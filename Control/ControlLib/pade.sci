@@ -17,8 +17,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Aug 25, 2018 	DA Gutz		Created
+// Aug 29, 2018 	DA Gutz		Created
 // 
-getd('../ControlLib')
-
-pade1 = pade(.01, 1);
+function [result] = pade(T, order)
+    s = %s;
+    if order==1 then
+        result = syslin('c', (-T/2*s+1)/(T/2*s+1));
+    elseif order==2 then
+        result = syslin('c', (T*T/12*s*s-T/2*s+1)/(T*T/12*s*s+T/2*s+1));
+    else
+        result = 0;
+    end
+endfunction
