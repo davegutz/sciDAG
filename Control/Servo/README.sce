@@ -21,4 +21,29 @@
 // 
 getd('../ControlLib')
 
-pade1 = pade(.01, 1);
+pade1 = pade(.01, 2);
+pade10 = pade(.1, 2);
+f_min = 1;
+f_max = 1000;
+n_fig = 0;
+
+// Bode plot.
+// With gainplot and phaseplot can only use Hz but can manually scale
+// With bode can use rad/s but cannot scale phase plot
+n_fig = n_fig+1;
+figure(n_fig); clf(); 
+subplot(2,1,1)
+gainplot([pade1; pade10], f_min, f_max,  ["0.01 sec"; "0.1 sec"])
+a1 = gca();
+a1.auto_scale="off";
+a1.tight_limits = "on";
+a1.data_bounds = [f_min, -6; f_max, 6];
+subplot(2,1,2)
+phaseplot([pade1; pade10], f_min, f_max,  ["0.01 sec"; "0.1 sec"])
+a2 = gca();
+a2.auto_scale="off";
+a2.tight_limits = "on";
+a2.data_bounds = [f_min, -360; f_max, 0];
+a2.y_ticks.labels = ["-360";"-270";"-180";"-90"];
+a2.y_ticks.locations = [-360;-270;-180;-90];
+
