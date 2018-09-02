@@ -19,15 +19,16 @@
 // SOFTWARE.
 // Aug 30, 2018 	DA Gutz		Created
 // 
-function [sys_ol, sys_cl] = myServo(tld1, tlg1, tld2, tlg2, tldh, tlgh, T, tehsv1, tehsv2, gain)
+function [sys_ol, sys_cl] = myServo(dT, P, C)
     s = %s;
-    ff1 = syslin('c', (tld1*s+1)/(tlg1*s+1));
-    ff2 = syslin('c', (tld2*s+1)/(tlg2*s+1));
-    fb = syslin('c', (tldh*s+1)/(tlgh*s+1));
-    pade1 = pade(T/2, 2);
-    cg = ff1*ff2*gain*pade1;
+    ff1 = syslin('c', (C.tld1*s+1)/(C.tlg1*s+1));
+    ff2 = syslin('c', (C.tld2*s+1)/(C.tlg2*s+1));
+    fb = syslin('c', (C.tldh*s+1)/(C.tlgh*s+1));
+    pade1 = pade(dT/2, 2);
+    cg = ff1*ff2*C.gain*pade1;
     ch = fb*pade1;
-    plant = syslin('c', 1/(tehsv1*s+1))*syslin('c', 1/(tehsv2*s+1))*syslin('c', 1/(s));
+    plant = syslin('c', 1/(P.tehsv1*s+1))*syslin('c', ..
+                    1/(P.tehsv2*s+1))*syslin('c', P.gain/(s));
     sys_ol = cg*plant*ch;
     sys_cl = cg*plant/(1 + cg*plant*ch);
 endfunction

@@ -19,13 +19,43 @@
 // SOFTWARE.
 // Aug 25, 2018 	DA Gutz		Created
 // 
+getd('../ControlLib')
+exec('myServo.sci', -1)
+n_fig = 0;
 
-// Example of running servo models
-exec('myServo_short_example.sce');
+// Frequency range
+f_min = 1/2/%pi;
+f_max = 1/dT;
 
-// Example of running genetic algorithm
-exec('example_nsga2_run.sce');
+// System parameters
+tehsv1 = 0.007;
+tehsv2 = 0.01;
+dT = 0.01;
+myPlant = struct('tehsv1', 0.007, 'tehsv2', 0.01, 'gain', 1);
+myControl = struct( 'tld1', 0.100, 'tlg1', 0.008,..
+                    'tld2', 0.008, 'tlg2', 0.008,..
+                    'tldh', 0.008, 'tlgh', 0.008,..
+                    'gain', 10.00);
 
-// Example of running genetic algorithm on Servoe
-exec('myServo_nsga2_run.sce');
+// Performance function
+function p = myPerf(dT, P, C, gain)
+    C.gain = gain;
+    [sys_ol, sys_cl] = myServo(dT, P, C);
+    [p.gm, gfr] = g_margin(sys_ol);
+    [p.pm, pfr] = p_margin(sys_ol);
+    p.gwr = gfr*2*%pi;
+    p.pwr = pfr*2*%pi;
+endfunction
 
+
+p = myPerf(dT, myPlant, myControl, myControl.gain);
+casestr = msprintf('%4.1f/%4.3f : %4.1f/%4.0f', myControl.gain, myControl.tld1, p.gm, p.pm)
+mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n', p.gm, p.gwr, p.pm, p.gwr)
+
+
+// Bode plot.
+// With gainplot and phaseplot can only use Hz but can manually scale
+// With bode can use rad/s but cannot scale phase plot
+n_fig = n_fig+1;
+figure(n_fig); clf(); 
+bode(sys_ol, f_min, f_max,  [casestr], 'rad')
