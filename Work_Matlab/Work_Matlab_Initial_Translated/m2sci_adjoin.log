@@ -1,0 +1,72 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/adjoin.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: NO
+  Verbose mode: 3
+  Generate formated code: YES
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  !! L.37: Unknown function narginchk not converted, original calling sequence used.
+  !! L.39: Matlab function int2str not yet converted, original calling sequence used.
+  !! L.44: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.44: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.45: Unknown function size_ss not converted, original calling sequence used.
+  !! L.47: Matlab function int2str not yet converted, original calling sequence used.
+  !! L.48: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.48: Unknown function size_ss not converted, original calling sequence used.
+  ! L.54: abs(mtlb_s(mtlb_double(a1),mtlb_double(ai))) may be replaced by:
+  !    --> mtlb_s(mtlb_double(a1),mtlb_double(ai)) if mtlb_s(mtlb_double(a1),mtlb_double(ai)) is Real.
+  ! L.54: abs(mtlb_s(mtlb_double(b1),mtlb_double(bi))) may be replaced by:
+  !    --> mtlb_s(mtlb_double(b1),mtlb_double(bi)) if mtlb_s(mtlb_double(b1),mtlb_double(bi)) is Real.
+  !! L.55: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.57: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.57: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.59: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.59: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.62: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.62: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.64: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.64: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.71: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.71: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.72: Unknown function size_ss not converted, original calling sequence used.
+  !! L.74: Matlab function int2str not yet converted, original calling sequence used.
+  !! L.75: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.75: Unknown function size_ss not converted, original calling sequence used.
+  ! L.81: abs(mtlb_s(mtlb_double(a1),mtlb_double(ai))) may be replaced by:
+  !    --> mtlb_s(mtlb_double(a1),mtlb_double(ai)) if mtlb_s(mtlb_double(a1),mtlb_double(ai)) is Real.
+  ! L.81: abs(mtlb_s(mtlb_double(c1),mtlb_double(ci))) may be replaced by:
+  !    --> mtlb_s(mtlb_double(c1),mtlb_double(ci)) if mtlb_s(mtlb_double(c1),mtlb_double(ci)) is Real.
+  !! L.82: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.84: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.84: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.85: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.85: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.89: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.89: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.90: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.90: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.96: Matlab function int2str not yet converted, original calling sequence used.
+  !! L.101: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.103: Matlab function int2str not yet converted, original calling sequence used.
+  !! L.104: Unknown function unpack_ss not converted, original calling sequence used.
+  !! L.104: Unknown function size_ss not converted, original calling sequence used.
+  !! L.106: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.106: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.107: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.107: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.108: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.108: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.109: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.109: Unknown function zeros_ss not converted, original calling sequence used.
+  !! L.112: Unknown function pack_ss not converted, original calling sequence used.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be wrong (see the //!! comments).
+  ****** End of mfile2sci() session ******

@@ -1,0 +1,14 @@
+  ****** adjoin: Functions of mfile2sci() session ******
+  *
+  1 Matlab Function(s) not yet converted, original calling sequence used:
+  "int2str"
+  *
+  0 Matlab Toolbox(es) Functions, original calling sequence used :
+  *
+  5 Unknown Function(s), original calling sequence used :
+  "narginchk"
+  "unpack_ss"
+  "size_ss"
+  "zeros_ss"
+  "pack_ss"
+  *
