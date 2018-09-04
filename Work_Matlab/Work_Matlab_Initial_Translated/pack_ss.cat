@@ -1,0 +1,37 @@
+ PACK_SSForm a system from component matrices.
+
+ Syntax: SYS = PACK_SS(A,B1,B2,C1,C2,E11,E12,E21,E22) or ...
+         SYS = PACK_SS(A,B1,B2,C1,C2) or ...
+         SYS = PACK_SS(A,B,C,E) or ...
+         SYS = PACK_SS(A,B,C)
+
+ Purpose:The first version of PACK_SS 'packs' a full set of
+nine matrices defining a TITO system into a single
+data element.  The function uses the NaN (not_a_number)
+symbol to denote partitioning between the A, B, C, and
+E sections and the Inf (infinity) symbol to denote
+partitioning between B1 and B2, C1 and C2, and E11, E12,
+E21, and E22.  If the A matrix is empty, a static system
+made up only of the partitioned E matrix is returned
+
+The second version creates an appropiate identically zero 
+partitioned E matrix to complete the TITO system.
+
+The third version 'packs' the four matrices of a SISO
+state-space realization into a single data element using
+the NaN symbol to denote partitioning.
+
+The fourth version creates an identically zero E matrix to
+complete the SISO system.
+
+ Input:A,B1,B2,C1,E11,E12,E21,E22 - Regular matrices denoting
+   the elements of a TITO state-space system, or ...
+A,B,C,E - Regular matrices denoting the elements of 
+   a SISO state-space system.
+(Note that the dimensions of these matrices must be 
+   conformable in either case.)
+
+ Output:SYS -  Resulting packed matrix system, with state
+   dimension equal to the dimension of A.
+
+ See Also:UNPACK_SS, MAT2SYS, SYS2MAT

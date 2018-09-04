@@ -1,0 +1,21 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./hole.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  !! L.21: If sqrt(mtlb_s(1,frac*frac))/frac is outside [-1,1]
+  !!    real part of output of atan(sqrt(mtlb_s(1,frac*frac))/frac) will be the opposite of Matlab one.
+  !! L.24: If sqrt(mtlb_s(1,frac*frac))/frac is outside [-1,1]
+  !!    real part of output of atan(sqrt(mtlb_s(1,frac*frac))/frac) will be the opposite of Matlab one.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be wrong (see the //!! comments).
+  ****** End of mfile2sci() session ******

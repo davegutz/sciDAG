@@ -1,0 +1,8 @@
+function default(varS, valS)
+% 15-Oct-2015   DA Gutz         Created
+%
+try evalin('caller', sprintf('temp = %s;', varS));
+catch ERR %#ok<NASGU>
+    evalin('caller', sprintf('%s = %s;', varS, valS))
+end
+

@@ -1,0 +1,123 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./unpack_ss.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  ! L.52: abs(isnan(sys)) may be replaced by:
+  !    --> isnan(sys) if isnan(sys) is Real.
+  ! L.52: abs(mtlb_all(abs(isnan(sys)))) may be replaced by:
+  !    --> mtlb_all(abs(isnan(sys))) if mtlb_all(abs(isnan(sys))) is Real.
+  ! L.59: abs(~abs(sys)<%inf) may be replaced by:
+  !    --> ~abs(sys)<%inf if ~abs(sys)<%inf is Real.
+  ! L.59: abs(mtlb_all(abs(~abs(sys)<%inf))) may be replaced by:
+  !    --> mtlb_all(abs(~abs(sys)<%inf)) if mtlb_all(abs(~abs(sys)<%inf)) is Real.
+  ! L.64: abs(~abs(mtlb_t(sys))<%inf) may be replaced by:
+  !    --> ~abs(mtlb_t(sys))<%inf if ~abs(mtlb_t(sys))<%inf is Real.
+  ! L.64: abs(mtlb_all(abs(~abs(mtlb_t(sys))<%inf))) may be replaced by:
+  !    --> mtlb_all(abs(~abs(mtlb_t(sys))<%inf)) if mtlb_all(abs(~abs(mtlb_t(sys))<%inf)) is Real.
+  !! L.65: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.65: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.65: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.65: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.66: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.66: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.66: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.66: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.67: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.67: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.67: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.67: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.68: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.68: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.68: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.68: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.77: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.78: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.82: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  ! L.82: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.82: Unknown function mtlb not converted, original calling sequence used.
+  ! L.82: abs(~abs(b(1,mtlb(mtlb(:))))<%inf) may be replaced by:
+  !    --> ~abs(b(1,mtlb(mtlb(:))))<%inf if ~abs(b(1,mtlb(mtlb(:))))<%inf is Real.
+  !! L.86: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.86: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.87: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  ! L.87: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.87: Unknown function mtlb not converted, original calling sequence used.
+  !! L.87: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.87: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.87: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  ! L.87: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.87: Unknown function mtlb not converted, original calling sequence used.
+  !! L.87: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.87: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.87: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.89: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  ! L.89: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.89: Unknown function mtlb not converted, original calling sequence used.
+  ! L.89: abs(~abs(c(mtlb(mtlb(:)),1))<%inf) may be replaced by:
+  !    --> ~abs(c(mtlb(mtlb(:)),1))<%inf if ~abs(c(mtlb(mtlb(:)),1))<%inf is Real.
+  !! L.94: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.94: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.98: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.98: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.98: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.98: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.98: Unknown function mtlb not converted, original calling sequence used.
+  ! L.98: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.98: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.98: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.98: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.98: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.98: Unknown function mtlb not converted, original calling sequence used.
+  ! L.103: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.103: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.103: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.103: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.103: Unknown function mtlb not converted, original calling sequence used.
+  ! L.103: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.103: Unknown function mtlb_a not converted, original calling sequence used.
+  !! L.103: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.103: Unknown function mtlb_imp not converted, original calling sequence used.
+  ! L.103: mtlb(:) can be replaced by :() or : whether : is an M-file or not.
+  !! L.103: Unknown function mtlb not converted, original calling sequence used.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be wrong (see the //!! comments).
+  ****** End of mfile2sci() session ******

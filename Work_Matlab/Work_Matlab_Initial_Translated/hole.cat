@@ -1,0 +1,4 @@
+ @(#)hole.m 1.2 93/06/22
+ HOLE.Calculate hole area as a function of uncovered length.
+ Author:     Dave Gutz 09-Jun-90.
+ Revisions:  None.

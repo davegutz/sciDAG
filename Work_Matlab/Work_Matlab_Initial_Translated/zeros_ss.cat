@@ -1,0 +1,7 @@
+function sys = zeros_ss(n,m);
+ Wrapper for isicles functions to avoid error return for 0 index.
+ D. Gutz 1/27/04
+ Inputs:
+ same as matlab zeros function.
+ Outputs:
+ same as matlab zeros function.

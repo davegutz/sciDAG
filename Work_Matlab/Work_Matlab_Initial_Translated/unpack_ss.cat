@@ -1,0 +1,30 @@
+
+ UNPACK_SSUnpacks a system into component matrices.
+
+ Syntax: [A,B1,B2,C1,C2,D11,D12,D21,D22] = UNPACK_SS(SYS), or ...
+         [A,B,C,D] = UNPACK_SS(SYS) or ...
+         X = UNPACK_SS(SYS,FLAG)
+
+ Purpose:The first version 'unpacks' the nine constituent matrices
+of a TITO state-space representation.
+               
+The second version 'unpacks' the four constituent matrices 
+of a SISO state-space representation.
+
+The third version allows selection of only a single
+element from the SISO state-space quartet or from the
+TITO nantet.
+
+ Input:SYS - Input system, in packed matrix format.
+FLAG - Optional character used to select only a single
+       matrix or section for unpacking.  Hence FLAG 
+       may be either 'a', 'b', 'c', 'd', 'b1', 'b2', 
+       'c1', 'c2', 'd11', 'd12', 'd21', or 'd22', in
+       which case the corresponding matrix is unpacked
+       from SYS.
+
+ Output:A, B1, B2, C1, C2, D11, D12, D21, D22  or ...
+A, B, C, D 
+- Regular matrices unpacked from SYS.
+
+ See Also:PACK_SS

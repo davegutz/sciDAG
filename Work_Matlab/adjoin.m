@@ -34,18 +34,18 @@ function so = adjoin(s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15) %#ok<IN
 
 
 %**********************************************************************
-narginchk(2,15);
+narginchk(nargin, 2, 15);
 %
 s_f = eval(['s',int2str(nargin)]);
 % if isstr(s_f)
 if ischar(s_f)
     if s_f == 'v'			% Vertical stacking operation
-        [ao,bo,co,eo] = unpack_ss(s1); [a1,b1,tmp1,tmp2] = unpack_ss(s1);
-        [tmp3,p1,tmp4] = size_ss(s1);
+        [ao,bo,co,eo] = unpack_ss(s1); [a1,b1,tmp,tmp1] = unpack_ss(s1);
+        [tmp,p1,tmp1] = size_ss(s1);
         for i = 2:nargin-1
             si = eval(['s',int2str(i)]);
             [ai,bi,ci,ei] = unpack_ss(si); [mi,pi,ni] = size_ss(si);
-            [mo,tmp5] = size(eo); [tmp6,no] = size(ao);
+            [mo,tmp1] = size(eo); [tmp,no] = size(ao);
             if pi ~= p1
                 error('Incompatible dimensions for adjoin operation');
             end
@@ -65,12 +65,12 @@ if ischar(s_f)
             eo = [eo; ei];
         end
     elseif s_f == 'h'			% Horizontal stacking operation
-        [ao,bo,co,eo] = unpack_ss(s1); [a1,tmp7,c1,tmp8] = unpack_ss(s1);
-        [m1,tmp9,tmp10] = size_ss(s1);
+        [ao,bo,co,eo] = unpack_ss(s1); [a1,tmp,c1,tmp1] = unpack_ss(s1);
+        [m1,tmp,tmp1] = size_ss(s1);
         for i = 2:nargin-1
             si = eval(['s',int2str(i)]);
             [ai,bi,ci,ei] = unpack_ss(si); [mi,pi,ni] = size_ss(si);
-            [tmp11,po] = size(eo); [tmp12,no] = size(ao);
+            [tmp,po] = size(eo); [tmp,no] = size(ao);
             if mi ~= m1
                 error('Incompatible dimensions for adjoin operation');
             end
@@ -99,7 +99,7 @@ else
     for i = 2:nargin
         si = eval(['s',int2str(i)]);
         [ai,bi,ci,ei] = unpack_ss(si); [mi,pi,ni] = size_ss(si);
-        [mo,po] = size(eo); [tmp13,no] = size(ao);
+        [mo,po] = size(eo); [tmp,no] = size(ao);
         ao = [ao zeros_ss(no,ni); zeros_ss(ni,no) ai];
         bo = [bo zeros_ss(no,pi); zeros_ss(ni,po) bi];
         co = [co zeros_ss(mo,ni); zeros_ss(mi,no) ci];

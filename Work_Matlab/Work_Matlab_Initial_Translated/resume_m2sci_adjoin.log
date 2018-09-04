@@ -5,10 +5,6 @@
   *
   0 Matlab Toolbox(es) Functions, original calling sequence used :
   *
-  5 Unknown Function(s), original calling sequence used :
-  "narginchk"
-  "unpack_ss"
+  1 Unknown Function(s), original calling sequence used :
   "size_ss"
-  "zeros_ss"
-  "pack_ss"
   *
