@@ -19,16 +19,38 @@
 // SOFTWARE.
 // Sep 5, 2018 	DA Gutz		Created
 // 
-A=[0,1;0,0];B=[1;1];C=[1,1; 1,1];
-S1=syslin('c',A,B,C);   //Linear system definition
-[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+
+//A=[-1];B=[1];C=[1];
+//S1=syslin('c',A,B,C);   //Linear system definition
+//[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+//
+A=[0];B=[1];C=[1];
+//S1=syslin('c',A,B,C);   //Linear system definition
+//[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+//
+function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
+    S1=syslin('c',A,B,C);   //Linear system definition
+    [plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+    continueSimulation = %t;
+endfunction
 
 
-A=[-1];B=[1];C=[1];
-S1=syslin('c',A,B,C);   //Linear system definition
-[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+importXcosDiagram("./scratch.xcos")
+xcos_simulate(scs_m, 4);
 
-A=[0];B=[0];C=[0];D=[1];
-S1=syslin('c',A,B,C,D);   //Linear system definition
-[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+
+typeof(scs_m)
+scs_m.props.context
+
+
+for i=1:length(scs_m.objs)
+    if typeof(scs_m.objs(i))=="Block" & scs_m.objs(i).gui=="SUPER_f" then
+        scs_m = scs_m.objs(i).model.rpar;
+        break;
+    end
+end
+
+sys = lincos(scs_m);
+figure()
+bode(sys);
 
