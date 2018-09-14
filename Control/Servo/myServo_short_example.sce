@@ -21,35 +21,42 @@
 // 
 getd('../ControlLib')
 exec('myServo.sci', -1)
-n_fig = 0;
+n_fig = -1;
+xdel(winsid())
+
+global dT P C p
+dT = 0.01;
 
 // Frequency range
 f_min = 1/2/%pi;
 f_max = 1/dT;
 
 // System parameters
-tehsv1 = 0.007;
-tehsv2 = 0.01;
-dT = 0.01;
-myPlant = struct('tehsv1', 0.007, 'tehsv2', 0.01, 'gain', 1);
-myControl = struct( 'tld1', 0.100, 'tlg1', 0.008,..
+P = struct('tehsv1', 0.007, 'tehsv2', 0.01, 'gain', 1);
+C = struct( 'tld1', 0.064, 'tlg1', 0.008,..
                     'tld2', 0.008, 'tlg2', 0.008,..
                     'tldh', 0.008, 'tlgh', 0.008,..
-                    'gain', 10.00);
-
+                    'gain', 9.844);
+R = struct('gm', 6, 'pm', 45, 'gwr', 120);
 // Performance function
-function p = myPerf(dT, P, C, gain)
-    C.gain = gain;
-    [sys_ol, sys_cl] = myServo(dT, P, C);
-    [p.gm, gfr] = g_margin(sys_ol);
-    [p.pm, pfr] = p_margin(sys_ol);
+function f = myPerf(I)
+    global dT P C p
+    C.gain = I(1);
+    C.tld1 = I(2);
+    [p.sys_ol, p.sys_cl] = myServo(dT, P, C);
+    [p.gm, gfr] = g_margin(p.sys_ol);
+    [p.pm, pfr] = p_margin(p.sys_ol);
     p.gwr = gfr*2*%pi;
     p.pwr = pfr*2*%pi;
+    egm = p.gm - R.gm;
+    epm = p.pm - R.pm;
+    egwr = p.gwr - R.gwr;
+    f = [-epm, egwr];
 endfunction
 
 
-p = myPerf(dT, myPlant, myControl, myControl.gain);
-casestr = msprintf('%4.1f/%4.3f : %4.1f/%4.0f', myControl.gain, myControl.tld1, p.gm, p.pm)
+f1 = myPerf([C.gain, C.tld1]);
+casestr = msprintf('%4.1f/%4.3f : %4.1f/%4.0f', C.gain, C.tld1, p.gm, p.pm)
 mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n', p.gm, p.gwr, p.pm, p.gwr)
 
 
@@ -58,4 +65,79 @@ mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n', p.gm, p.gwr, p.p
 // With bode can use rad/s but cannot scale phase plot
 n_fig = n_fig+1;
 figure(n_fig); clf(); 
-bode(sys_ol, f_min, f_max,  [casestr], 'rad')
+bode(p.sys_ol, f_min, f_max,  [casestr], 'rad')
+
+
+// Example of use of the genetic algorithm
+funcname = 'myPerf';
+PopSize = 200;
+Proba_cross = 0.7;
+Proba_mut = 0.1;
+NbGen = 100;
+NbCouples = 110;
+Log = %T;
+pressure = 0.1;
+// Setting parameters of optim_nsga2 function
+ga_params = init_param();
+// Parameters to adapt to the shape of the optimization problem
+ga_params = add_param(ga_params,'minbound', [2, 0.008]);
+ga_params = add_param(ga_params,'maxbound', [20, 0.3]);
+ga_params = add_param(ga_params,'dimension', 2);
+ga_params = add_param(ga_params,'beta',0);
+ga_params = add_param(ga_params,'delta',0.1);
+// Parameters to fine tune the Genetic algorithm.
+// All these parameters are optional for continuous optimization.
+// If you need to adapt the GA to a special problem.
+ga_params = add_param(ga_params,'init_func',init_ga_default);
+ga_params = add_param(ga_params,'crossover_func',crossover_ga_default);
+ga_params = add_param(ga_params,'mutation_func',mutation_ga_default);
+ga_params = add_param(ga_params,'codage_func',coding_ga_identity);
+ga_params = add_param(ga_params,'nb_couples',NbCouples);
+ga_params = add_param(ga_params,'pressure',pressure);
+// Define s function shortcut
+deff('y=fobjs(x)','y = myPerf(x);');
+
+// Performing optimization
+printf("Performing optimization:");
+[pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = optim_nsga2(fobjs, PopSize, NbGen, Proba_mut, Proba_cross, Log, ga_params);
+mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n', p.gm, p.gwr, p.pm, p.gwr)
+
+// Compute Pareto front and filter
+[f_pareto, pop_pareto] = pareto_filter(fobj_pop_opt, pop_opt);
+// Optimal front function definition
+f1_opt = linspace(0,1);
+f2_opt = 1 - sqrt(f1_opt);
+
+// Plot solution: Pareto front
+n_fig = n_fig + 1;
+figure(n_fig); clf(); 
+scf(n_fig);
+// Plotting final population
+plot(fobj_pop_opt(:,1), fobj_pop_opt(:,2),'g.');
+// Plotting Pareto population
+plot(f_pareto(:,1), f_pareto(:,2),'k.');
+plot(f1_opt, f2_opt, 'k-');
+title("Pareto front","fontsize",3);
+xlabel("$f_1$","fontsize",4);
+ylabel("$f_2$","fontsize",4);
+legend(['Final pop.','Pareto pop.','Pareto front.']);
+
+
+// Transform list to vector for plotting Pareto set
+npop = length(pop_opt);
+pop_opt = matrix(list2vec(pop_opt),2,npop)';
+nfpop = length(pop_pareto);
+pop_pareto = matrix(list2vec(pop_pareto),2,nfpop)';
+// Plot the Pareto set
+n_fig = n_fig + 1;
+figure(n_fig); clf(); 
+scf(n_fig);
+// Plotting final population
+plot(pop_opt(:,1),pop_opt(:,2),'g.');
+// Plotting Pareto population
+plot(pop_pareto(:,1),pop_pareto(:,2),'k.');
+title("Pareto Set","fontsize",3);
+xlabel("$x_1$","fontsize",4);
+ylabel("$x_2$","fontsize",4);
+legend(['Final pop.','Pareto pop.']);
+
