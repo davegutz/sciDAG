@@ -25,8 +25,10 @@ exec('myServo.sci', -1)
 n_fig = -1;
 xdel(winsid())
 
-global dT P C p
+global dT P C W p t_step verbose
 dT = 0.01;
+t_step = 0:dT:2;
+verbose = 0;
 
 // Frequency range
 f_min = 1/2/%pi;
@@ -37,19 +39,32 @@ P = struct('tehsv1', 0.007, 'tehsv2', 0.01, 'gain', 1);
 C = struct( 'tld1', 0.064, 'tlg1', 0.008,..
                     'tld2', 0.008, 'tlg2', 0.008,..
                     'tldh', 0.008, 'tlgh', 0.008,..
-                    'gain', 9.844);
-R = struct('gm', 6, 'pm', 45, 'pwr', 40);
+                    'gain', 16);
+MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
+             'tr', 0.2, 'Mp', 0.15, 'ts', 1, 'sum', 0);
+W = struct('tr', 0, 'Mp', 0, 'ts', 0);
+R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
+             'tr', 0.2, 'Mp', 0.05, 'ts', 2);
 // Performance function
-function f = myObj(I)
-    O = myPerf(I);
-    pm = O(1); gm = O(2); pwr = O(3);
-    egm = R.gm - gm;
-    epm = R.pm -pm;
-    epwr = R.pwr - pwr;
-    f = [(epm/8)^2, epwr/5, egm^2];
+function f = myObj(x)
+    global W p verbose
+    [n, m] = size(x);
+    f = zeros(n,1);
+    for i = 1:n
+        I = [max(x(i,1), 3), max(x(i,2), 0.008)];
+        if verbose>2 then
+            mprintf('myObj:  gain=%6.3f   tld1=%6.3f\n', I(1), I(2));
+        end
+        [pm, gm, gwr, pwr, tr, tp, Mp, ts] = myPerf(I);
+        if verbose>3 then
+            mprintf('myObj:  W.tr=%6.3f   W.Mp=%6.3f, W.ts=%6.3f\n', W.tr, W.Mp, W.ts);
+            mprintf('myObj:  tr=%5.3f s   Mp=%6.3f    ts=%5.3f s\n', p.tr, p.Mp*100, p.ts);
+        end
+        f(i) = W.tr*tr + W.Mp*Mp + W.ts*ts;
+    end
 endfunction
-function o = myPerf(I)
-    global dT P C p
+function [pm, gm, gwr, pwr, tr, tp, Mp, ts] = myPerf(I)
+    global dT P C p t_step
     C.gain = I(1);
     C.tld1 = I(2);
     [p.sys_ol, p.sys_cl] = myServo(dT, P, C);
@@ -57,13 +72,54 @@ function o = myPerf(I)
     [p.pm, pfr] = p_margin(p.sys_ol);
     p.gwr = gfr*2*%pi;
     p.pwr = pfr*2*%pi;
-    o = [p.pm, p.gm, p.pwr];
+    p.y_step = csim('step', t_step, p.sys_cl);
+    [p.tr, p.tp, p.Mp, p.ts] = stepPerf(p.y_step, t_step,..
+                                        0.95, 0.02, dT);
+    pm = p.pm;
+    gm = p.gm;
+    gwr = p.gwr;
+    pwr = p.pwr;
+    tr = p.tr;
+    tp = p.tp;
+    Mp = p.Mp;
+    ts = p.ts;
+endfunction
+function [time_rise, time_peak, magnitude_peak, time_settle] = ..
+    stepPerf(y, t, frac_rise, frac_settle, dT)
+    // Unit step response performance
+    // Assume regular update interval of unit response y
+    // Assume final value y = 1
+    global dT t_step
+    r = 1;
+    rx = length(t);
+    while y(r)<frac_rise & r<rx
+        r = r+1;
+    end
+    time_rise = (r-1)*dT;
+    [y_p, r_p] = max(y);
+    time_peak = (r_p-1)*dT;
+    magnitude_peak = y_p-1;
+    y_s_max = 1+frac_settle;
+    y_s_min = 1-frac_settle;
+    r = rx;
+    while y(r)>y_s_min & y(r)<y_s_max & r>0
+        r = r-1;
+    end
+    time_settle = (r-1)*dT;
 endfunction
 
+MU.sum = MU.tr + MU.Mp + MU.ts;
+R.sum = R.tr + R.Mp + R.ts;
+W.tr = R.sum/R.tr * MU.sum/MU.tr;
+W.Mp = R.sum/R.Mp * MU.sum/MU.Mp;
+W.ts = R.sum/R.ts * MU.sum/MU.ts;
 
 f1 = myObj([C.gain, C.tld1]);
-casestr = msprintf('%4.1f/%4.3f : %4.1f/%4.0f', C.gain, C.tld1, p.gm, p.pm)
-mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n', p.gm, p.gwr, p.pm, p.pwr)
+casestr = msprintf('%4.1f/%4.3f : %4.1f/%4.0f',..
+                   C.gain, C.tld1, p.gm, p.pm)
+mprintf('%4.1f/%4.3f:  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
+        C.gain, C.tld1, p.gm, p.gwr, p.pm, p.pwr)
+mprintf('tr=%5.3f s   Mp=%6.3f  ts=%5.3f s\n', p.tr, p.Mp*100, p.ts)
 
 
 // Bode plot.
@@ -74,80 +130,46 @@ figure(n_fig); clf();
 bode(p.sys_ol, f_min, f_max,  [casestr], 'rad')
 
 
-// Example of use of the genetic algorithm
-funcname = 'myObj';
-PopSize = 100;
-Proba_cross = 0.7;
-Proba_mut = 0.1;
-NbGen = 50;
-NbCouples = 110;
-Log = %T;
-pressure = 0.1;
-// Setting parameters of optim_nsga2 function
-ga_params = init_param();
-// Parameters to adapt to the shape of the optimization problem
-ga_params = add_param(ga_params,'minbound', [4, 0.008]);
-ga_params = add_param(ga_params,'maxbound', [40, 0.2]);
-ga_params = add_param(ga_params,'dimension', 2);
-ga_params = add_param(ga_params,'beta',0);
-ga_params = add_param(ga_params,'delta',0.1);
-// Parameters to fine tune the Genetic algorithm.
-// All these parameters are optional for continuous optimization.
-// If you need to adapt the GA to a special problem.
-ga_params = add_param(ga_params,'init_func',init_ga_default);
-ga_params = add_param(ga_params,'crossover_func',crossover_ga_default);
-ga_params = add_param(ga_params,'mutation_func',mutation_ga_default);
-ga_params = add_param(ga_params,'codage_func',coding_ga_identity);
-ga_params = add_param(ga_params,'nb_couples',NbCouples);
-ga_params = add_param(ga_params,'pressure',pressure);
-// Define s function shortcut
-deff('y=fobjs(x)','y = myObj(x);');
+// PSO inputs
+wmax = 0.9; // initial weight parameter
+wmin = 0.4; // final weight parameter
+weights = [wmax; wmin];
+itmax = 30; //Maximum iteration number
+c1 = 0.7; // knowledge factors for personnal best
+c2 = 1.47; // knowledge factors for global best
+c = [c1; c2];
+N = 100; // problem dimensions: number of particles
+D = 2; // problem in R^2
+launchp = 0.9;
+speedf = 2*ones(1,D);
+nraptor = N;
+x0 = [30, 0.008];
+boundsmax = x0'*4;
+boundsmin = x0'/4;
+bounds = [boundsmin,boundsmax];
+speed_max = 0.1*boundsmax;
+speed_min = 0.1*boundsmin;
+speed = [speed_min, speed_max];
+verbosef = 1; // 1 to activate autosave and graphics by default
+grand('setsd', getdate('s')); // must initialize random generator
 
-// Performing optimization
-printf("Performing optimization:");
-[pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = optim_nsga2(fobjs, PopSize, NbGen, Proba_mut, Proba_cross, Log, ga_params);
-mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n', p.gm, p.gwr, p.pm, p.pwr)
-
-// Compute Pareto front and filter
-//[m, n] = size(fobj_pop_opt);
-//obj_pop_opt(:,1) = -fobj_pop_opt(:,1) + R.pm*ones(m,1);
-//obj_pop_opt(:,2) = -fobj_pop_opt(:,2) + R.gm*ones(m,1);
-obj_pop_opt = fobj_pop_opt;
-[f_pareto, pop_pareto] = pareto_filter(fobj_pop_opt, pop_opt);
-//[m, n] = size(f_pareto);
-//o_pareto(:,1) = -f_pareto(:,1) + R.pm*ones(m,1);
-//o_pareto(:,2) = -f_pareto(:,2) + R.gm*ones(m,1);
-o_pareto = f_pareto;
-
-// Plot solution: Pareto front
-n_fig = n_fig + 1;
+// Particle Swarm algorithm
+x0 = [20, 0.008];
+boundsmax = [35; 0.25];
+boundsmin = [3; 0.008];
+bounds = [boundsmin, boundsmax];
+verbosef = 1; // 1 to activate autosave and graphics by default
+if verbosef>0 then
+    n_fig = n_fig+1;
+end
+[fopt, xopt]=PSO_bsg_starcraft(myObj, bounds, speed, itmax, N,..
+                weights, c, launchp, speedf, nraptor, verbosef, x0);
+mprintf('xopt= %4.1f/%4.3f, fopt=%e\n', xopt, fopt);
+mprintf('%4.1f/%4.3f:  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
+        C.gain, C.tld1, p.gm, p.gwr, p.pm, p.pwr)
+mprintf('tr=%5.3f s   Mp=%6.3f  ts=%5.3f s\n', p.tr, p.Mp*100, p.ts)
+mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
+        p.gm, p.gwr, p.pm, p.pwr)
+n_fig = n_fig+1;
 figure(n_fig); clf(); 
-scf(n_fig);
-// Plotting final population
-plot(obj_pop_opt(:,1), obj_pop_opt(:,2),'g.');
-// Plotting Pareto population
-plot(o_pareto(:,1), o_pareto(:,2),'k.');
-title("Pareto front","fontsize",3);
-xlabel("$f_1$","fontsize",4);
-ylabel("$f_2$","fontsize",4);
-legend(['Final pop','Pareto pop']);
-
-
-// Transform list to vector for plotting Pareto set
-npop = length(pop_opt);
-pop_opt = matrix(list2vec(pop_opt), 2, npop)';
-nfpop = length(pop_pareto);
-pop_pareto = matrix(list2vec(pop_pareto), 2, nfpop)';
-// Plot the Pareto set
-n_fig = n_fig + 1;
-figure(n_fig); clf(); 
-scf(n_fig);
-// Plotting final population
-plot(pop_opt(:,1),pop_opt(:,2),'g.');
-// Plotting Pareto population
-plot(pop_pareto(:,1),pop_pareto(:,2),'k.');
-title("Pareto Set","fontsize",3);
-xlabel("$x_1$","fontsize",4);
-ylabel("$x_2$","fontsize",4);
-legend(['Final pop.','Pareto pop.']);
-
+plot(t_step, p.y_step)        
