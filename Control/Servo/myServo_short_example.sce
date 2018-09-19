@@ -41,10 +41,11 @@ C = struct( 'tld1', 0.064, 'tlg1', 0.008,..
                     'tldh', 0.008, 'tlgh', 0.008,..
                     'gain', 16);
 MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
-             'tr', 0.2, 'Mp', 0.15, 'ts', 1, 'sum', 0);
+             'tr', 0.05, 'Mp', 0.15, 'ts', 0.2, 'sum', 0);
 W = struct('tr', 0, 'Mp', 0, 'ts', 0);
 R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
-             'tr', 0.2, 'Mp', 0.05, 'ts', 2);
+             'tr', 0.07, 'Mp', 0.05, 'ts', 0.2);
+WC = struct('tr', 1, 'Mp', 1, 'ts', 0.2, 'sum', 0);
 // Performance function
 function f = myObj(x)
     global W p verbose
@@ -61,6 +62,12 @@ function f = myObj(x)
             mprintf('myObj:  tr=%5.3f s   Mp=%6.3f    ts=%5.3f s\n', p.tr, p.Mp*100, p.ts);
         end
         f(i) = W.tr*tr + W.Mp*Mp + W.ts*ts;
+        if gm<R.gm then
+            f(i)= f(i) + 100;
+        end
+        if pm<R.pm then
+            f(i) = f(i) + 100;
+        end
     end
 endfunction
 function [pm, gm, gwr, pwr, tr, tp, Mp, ts] = myPerf(I)
@@ -114,20 +121,37 @@ W.tr = R.sum/R.tr * MU.sum/MU.tr;
 W.Mp = R.sum/R.Mp * MU.sum/MU.Mp;
 W.ts = R.sum/R.ts * MU.sum/MU.ts;
 
+WC.sum = WC.tr + WC.Mp + WC.ts;
+WC.tr = WC.tr/WC.sum;
+WC.Mp = WC.Mp/WC.sum;
+WC.ts = WC.ts/WC.sum;
+
+MU.sum = 1/MU.tr + 1/MU.Mp + 1/MU.ts;
+W.tr = WC.tr/(MU.tr*MU.sum);
+W.Mp = WC.Mp/(MU.Mp*MU.sum);
+W.ts = WC.ts/(MU.ts*MU.sum);
+
+
 f1 = myObj([C.gain, C.tld1]);
-casestr = msprintf('%4.1f/%4.3f : %4.1f/%4.0f',..
+casestr_i = msprintf('Orig %4.1f/%4.3f : %4.1f/%4.0f',..
                    C.gain, C.tld1, p.gm, p.pm)
 mprintf('%4.1f/%4.3f:  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
         C.gain, C.tld1, p.gm, p.gwr, p.pm, p.pwr)
 mprintf('tr=%5.3f s   Mp=%6.3f  ts=%5.3f s\n', p.tr, p.Mp*100, p.ts)
-
+n_fig = n_fig+1;
+n_fig_step = n_fig;
+scf(n_fig_step); clf(); 
+plot(t_step, p.y_step, 'b')
+y_step_i = p.y_step;
+sys_ol_i = p.sys_ol;
 
 // Bode plot.
 // With gainplot and phaseplot can only use Hz but can manually scale
 // With bode can use rad/s but cannot scale phase plot
 n_fig = n_fig+1;
-figure(n_fig); clf(); 
-bode(p.sys_ol, f_min, f_max,  [casestr], 'rad')
+n_fig_bode = n_fig;
+scf(n_fig_bode); clf(); 
+bode(p.sys_ol, f_min, f_max,  [casestr_i], 'rad')
 
 
 // PSO inputs
@@ -161,15 +185,25 @@ bounds = [boundsmin, boundsmax];
 verbosef = 1; // 1 to activate autosave and graphics by default
 if verbosef>0 then
     n_fig = n_fig+1;
+    figure(n_fig);
 end
 [fopt, xopt]=PSO_bsg_starcraft(myObj, bounds, speed, itmax, N,..
                 weights, c, launchp, speedf, nraptor, verbosef, x0);
+casestr_f = msprintf('Final %4.1f/%4.3f : %4.1f/%4.0f',..
+                   C.gain, C.tld1, p.gm, p.pm)
 mprintf('xopt= %4.1f/%4.3f, fopt=%e\n', xopt, fopt);
 mprintf('%4.1f/%4.3f:  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
         C.gain, C.tld1, p.gm, p.gwr, p.pm, p.pwr)
 mprintf('tr=%5.3f s   Mp=%6.3f  ts=%5.3f s\n', p.tr, p.Mp*100, p.ts)
 mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
         p.gm, p.gwr, p.pm, p.pwr)
-n_fig = n_fig+1;
-figure(n_fig); clf(); 
-plot(t_step, p.y_step)        
+
+scf(n_fig_step);
+plot(t_step, p.y_step, 'g')
+title("Step Response","fontsize",3);
+xlabel("t, sec","fontsize",4);
+ylabel("$y$","fontsize",4);
+legend([casestr_i, casestr_f]);
+
+scf(n_fig_bode); clf();
+bode([sys_ol_i, p.sys_ol], f_min, f_max, [casestr_i, casestr_f], 'rad')
