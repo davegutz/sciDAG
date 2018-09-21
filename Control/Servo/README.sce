@@ -21,11 +21,14 @@
 // 
 
 // Example of running servo models
-exec('myServo_short_example.sce');
+//      Uses Particle Swarm Optimization
+exec('myServo-PSO_run.sce');
 
 // Example of running genetic algorithm
-exec('example_nsga2_run.sce');
+exec('example-nsga2_run.sce');
 
 // Example of running genetic algorithm on Servoe
 exec('myServo_nsga2_run.sce');
 
+// Example of various optimzation algorithms on Rosenbrock function
+exec('rosenbrock-various_run.sce');
