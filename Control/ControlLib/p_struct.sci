@@ -19,42 +19,51 @@
 // SOFTWARE.
 // Sep 24, 2018 	DA Gutz		Created
 // 
-function p_struct(st_str, st)
+function p_struct(st, st_str, fd, lo)
+    if argn(2)<4 then
+        lo = '';
+    end
+    if argn(2)<3 then
+        fd = 6;   // stdout
+    end
+    if argn(2)<2 then
+        st_str = '<blank>';
+    end
     F = fieldnames(st);
     [n, m] = size(F);
     if n==0 then
         ty = type(st);
         [nst, mst] = size(st);
-        mprintf('%s = ', st_str);
+        mfprintf(fd, '%s = ', st_str);
         for j=1:mst
             if mst>1 & j==1 then
-               mprintf(' [');
+               mfprintf(fd, ' [');
            end
             if ty==1 then
-                mprintf('%f', st(j));
+                mfprintf(fd, '%f', st(j));
             elseif ty==4 then
                 if st(j) then
-                mprintf('T');
+                mfprintf(fd, 'T');
              else
-                mprintf('F');
+                mfprintf(fd, 'F');
             end
             elseif ty==10 then
-                mprintf('''%s''', st(j));
+                mfprintf(fd, '''%s''', st(j));
             else
-                mprintf('type %d for %s unknown\n', ty, st_str);
+                mfprintf(fd, 'type %d for %s unknown\n', ty, st_str);
             end
             if mst>1 & j==mst then
-               mprintf(']');
+               mfprintf(fd, ']');
             elseif mst>1
-               mprintf(', ');
+               mfprintf(fd, ', ');
             end
         end
-        mprintf('\n');
+        mfprintf(fd, '%s\n', lo);
     else
         for i=1:n
             new_name = st_str + '.' + F(i);
-            // mprintf('new_name=%s\n', new_name);
-            p_struct(new_name, evstr(new_name));
+            // mfprintf(fd, 'new_name=%s\n', new_name);
+            p_struct(evstr(new_name), new_name, fd, lo);
         end
     end
 endfunction

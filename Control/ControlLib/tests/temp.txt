@@ -1,0 +1,4 @@
+sys.control.gain = 20.000000;
+sys.control.tlead = 0.200000;
+sys.plant.gain = 40.000000;
+sys.Title = 'mySystem2';
