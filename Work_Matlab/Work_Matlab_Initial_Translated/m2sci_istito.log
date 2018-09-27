@@ -1,0 +1,33 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./istito.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  ! L.30: abs(~abs(sys)<%inf) may be replaced by:
+  !    --> ~abs(sys)<%inf if ~abs(sys)<%inf is Real.
+  ! L.30: abs(mtlb_all(abs(~abs(sys)<%inf))) may be replaced by:
+  !    --> mtlb_all(abs(~abs(sys)<%inf)) if mtlb_all(abs(~abs(sys)<%inf)) is Real.
+  ! L.34: abs(isnan(sys)) may be replaced by:
+  !    --> isnan(sys) if isnan(sys) is Real.
+  ! L.34: abs(mtlb_all(abs(isnan(sys)))) may be replaced by:
+  !    --> mtlb_all(abs(isnan(sys))) if mtlb_all(abs(isnan(sys))) is Real.
+  ! L.37: abs(isnan(sys)) may be replaced by:
+  !    --> isnan(sys) if isnan(sys) is Real.
+  ! L.37: abs(mtlb_all(abs(isnan(sys)))) may be replaced by:
+  !    --> mtlb_all(abs(isnan(sys))) if mtlb_all(abs(isnan(sys))) is Real.
+  ! L.44: abs(isnan(sys)) may be replaced by:
+  !    --> isnan(sys) if isnan(sys) is Real.
+  ! L.44: abs(mtlb_all(abs(isnan(sys)))) may be replaced by:
+  !    --> mtlb_all(abs(isnan(sys))) if mtlb_all(abs(isnan(sys))) is Real.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  ****** End of mfile2sci() session ******

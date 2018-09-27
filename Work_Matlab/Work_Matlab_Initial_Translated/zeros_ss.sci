@@ -16,9 +16,9 @@ ieee(1);
 // Outputs:
 // same as matlab zeros function.
 
-if mtlb_logic(mtlb_double(n),"==",0) & mtlb_logic(mtlb_double(m),"<>",0) | mtlb_logic(mtlb_double(n),"<>",0) & mtlb_logic(mtlb_double(m),"==",0) then
+if mtlb_logic(n,"==",0) & mtlb_logic(m,"<>",0) | mtlb_logic(n,"<>",0) & mtlb_logic(m,"==",0) then
   sys = [];
 else
-  sys = zeros(mtlb_double(n),mtlb_double(m));
+  sys = zeros(n,m);
 end;
 endfunction

@@ -47,13 +47,13 @@ ieee(1);
 
 
 //**********************************************************************
-narginchk(2,15);
+narginchk(%nargin,2,15);
 // 
 // !! L.39: Matlab function int2str not yet converted, original calling sequence used.
 s_f = mtlb_eval("s"+int2str(%nargin));
 // if isstr(s_f)
 if type(s_f)==10 then
-  if mtlb_logic(s_f,"==","v") then
+  if mtlb_logic(mtlb_double(s_f),"==",asciimat("v")) then
     // Vertical stacking operation
     [ao,bo,co,eo] = unpack_ss(s1);  [a1,b1,tmp,tmp1] = unpack_ss(s1);
     // !! L.45: Unknown function size_ss not converted, original calling sequence used.
@@ -63,22 +63,18 @@ if type(s_f)==10 then
       si = mtlb_eval("s"+int2str(i));
       [ai,bi,ci,ei] = unpack_ss(si);  // !! L.48: Unknown function size_ss not converted, original calling sequence used.
       [mi,pi,ni] = size_ss(si);
-      [mo,tmp1] = size(eo);  [tmp,no] = size(ao);
-      if mtlb_logic(%pi,"<>",p1) then
+      [mo,tmp1] = size(mtlb_double(eo));  [tmp,no] = size(mtlb_double(ao));
+      if mtlb_logic(mtlb_double(%pi),"<>",mtlb_double(p1)) then
         error("Incompatible dimensions for adjoin operation");
       end;
-      if mtlb_logic(no,"==",ni) then
-        // ! L.54: abs(mtlb_s(a1,ai)) may be replaced by:
-        // !    --> mtlb_s(a1,ai) if mtlb_s(a1,ai) is Real.
-        // ! L.54: abs(mtlb_any(abs(mtlb_s(a1,ai)))) may be replaced by:
-        // !    --> mtlb_any(abs(mtlb_s(a1,ai))) if mtlb_any(abs(mtlb_s(a1,ai))) is Real.
-        // ! L.54: abs(mtlb_s(b1,bi)) may be replaced by:
-        // !    --> mtlb_s(b1,bi) if mtlb_s(b1,bi) is Real.
-        // ! L.54: abs(mtlb_any(abs(mtlb_s(b1,bi)))) may be replaced by:
-        // !    --> mtlb_any(abs(mtlb_s(b1,bi))) if mtlb_any(abs(mtlb_s(b1,bi))) is Real.
-        %v05 = %f;  if ~mtlb_any(abs(mtlb_any(abs(mtlb_s(a1,ai))))) then %v05 = ~mtlb_any(abs(mtlb_any(abs(mtlb_s(b1,bi)))));end;
+      if mtlb_logic(no,"==",mtlb_double(ni)) then
+        // ! L.54: abs(mtlb_s(mtlb_double(a1),mtlb_double(ai))) may be replaced by:
+        // !    --> mtlb_s(mtlb_double(a1),mtlb_double(ai)) if mtlb_s(mtlb_double(a1),mtlb_double(ai)) is Real.
+        // ! L.54: abs(mtlb_s(mtlb_double(b1),mtlb_double(bi))) may be replaced by:
+        // !    --> mtlb_s(mtlb_double(b1),mtlb_double(bi)) if mtlb_s(mtlb_double(b1),mtlb_double(bi)) is Real.
+        %v05 = %f;  if ~mtlb_any(bool2s(mtlb_any(abs(mtlb_s(mtlb_double(a1),mtlb_double(ai)))))) then %v05 = ~mtlb_any(bool2s(mtlb_any(abs(mtlb_s(mtlb_double(b1),mtlb_double(bi))))));end;
         if %v05 then
-          co = [co;ci,zeros_ss(%pi,mtlb_s(no,ni))];
+          co = [co;ci,zeros_ss(%pi,mtlb_s(no,mtlb_double(ni)))];
         else
           ao = [ao,zeros_ss(no,ni);zeros_ss(ni,no),ai];
           bo = [bo;bi];
@@ -92,7 +88,7 @@ if type(s_f)==10 then
       eo = [eo;ei];
     end;
   else
-    if mtlb_logic(s_f,"==","h") then
+    if mtlb_logic(mtlb_double(s_f),"==",asciimat("h")) then
       // Horizontal stacking operation
       [ao,bo,co,eo] = unpack_ss(s1);  [a1,tmp,c1,tmp1] = unpack_ss(s1);
       // !! L.72: Unknown function size_ss not converted, original calling sequence used.
@@ -102,22 +98,18 @@ if type(s_f)==10 then
         si = mtlb_eval("s"+int2str(i));
         [ai,bi,ci,ei] = unpack_ss(si);  // !! L.75: Unknown function size_ss not converted, original calling sequence used.
         [mi,pi,ni] = size_ss(si);
-        [tmp,po] = size(eo);  [tmp,no] = size(ao);
-        if mtlb_logic(mi,"<>",m1) then
+        [tmp,po] = size(mtlb_double(eo));  [tmp,no] = size(mtlb_double(ao));
+        if mtlb_logic(mtlb_double(mi),"<>",mtlb_double(m1)) then
           error("Incompatible dimensions for adjoin operation");
         end;
-        if mtlb_logic(no,"==",ni) then
-          // ! L.81: abs(mtlb_s(a1,ai)) may be replaced by:
-          // !    --> mtlb_s(a1,ai) if mtlb_s(a1,ai) is Real.
-          // ! L.81: abs(mtlb_any(abs(mtlb_s(a1,ai)))) may be replaced by:
-          // !    --> mtlb_any(abs(mtlb_s(a1,ai))) if mtlb_any(abs(mtlb_s(a1,ai))) is Real.
-          // ! L.81: abs(mtlb_s(c1,ci)) may be replaced by:
-          // !    --> mtlb_s(c1,ci) if mtlb_s(c1,ci) is Real.
-          // ! L.81: abs(mtlb_any(abs(mtlb_s(c1,ci)))) may be replaced by:
-          // !    --> mtlb_any(abs(mtlb_s(c1,ci))) if mtlb_any(abs(mtlb_s(c1,ci))) is Real.
-          %v16 = %f;  if ~mtlb_any(abs(mtlb_any(abs(mtlb_s(a1,ai))))) then %v16 = ~mtlb_any(abs(mtlb_any(abs(mtlb_s(c1,ci)))));end;
+        if mtlb_logic(no,"==",mtlb_double(ni)) then
+          // ! L.81: abs(mtlb_s(mtlb_double(a1),mtlb_double(ai))) may be replaced by:
+          // !    --> mtlb_s(mtlb_double(a1),mtlb_double(ai)) if mtlb_s(mtlb_double(a1),mtlb_double(ai)) is Real.
+          // ! L.81: abs(mtlb_s(mtlb_double(c1),mtlb_double(ci))) may be replaced by:
+          // !    --> mtlb_s(mtlb_double(c1),mtlb_double(ci)) if mtlb_s(mtlb_double(c1),mtlb_double(ci)) is Real.
+          %v16 = %f;  if ~mtlb_any(bool2s(mtlb_any(abs(mtlb_s(mtlb_double(a1),mtlb_double(ai)))))) then %v16 = ~mtlb_any(bool2s(mtlb_any(abs(mtlb_s(mtlb_double(c1),mtlb_double(ci))))));end;
           if %v16 then
-            bo = [bo,[bi;zeros_ss(mtlb_s(no,ni),mi)]];
+            bo = [bo,[bi;zeros_ss(mtlb_s(no,mtlb_double(ni)),mi)]];
           else
             ao = [ao,zeros_ss(no,ni);zeros_ss(ni,no),ai];
             bo = [bo,zeros_ss(no,%pi);zeros_ss(ni,po),bi];
@@ -143,7 +135,7 @@ else
     si = mtlb_eval("s"+int2str(i));
     [ai,bi,ci,ei] = unpack_ss(si);  // !! L.104: Unknown function size_ss not converted, original calling sequence used.
     [mi,pi,ni] = size_ss(si);
-    [mo,po] = size(eo);  [tmp,no] = size(ao);
+    [mo,po] = size(mtlb_double(eo));  [tmp,no] = size(mtlb_double(ao));
     ao = [ao,zeros_ss(no,ni);zeros_ss(ni,no),ai];
     bo = [bo,zeros_ss(no,%pi);zeros_ss(ni,po),bi];
     co = [co,zeros_ss(mo,ni);zeros_ss(mi,no),ci];

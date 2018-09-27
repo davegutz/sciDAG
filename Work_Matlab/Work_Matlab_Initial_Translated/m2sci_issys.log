@@ -1,5 +1,5 @@
   ****** Beginning of mfile2sci() session ******
-  File to convert: ./zeros_ss.m
+  File to convert: ./issys.m
   Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
   Recursive mode: OFF
   Only double values used in M-file: YES
@@ -11,6 +11,11 @@
   Syntax modification: Done
   Macro to tree conversion...
   Conversion of M-tree...
+  ! L.27: abs(isnan(x)) may be replaced by:
+  !    --> isnan(x) if isnan(x) is Real.
+  ! L.27: abs(mtlb_all(abs(isnan(x)))) may be replaced by:
+  !    --> mtlb_all(abs(isnan(x))) if mtlb_all(abs(isnan(x))) is Real.
   Conversion of M-tree: Done
   Macro to tree conversion: Done
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
   ****** End of mfile2sci() session ******

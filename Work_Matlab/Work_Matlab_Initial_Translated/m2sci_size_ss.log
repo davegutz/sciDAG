@@ -1,5 +1,5 @@
   ****** Beginning of mfile2sci() session ******
-  File to convert: ./zeros_ss.m
+  File to convert: ./size_ss.m
   Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
   Recursive mode: OFF
   Only double values used in M-file: YES
@@ -11,6 +11,9 @@
   Syntax modification: Done
   Macro to tree conversion...
   Conversion of M-tree...
+  !! L.34: Unknown function issys not converted, original calling sequence used.
+  !! L.37: Matlab toolbox(es) function istito not converted, original calling sequence used
   Conversion of M-tree: Done
   Macro to tree conversion: Done
+  Translation may be wrong (see the //!! comments).
   ****** End of mfile2sci() session ******
