@@ -23,12 +23,13 @@
 // copy <mfile>.sci into 'Work_Matlab\Work_Matlab_Final_Translated' and hand edit from there
 
 // example:
-mfile2sci
-// select adjoin.m
-// select Work_Matlab\Work_Matlab_Initial_Translated
-// log echoed to cli
+mfile2sci('./adjoin.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
 // adjoin.sci will have !!L. issues in it.
 // copy adjoin.sci to Work_Matlab\Work_Matlab_Final_Translated\.
-// <mfile>_test.sce will perform a test on module
+// change directory to Work_Matlab_Final_Translated
+// create:
+//       Work_Matlab_Final_Translated/tests/nonreg_tests/adjoin.tst
+//       Work_Matlab_Final_Translated/tests/nonreg_tests/adjoin.dia.ref
+test_run(pwd(), 'adjoin')
 
 
