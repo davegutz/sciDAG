@@ -1,0 +1,2 @@
+ function timeStamp = getStamp(fp)
+ Get time stamp of a file path; return 0 if non-existant

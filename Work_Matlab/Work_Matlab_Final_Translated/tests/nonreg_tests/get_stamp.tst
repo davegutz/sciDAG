@@ -28,16 +28,5 @@
 clear
 funcprot(0);
 getd('../Work_Matlab_Final_Translated')
-a = [1 2
-     3 4];
-b = [5
-     6];
-c = [7 8
-     9 10];
-e = [11
-    12];
-sys = pack_ss(a, b, c, e);
-disp(sys)
-p = istito(sys);
-mprintf('\nistito(sys)=')
-disp(p)
+st = get_stamp('get_stamp.tst')
+st = get_stamp('SCI/modules/core/macros/edit.sci')

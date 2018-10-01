@@ -1,5 +1,5 @@
   ****** Beginning of mfile2sci() session ******
-  File to convert: ./adjoin.m
+  File to convert: ./get_stamp.m
   Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
   Recursive mode: OFF
   Only double values used in M-file: YES
@@ -9,3 +9,10 @@
   M-file reading: Done
   Syntax modification...
   Syntax modification: Done
+  Warning: file ./get_stamp.m defines function getStamp instead of get_stamp
+           getStamp.sci, getStamp.cat and sci_getStamp.sci will be generated !
+  Macro to tree conversion...
+  Conversion of M-tree...
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  ****** End of mfile2sci() session ******
