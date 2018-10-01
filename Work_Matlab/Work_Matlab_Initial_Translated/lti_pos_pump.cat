@@ -1,0 +1,14 @@
+ POS_PUMP.Positive displacement pump model.
+ Author:D. A. Gutz
+ Written:19-Aug-92
+ Revisions:None.
+
+ Input:
+ csLaminar slip flow coefficient.
+ ctTurbulent slip flow coefficient. 
+ cnSpeed slip flow coefficient.
+ dispDisplacement, cuin/rev.
+ psSupply, psia.
+ pdDischarge, psia.
+ kvisKinematic viscosity, centistokes.
+ sgSpecific gravity.

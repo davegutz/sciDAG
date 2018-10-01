@@ -32,4 +32,7 @@ mfile2sci('./adjoin.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_
 //       Work_Matlab_Final_Translated/tests/nonreg_tests/adjoin.dia.ref
 test_run(pwd(), 'adjoin')
 
+// TODO: this bombs and kills scilab
+mfile2sci('./calc_pos_pump_a.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
 
+// TODO:  tests for 
