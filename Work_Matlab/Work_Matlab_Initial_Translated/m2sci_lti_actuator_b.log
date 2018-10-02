@@ -1,0 +1,30 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./lti_actuator_b.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  ! L.76: mtlb(m0) can be replaced by m0() or m0 whether m0 is an M-file or not.
+  ! L.77: mtlb(ah0ah) can be replaced by ah0ah() or ah0ah whether ah0ah is an M-file or not.
+  ! L.84: mtlb(dwdc0) can be replaced by dwdc0() or dwdc0 whether dwdc0 is an M-file or not.
+  ! L.84: mtlb(dwdc0) can be replaced by dwdc0() or dwdc0 whether dwdc0 is an M-file or not.
+  ! L.84: mtlb(dwdc0) can be replaced by dwdc0() or dwdc0 whether dwdc0 is an M-file or not.
+  ! L.85: mtlb(dwfrldp00) can be replaced by dwfrldp00() or dwfrldp00 whether dwfrldp00 is an M-file or not.
+  !! L.85: Unknown function mtlb_a not converted, original calling sequence used.
+  ! L.85: mtlb(dwfhldp00) can be replaced by dwfhldp00() or dwfhldp00 whether dwfhldp00 is an M-file or not.
+  ! L.85: mtlb(dwfbdp000) can be replaced by dwfbdp000() or dwfbdp000 whether dwfbdp000 is an M-file or not.
+  ! L.85: mtlb(dwfrldp0) can be replaced by dwfrldp0() or dwfrldp0 whether dwfrldp0 is an M-file or not.
+  ! L.85: mtlb(dwfrldp00) can be replaced by dwfrldp00() or dwfrldp00 whether dwfrldp00 is an M-file or not.
+  ! L.85: mtlb(dwfhldp00) can be replaced by dwfhldp00() or dwfhldp00 whether dwfhldp00 is an M-file or not.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be wrong (see the //!! comments).
+  ****** End of mfile2sci() session ******

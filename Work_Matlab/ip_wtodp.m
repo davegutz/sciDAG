@@ -1,4 +1,4 @@
-function [sys, dp] = ip_wtodp(a, b, c, d, r1, ~, r2, b2, rpm, wf, sg, tau)
+function [sys, dp] = ip_wtodp(a, b, c, d, r1, b1, r2, b2, rpm, wf, sg, tau)
 % function [sys, dp] = ip_wtodp(a, b, c, d, r1, ~, r2, b2, rpm, wf, sg, tau)
 % function sys = ip_wtodp(a, b, c, r1, b1, r2, b2, rpm, wf, sg, tau);
 % Impeller model, flow and discharge pressure to supply.

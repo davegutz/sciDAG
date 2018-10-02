@@ -1,0 +1,7 @@
+ LAG.Building block for simple first order lag.
+  Author:D. A. Gutz
+  Written:26-Jun-92
+  Revisions:19-Aug-92Simplify return arguments.
+
+  Input:
+  tauTime constant, sec.

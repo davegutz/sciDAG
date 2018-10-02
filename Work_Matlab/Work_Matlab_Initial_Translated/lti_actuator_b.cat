@@ -1,0 +1,8 @@
+ ACTUATOR_B.Building block for actuator.  Friction is neglected
+(damping input).
+ Author:D. A. Gutz
+ Written:19-Aug-92.
+ Revisions:20-Aug-92Fix sign of states.
+26-Aug-92Prevent  / 0.
+11-Sep-92Added stops.
+14-Sep-92Added sg so flow calculation correct.
