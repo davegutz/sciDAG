@@ -30,7 +30,7 @@ function [p,m,n] = size_ss(g)
 % 
 
 %
-narginchk(1,1);
+narginchk(nargin, 1,1);
 [p,m] = size(g); n = issys(g);
 %
 if n,

@@ -65,8 +65,10 @@ if nargin == 3 | nargin == 4,
       e = zeros(mc,nb);
    else
       e = c1; [me,ne] = size(e);
-      if ((me ~= mc) | (ne ~= nb)) & ~isempty(a),
-	 error('Matrix dimensions are incompatible for packing')
+      if ~isempty(a),
+        if (me ~= mc) | (ne ~= nb),
+          error('Matrix dimensions are incompatible for packing')
+        end
       end
    end
 %

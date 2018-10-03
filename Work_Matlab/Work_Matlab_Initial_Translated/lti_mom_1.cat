@@ -1,0 +1,15 @@
+ function sys = mom_1(l, a, c)
+ MOM_11.Building block for a momentum slice having two pressure inputs.
+ Author:D. A. Gutz
+ Written:17-Apr-92
+ Revisions:10-Dec-98Add damping, c.
+ Input:
+ aCross sectional area, sqin.
+ lSlice length, in.
+ cDamping, psi/in/sec, (OPTIONAL).
+ Output:
+ sysPacked system description of Input and Output.
+ Differential I/O:
+ psInput # 1, supply pressure, psia.
+ pdInput # 2, discharge pressure, psia.
+ wfOutput # 1, slice flow, pph.

@@ -37,3 +37,4 @@ a	= -1/tau;
 b	= 1/tau;
 c	= 1;
 e	= 0;
+sys = pack_ss(a,b,c,e);

@@ -7,7 +7,7 @@ function sys = zeros_ss(n,m);
 % Outputs:
 % same as matlab zeros function.
 
-if ( n == 0 & m ~=0 ) | ( n~=0 & m == 0 ),
+if ( n == 0 & m ~=0 ) || ( n~=0 & m == 0 ),
   sys = [];
 else
   sys = zeros(n, m);
