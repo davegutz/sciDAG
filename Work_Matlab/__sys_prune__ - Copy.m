@@ -21,26 +21,23 @@
 
 function sys = __sys_prune__ (sys, out_idx, in_idx, st_idx = ":")
 
-##  [sys.lti, out_idx, in_idx] = __lti_prune__ (sys.lti, out_idx, in_idx);
+  [sys.lti, out_idx, in_idx] = __lti_prune__ (sys.lti, out_idx, in_idx);
   
-##  if (ischar (st_idx) && ! strcmp (st_idx, ":"))
-##    disp('here1');
-##    st_idx = {st_idx};
-##  endif
-##  if (iscell (st_idx))
-##    disp('here2');
-##    st_idx = cellfun (@(x) __str2idx__ (sys.stname, x), st_idx);
-##  endif
+  if (ischar (st_idx) && ! strcmp (st_idx, ":"))
+    st_idx = {st_idx};
+  endif
+  if (iscell (st_idx))
+    st_idx = cellfun (@(x) __str2idx__ (sys.stname, x), st_idx);
+  endif
 
   sys.a = sys.a(st_idx, st_idx);
   sys.b = sys.b(st_idx, in_idx);
   sys.c = sys.c(out_idx, st_idx);
   sys.d = sys.d(out_idx, in_idx);
 
-##  if (! isempty (sys.e))
-##    disp('here3');
-##    sys.e = sys.e(st_idx, st_idx);
-##  endif
+  if (! isempty (sys.e))
+    sys.e = sys.e(st_idx, st_idx);
+  endif
 
   sys.stname = sys.stname(st_idx);
 
@@ -52,18 +49,17 @@ endfunction
 %       There are input and output groups, but no state groups.
 %       At least the 'dark side' does not have state groups.
 %       However, I do contemplate 'stgroup'.
-##function idx = __str2idx__ (name, str)
-##   disp('here4');
-##
-##  tmp = strcmp (name, str)(:);
-##
-##  switch (nnz (tmp))
-##    case 1
-##      idx = find (tmp);
-##    case 0
-##      error ("ss: state name '%s' not found", str);
-##    otherwise
-##      error ("ss: state name '%s' is ambiguous", str);
-##  endswitch
-##
-##endfunction
+function idx = __str2idx__ (name, str)
+
+  tmp = strcmp (name, str)(:);
+
+  switch (nnz (tmp))
+    case 1
+      idx = find (tmp);
+    case 0
+      error ("ss: state name '%s' not found", str);
+    otherwise
+      error ("ss: state name '%s' is ambiguous", str);
+  endswitch
+
+endfunction

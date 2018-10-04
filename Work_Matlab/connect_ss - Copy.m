@@ -48,11 +48,11 @@
 
 function sys = connect_ss(varargin)
 
-##  if (nargin < 2)
-##    print_usage ();
-##  endif
+  if (nargin < 2)
+    print_usage ();
+  endif
   
-##  if (is_real_matrix (varargin{2}))     # connect (sys, cm, in_idx, out_idx)
+  if (is_real_matrix (varargin{2}))     # connect (sys, cm, in_idx, out_idx)
   
     if (nargin != 4)
       print_usage ();
@@ -109,70 +109,69 @@ function sys = connect_ss(varargin)
     endfor
 
     sys = sys_connect (sys, M);
-    disp('a');disp(sys.a);disp('b');disp(sys.b);disp('c');disp(sys.c);disp('d');disp(sys.d);
-    disp('out_idx'); disp(out_idx); disp('in_idx'); disp(in_idx);
+    disp(sys.a);disp(sys.b);disp(sys.c);disp(sys.d);
     sys = __sys_prune__ (sys, out_idx, in_idx);
     disp('after')
-    disp('a');disp(sys.a);disp('b');disp(sys.b);disp('c');disp(sys.c);disp('d');disp(sys.d);
+    disp(sys.a);disp(sys.b);disp(sys.c);disp(sys.d);
 
-##  else                                  # connect (sys1, sys2, ..., sysN, in_idx, out_idx)
-##
-##    lti_idx = cellfun (@isa, varargin, {"lti"});
-##    sys = blkdiag (varargin{lti_idx});
-##    io_idx = ! lti_idx;
-##    
-##    if (nnz (io_idx) == 2)
-##      in_idx = varargin(io_idx){1};
-##      out_idx = varargin(io_idx){2};      
-##    else
-##      in_idx = ":";
-##      out_idx = ":";
-##    endif
-##
-##    inname = sys.inname;
-##    if (any (cellfun (@isempty, inname)))
-##      error ("connect: all inputs must have names");
-##    endif
-##
-##    outname = sys.outname;
-##    if (any (cellfun (@isempty , outname)))
-##      error ("connect: all outputs must have names");
-##    endif
-##    
-##    ioname = intersect (inname, outname);
-##    
-##    tmp = cellfun (@(x) find (strcmp (inname, x)(:)), ioname, "uniformoutput", false);
-##    inputs = vertcat (tmp{:});  # there could be more than one input with the same name
-##    
-##    [p, m] = size (sys);
-##    M = zeros (m, p);
-##    for k = 1 : length (inputs)
-##      outputs = strcmp (outname, inname(inputs(k)));
-##      M(inputs(k), :) = outputs;
-##    endfor
-##
-##    sys = sys_connect (sys, M);
-##
-##    % sys_prune will error out if names in out_idx and in_idx are not unique
-##    % the dark side handles cases with common in_idx names - so do we
-##
-##    inname_u = unique (inname);
-##    if (numel (inname_u) != numel (inname))
-##      tmp = cellfun (@(u) strcmp (u, inname), inname_u, "uniformoutput", false);
-##      mat = double (horzcat (tmp{:}));
-##      scl = ss (mat, "inname", inname_u, "outname", inname);
-##      sys = sys * scl;
-##      if (is_real_vector (in_idx))
-##        warning ("connect: use names instead of indices for argument 'inputs'");
-##      endif
-##    endif
-##
-##    sys = sys_prune (sys, out_idx, in_idx);
-##
-##    if (isa (sys, "ss"))
-##      sys = sminreal (sys);
-##    endif
-##
-##  endif
+  else                                  # connect (sys1, sys2, ..., sysN, in_idx, out_idx)
+
+    lti_idx = cellfun (@isa, varargin, {"lti"});
+    sys = blkdiag (varargin{lti_idx});
+    io_idx = ! lti_idx;
+    
+    if (nnz (io_idx) == 2)
+      in_idx = varargin(io_idx){1};
+      out_idx = varargin(io_idx){2};      
+    else
+      in_idx = ":";
+      out_idx = ":";
+    endif
+
+    inname = sys.inname;
+    if (any (cellfun (@isempty, inname)))
+      error ("connect: all inputs must have names");
+    endif
+
+    outname = sys.outname;
+    if (any (cellfun (@isempty , outname)))
+      error ("connect: all outputs must have names");
+    endif
+    
+    ioname = intersect (inname, outname);
+    
+    tmp = cellfun (@(x) find (strcmp (inname, x)(:)), ioname, "uniformoutput", false);
+    inputs = vertcat (tmp{:});  # there could be more than one input with the same name
+    
+    [p, m] = size (sys);
+    M = zeros (m, p);
+    for k = 1 : length (inputs)
+      outputs = strcmp (outname, inname(inputs(k)));
+      M(inputs(k), :) = outputs;
+    endfor
+
+    sys = sys_connect (sys, M);
+
+    % sys_prune will error out if names in out_idx and in_idx are not unique
+    % the dark side handles cases with common in_idx names - so do we
+
+    inname_u = unique (inname);
+    if (numel (inname_u) != numel (inname))
+      tmp = cellfun (@(u) strcmp (u, inname), inname_u, "uniformoutput", false);
+      mat = double (horzcat (tmp{:}));
+      scl = ss (mat, "inname", inname_u, "outname", inname);
+      sys = sys * scl;
+      if (is_real_vector (in_idx))
+        warning ("connect: use names instead of indices for argument 'inputs'");
+      endif
+    endif
+
+    sys = sys_prune (sys, out_idx, in_idx);
+
+    if (isa (sys, "ss"))
+      sys = sminreal (sys);
+    endif
+
+  endif
 
 endfunction
