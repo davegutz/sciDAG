@@ -36,6 +36,8 @@ test_run(pwd())
 // To test individual functions
 test_run(pwd(), 'adjoin')
 editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_3552_19168\adjoin.dia')
+test_run(pwd(), 'connect_ss')
+editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_10656_31074\connect_ss.dia')
 test_run(pwd(), 'default')
 editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_3552_19168\default.dia')
 test_run(pwd(), 'get_stamp')
