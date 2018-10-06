@@ -1,0 +1,17 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./connect_ssx.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Warning: file ./connect_ssx.m defines function connect_ss instead of connect_ssx
+           connect_ss.sci, connect_ss.cat and sci_connect_ss.sci will be generated !
+  Macro to tree conversion...
+  Conversion of M-tree...
+  !! L.51: Unknown function print_usage not converted, original calling sequence used.
+  ! L.54: mtlb(varargin) can be replaced by varargin() or varargin whether varargin is an M-file or not.

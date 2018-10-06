@@ -61,8 +61,9 @@ function sys = sys_connect(sys, m)
   z = eye (rows (d)) - d*m;
 
   if (rcond (z) >= eps)  # check for singularity
-    
+    disp('a=');disp(a);disp('b=');disp(b);disp('m=');disp(m);disp('z=');disp(z);disp('c=');disp(c)
     sys.a = a + b*m/z*c;  # F
+    disp('as=');disp(sys.a);
     sys.b = b + b*m/z*d;  # G
     sys.c = z\c;          # H
     sys.d = z\d;          # J

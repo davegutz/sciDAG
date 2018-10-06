@@ -1,0 +1,48 @@
+ Copyright (C) 2009-2016   Lukas F. Reichlin
+
+ This file is part of LTI Syncope.
+
+ LTI Syncope is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ LTI Syncope is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with LTI Syncope.  If not, see <http://www.gnu.org/licenses/>.
+ Name-based or index-based interconnections between the inputs and outputs of 
+ LTI models.
+ 
+ The properties 'inname' and 'outname'
+ of each model should be set according to the desired input-output connections.
+ For name-based interconnections, string or cell of strings containing the names
+ of the inputs to be kept.  The names must be part of the properties 'ingroup' or
+ 'inname'.  For index-based interconnections, vector containing the indices of the
+ inputs to be kept.
+ outputs
+ For name-based interconnections, string or cell of strings containing the names
+ of the outputs to be kept.  The names must be part of the properties 'outgroup' 
+ or 'outname'.  For index-based interconnections, vector containing the indices of
+ the outputs to be kept.
+ cm
+ Connection matrix (not name-based).  Each row of the matrix represents a summing
+ junction.  The first column holds the indices of the inputs to be summed with
+ outputs of the subsequent columns.  The output indices can be negative, if the output
+ is to be substracted, or zero.  For example, the row
+ [2 0 3 -4 0]
+ or
+ [2 -4 3]
+ will sum input u(2) with outputs y(3) and y(4) as
+ u(2) + y(3) - y(4).
+
+ Resulting interconnected system with outputs and inputs.
+
+ Author: Lukas Reichlin <lukas.reichlin@gmail.com>
+ Created: October 2009
+ October 2018  Dave Gutz   Port to scilab with pack_ss format of sys.
+ Version: 0.4.1
+ 
