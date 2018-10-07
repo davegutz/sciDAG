@@ -1,23 +1,3 @@
-// Copyright (C) 2009-2016   Lukas F. Reichlin
-//
-// This file is part of LTI Syncope.
-//
-// LTI Syncope is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// LTI Syncope is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with LTI Syncope.  If not, see <http://www.gnu.org/licenses/>.
-//
-// Author: Lukas Reichlin <lukas.reichlin@gmail.com>
-// Created: September 2009
-// Version: 0.3.1
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,10 +17,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Oct 4, 2018 	DA Gutz		Created
-function [syso] = sys_prune(sys, out_idx, in_idx)
-  syso.a = sys.a(:, :);
-  syso.b = sys.b(:, in_idx);
-  syso.c = sys.c(out_idx, :);
-  syso.d = sys.d(out_idx, in_idx);
-endfunction
+// Sep 26, 2018 	DA Gutz		Created
+// 
+
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
+
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
+
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../Work_Matlab_Final_Translated')
+a = 1/19020;
+wf = 1;
+ps = 1;
+pd = 0;
+%cd = 1;
+sg = 1;
+sys_or = lti_dor_aptow(wf, ps, pd, %cd, sg)

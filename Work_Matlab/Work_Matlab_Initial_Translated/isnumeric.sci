@@ -16,7 +16,7 @@
 // along with LTI Syncope.  If not, see <http://www.gnu.org/licenses/>.
 //
 // 
-// Return 1 if x is a non-empty matrix of real or integer-valued scalars,
+// Return 1 if x is numerice
 // and return 0 otherwise.
 //
 // Examples:
@@ -24,7 +24,7 @@
 // is_real_matrix([])           ==> 0
 // is_real_matrix([1 2; 3 4])   ==> 1
 // is_real_matrix([1 2 3])      ==> 1
-// is_real_matrix([%i 2 3])      ==> 0
+// is_real_matrix([i 2 3])      ==> 0
 // is_real_matrix("hello")      ==> 0
 //
 // Author: Lukas Reichlin <lukas.reichlin@gmail.com>
@@ -51,15 +51,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 // Oct 4, 2018  DA Gutz Created
-function y = is_real_matrix(x)
-  if (~ismatrix(x))
-    y = %f;
-  else
-    y = %t;
-    for i = 1:max(size(x))
-      if (~(isnumeric(x(i)) && isscalar(x(i)) && isreal(x(i))))
-        y = %f;
-      end
-    end
-  end
+function y = isnumeric(A)
+    y = or(type(A)==[1 5 8]);    
 endfunction

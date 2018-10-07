@@ -101,7 +101,8 @@ function [sys] = lti_actuator_b(ah, ar, bdamp, mact, mext, pr, ph, pl, wfb, wfrl
     end;
 
     // Connections and system construction.
-    as = [-bdamp*386)/m, 0; 1, 0];
+    as = [-bdamp*386/m,     0;
+          1,                0];
     bs = [ar, -ah, 0, ah-ar, -1];
     bs = (bs*386)/m;
     bs = [bs; 0, 0, 0, 0, 0];
@@ -111,8 +112,8 @@ function [sys] = lti_actuator_b(ah, ar, bdamp, mact, mext, pr, ph, pl, wfb, wfrl
     end;
     cs  = [ ar*dwdc,       0;..
             -ah*dwdc,      0;..
-            0,             q0;..
-            (ah-ar)*dwdc,  q0;..
+            0,             0;..
+            (ah-ar)*dwdc,  0;..
             0,             0;..
             0,             0;..
             1,             0;..
@@ -121,6 +122,10 @@ function [sys] = lti_actuator_b(ah, ar, bdamp, mact, mext, pr, ph, pl, wfb, wfrl
     es	= [(dwfbdp+dwfrldp)  -dwfbdp            -dwfrldp    0   0;
             -dwfbdp          (dwfbdp+dwfhldp)   -dwfhldp    0   0;
             dwfbdp           -dwfbdp            0           0   0;
+            0                0                  0           0   0;
+            dwfrldp          0                  -dwfrldp    0   0;
+            0                dwfhldp            -dwfhldp    0   0;
+            0                0                  0           0   0;
             0                0                  0           0   0];
 
     // Form the system.

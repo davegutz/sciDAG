@@ -1,0 +1,15 @@
+ function a = or_wptoa(wf, ps, pd, cd, sg);
+ Square law orifice function, flow/pressure to area.
+ Author:D. A. Gutz
+ Written:22-Jun-92
+ Revisions:17-Oct-96Trap divide by cd=0.
+
+ Input:
+ cd    Coefficient of discharge.
+ pd    Discharge pressure, psia.
+ ps    Supply pressure, psia.
+ sg    Specific gravity.
+ wf    Flow, pph.
+
+ Output:
+ aCalculated orifice area, sqin.

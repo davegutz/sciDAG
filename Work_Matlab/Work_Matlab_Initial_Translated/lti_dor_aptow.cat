@@ -1,0 +1,21 @@
+ function sys = dor_aptow(wf, ps, pd, cd, sg);
+ Differential area/pressure to flow for a square law orifice.
+ Author:D. A. Gutz
+ Written:22-Jun-92
+ Revisions:19-Aug-92Simplify return arguments.
+               26-Nov-2012 add divide by zero protection%
+ Input:
+ cdCoefficient of discharge.
+ pdDischarge pressure, psia.
+ psSupply pressure, psia.
+ sgSpecific gravity.
+ wfFlow, pph.
+
+ Differential IO.
+ psInput # 1, supply pressure, psia.
+ pdInput # 2, discharge pressure, psia.
+ a         Input # 3, area perturbation, sqin.
+ wfOutput # 1, flow, pph.
+
+ Output:
+ sysDifferential orifice model.

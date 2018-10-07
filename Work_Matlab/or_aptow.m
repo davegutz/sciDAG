@@ -19,3 +19,4 @@ function wf = or_aptow(a, ps, pd, cd, sg)
 % ssqrt		Signed square root.
 
 % Perform:
+wf = a * ssqrt((ps-pd)*sg) * cd * 19020.;

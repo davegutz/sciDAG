@@ -16,16 +16,16 @@
 // along with LTI Syncope.  If not, see <http://www.gnu.org/licenses/>.
 //
 // 
-// Return 1 if x is a non-empty matrix of real or integer-valued scalars,
-// and return 0 otherwise.
-//
-// Examples:
-// is_real_matrix(6)            ==> 0
-// is_real_matrix([])           ==> 0
-// is_real_matrix([1 2; 3 4])   ==> 1
-// is_real_matrix([1 2 3])      ==> 1
-// is_real_matrix([%i 2 3])      ==> 0
-// is_real_matrix("hello")      ==> 0
+// Return true if all arguments are real-valued vectors and false
+// otherwise.  [] is not a valid vector.  Avoid nasty stuff like 'true
+//    = isreal ("a")'
+//// Examples:
+// is_real_vector(6)            ==> 1
+// is_real_vector([])           ==> 0
+// is_real_vector([1 2; 3 4])   ==> 0
+// is_real_vector([1 2 3])      ==> 1
+// is_real_vector([%i 2 3])      ==> 0
+// is_real_vector("hello")      ==> 0
 //
 // Author: Lukas Reichlin <lukas.reichlin@gmail.com>
 // Created: September 2009
@@ -51,13 +51,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 // Oct 4, 2018  DA Gutz Created
-function y = is_real_matrix(x)
-  if (~ismatrix(x))
+function y = is_real_vector(v)
+  if (~(size(v,1)==1 | size(v,2)==1))
     y = %f;
   else
     y = %t;
-    for i = 1:max(size(x))
-      if (~(isnumeric(x(i)) && isscalar(x(i)) && isreal(x(i))))
+    for i = 1:max(size(v))
+      if (~(isnumeric(v(i)) && isscalar(v(i)) && isreal(v(i))))
         y = %f;
       end
     end

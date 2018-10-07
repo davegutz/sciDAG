@@ -20,3 +20,6 @@ function a = or_wptoa(wf, ps, pd, cd, sg)
 
 % Perform:
 psmpd	= sgn(ps - pd) * max(abs(ps - pd), 1e-16);
+a = wf / ssqrt(psmpd*sg) / cd / 19020.;
+
+return

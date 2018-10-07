@@ -45,6 +45,6 @@ dwfdp	= wf / (2. * psmpd);
 a	= [];
 b	= [];
 c	= [];
-e	= [dwfdp 	-dwfdp		dwfda];
+e	= [dwfdp  -dwfdp  dwfda];
 
 % Form the system.

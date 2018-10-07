@@ -18,3 +18,4 @@ function ps = or_awtop(a, wf, pd, cd, sg)
 % ssqr		Signed square.
 
 % Perform:
+ps = pd + ssqr(wf/a/cd/19020.)/sg;

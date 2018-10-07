@@ -1,16 +1,21 @@
-function [area] = hole(x,d) // @(#)hole.m 1.2 93/06/22
-    // HOLE.Calculate hole area as a function of uncovered length.
-    // Author:     Dave Gutz 09-Jun-90.
-    // Revisions:  None.
-
-    // Inputs:
-    // xSpool edge relative to start of hole.
-    // dHole diameter.
-
-    // Local:
-    // rHole radius.
-    // fracFraction of hole uncovered.
-    // fracFraction of hole uncovered.
+function [sys] = vol_1(vol, %beta, spgr)
+    // VOL1.  Building block for a volume having two flow inputs.
+    //  Author:     D. A. Gutz
+    //  Written:    16-Apr-92
+    //  Revisions:  None.
+    //
+    //  Input:
+    //  beta        Fluid bulk modulus, psi.
+    //  spgr        Fluid specific gravity.
+    //  vol         Volume, cuin.
+    //  wfs         Input # 1, supply flow, pph.
+    //  wfd         Input # 2, discharge flow, pph.
+    //
+    //  Output:
+    //  sys         Packed system of Input and Output
+    //  p           Output # 1, volume pressure, psia.
+    //
+    // 
     // Copyright (C) 2018 - Dave Gutz
     //
     // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,7 +41,7 @@ function [area] = hole(x,d) // @(#)hole.m 1.2 93/06/22
 
 
     // Output variables initialisation (not found in input variables)
-    area=[];
+    sys=[];
 
     // Display mode
     mode(0);
@@ -44,20 +49,14 @@ function [area] = hole(x,d) // @(#)hole.m 1.2 93/06/22
     // Display warning for floating point exception
     ieee(1);
 
+    //  Derivative
+    dp = ((%beta/129.93948)/vol)/spgr;  // Derivative, psi/sec.
+    a = 0;
+    b = [dp, -dp];
+    c = 1;
+    e = 0;
 
-    r = d/2;
-    x = mtlb_max(mtlb_min(x,mtlb_s(d,1.000000000D-16)),1.000000000D-16);
-    frac = mtlb_s(1,x/r);
+    //  Form the system.
+    sys = pack_ss(a, b, c, e);
 
-    if mtlb_logic(frac,">",1.000000000D-16) then
-        area = atan(sqrt(mtlb_s(1,frac*frac))/frac);
-    else
-        if mtlb_logic(frac,"<",-1.000000000D-16) then
-            area = mtlb_a(%pi,atan(sqrt(mtlb_s(1,frac*frac))/frac));
-        else
-            area = %pi/2;
-        end;
-    end;
-    area = mtlb_s((r*r)*area,mtlb_s(r,x)*sqrt(x*mtlb_s(2 .*r,x)));
-    area = mtlb_max(area,1.000000000D-16);
 endfunction

@@ -1,5 +1,5 @@
   ****** Beginning of mfile2sci() session ******
-  File to convert: ./pack_ss.m
+  File to convert: ./or_wptoa.m
   Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
   Recursive mode: OFF
   Only double values used in M-file: YES
@@ -9,3 +9,10 @@
   M-file reading: Done
   Syntax modification...
   Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  !! L.22: Unknown function sgn not converted, original calling sequence used.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be wrong (see the //!! comments).
+  ****** End of mfile2sci() session ******
