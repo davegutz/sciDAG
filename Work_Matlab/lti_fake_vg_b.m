@@ -52,9 +52,9 @@ function sys    = lti_fake_vg_b(dpav1, dpav2, wfl, cd, sg, vol_rcham, beta)
 % Parameters.
 % none.
 
-fake_ehsv   = m_valve_a(0, dpav1, wfl);
+fake_ehsv   = lti_m_valve_a(0, dpav1, wfl);
 tee_pr      = vol_1(vol_rcham, beta, sg);
-fake_act    = dor_aptow(wfl, dpav2, 0, cd, sg);
+fake_act    = lti_dor_aptow(wfl, dpav2, 0, cd, sg);
 tee_sum_pr  = summer(1,1,0,0);
 dummy       = summer(0,0,0,0);
 
@@ -76,5 +76,5 @@ qs    =    [    2    2;
 
 % Form the system.
 [a,b,c,e]   = unpack_ss(sys);
-[a,b,c,e]   = connect(a, b, c, e, qs, us, ys);
+[a,b,c,e]   = connect_ss(a, b, c, e, qs, us, ys);
 sys         = pack_ss(a, b, c, e);

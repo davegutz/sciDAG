@@ -6,3 +6,44 @@
  Revisions:    21-Sep-92    Unfroze pr & pr_sens.
                29-Sep-92    Added vol_rcham.
                29-Sep-92    Rewrote because non-working.
+
+Input:
+ dpav1         Variable load drop, psi.
+ dpav2         Fixed load drop, psi.
+ wfl           Load flow, pph.
+ cd            Coefficient of discharge.
+ sg            Specific gravity.
+ vol_rcham     Rod chamber volume.
+ beta          Fuel compressibility, psi.
+
+ Differential IO:
+ pd            Input # 1, supply pressure, psi.
+ pr            Input # 2, drain pressure, psi.
+ per           Input # 3, actuator end pressure, psi.
+ wfld          Input # 4, load flow demand, mA.
+ fx            Input # 5, load, lbf pullin.
+ wfh_sens      Input # 6, head sense flow out of ehsv, pph.
+ wfr_sens      Input # 7, rod sense flow out of ehsv, pph.
+ wfs           Output # 1, supply flow in, pph.
+ wfr           Output # 2, drain flow out, pph.
+ wfve          Output # 3, actuator end flow pulled in by rod, pph.
+ ph_sens       Output # 4, head sensed pressure at ehsv, psi.
+ pr_sens       Output # 5, rod sensed pressure at ehsv, psi.
+ ph            Output # 6, head pressure at actuator, psi.
+ pr            Output # 7, rod pressure at actuator, psi.
+ v_sv          Output # 8, EHSV spool velocity toward head end, in/s.
+ x_sv          Output # 9, EHSV spool displacement toward head, in.
+ v_act         Output # 10, actuator velocity toward head end, in/s.
+ x_act         Output # 11, actuator  displacement toward head, in.
+
+ Local:
+ fake_ehsv     Variable load.
+ fake_act      Fixed load.
+ tee_pr        Flow tee for pr.
+ dummy         Dummy for null i/o.
+ tee_sum_pr    Sum flow to tee_pr.
+
+ Functions called:
+ m_valve_a     Variable valve.
+ summer        sum.
+ dor_aptow     Fixed drop.
