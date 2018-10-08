@@ -1,0 +1,8 @@
+ Build a fake load subsystem for a vg_b.
+ The model consists of adjustable drop in series with a fixed
+ drop. fx is frozen.  Equivalent to vg_b.
+ Author:       D. A. Gutz
+ Written:      14-Sep-92
+ Revisions:    21-Sep-92    Unfroze pr & pr_sens.
+               29-Sep-92    Added vol_rcham.
+               29-Sep-92    Rewrote because non-working.

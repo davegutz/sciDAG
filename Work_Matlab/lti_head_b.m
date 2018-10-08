@@ -1,9 +1,9 @@
 function sys = lti_head_b(ae, bdamp, cdf, dn, ks, kb, pf, ph, sg, wff, m)
-% function sys = head_a(ae, bdamp, cdf, dn, ks, kb, pf, ph, sg, wff, m);
+% function sys = lti_head_b(ae, bdamp, cdf, dn, ks, kb, pf, ph, sg, wff, m);
 % Building block for a bellows head sensor.  Version with ph,
-%		pl, & pf input and wfh, wfl, & wff output, mass.
-% Author:	D. A. Gutz
-% Written:	02-Dec-92	Add mass to head_a.
+% pl, & pf input and wfh, wfl, & wff output, mass.
+% Author:       D. A. Gutz
+% Written:      02-Dec-92    Add mass to head_a.
 % Revisions:
 %
 % Input:
@@ -29,47 +29,46 @@ function sys = lti_head_b(ae, bdamp, cdf, dn, ks, kb, pf, ph, sg, wff, m)
 % x      Output # 4, flapper differential position, in.
 %
 % Output:
-% sys		Packed system of Input and Output.
-
+% sys        Packed system of Input and Output.
+%
 % Local:
-% af		Flapper discharge window area, sqin.
-% dafdx	Partial area with flapper position, sqin/in.
-% dwfda	Partial flow with flapper area, pph/sqin.
-% dwdc		Volumetric to mass flow conversion, pph/cis.
-% dwfdp	Partial flow with flapper delta pressure, pph/psi.
-% q		Connection matrix.
-% u		Input matrix.
-% y		Output matrix.
-
-
+% af        Flapper discharge window area, sqin.
+% dafdx     Partial area with flapper position, sqin/in.
+% dwfda     Partial flow with flapper area, pph/sqin.
+% dwdc      Volumetric to mass flow conversion, pph/cis.
+% dwfdp     Partial flow with flapper delta pressure, pph/psi.
+% q         Connection matrix.
+% u         Input matrix.
+% y         Output matrix.
+%
 % States:
-% x	    Flapper differential position, in.
-
+% x        Flapper differential position, in.
+%
 % Functions called:
-% or_wptoa	Orifice calculation.
+% or_wptoa    Orifice calculation.
 
 % Parameters.
-af	= or_wptoa(wff, pf, ph, cdf, sg);
-dwdc	= 129.93948 * sg;
+af    = or_wptoa(wff, pf, ph, cdf, sg);
+dwdc    = 129.93948 * sg;
 
 % Partials.
-dafdx	= pi * dn;
-dwfda	= wff / af;
-dwfdp	= wff / (2. * (pf - ph));
+dafdx    = pi * dn;
+dwfda    = wff / af;
+dwfdp    = wff / (2. * (pf - ph));
 
 % Connections and system construction.
-a	= [-bdamp	-(ks+kb)] * 386.4 / m;
-a	= [a;
-	  1	0];
-b	= [ae	-ae	0] * 386.4 / m;
-b	= [b;
-	  0	0	0];
-c	= [ae*dwdc	-dafdx*dwfda;
-	  ae*dwdc	0;
-	  0		dafdx*dwfda;
-	  0		1];
-e	= [dwfdp	0	-dwfdp;
-	   0		0	0;
-	   -dwfdp	0	dwfdp;
-	   0		0	0];
-
+a    = [-bdamp    -(ks+kb)] * 386.4 / m;
+a    = [a;
+      1    0];
+b    = [ae    -ae    0] * 386.4 / m;
+b    = [b;
+      0    0    0];
+c    = [ae*dwdc    -dafdx*dwfda;
+      ae*dwdc    0;
+      0        dafdx*dwfda;
+      0        1];
+e    = [dwfdp    0    -dwfdp;
+       0        0    0;
+       -dwfdp    0    dwfdp;
+       0        0    0];
+sys = pack_ss(a, b, c, e);
