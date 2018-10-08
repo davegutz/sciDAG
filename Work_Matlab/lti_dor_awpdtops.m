@@ -1,9 +1,9 @@
 function sys = lti_dor_awpdtops(wf, ps, pd, cd, sg)
 % function sys = dor_awpdtops(wf, ps, pd, cd, sg);
 % Differential area/flow/discharge pressure to supply pressure.
-% Author:   D. A. Gutz
-% Written:  22-Jun-92
-% Revisions:  19-Aug-92 Simplify return arguments.
+% Author:       D. A. Gutz
+% Written:      22-Jun-92
+% Revisions:    19-Aug-92 Simplify return arguments.
 %
 % Input:
 % cd    Coefficient of discharge.
@@ -17,15 +17,15 @@ function sys = lti_dor_awpdtops(wf, ps, pd, cd, sg)
 % wf    Input  # 2, differential flow, pph.
 % pd    Input  # 3, differential discharge pressure, psi.
 % ps    Output # 1, differential supply pressure, psi.
-
+%
 % Local:
 % ao     Orifice area, sqin.
 % dpda   Partial pressure to area, psi/sqin.
 % dpdw   Partial pressure to flow, psi/pph.
-
+%
 % States:
 % none.
-
+%
 % Functions called:
 % or_wptoa Orifice area.
 
@@ -43,3 +43,4 @@ c = [];
 e = [dpda  dpdw  1];
 
 % Form the system.
+sys = pack_ss(a, b, c, e);

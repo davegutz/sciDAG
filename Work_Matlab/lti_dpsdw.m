@@ -25,3 +25,4 @@ c = [];
 e = [dpsdwf 1];
 
 % Form the system.
+sys = pack_ss(a, b, c, e);
