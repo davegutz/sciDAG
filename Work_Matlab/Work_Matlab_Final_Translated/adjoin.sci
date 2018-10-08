@@ -1,56 +1,56 @@
-function [so] = adjoin(s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15)
-    // ADJOINForm composite system interconnection.
-    // 
-    // Syntax: So = ADJOIN(S1, ... Sn), or So = ADJOIN(S1, ... Sn-1, FLAG)
-    // 
-    // Purpose:The ADJOIN function forms a composite system from
-    //the state-space realizations of distinct systems.
-    //The different forms possible include
-    // 
-    //[ S1   0  ]                [  S1  ]
-    //[    \    ],  [S1 --- Sn-1],  [   |  ]
-    //[  0   Sn ]                   [ Sn-1 ]
-    // 
-    //where the latter two are horizontally and vertically
-    //adjoined systems, obtained with FLAG = ''h'', or FLAG = ''v''
-    //respectively.
-    // 
-    // Input:S1 ,... Sn  - Input systems, in packed matrix form. Currently
-    //      n is limited to a maximum of 15.
-    //FLAG- Optional string, either ''h'' indicating the
-    //horizontal adjoin operation, or ''v'' for vertical.
-    // 
-    // Output:So- the composite system, in packed matrix form.
-    // 
-    // See Also:ADD_SS, MULT_SS, SUB_SS, INV_SS
+// ADJOINForm composite system interconnection.
+// 
+// Syntax: So = ADJOIN(S1, ... Sn), or So = ADJOIN(S1, ... Sn-1, FLAG)
+// 
+// Purpose:The ADJOIN function forms a composite system from
+//the state-space realizations of distinct systems.
+//The different forms possible include
+// 
+//[ S1   0  ]                [  S1  ]
+//[    \    ],  [S1 --- Sn-1],  [   |  ]
+//[  0   Sn ]                   [ Sn-1 ]
+// 
+//where the latter two are horizontally and vertically
+//adjoined systems, obtained with FLAG = ''h'', or FLAG = ''v''
+//respectively.
+// 
+// Input:S1 ,... Sn  - Input systems, in packed matrix form. Currently
+//      n is limited to a maximum of 15.
+//FLAG- Optional string, either ''h'' indicating the
+//horizontal adjoin operation, or ''v'' for vertical.
+// 
+// Output:So- the composite system, in packed matrix form.
+// 
+// See Also:ADD_SS, MULT_SS, SUB_SS, INV_SS
 
-    // Algorithm:
-    // 
-    // Calls:UNPACK_SS, PACK_SS
-    // 
-    // Called By:
-    // Copyright (C) 2018 - Dave Gutz
-    //
-    // Permission is hereby granted, free of charge, to any person obtaining a copy
-    // of this software and associated documentation files (the "Software"), to deal
-    // in the Software without restriction, including without limitation the rights
-    // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    // copies of the Software, and to permit persons to whom the Software is
-    // furnished to do so, subject to the following conditions:
-    //
-    // The above copyright notice and this permission notice shall be included in all
-    // copies or substantial portions of the Software.
-    //
-    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    // SOFTWARE.
-    // Sep 26, 2018 	DA Gutz		Created
-    // 
-    //**********************************************************************
+// Algorithm:
+// 
+// Calls:UNPACK_SS, PACK_SS
+// 
+// Called By:
+// Copyright (C) 2018 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Sep 26, 2018 	DA Gutz		Created
+// 
+//**********************************************************************
+function [so] = adjoin(s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15)
 
     // Output variables initialisation (not found in input variables)
     so=[];
@@ -150,18 +150,18 @@ function [so] = adjoin(s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15)
             end;
         end;
     else
-        [ao,bo,co,eo] = unpack_ss(s1);  // Block-diagonal adjoin
+        [ao, bo, co, eo] = unpack_ss(s1);  // Block-diagonal adjoin
         for i = 2:%nargin
             si = evstr("s"+string(i));
-            [ai,bi,ci,ei] = unpack_ss(si);
-            [mi,pi,ni] = size_ss(si);
-            [mo,po] = size(eo);  [tmp,no] = size(ao);
-            ao = [ao,zeros_ss(no,ni);zeros_ss(ni,no),ai];
-            bo = [bo,zeros_ss(no,pi);zeros_ss(ni,po),bi];
-            co = [co,zeros_ss(mo,ni);zeros_ss(mi,no),ci];
-            eo = [eo,zeros_ss(mo,pi);zeros_ss(mi,po),ei];
+            [ai, bi, ci, ei] = unpack_ss(si);
+            [mi, pi, ni] = size_ss(si);
+            [mo, po] = size(eo);  [tmp, no] = size(ao);
+            ao = [ao,zeros_ss(no,ni); zeros_ss(ni,no),ai];
+            bo = [bo,zeros_ss(no,pi); zeros_ss(ni,po),bi];
+            co = [co,zeros_ss(mo,ni); zeros_ss(mi,no),ci];
+            eo = [eo,zeros_ss(mo,pi); zeros_ss(mi,po),ei];
         end;
     end;
-    so = pack_ss(ao,bo,co,eo);
-    // 
+    so = pack_ss(ao, bo, co, eo);
+
 endfunction

@@ -62,13 +62,13 @@ function [sys] = lti_fake_vg_b(dpav1,dpav2,wfl,%cd,sg,vol_rcham,%beta)
     // none.
 
     fake_ehsv = lti_m_valve_a(0, dpav1, wfl);
-    tee_pr = vol_1(vol_rcham, %beta, sg);
+    tee_pr = lti_vol_1(vol_rcham, %beta, sg);
     fake_act = lti_dor_aptow(wfl,dpav2, 0, %cd, sg);
     tee_sum_pr = summer(1, 1, 0, 0);
     dummy = summer(0, 0, 0, 0);
 
     // Make system.
-    sys = adjoin(fake_ehsv,tee_pr,fake_act,tee_sum_pr,dummy);
+    sys = adjoin(fake_ehsv, tee_pr, fake_act, tee_sum_pr, dummy);
 
     // Inputs.
     us = [1, 7, 13, 3, 14, 15, 9];
@@ -80,8 +80,6 @@ function [sys] = lti_fake_vg_b(dpav1,dpav2,wfl,%cd,sg,vol_rcham,%beta)
     qs = [2,2; 4,1; 5,4; 6,2; 10,3];
 
     // Form the system.
-    [a,b,c,e] = unpack_ss(sys);
-    [a,b,c,e] = connect_ss(a,b,c,e,qs,us,ys);
-    sys = pack_ss(a,b,c,e);
+    sys = connect_ss(sys, qs, us, ys);
 
 endfunction

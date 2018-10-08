@@ -39,8 +39,11 @@
 // SOFTWARE.
 // Oct 4, 2018 	DA Gutz		Created
 function [syso] = sys_prune(sys, out_idx, in_idx)
-  syso.a = sys.a(:, :);
-  syso.b = sys.b(:, in_idx);
-  syso.c = sys.c(out_idx, :);
-  syso.d = sys.d(out_idx, in_idx);
+    
+  a = sys.a(:, :);
+  b = sys.b(:, in_idx);
+  c = sys.c(out_idx, :);
+  d = sys.d(out_idx, in_idx);
+  syso = pack_ss(a, b, c, d);
+ 
 endfunction

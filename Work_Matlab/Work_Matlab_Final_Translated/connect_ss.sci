@@ -69,8 +69,8 @@ function [sys] = connect_ss(varargin)
         print_usage();
     end
     sys = varargin(1);
-    [a,b,c,d] = unpack_ss(sys);
-    sys = syslin('c',a,b,c,d);
+    [a, b, c, d] = unpack_ss(sys);
+    sys = syslin('c', a, b, c, d);
     cm = varargin(2);
     in_idx = varargin(3);
     out_idx = varargin(4);
@@ -119,4 +119,5 @@ function [sys] = connect_ss(varargin)
     end
     sys = sys_connect(sys, M);
     sys = sys_prune(sys, out_idx, in_idx);
+    
 endfunction

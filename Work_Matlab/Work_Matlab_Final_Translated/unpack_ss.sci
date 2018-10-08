@@ -1,56 +1,57 @@
+// UNPACK_SS    Unpacks a system into component matrices.
+// 
+// Syntax: [A,B1,B2,C1,C2,D11,D12,D21,D22] = UNPACK_SS(SYS), or ...
+//         [A,B,C,D] = UNPACK_SS(SYS) or ...
+//         X = UNPACK_SS(SYS,FLAG)
+// 
+// Purpose:The first version ''unpacks'' the nine constituent matrices
+// of a TITO state-space representation.
+//               
+// The second version ''unpacks'' the four constituent matrices 
+// of a SISO state-space representation.
+// 
+// The third version allows selection of only a single
+// element from the SISO state-space quartet or from the
+// TITO nantet.
+// 
+// Input:
+//  SYS - Input system, in packed matrix format.
+//  FLAG - Optional character used to select only a single
+//       matrix or section for unpacking.  Hence FLAG 
+//       may be either ''a'', ''b'', ''c'', ''d'', ''b1'', ''b2'', 
+//       ''c1'', ''c2'', ''d11'', ''d12'', ''d21'', or ''d22'', in
+//       which case the corresponding matrix is unpacked
+//       from SYS.
+// 
+//  Output:
+//      A, B1, B2, C1, C2, D11, D12, D21, D22  or ...
+//      A, B, C, D 
+//- Regular matrices unpacked from SYS.
+// 
+// See Also:PACK_SS
+//**********************************************************************
+// Copyright (C) 2018 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Sep 26, 2018 	DA Gutz		Created
+// 
 function [a,b1,b2,c1,c2,d11,d12,d21,d22] = unpack_ss(sys,flag)
-    // UNPACK_SSUnpacks a system into component matrices.
-    // 
-    // Syntax: [A,B1,B2,C1,C2,D11,D12,D21,D22] = UNPACK_SS(SYS), or ...
-    //         [A,B,C,D] = UNPACK_SS(SYS) or ...
-    //         X = UNPACK_SS(SYS,FLAG)
-    // 
-    // Purpose:The first version ''unpacks'' the nine constituent matrices
-    //of a TITO state-space representation.
-    //               
-    //The second version ''unpacks'' the four constituent matrices 
-    //of a SISO state-space representation.
-    // 
-    //The third version allows selection of only a single
-    //element from the SISO state-space quartet or from the
-    //TITO nantet.
-    // 
-    // Input:SYS - Input system, in packed matrix format.
-    //FLAG - Optional character used to select only a single
-    //       matrix or section for unpacking.  Hence FLAG 
-    //       may be either ''a'', ''b'', ''c'', ''d'', ''b1'', ''b2'', 
-    //       ''c1'', ''c2'', ''d11'', ''d12'', ''d21'', or ''d22'', in
-    //       which case the corresponding matrix is unpacked
-    //       from SYS.
-    // 
-    // Output:A, B1, B2, C1, C2, D11, D12, D21, D22  or ...
-    //A, B, C, D 
-    //- Regular matrices unpacked from SYS.
-    // 
-    // See Also:PACK_SS
-    //**********************************************************************
-    // Copyright (C) 2018 - Dave Gutz
-    //
-    // Permission is hereby granted, free of charge, to any person obtaining a copy
-    // of this software and associated documentation files (the "Software"), to deal
-    // in the Software without restriction, including without limitation the rights
-    // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    // copies of the Software, and to permit persons to whom the Software is
-    // furnished to do so, subject to the following conditions:
-    //
-    // The above copyright notice and this permission notice shall be included in all
-    // copies or substantial portions of the Software.
-    //
-    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    // SOFTWARE.
-    // Sep 26, 2018 	DA Gutz		Created
-    // 
-
 
     // Output variables initialisation (not found in input variables)
     a=[];
@@ -101,12 +102,12 @@ function [a,b1,b2,c1,c2,d11,d12,d21,d22] = unpack_ss(sys,flag)
     if isempty(na) then
         a = [];  b1 = [];  b2 = [];  c1 = [];  c2 = [];
         d = sys;
-        ne = mtlb_find(mtlb_all(~abs(sys)<%inf));
+        ne = mtlb_find(mtlb_all(~(abs(sys)<%inf)));
         if isempty(ne) then
             d11 = sys;
             d12 = [];  d21 = [];  d22 = [];
         else
-            me = mtlb_find(mtlb_all(~abs(mtlb_t(sys))<%inf));
+            me = mtlb_find(mtlb_all(~(abs(mtlb_t(sys))<%inf)));
             d11 = sys(mtlb_imp(1,mtlb_s(me,1)),mtlb_imp(1,mtlb_s(ne,1)));
             d12 = sys(mtlb_imp(1,mtlb_s(me,1)),mtlb_imp(mtlb_a(ne,1),ns));
             d21 = sys(mtlb_imp(mtlb_a(me,1),ms),mtlb_imp(1,mtlb_s(ne,1)));

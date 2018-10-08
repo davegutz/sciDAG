@@ -55,7 +55,7 @@ na = find(all(isnan(sys)));
 if isempty(na),
   a = []; b1 = []; b2 = []; c1 = []; c2 = [];
   d = sys;
-  ne = find(all(~isfinite(sys)));	
+  ne = find(all(~isfinite(sys)));
   if isempty(ne),
     d11 = sys;
     d12 = []; d21 = []; d22 = [];

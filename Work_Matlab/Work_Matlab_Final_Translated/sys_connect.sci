@@ -125,4 +125,5 @@ function [sys] = sys_connect(sys, m)
       //sys.e = blkdiag (sys.e, zeros (pp,pp));
     end
   end
+  
 endfunction

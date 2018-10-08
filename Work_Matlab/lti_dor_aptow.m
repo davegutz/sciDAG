@@ -38,7 +38,7 @@ ao	= or_wptoa(wf, ps, pd, cd, sg);
 
 % Partials.
 dwfda	= wf / ao;
-psmpd	= sgn(ps - pd) * max(abs(ps - pd), 1e-16);  % 11/26/2012 add divide by zero protection
+psmpd	= sign(ps - pd) * max(abs(ps - pd), 1e-16);  % 11/26/2012 add divide by zero protection
 dwfdp	= wf / (2. * psmpd);
 
 % Connections and system construction.
@@ -48,3 +48,4 @@ c	= [];
 e	= [dwfdp  -dwfdp  dwfda];
 
 % Form the system.
+sys = pack_ss(a, b, c, e);

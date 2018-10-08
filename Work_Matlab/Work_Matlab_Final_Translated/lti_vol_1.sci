@@ -1,4 +1,4 @@
-function [sys] = vol_1(vol, %beta, spgr)
+function [sys] = lti_vol_1(vol, %beta, spgr)
     // VOL1.  Building block for a volume having two flow inputs.
     //  Author:     D. A. Gutz
     //  Written:    16-Apr-92
@@ -54,7 +54,7 @@ function [sys] = vol_1(vol, %beta, spgr)
     a = 0;
     b = [dp, -dp];
     c = 1;
-    e = 0;
+    e = [0, 0];
 
     //  Form the system.
     sys = pack_ss(a, b, c, e);

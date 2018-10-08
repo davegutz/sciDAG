@@ -28,4 +28,5 @@
 clear
 funcprot(0);
 getd('../Work_Matlab_Final_Translated')
-vga = lti_fake_vg_b(100, 10, 100, 1, 1, 1, 150000)
+vga = lti_fake_vg_b(100, 10, 100, 1, 1, 1, 150000);
+[a, b, c, d] = unpack_ss(vga)
