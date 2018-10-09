@@ -1,0 +1,47 @@
+ function sys = ip_wpdtops(a, b, c, f, r1, b1, r2, b2, rpm, wf, sg, tau)
+ Impeller model, flow and discharge pressure to supply.
+ Author:   D. A. Gutz
+ Written:  08-Jul-92
+ Revisions:
+  19-Aug-92    DA Gutz     Simplify return arguments.
+  11-Apr-2014  DA Gutz     Add f coefficient
+
+ Input:
+ a     Pump head coefficients.
+ b              "
+ c              "
+ f              "
+ r1    Inner radius, in.
+ b1    Inner disk width, in.
+ r2    Outer radius, in.
+ b2    Outer disk width, in.
+ rpm   Speed.
+ wf    Flow, pph.
+ sg    Specific gravity.
+ tau   Time constant, sec.
+
+ Differential IO:
+ wf  Input  # 1, flow, pph.
+ pd  Input  # 2, discharge pressure, psi.
+ rpm Input  # 3, speed, rpm.
+ ps  Output # 1, supply pressure, psi.
+
+ Output:
+ sys   Packed system of Input and Output.
+
+ Local:
+ dfcdwf    Flow coefficient due to flow, 1/pph.
+ dhcdfc    Head coefficient due to flow coefficient.
+ dpdhc     Pressure due to head coefficient, psi.
+ dfcdrpm   Flow coefficient due to speed, 1/rpm.
+ dwdc      Conversion cis to pph.
+ fc        Flow coefficient.
+ q         Connection matrix.
+ u         Input matrix.
+ y         Output matrix.
+
+ States:
+ none.
+
+ Functions called:
+ None.

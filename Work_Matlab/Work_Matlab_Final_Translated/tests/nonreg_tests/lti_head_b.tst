@@ -1,4 +1,3 @@
-// Get time stamp of a file path; return 0 if non-existant
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,32 +19,14 @@
 // SOFTWARE.
 // Sep 26, 2018 	DA Gutz		Created
 // 
-function [time_stamp] = get_stamp(file_name)
 
-    // Output variables initialisation (not found in input variables)
-    time_stamp=[];
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
 
-    // Display mode
-    mode(0);
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
 
-    // Display warning for floating point exception
-    ieee(1);
-
-    // function timeStamp = geStStamp(fp)
-    // Get time stamp of a file path; return 0 if non-existant
-
-    dfp = dir(file_name);
-    if isempty(dfp) then
-        time_stamp = 0; 
-    else
-        time_stamp_raw = getdate(dfp.date);
-        Years = time_stamp_raw(1);
-        Months = time_stamp_raw(2);
-        Days = time_stamp_raw(6);
-        Hours = time_stamp_raw(7);
-        Minutes = time_stamp_raw(8);
-        Seconds = time_stamp_raw(9);
-        time_stamp = datenum(Years,Months,Days,Hours,Minutes,Seconds);
-    end;
-
-endfunction
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../Work_Matlab_Final_Translated')
+heada = lti_head_b(0.1, 0.1, 1, 0.1, 100, 10, 100, 0, 1, 100, 0.1);
+[a, b, c, d] = unpack_ss(heada)
