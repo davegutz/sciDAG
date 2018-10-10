@@ -1,3 +1,24 @@
+// Copyright (C) 2018 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Oct 10, 2018 	DA Gutz		Created
+// 
 // Translated work .m files into .sci
 // See help matlab to scilab conversion tips
 // or m2sci
@@ -76,8 +97,16 @@ test_run(pwd(), 'lti_ip_wppstopd')
 editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_6828_32050\lti_ip_wpstopd.dia')
 test_run(pwd(), 'lti_m_valve_a')
 editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_6828_32050\lti_m_valve_a.dia')
+test_run(pwd(), 'lti_man_1_mv')
+editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_16636_22599\lti_man_1_mv.dia')
+test_run(pwd(), 'lti_man_1_vm')
+editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_16636_22599\lti_man_1_vm.dia')
+test_run(pwd(), 'lti_mom_1')
+editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_16636_22599\lti_mom_1.dia')
 test_run(pwd(), 'lti_pos_pump')
 editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_16392_16\lti_pos_pump.dia')
+test_run(pwd(), 'lti_vol_1')
+editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_16636_22599\lti_vol_1.dia')
 test_run(pwd(), 'narginchk')
 editor('C:\Users\Dave\AppData\Local\Temp\SCI_TMP_3552_19168\narginchk.dia')
 test_run(pwd(), 'or_aptow')

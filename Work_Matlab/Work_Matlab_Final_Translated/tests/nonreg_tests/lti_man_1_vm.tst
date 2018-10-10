@@ -1,23 +1,3 @@
-// function sys = lti_vol_1(vol, beta, spgr)
-// Building block for a volume having two flow inputs.
-// Author:   D. A. Gutz
-// Written:  16-Apr-92
-// Revisions:None.
-// 
-// Input:
-// beta  Fluid bulk modulus, psi.
-// spgr  Fluid specific gravity.
-// vol   Volume, cuin.
-// wfs   Input # 1, supply flow, pph.
-// wfd   Input # 2, discharge flow, pph.
-// 
-// Output:
-// sys   Packed system of Input and Output
-// 
-// Differential I/O:
-// wfs   Input # 1, supply flow, pph
-// wfd   Input # 2, discharge flow, pph
-// p     Output # 1, slice pressure, psid.
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,28 +17,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Oct 10, 2018 	DA Gutz		Created
-// ******************************************************************************
-function [sys] = lti_vol_1(vol,%beta,spgr)
+// Sep 26, 2018 	DA Gutz		Created
+// 
 
-    // Output variables initialisation (not found in input variables)
-    sys=[];
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
 
-    // Display mode
-    mode(0);
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
 
-    // Display warning for floating point exception
-    ieee(1);
-
-
-    // Derivative
-    dp = ((%beta/129.93948)/vol)/spgr;// Derivative, psi/sec.
-    a = 0;
-    b = [dp,-dp];
-    c = 1;
-    e = [0,0];
-
-    // Form the system.
-    sys = pack_ss(a,b,c,e);
-
-endfunction
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../Work_Matlab_Final_Translated')
+man_1_vm = lti_man_1_vm(1, 0.1, 0.1, 0.8, 150000, 1)
+man_1_vm = lti_man_1_vm(1, 0.1, 0.1, 0.8, 150000, 0)
+man_1_vm = lti_man_1_vm(1, 0.1, 0.1, 0.8, 150000)

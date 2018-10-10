@@ -108,16 +108,8 @@ function sys = connect_ss(varargin)
       endif
     endfor
 
-    disp('before sys_connect')
-    disp('a');disp(sys.a);disp('b');disp(sys.b);disp('c');disp(sys.c);disp('d');disp(sys.d);
-    disp('out_idx'); disp(out_idx); disp('in_idx'); disp(in_idx);disp('M');disp(M);
     sys = sys_connect (sys, M);
-    disp('before __sys_prune__')
-    disp('a');disp(sys.a);disp('b');disp(sys.b);disp('c');disp(sys.c);disp('d');disp(sys.d);
-    disp('out_idx'); disp(out_idx); disp('in_idx'); disp(in_idx);
     sys = __sys_prune__ (sys, out_idx, in_idx);
-    disp('after')
-    disp('a');disp(sys.a);disp('b');disp(sys.b);disp('c');disp(sys.c);disp('d');disp(sys.d);
 
 %  else                                  # connect (sys1, sys2, ..., sysN, in_idx, out_idx)
 %

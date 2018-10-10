@@ -1,4 +1,20 @@
- VOL1.Building block for a volume having two flow inputs.
-  Author:D. A. Gutz
-  Written:16-Apr-92
-  Revisions:None.
+ function sys = lti_vol_1(vol, beta, spgr)
+ Building block for a volume having two flow inputs.
+ Author:   D. A. Gutz
+ Written:  16-Apr-92
+ Revisions:None.
+
+ Input:
+ beta  Fluid bulk modulus, psi.
+ spgr  Fluid specific gravity.
+ vol   Volume, cuin.
+ wfs   Input # 1, supply flow, pph.
+ wfd   Input # 2, discharge flow, pph.
+
+ Output:
+ sys   Packed system of Input and Output
+
+ Differential I/O:
+ wfs   Input # 1, supply flow, pph
+ wfd   Input # 2, discharge flow, pph
+ p     Output # 1, slice pressure, psid.

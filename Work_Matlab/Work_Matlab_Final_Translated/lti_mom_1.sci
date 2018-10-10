@@ -1,23 +1,21 @@
-// function sys = lti_vol_1(vol, beta, spgr)
-// Building block for a volume having two flow inputs.
-// Author:   D. A. Gutz
-// Written:  16-Apr-92
-// Revisions:None.
+// function sys = lti_mom_1(l, a, c)
+// Building block for a momentum slice having two pressure inputs.
+// Author:       D. A. Gutz
+// Written:      17-Apr-92
+// Revisions:    10-Dec-98    Add damping, c.
 // 
 // Input:
-// beta  Fluid bulk modulus, psi.
-// spgr  Fluid specific gravity.
-// vol   Volume, cuin.
-// wfs   Input # 1, supply flow, pph.
-// wfd   Input # 2, discharge flow, pph.
+// a    Cross sectional area, sqin.
+// l    Slice length, in.
+// c    Damping, psi/in/sec, (OPTIONAL).
 // 
 // Output:
-// sys   Packed system of Input and Output
+// sys  Packed system description of Input and Output.
 // 
 // Differential I/O:
-// wfs   Input # 1, supply flow, pph
-// wfd   Input # 2, discharge flow, pph
-// p     Output # 1, slice pressure, psid.
+// ps   Input # 1, supply pressure, psia.
+// pd   Input # 2, discharge pressure, psia.
+// wf   Output # 1, slice flow, pph.
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,10 +37,13 @@
 // SOFTWARE.
 // Oct 10, 2018 	DA Gutz		Created
 // ******************************************************************************
-function [sys] = lti_vol_1(vol,%beta,spgr)
+function [sys] = lti_mom_1(l,a,c)
 
     // Output variables initialisation (not found in input variables)
     sys=[];
+
+    // Number of arguments in function call
+    [%nargout,%nargin] = argn(0)
 
     // Display mode
     mode(0);
@@ -50,11 +51,15 @@ function [sys] = lti_vol_1(vol,%beta,spgr)
     // Display warning for floating point exception
     ieee(1);
 
-
-    // Derivative
-    dp = ((%beta/129.93948)/vol)/spgr;// Derivative, psi/sec.
-    a = 0;
-    b = [dp,-dp];
+    // Derivatives
+    dw = ((3600*386)*a)/l;// Derivative, pph/sec.
+    if %nargin==3 then
+        dp = (c*l)*sqrt((a*4)/%pi);  // Damping, pph/sec/pph
+    else
+        dp = 0;
+    end;
+    a = -dp;
+    b = [dw,-dw];
     c = 1;
     e = [0,0];
 

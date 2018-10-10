@@ -1,5 +1,5 @@
   ****** Beginning of mfile2sci() session ******
-  File to convert: ./lti_man_1_mv.m
+  File to convert: ./lti_man_1_vm.m
   Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
   Recursive mode: OFF
   Only double values used in M-file: YES
@@ -11,10 +11,8 @@
   Syntax modification: Done
   Macro to tree conversion...
   Conversion of M-tree...
-  ! L.40: mtlb(v_1) can be replaced by v_1() or v_1 whether v_1 is an M-file or not.
-  !! L.52: Unknown function connect_ss not converted, original calling sequence used.
+  !! L.53: Unknown function connect_ss not converted, original calling sequence used.
   Conversion of M-tree: Done
   Macro to tree conversion: Done
-  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
   Translation may be wrong (see the //!! comments).
   ****** End of mfile2sci() session ******
