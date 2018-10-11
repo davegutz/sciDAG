@@ -110,6 +110,7 @@ function sys = connect_ss(varargin)
 
     sys = sys_connect (sys, M);
     sys = __sys_prune__ (sys, out_idx, in_idx);
+    sys = pack_ss(sys.a, sys.b, sys.c, sys.d);
 
 %  else                                  # connect (sys1, sys2, ..., sysN, in_idx, out_idx)
 %
