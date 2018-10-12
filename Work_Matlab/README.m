@@ -1,5 +1,5 @@
 ## Baseline runs for the scilab work
-## Run these in Octave
+## Run these in Octave in Linux (Ubuntu)
 
 a=[1 2;3 4];b=[5 6]';c=[7 8; 9 10];d=[11 12]';sys=pack_ss(a,b,c,d)
 ##sys =
@@ -162,7 +162,10 @@ pkg load control; man_n_mv = lti_man_n_mv(24, 0.1, 2.4, 4, 0.8, 150000, 1)
 ##           NaN           NaN           NaN           NaN           NaN
 ##       0.00000       0.00000           NaN       0.00000       0.00000
 ##       0.00000       1.00000           NaN       0.00000       0.00000
-pkg load control;[a,b,c,d]=unpack_ss(man_n_mv); man_n_mv_lti = ss(a,b,c,d);
+pkg load control signal;
+dummy = lti_dpsdw(1);
+sys = adjoin(man_n_mv, dummy);
+man_n_mv_siso=connect_ss(sys,[3 2],[1],[2]);[a,b,c,d]=unpack_ss(man_n_mv_siso); man_n_mv_lti = ss(a,b,c,d);
 eig(a)
 ##ans  =
 ##  -1.0704745 + 14026.184i
@@ -173,13 +176,4 @@ eig(a)
 ##  -1.0704745 - 2591.9339i
 ##  -1.0704745 + 7463.1767i
 ##  -1.0704745 - 7463.1767i
-pkg load control;man_n_mv_ltitf = ss2tf(man_n_mv_lti); man_n_mv_siso = man_n_mv_ltitf(1,2);
-bode(man_n_mv_siso)
-Transfer function 'man_n_mv_siso' from input 'u1' to output ...
-
-       2.316e+04 s^7 + 1.488e+05 s^6 + 7.74e+12 s^5 + 3.314e+13 s^4 + 7.185e+20 s^3 + 1.538e+21
- s^2 + 1.601e+28 s - 0.001298
- y1:  -----------------------------------------------------------------------------------------
-------------------------------
-      s^8 + 8.564 s^7 + 3.899e+08 s^6 + 2.504e+09 s^5 + 4.654e+16 s^4 + 1.993e+17 s^3 + 1.728e+
-24 s^2 + 3.7e+24 s + 9.625e+30
+pkg load control signal;bode(man_n_mv_lti)
