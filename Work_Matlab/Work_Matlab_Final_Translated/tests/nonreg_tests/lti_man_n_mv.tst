@@ -30,3 +30,13 @@ funcprot(0);
 getd('../Work_Matlab_Final_Translated')
 man_n_mv = lti_man_n_mv(24, 0.1, 2.4, 4, 0.8, 150000, 1)
 man_n_mv = lti_man_n_mv(24, 0.1, 2.4, 4, 0.8, 150000, 0)
+
+man_n_mv = lti_man_n_mv(24, 0.1, 2.4, 4, 0.8, 150000, 1);
+sys_siso = connect_ss(man_n_mv, [], [1], [2]);
+[a,b,c,d]=unpack_ss(sys_siso); man_n_mv_lti = syslin('c',a,b,c,d);
+spec(a)
+epsa = 1e-32; epsr = 1e-32;
+man_n_mv_ltitf = clean(ss2tf(man_n_mv_lti), epsa, epsr);
+bode(man_n_mv_ltitf, 1, 100000)
+
+

@@ -77,3 +77,19 @@ man_n_mv = lti_man_n_mv(24, 0.1, 2.4, 4, 0.8, 150000, 0)
    Nan         Nan      Nan   Nan      Nan      
    0.          0.       Nan   0.       0.       
    0.          1.       Nan   0.       0.       
+man_n_mv = lti_man_n_mv(24, 0.1, 2.4, 4, 0.8, 150000, 1);
+sys_siso = connect_ss(man_n_mv, [], [1], [2]);
+[a,b,c,d]=unpack_ss(sys_siso); man_n_mv_lti = syslin('c',a,b,c,d);
+spec(a)
+ ans  =
+  -1.0704745 + 14026.184i
+  -1.0704745 - 14026.184i
+  -1.0704745 + 11434.25i
+  -1.0704745 - 11434.25i
+  -1.0704745 + 2591.9339i
+  -1.0704745 - 2591.9339i
+  -1.0704745 + 7463.1767i
+  -1.0704745 - 7463.1767i
+epsa = 1e-32; epsr = 1e-32;
+man_n_mv_ltitf = clean(ss2tf(man_n_mv_lti), epsa, epsr);
+bode(man_n_mv_ltitf, 1, 100000)
