@@ -47,14 +47,14 @@ u    = [1    n*2];
 y    = [1    n*2];
 
 % Connections and system construction.
-temp    = make_pack(man);
+temp    = man;
 q = [];
 for i=2:n
-    temp    = adjoin(temp, make_pack(man));
+    temp    = adjoin(temp, man);
     q    = [q;
            2*(i-1)    2*(i-1)+1;
            2*(i-1)+1    2*(i-1)];
 end
 
 % Form the system.
-[a,b,c,e]    = connect_ss(temp,q,u,y);
+sys = connect_ss(temp,q,u,y);
