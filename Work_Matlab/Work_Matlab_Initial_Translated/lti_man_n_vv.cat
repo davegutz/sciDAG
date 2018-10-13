@@ -1,0 +1,29 @@
+ function sys = man_n_vv(l, a, vol, n, spgr, beta, c)
+ Building block for a line distributed among n equally sized
+ volumes and momentum slices, with volume first & last (n = #
+ of momentum slices and n+1 = # volume nodes).
+ Author:       D. A. Gutz
+ Written:      22-Jun-92
+ Revisions:    19-Aug-92    Simplify output arguments.
+               10-Dec-98    Add damping, c.
+ Input:
+ a     Line cross-section, sqin.
+ beta  Fluid bulk modulus, psi.
+ l     Line length, in.
+ n     Number of volume node / momentum slice pairs.
+ spgr  Fluid specific gravity.
+ vol   Line volume, cuin.
+ c     Damping, psi/in/sec, (OPTIONAL).
+
+ Output:
+ sys   lti in pack_ss form
+
+ Differential I/O:
+ wfs   Input  # 1, supply flow, pph.
+ wfd   Input  # 2, discharge flow, pph.
+ ps    Output # 1, supply pressure, psia.
+ pd    Output # 2, discharge pressure, psia.
+
+ Functions called:
+ man_1_vm    Creates single element line of wfs, pd input and ps, wfd output.
+ vol_1    Creates single volume node of wfs, wfd input and p output.
