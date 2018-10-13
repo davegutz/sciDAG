@@ -242,7 +242,7 @@ pkg load control; man_n_vv = lti_man_n_vv(24, 0.1, 2.4, 4, 0.8, 150000, 1)
 %   0.0000e+00   0.0000e+00   0.0000e+00          NaN   0.0000e+00   0.0000e+00
 %   0.0000e+00   0.0000e+00   1.0000e+00          NaN   0.0000e+00   0.0000e+00
 
-pkg load control; trivalve = lti_trivalve_a(0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.61, 50 0.1, 50, 0, 1000, 50, 500, 0.8, 0.1, 0.1, 10, 10, 0)
+pkg load control; trivalve = lti_trivalve_a(0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.61, 50, 0.1, 50, 0, 1000, 50, 500, 0.8, 0.1, 0.1, 10, 10, 0)
 %trivalve =
 %
 % Columns 1 through 9:

@@ -138,7 +138,8 @@ function [sys] = lti_trivalve_a(ahs,ahd,alr,ald,ale,bdamp,%cd,ks,m,ki,cause,ps,p
                 dwdc*ald, 0;
                 1,        0;
                 0,        1];
-        es = [  dwfsdp,0,-dwfsdp,0,0,0,0,0,0,0;0,-dwfddp,dwfddp,0,0,0,0,0,0,0;
+        es = [  dwfsdp,0,-dwfsdp,0,0,0,0,0,0,0;
+                0,-dwfddp,dwfddp,0,0,0,0,0,0,0;
                 dwfsdp,dwfddp,-dwfxdpx,0,0,0,0,0,0,0;
                 0,0,0,0,0,0,0,0,0,0;
                 0,0,0,0,0,0,0,0,0,0;
@@ -174,7 +175,7 @@ function [sys] = lti_trivalve_a(ahs,ahd,alr,ald,ale,bdamp,%cd,ks,m,ki,cause,ps,p
         else
             error("Improper cause input to trivalve_a.")
             // ! L.111: mtlb(resume) can be replaced by resume() or resume whether resume is an M-file or not.
-            mtlb(resume);
+//            mtlb(resume);
         end;
     end;
 

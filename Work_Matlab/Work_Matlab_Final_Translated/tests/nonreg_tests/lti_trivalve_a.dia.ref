@@ -1,0 +1,57 @@
+// Copyright (C) 2018 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Sep 26, 2018 	DA Gutz		Created
+// 
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../Work_Matlab_Final_Translated')
+trivalve = lti_trivalve_a(0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.61, 50, 0.1, 50, 0, 1000, 50, 500, 0.8, 0.1, 0.1, 10, 10, 0)
+ trivalve  = 
+         column 1 to 7
+  -3860.      -193000.     Nan   0.     0.          0.          386.
+   1.          0.          Nan   0.     0.          0.          0.  
+   Nan         Nan         Nan   Nan    Nan         Nan         Nan 
+   0.          23204.4     Nan   0.01   0.         -0.01        0.  
+   0.         -22013.627   Nan   0.    -0.0111111   0.0111111   0.  
+   0.          45218.027   Nan   0.01   0.0111111  -0.0211111   0.  
+  -10.395158   0.          Nan   0.     0.          0.          0.  
+   10.395158   0.          Nan   0.     0.          0.          0.  
+   10.395158   0.          Nan   0.     0.          0.          0.  
+   10.395158   0.          Nan   0.     0.          0.          0.  
+   10.395158   0.          Nan   0.     0.          0.          0.  
+   1.          0.          Nan   0.     0.          0.          0.  
+   0.          1.          Nan   0.     0.          0.          0.  
+         column 8 to 13
+  -386.  -386.   386.  -386.   193000.   3860.
+   0.     0.     0.     0.     0.        0.   
+   Nan    Nan    Nan    Nan    Nan       Nan  
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
+   0.     0.     0.     0.     0.        0.   
