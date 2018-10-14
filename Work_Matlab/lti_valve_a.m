@@ -82,9 +82,9 @@ ah    = or_wptoa(wfh, ph, ps, cd, sg);
 
 % Partials.
 dwfdda    = wfd / max(ad, 1e-16);
-dwfddp    = wfd / (2. * sgn(ps - pd) * max(abs(ps - pd),1e-16));
+dwfddp    = wfd / (2. * sign(ps - pd) * max(abs(ps - pd), 1e-16));
 dwfhda    = wfh / max(ah, 1e-16);
-dwfhdp    = wfh / (2. * sgn(ph - ps) * max(abs(ph - ps), 1e-16));
+dwfhdp    = wfh / (2. * sign(ph - ps) * max(abs(ph - ps), 1e-16));
 dfjhdp    = -sign(ps - ph) * cp * ah;
 dfjddp    = sign(ps - pd) * cp * ad;
 dfjhda    = -cp * abs(ps - ph);
