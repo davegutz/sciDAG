@@ -118,4 +118,4 @@ eol    = [(dwfddp+dwfhdp)    -dwfddp    -dwfhdp    0 0 0 (dwfdda*wd + dwfhda*wh)
        0        0        0    0 0 0 0];
 
 % Form the system.
-sys = pack_ss(a, b, col, eol);
+sysol = pack_ss(a, b, col, eol);
