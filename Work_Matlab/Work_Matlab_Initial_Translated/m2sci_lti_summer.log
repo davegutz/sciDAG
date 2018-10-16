@@ -1,0 +1,18 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./lti_summer.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Warning: file ./lti_summer.m defines function summer instead of lti_summer
+           summer.sci, summer.cat and sci_summer.sci will be generated !
+  Macro to tree conversion...
+  Conversion of M-tree...
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  ****** End of mfile2sci() session ******

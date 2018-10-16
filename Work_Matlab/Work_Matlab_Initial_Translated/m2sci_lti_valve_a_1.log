@@ -1,0 +1,18 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./lti_valve_a_1.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  L.100: At least one operand of mtlb_s(ax1,ax4)-dfjhdp is an empty matrix, Scilab equivalent is [].
+  L.100: At least one operand of []-dfjddp is an empty matrix, Scilab equivalent is [].
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  ****** End of mfile2sci() session ******

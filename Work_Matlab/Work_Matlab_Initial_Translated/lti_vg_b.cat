@@ -1,0 +1,77 @@
+ 
+ 
+ 
+ 
+ 
+ 
+ Building block for variable geometry with four-way ehsv
+ and actuator with bleeds.
+ Author:    D. A. Gutz
+ Written:    14-Sep-92.
+ Revisions:
+
+ Input:
+ ah_sv        EHSV spool end head area, sqin.
+ cause_sv    EHSV causality, 1=flow, 2=pressure.
+ cd_sv        EHSV coefficient of discharge.
+ ps        Supply pressure, psia.
+ pd        Drain pressure, psia.
+ ph        Head control pressure, psia.
+ pr        Rod control pressure, psia.
+ sg        Fluid specific gravity.
+ wdh_sv    EHSV head drain area gradient, sqin/in.
+ wdr_sv    EHSV rod drain area gradient, sqin/in.
+ wsh_sv    EHSV head supply area gradient, sqin/in.
+ wsr_sv    EHSV rod supply  area gradient, sqin/in.
+ wfhd_sv    EHSV head to drain flow, pph.
+ wfrd_sv    EHSV rod to drain flow, pph.
+ wfsh_sv    EHSV supply to head flow, pph.
+ wfsr_sv    EHSV supply to rod flow, pph.
+ wfj_sv    EHSV first stage flow, pph.
+ stops_sv    EHSV: 0=go.
+ kix_sv    EHSV servovalve gain, inches/mA.
+ tau_sv    EHSV time constant, sec.
+ dp_s_sv    EHSV (ps-pd) at time constant sizing, psi.
+ l_rl        Rod line length, in.
+ a_rl        Rod line section, sqin.
+ vol_rl    Rod line volume, cuin.
+ n_rl        Rod line number of vol nodes.
+ l_hl        Head line length, in.
+ a_hl        Head line section, sqin.
+ vol_hl    Head line volume, cuin.
+ n_hl        Head line number of vol nodes.
+ beta        Fluid compressibility, psi.
+ vol_rc    Rod chamber volume, cuin.
+ vol_hc    Head chamber volume, cuin.
+ ah_act    Actuator head end section, sqin.
+ ar_act    Actuator rod end section, sqin.
+ bdamp_act    Actuator damping, lbf/in/s.
+ mact_act    Actuator mass, lbm.
+ mext_act    Actuator external mass, lbm.
+ wfb_act    Actuator cross piston bleed rod to head, pph.
+ wfrl_act    Actuator rod leakage out, pph.
+ wfhl_act    Actuator head leakage out, pph.
+ stops_act    0=go.
+
+ Output:
+ sys        Packed system of Input and Output.
+
+ Differential IO:
+ pd        Input # 1, supply pressure, psi.
+ pr        Input # 2, drain pressure, psi.
+ per        Input # 3, actuator end pressure, psi.
+ wfld        Input # 4, load flow demand, mA.
+ fx        Input # 5, load, lbf pullin.
+ wfh_sens    Input # 6, head sense flow out of ehsv, pph.
+ wfr_sens    Input # 7, rod sense flow out of ehsv, pph.
+ wfs        Output # 1, supply flow in, pph.
+ wfr        Output # 2, drain flow out, pph.
+ wfve        Output # 3, actuator end flow pulled in by rod, pph.
+ ph_sens    Output # 4, head sensed pressure at ehsv, psi.
+ pr_sens    Output # 5, rod sensed pressure at ehsv, psi.
+ ph        Output # 6, head pressure at actuator, psi.
+ pr        Output # 7, rod pressure at actuator, psi.
+ v_sv        Output # 8, EHSV spool velocity toward head end, in/s.
+ x_sv        Output # 9, EHSV spool displacement toward head, in.
+ v_act        Output # 10, actuator velocity toward head end, in/s.
+ x_act        Output # 11, actuator  displacement toward head, in.
