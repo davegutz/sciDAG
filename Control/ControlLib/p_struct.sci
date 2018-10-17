@@ -1,3 +1,19 @@
+// p_struct(st, st_str, fd, lo)
+// Recursively write out a scilab structure.
+// 17-October-2018  DA Gutz     Written
+// 
+// Inputs:
+//  st      Structure to write, must be provided
+//  st_str  Structure name to record in the written output ['blank']
+//  fd      File device [stdout], must be open on call
+//  lo      Field separator ['']
+//
+// Outputs:
+//  fd      file output stream, not closed
+//
+// Local:
+//  ty      Data type of a field, for printing correct format
+//
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy

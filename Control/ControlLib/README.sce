@@ -20,16 +20,12 @@
 // Aug 25, 2018 	DA Gutz		Created
 // 
 
-// Example of running servo models
-//      Uses Particle Swarm Optimization
-exec('myServo-PSO_run.sce');
-test_run(pwd(), 'myServo-PSO_run')
+// Example of reading and writing structures to file
+test_run(pwd(), 'p_struct')
 
-// Example of running genetic algorithm
-exec('example-nsga2_run.sce');
+// Example of pade lti
+test_run(pwd(), 'pade')
 
-// Example of running genetic algorithm on Servoe
-exec('myServo_nsga2_run.sce');
+// Example of step response performance
+test_run(pwd(), 'myStepPerf')
 
-// Example of various optimzation algorithms on Rosenbrock function
-exec('rosenbrock-various_run.sce');

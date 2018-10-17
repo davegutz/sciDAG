@@ -17,19 +17,36 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Aug 25, 2018 	DA Gutz		Created
+// Sep 26, 2018 	DA Gutz		Created
 // 
 
-// Example of running servo models
-//      Uses Particle Swarm Optimization
-exec('myServo-PSO_run.sce');
-test_run(pwd(), 'myServo-PSO_run')
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
 
-// Example of running genetic algorithm
-exec('example-nsga2_run.sce');
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
 
-// Example of running genetic algorithm on Servoe
-exec('myServo_nsga2_run.sce');
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../ControlLib')
 
-// Example of various optimzation algorithms on Rosenbrock function
-exec('rosenbrock-various_run.sce');
+// Read from file
+testInFile = 'tests/nonreg_tests/p_struct.csv';
+M = csvRead(testInFile,[],[],'string');
+[nrow, ncol] = size(M);
+Mnames = csvRead(testInFile,[],[],'string',[],[],[2 1 nrow 1]);
+Mvals =  csvRead(testInFile,[],[],'string',[],[],[2 2 nrow ncol]);
+j = 2;
+for i=1:nrow-1
+    execstr(Mnames(i)+'='+Mvals(i,j))
+end
+
+// Recursive extraction experiment
+// exec('p_struct.sci', -1)
+p_struct(sys, 'sys');
+p_struct(sys, 'sys', 6, ';');
+
+testOutFile = 'tests/nonreg_tests/p_struct.txt';
+fd = mopen(testOutFile, 'wt');
+p_struct(sys, 'sys', fd, ';');
+mclose(fd);
+mgetl(testOutFile)

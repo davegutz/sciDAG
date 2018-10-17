@@ -28,7 +28,7 @@ xdel(winsid())
 global dT P C W p t_step verbose
 dT = 0.01;
 t_step = 0:dT:2;
-verbose = 4;
+verbose = 0;
 
 // Frequency range
 f_min = 1/2/%pi;

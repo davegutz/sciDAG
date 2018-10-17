@@ -17,19 +17,33 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Aug 25, 2018 	DA Gutz		Created
+// Sep 26, 2018 	DA Gutz		Created
 // 
-
-// Example of running servo models
-//      Uses Particle Swarm Optimization
-exec('myServo-PSO_run.sce');
-test_run(pwd(), 'myServo-PSO_run')
-
-// Example of running genetic algorithm
-exec('example-nsga2_run.sce');
-
-// Example of running genetic algorithm on Servoe
-exec('myServo_nsga2_run.sce');
-
-// Example of various optimzation algorithms on Rosenbrock function
-exec('rosenbrock-various_run.sce');
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../ControlLib')
+// System parameters
+global dT t_step verbose
+global p
+dT = 0.01;
+t_step = 0:dT:2;
+verbose = 0;
+R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
+           'rise', 0.95, 'settle', 0.02,..
+           'invgain', 1/30,..
+           'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2);
+s = %s;
+p.sys_cl = syslin('c', 1/(0.1*s+1));
+p.sys_ol = syslin('c', 10/s);
+[p.gm, gfr] = g_margin(p.sys_ol);
+[p.pm, pfr] = p_margin(p.sys_ol);
+p.gwr = gfr*2*%pi;
+p.pwr = pfr*2*%pi;
+p.y_step = csim('step', t_step, p.sys_cl);
+[p.tr, p.tp, p.Mp, p.tu, p.Mu, p.ts] =  myStepPerf(p.y_step, t_step, R.rise, R.settle, dT);
+mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
+        p.tr, p.Mp*100, p.Mu*100, p.ts)
+tr=0.300 s Mp100= 0.000  Mu100=-0.000  ts=0.391 s

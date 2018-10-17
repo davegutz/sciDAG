@@ -17,19 +17,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Aug 25, 2018 	DA Gutz		Created
+// Sep 26, 2018 	DA Gutz		Created
 // 
 
-// Example of running servo models
-//      Uses Particle Swarm Optimization
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
+
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
+
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../Servo')
 exec('myServo-PSO_run.sce');
-test_run(pwd(), 'myServo-PSO_run')
-
-// Example of running genetic algorithm
-exec('example-nsga2_run.sce');
-
-// Example of running genetic algorithm on Servoe
-exec('myServo_nsga2_run.sce');
-
-// Example of various optimzation algorithms on Rosenbrock function
-exec('rosenbrock-various_run.sce');
