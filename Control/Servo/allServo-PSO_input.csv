@@ -79,7 +79,7 @@ D,7,
 //   launch probability, default,0.9 (?)
 launchp,0.9,
 //   speed factor, default,2
-speedf,2*ones(1,D);,
+speedf,[2;2]',
 //   1 to activate autosave and graphics
 verbosef,1,
 boundsmax,[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],

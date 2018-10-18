@@ -28,21 +28,21 @@ xdel(winsid())
 
 // Read from file
 testInFile = 'testIn.csv';
-M = csvRead(testInFile,[],[],'string',[],'/\/\//');
-//M = csvRead(testInFile,[],[],'string',[],"/^\s*$/");
+commentDelim = '/\/\//';
+M = csvRead(testInFile,[],[],'string',[],commentDelim);
 
 [nrow, ncol] = size(M);
-Mnames = csvRead(testInFile,[],[],'string',[],[],[1 1 nrow 1]);
-Mvals =  csvRead(testInFile,[],[],'string',[],[],[1 2 nrow ncol]);
-j = 1;
-for i=1:nrow-1
-    execstr(Mnames(i)+'='+Mvals(i,j))
+Mnames = csvRead(testInFile,[],[],'string',[],commentDelim,[1 1 nrow 1]);
+// Assume data lines have trailing comma at end of line e.g. 'input=2,2,3,'
+Mvals =  csvRead(testInFile,[],[],'string',[],commentDelim,[1 2 nrow ncol-1]);
+mcol = size(Mvals, 'c');
+for j = 1:mcol
+    for i=1:nrow-1
+        execstr(Mnames(i)+'='+Mvals(i,j))
+    end
+    p_struct(P, 'P');
+    disp(Config)
+    disp(Desc)
+    disp(speedf)
+    disp(boundsmax)
 end
-
-p_struct(P, 'P');
-p_struct(C, 'C');
-p_struct(MU, 'MU');
-p_struct(R, 'R');
-p_struct(WC, 'WC');
-disp(speedf)
-disp(boundsmax)
