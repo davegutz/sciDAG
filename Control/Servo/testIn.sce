@@ -30,15 +30,18 @@ xdel(winsid())
 testInFile = 'testIn.csv';
 commentDelim = '/\/\//';
 M = csvRead(testInFile,[],[],'string',[],commentDelim);
-
+// TODO:  use csvTextScan instead so don't load the file three times
+// could use size() to get number of lines and read csvTextScan first
+// row to get number of columns.
 [nrow, ncol] = size(M);
-Mnames = csvRead(testInFile,[],[],'string',[],commentDelim,[1 1 nrow 1]);
+Mnames = M(:, 1);
 // Assume data lines have trailing comma at end of line e.g. 'input=2,2,3,'
-Mvals =  csvRead(testInFile,[],[],'string',[],commentDelim,[1 2 nrow ncol-1]);
+// Trailing comma requires '-1' in next line.
+Mvals =  M(:, 2:ncol-1);
 mcol = size(Mvals, 'c');
 for j = 1:mcol
-    for i=1:nrow-1
-        execstr(Mnames(i)+'='+Mvals(i,j))
+    for i=1:nrow
+        execstr(Mnames(i)+'='+Mvals(i, j))
     end
     p_struct(P, 'P');
     disp(Config)
