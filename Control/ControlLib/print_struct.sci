@@ -1,15 +1,18 @@
-// print_struct(st, st_str, fd, sep)
+// print_struct(st, st_str, fd, sep, vectoring, titled, titling)
 // Recursively write out a scilab structure.
 // 17-October-2018  DA Gutz     Written
 // 
 // Inputs:
-//  st      Structure to write, must be provided
-//  st_str  Structure name to record in the written output ['blank']
-//  fd      File device [stdout], must be open on call
-//  sep     Field separator ['']
+//  st          Structure to write, must be provided
+//  st_str      Structure name to record in the written output ['blank']
+//  fd          File device [stdout], must be open on call
+//  sep         Field separator ['']
+//  vectoring   A multi-dimensional structure array is being de-coded
+//  titled      A title step only has been performed top to bottom (for vectoring)
+//  titling     In the act of titling
 //
 // Outputs:
-//  fd      file output stream, not closed
+//  fd          file output stream, not closed
 //
 // Local:
 //  type_instance      Data type of a field, for printing correct format
@@ -35,7 +38,13 @@
 // SOFTWARE.
 // Sep 24, 2018 	DA Gutz		Created
 // 
-function print_struct(st, st_str, fd, sep, vectoring)
+function print_struct(st, st_str, fd, sep, vectoring, titled, titling)
+    if argn(2)<7 then
+        titling = %f;
+    end
+    if argn(2)<6 then
+        titled = %f;
+    end
     if argn(2)<5 then
         vectoring = %f;
     end
@@ -52,6 +61,13 @@ function print_struct(st, st_str, fd, sep, vectoring)
     if n_cases > 1 then
         vectoring = %t;
     end
+    if vectoring & ~titled then
+        titling = %t;
+        print_struct(st(1), st_str, fd, sep, vectoring, titled, titling);
+        titling = %f;
+        titled = %t;
+    end
+    mprintf('vectoring=%d, titled=%d, titling=%d\n', vectoring, titled, titling);
     //mprintf('n_cases=%d\n', n_cases);
     for i_case = 1:n_cases
         field_names = fieldnames(st(i_case));
@@ -61,45 +77,51 @@ function print_struct(st, st_str, fd, sep, vectoring)
             type_instance = type(st(i_case));
             [n_instance, m_instance] = size(st(i_case));
             if i_case==1
-                mfprintf(fd, '%s = ', st_str);
-            end
-            for instance=1:m_instance
-                if m_instance>1 & instance==1 then
-                    mfprintf(fd, ' [');
-                end
-                if type_instance==1 then
-                    mfprintf(fd, '%f', st(i_case, instance));
-                elseif type_instance==4 then
-                    if st(i_case, instance) then
-                        mfprintf(fd, 'T');
-                    else
-                        mfprintf(fd, 'field_names');
-                    end
-                elseif type_instance==10 then
-                    mfprintf(fd, '''%s''', st(i_case,instance));
+                if titling
+                    mfprintf(fd, '%s%s', st_str, sep);
                 else
-                    mfprintf(fd, 'type %d for %s unknown\n', type_instance, st_str);
-                end
-                if m_instance>1 & instance==m_instance then
-                    mfprintf(fd, ']');
-                elseif m_instance>1
-                    mfprintf(fd, ', ');
+                    mfprintf(fd, '%s = ', st_str);
                 end
             end
-            if i_case==n_cases
-                mfprintf(fd, '%s\n', sep);
+            if ~titling then
+                for instance=1:m_instance
+                    if m_instance>1 & instance==1 then
+                        mfprintf(fd, ' [');
+                    end
+                    if type_instance==1 then
+                        mfprintf(fd, '%f', st(i_case, instance));
+                    elseif type_instance==4 then
+                        if st(i_case, instance) then
+                            mfprintf(fd, 'T');
+                        else
+                            mfprintf(fd, 'field_names');
+                        end
+                    elseif type_instance==10 then
+                        mfprintf(fd, '''%s''', st(i_case,instance));
+                    else
+                        mfprintf(fd, 'type %d for %s unknown\n', type_instance, st_str);
+                    end
+                    if m_instance>1 & instance==m_instance then
+                        mfprintf(fd, ']');
+                    elseif m_instance>1
+                        mfprintf(fd, ', ');
+                    end
+                end
+                if i_case==n_cases
+                    mfprintf(fd, '%s\n', sep);
+                end
             end
         else
             if n_cases<>1
                 //mfprintf(fd, 'calling print_struct(st(i_case), st_str, fd, sep)\n');
-                print_struct(st(i_case), st_str, fd, sep, vectoring);
+                print_struct(st(i_case), st_str, fd, sep, vectoring, titled, titling);
             else
                 for i_field=1:n_fields
                     new_name = st_str + '.' + field_names(i_field);
                     exec_name = 'st.' + field_names(i_field);
                     //mfprintf(fd, 'n_fields=%d, exec_name = %s, new_name=%s\n', n_fields, exec_name, new_name);
                     //mfprintf(fd, 'evstr(exec_name)=%f\n', evstr(exec_name));
-                    print_struct(evstr(exec_name), new_name, fd, sep, vectoring);
+                    print_struct(evstr(exec_name), new_name, fd, sep, vectoring, titled, titling);
                 end
             end
         end
