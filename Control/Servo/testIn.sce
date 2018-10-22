@@ -39,6 +39,11 @@ Mnames = M(:, 1);
 // Trailing comma requires '-1' in next line.
 Mvals =  M(:, 2:ncol-1);
 mcol = size(Mvals, 'c');
+testOutFile = 'testOut.csv';
+[fdo, err] = mopen(testOutFile, 'wt');
+if err<>0 then
+    mprintf('testIn.sce: error %d opening %s...', err, testOutFile);
+end
 for j = 1:mcol
     for i=1:nrow
         execstr(Mnames(i)+'='+Mvals(i, j))
@@ -46,6 +51,22 @@ for j = 1:mcol
     p_struct(P, 'P');
     disp(Config)
     disp(Desc)
-    disp(speedf)
-    disp(boundsmax)
+    disp(PSO.speedf)
+    disp(PSO.boundsmax)
+    // Write to file
+    p_struct(Config, 'Config', fdo);
+    p_struct(Desc, 'Desc', fdo);
+    p_struct(dT, 'dT', fdo);
+    p_struct(verbose, 'verbose', fdo);
+    p_struct(f_min, 'f_min', fdo);
+    p_struct(f_max, 'f_max', fdo);
+    p_struct(P, 'P', fdo);
+    p_struct(C, 'C', fdo);
+    p_struct(MU, 'MU', fdo);
+    p_struct(R, 'R', fdo);
+    p_struct(WC, 'WC', fdo);
+    p_struct(PSO, 'PSO', fdo);
 end
+
+mclose(fdo);
+

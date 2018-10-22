@@ -62,23 +62,23 @@ WC.sum,0,0,
 WC.invgain,2,2,
 // Particle Swarm control parameters
 //   initial weight parameter
-wmax,0.9,0.9,
+PSO.wmax,0.9,0.9,
 //   final weight parameter
-wmin,0.4,0.4,
+PSO.wmin,0.4,0.4,
 //   maximum iteration number
-itmax,5,5,
+PSO.itmax,5,5,
 //   knowledge factors for personnal best
-c1,0.7,0.7,
-c2,1.47,1.47,
+PSO.c1,0.7,0.7,
+PSO.c2,1.47,1.47,
 //   problem dimensions: number of particles
-N,50,50,
+PSO.N,50,50,
 //   problem in R^2
-D,7,7,
+PSO.D,7,7,
 //   launch probability, default, default
-launchp,0.9,0.9,
+PSO.launchp,0.9,0.9,
 //   speed factor, default, default
-speedf,[2;2]',([2;2]')*2,
+PSO.speedf,[2;2]',([2;2]')*2,
 //   1 to activate autosave and graphics
-verbosef,1,1,
-boundsmax,[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250]*10,
-boundsmin,[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125],[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125],
+PSO.verbosef,1,1,
+PSO.boundsmax,[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250]*10,
+PSO.boundsmin,[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125],[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125],
