@@ -1,8 +1,5 @@
-// print_struct(st, st_str, fd, sep, titling)
-// Recursively write out a scilab structure.   Vectoring assumed and titles
-// always at top.   Elements may be row vectors.
-// Hint:   package all your data in one st and call with
-// st_str='' to squeeze it all in one file tab.
+// print_struct(st, st_str, fd, sep, vectoring, titling)
+// Recursively write out a scilab structure.
 // 17-October-2018  DA Gutz     Written
 // 
 // Inputs:
@@ -10,6 +7,7 @@
 //  st_str      Structure name to record in the written output ['blank']
 //  fd          File device [stdout], must be open on call
 //  sep         Field separator ['']
+//  vectoring   A multi-dimensional structure array is being de-coded
 //  titling     In the act of titling
 //
 // Outputs:
@@ -39,10 +37,13 @@
 // SOFTWARE.
 // Sep 24, 2018 	DA Gutz		Created
 // 
-function print_struct(st, st_str, fd, sep, titling)
-    verbosep = %f;
-    if argn(2)<5 then
+function print_struct_copy(st, st_str, fd, sep, vectoring, titling)
+    verbosep = %t;
+    if argn(2)<6 then
         titling = %f;
+    end
+    if argn(2)<5 then
+        vectoring = %f;
     end
     if argn(2)<4 then
         sep = '';
@@ -54,25 +55,29 @@ function print_struct(st, st_str, fd, sep, titling)
         st_str = '<blank>';
     end
     [n_cases, mc] = size(st);
-    if ~titling & n_cases>1 then // Only first call
+    vectoring = n_cases > 1;
+    if vectoring & ~titling then // Only first call will have n_cases > 1
         titling = %t;
-        print_struct(st(1), st_str, fd, sep, titling);
-        mfprintf(fd, '\n');
+        print_struct(st(1), st_str, fd, sep, vectoring, titling);
         titling = %f;
     end
-    for i_case = 1:n_cases  // Only first call will have n_cases > 1
+    for i_case = 1:n_cases
         field_names = fieldnames(st(i_case));
         [n_fields, m] = size(field_names);
         if n_fields==0 then  // Found the bottom of recursion
-            element = st(i_case);  // TODO try this below for st(icase)
-            if titling then
-                mfprintf(fd, '%s%s', st_str, sep);
-            else
-                type_instance = type(st(i_case));
-                [n_instance, m_instance] = size(st(i_case));
+            type_instance = type(st(i_case));
+            [n_instance, m_instance] = size(st(i_case));
+            if i_case==1
+                if titling
+                    mfprintf(fd, '%s%s', st_str, sep);
+                elseif ~vectoring
+                    mfprintf(fd, '%s = ', st_str);
+                end
+            end
+            if ~titling then
                 for instance=1:m_instance
                     if m_instance>1 & instance==1 then
-                        mfprintf(fd, '[');
+                        mfprintf(fd, ' [');
                     end
                     if type_instance==1 then
                         mfprintf(fd, '%f', st(i_case, instance));
@@ -83,35 +88,38 @@ function print_struct(st, st_str, fd, sep, titling)
                             mfprintf(fd, 'field_names');
                         end
                     elseif type_instance==10 then
-                        mfprintf(fd, '''%s''', st(i_case, instance));
+                        mfprintf(fd, '''%s''', st(i_case,instance));
                     else
                         mfprintf(fd, 'type %d for %s unknown\n', type_instance, st_str);
                     end
                     if m_instance>1 & instance==m_instance then
-                        mfprintf(fd, ' ]');
+                        mfprintf(fd, ']');
                     elseif m_instance>1
                         mfprintf(fd, ', ');
                     end
-                    mfprintf(fd, '%s', sep);
                 end
-            end  // if titling
-        else // Recursion in progress
-            if titling, ting = 1; else ting = 0; end
-            if n_cases<>1
-                print_struct(st(i_case), st_str, fd, sep, titling);
-                mfprintf(fd, '\n');
-            else
-                for i_field=1:n_fields
-                    if ~isempty(st_str) then
-                        new_name = st_str + '.' + field_names(i_field);
-                    else
-                        new_name = field_names(i_field);
-                    end
-                    exec_name = 'st.' + field_names(i_field);
-                    print_struct(evstr(exec_name), new_name, fd, sep, titling);
+                if i_case==n_cases
+                    mfprintf(fd, '%s\n', sep);
                 end
             end
-        end  // if n_fields==0
-    end  // for i_case
+        else // Recursion in progress
+            if vectoring, ving=1; else ving = 0; end
+            if titling, ting=1; else ting = 0; end
+            if n_cases<>1
+                if verbosep then, mfprintf(fd, 'calling print_struct(st(i_case), st_str, fd, sep, %d, %d)\n', ving, ting); end
+                print_struct(st(i_case), st_str, fd, sep, vectoring, titling);
+            else
+                for i_field=1:n_fields
+                    new_name = st_str + '.' + field_names(i_field);
+                    exec_name = 'st.' + field_names(i_field);
+                    if verbosep then
+                        mfprintf(fd, 'calling print_struct(''%s'', ''%s'', %d, ''%s'', %d, %d)\n',..
+                                 exec_name, new_name, fd, sep, ving, ting);
+                    end
+                    print_struct(evstr(exec_name), new_name, fd, sep, vectoring, titling);
+                end
+            end
+        end
+    end
 
 endfunction

@@ -25,7 +25,7 @@ if ~isstruct(StructToWrite)
             fprintf(fileId, '%s,', parent);
         end
         try
-        fprintf(fileId, '%f,', StructToWrite(i,:));
+            fprintf(fileId, '%f,', StructToWrite(i,:));
         catch ERR
             keyboard
         end
