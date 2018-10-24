@@ -26,28 +26,6 @@ getd('../ControlLib')
 mclose('all')
 xdel(winsid())
 
-
-function rotate_file(in_file, out_file, comment_delim)
-    // Rotate string file, saving header comment block
-    // Assumes all rows have same number of columns
-    [M, comments] = csvRead(in_file, [], [], 'string', [], commentDelim);
-    [n_rows, n_elements] = size(M);
-    [fdo, err] = mopen(out_file, 'wt');
-    [n_comments, m_comments] = size(comments);
-    for i_comment = 1:n_comments
-        mfprintf(fdo, '%s\n', comments(i_comment))
-    end
-    for i = 1:n_elements
-        if ~isempty(M(1, i)) then // Strip blanks
-            for j = 1:n_rows
-                mfprintf(fdo, '%s,', M(j, i));
-            end
-        end
-        mfprintf(fdo, '\n');
-    end
-    mclose(fdo);
-endfunction
-
 // Read text from file and assign values.  Assumed row format
 testInFile = 'testIn.csv';
 commentDelim = '/\/\//';
@@ -77,11 +55,26 @@ for i_case = 1:n_cases
         execstr("D("+string(i_case)+")."+Mnames(i_element)+'='+Mvals(i_element, i_case))
     end
 end
+print_struct(D, '', fdt,',');
+mclose(fdt);
+
+// Convert to column format (cases in columns)
+// Read text from file and assign values.  Assumed colum format
+tempInFile = 'tempOut.csv';
+M_t = csvRead(tempInFile, [], [], 'string', [], commentDelim);
+[n_rows_t, n_elements_t] = size(M_t);
+testOutFile = 'testOut.csv';
+[fdo, err] = mopen(testOutFile, 'wt');
 [n_comments, m_comments] = size(comments);
 for i_comment = 1:n_comments
-    mfprintf(fdt, '%s\n', comments(i_comment))
+    mfprintf(fdo, '%s\n', comments(i_comment))
 end
-print_struct(D, '', fdt, ',');
-mclose(fdt);
-rotate_file('tempOut.csv', 'testOut.csv', commentDelim);
-
+for i_t = 1:n_elements_t
+    if ~isempty(M_t(1, i_t)) then // Strip blanks
+        for j_t = 1:n_rows_t
+            mfprintf(fdo, '%s,', M_t(j_t, i_t));
+        end
+    end
+    mfprintf(fdo, '\n');
+end
+mclose(fdo);
