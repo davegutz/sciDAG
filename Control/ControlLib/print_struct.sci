@@ -16,7 +16,7 @@
 //  fd          file output stream, not closed
 //
 // Local:
-//  type_instance      Data type of a field, for printing correct format
+//  type_element      Data type of a field, for printing correct format
 //
 // Copyright (C) 2018 - Dave Gutz
 //
@@ -64,40 +64,54 @@ function print_struct(st, st_str, fd, sep, titling)
         field_names = fieldnames(st(i_case));
         [n_fields, m] = size(field_names);
         if n_fields==0 then  // Found the bottom of recursion
-            element = st(i_case);  // TODO try this below for st(icase)
+            element = st(i_case, :);
+            if verbosep then
+                [n, m] = size(element);
+                for i = 1:m
+                    mprintf('%s(%d)=%s,', st_str, i, string(element(i)));
+                end
+                mprintf('\n');
+            end
             if titling then
                 mfprintf(fd, '%s%s', st_str, sep);
             else
-                type_instance = type(st(i_case));
-                [n_instance, m_instance] = size(st(i_case));
+                type_element = type(element);
+                [n_instance, m_instance] = size(element);
+                mult_sep = ' ';
                 for instance=1:m_instance
                     if m_instance>1 & instance==1 then
                         mfprintf(fd, '[');
                     end
-                    if type_instance==1 then
-                        mfprintf(fd, '%f', st(i_case, instance));
-                    elseif type_instance==4 then
-                        if st(i_case, instance) then
+                    if type_element==1 then
+                        mfprintf(fd, '%f', element(instance));
+                    elseif type_element==4 then
+                        if element(instance) then
                             mfprintf(fd, 'T');
                         else
                             mfprintf(fd, 'field_names');
                         end
-                    elseif type_instance==10 then
-                        mfprintf(fd, '''%s''', st(i_case, instance));
+                    elseif type_element==10 then
+                        mfprintf(fd, '''%s''', element(instance));
                     else
-                        mfprintf(fd, 'type %d for %s unknown\n', type_instance, st_str);
+                        mfprintf(fd, 'type %d for %s unknown\n', type_element, st_str);
                     end
                     if m_instance>1 & instance==m_instance then
-                        mfprintf(fd, ' ]');
+                        mfprintf(fd, ']');
                     elseif m_instance>1
-                        mfprintf(fd, ', ');
+                        mfprintf(fd, '%s', mult_sep);
                     end
-                    mfprintf(fd, '%s', sep);
                 end
+                mfprintf(fd, '%s', sep);
             end  // if titling
         else // Recursion in progress
             if titling, ting = 1; else ting = 0; end
             if n_cases<>1
+                if verbosep then
+                    element = st(i_case);
+                    mprintf('element n_cases<>1:')
+                    disp(element)
+                    mprintf('\n');
+                end
                 print_struct(st(i_case), st_str, fd, sep, titling);
                 mfprintf(fd, '\n');
             else
@@ -108,6 +122,12 @@ function print_struct(st, st_str, fd, sep, titling)
                         new_name = field_names(i_field);
                     end
                     exec_name = 'st.' + field_names(i_field);
+                    new_val = evstr(exec_name);
+                    if verbosep then
+                        [n,m]=size(new_val);
+                        mprintf('%s=%s (%d,%d):', exec_name, new_name, n, m);
+                        disp(new_val)
+                    end
                     print_struct(evstr(exec_name), new_name, fd, sep, titling);
                 end
             end
