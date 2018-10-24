@@ -26,52 +26,49 @@ getd('../ControlLib')
 mclose('all')
 xdel(winsid())
 
-// Read from file
+// Read text from file and assign values.  Assumed row format
 testInFile = 'testIn.csv';
 commentDelim = '/\/\//';
 M = csvRead(testInFile, [], [], 'string', [], commentDelim);
-// TODO:  use csvTextScan instead so don't load the file three times
-// could use size() to get number of lines and read csvTextScan first
-// row to get number of columns.
 [n_elements, ncol] = size(M);
 Mnames = M(:, 1);
 // Assume data lines have trailing comma at end of line e.g. 'input=2,2,3,'
 // Trailing comma requires '-1' in next line.
 Mvals =  M(:, 2:ncol-1);
 n_cases = size(Mvals, 'c');
-testOutFile = 'testOut.csv';
-[fdo, err] = mopen(testOutFile, 'wt');
-if err<>0 then
-    mprintf('testIn.sce: error %d opening %s...', err, testOutFile);
-end
+// Assign values
 for i_case = 1:n_cases
     for i_element = 1:n_elements
         execstr(Mnames(i_element)+'='+Mvals(i_element, i_case))
     end
-//    print_struct(P, 'P');
-//    disp(Config)
-//    disp(Desc)
-//    disp(PSO.speedf)
-//    disp(PSO.boundsmax)
-//    // Write to file
-//    print_struct(Config, 'Config', fdo);
-//    print_struct(Desc, 'Desc', fdo);
-//    print_struct(dT, 'dT', fdo);
-//    print_struct(verbose, 'verbose', fdo);
-//    print_struct(f_min, 'f_min', fdo);
-//    print_struct(f_max, 'f_max', fdo);
-//    print_struct(P, 'P', fdo);
-//    print_struct(C, 'C', fdo);
-//    print_struct(MU, 'MU', fdo);
-//    print_struct(R, 'R', fdo);
-//    print_struct(WC, 'WC', fdo);
-//    print_struct(PSO, 'PSO', fdo);
+end
+
+// Output file
+// First print out in row format (cases in rows)
+tempOutFile = 'tempOut.csv';
+[fdt, err] = mopen(tempOutFile, 'wt');
+if err<>0 then
+    mprintf('testIn.sce: error %d opening %s...', err, tempOutFile);
 end
 for i_case = 1:n_cases
     for i_element = 1:n_elements
         execstr("D("+string(i_case)+")."+Mnames(i_element)+'='+Mvals(i_element, i_case))
     end
 end
-print_struct(D, '', fdo,',');
+print_struct(D, '', fdt,',');
+mclose(fdt);
 
+// Convert to column format (cases in columns)
+// Read text from file and assign values.  Assumed colum format
+tempInFile = 'tempOut.csv';
+M_t = csvRead(tempInFile, [], [], 'string', [], commentDelim);
+[n_rows_t, n_elements_t] = size(M_t);
+testOutFile = 'testOut.csv';
+[fdo, err] = mopen(testOutFile, 'wt');
+for i_t = 1:n_elements_t
+    for j_t = 1:n_rows_t
+        mfprintf(fdo, '%s,', M_t(j_t, i_t));
+    end
+    mfprintf(fdo, '\n');
+end
 mclose(fdo);
