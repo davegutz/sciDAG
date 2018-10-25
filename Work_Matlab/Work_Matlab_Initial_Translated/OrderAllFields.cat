@@ -1,0 +1,6 @@
+ function SortedStruct = OrderAllFields(StructToSort)
+
+ Sorts all fieldnames in a structure array alphabetically
+ on all levels.
+ Recursive function.
+

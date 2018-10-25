@@ -9,3 +9,31 @@
   M-file reading: Done
   Syntax modification...
   Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  !! L.39: Matlab function int2str not yet converted, original calling sequence used.
+  !! L.47: Matlab function int2str not yet converted, original calling sequence used.
+  ! L.54: abs(mtlb_s(a1,ai)) may be replaced by:
+  !    --> mtlb_s(a1,ai) if mtlb_s(a1,ai) is Real.
+  ! L.54: abs(mtlb_any(abs(mtlb_s(a1,ai)))) may be replaced by:
+  !    --> mtlb_any(abs(mtlb_s(a1,ai))) if mtlb_any(abs(mtlb_s(a1,ai))) is Real.
+  ! L.54: abs(mtlb_s(b1,bi)) may be replaced by:
+  !    --> mtlb_s(b1,bi) if mtlb_s(b1,bi) is Real.
+  ! L.54: abs(mtlb_any(abs(mtlb_s(b1,bi)))) may be replaced by:
+  !    --> mtlb_any(abs(mtlb_s(b1,bi))) if mtlb_any(abs(mtlb_s(b1,bi))) is Real.
+  !! L.74: Matlab function int2str not yet converted, original calling sequence used.
+  ! L.81: abs(mtlb_s(a1,ai)) may be replaced by:
+  !    --> mtlb_s(a1,ai) if mtlb_s(a1,ai) is Real.
+  ! L.81: abs(mtlb_any(abs(mtlb_s(a1,ai)))) may be replaced by:
+  !    --> mtlb_any(abs(mtlb_s(a1,ai))) if mtlb_any(abs(mtlb_s(a1,ai))) is Real.
+  ! L.81: abs(mtlb_s(c1,ci)) may be replaced by:
+  !    --> mtlb_s(c1,ci) if mtlb_s(c1,ci) is Real.
+  ! L.81: abs(mtlb_any(abs(mtlb_s(c1,ci)))) may be replaced by:
+  !    --> mtlb_any(abs(mtlb_s(c1,ci))) if mtlb_any(abs(mtlb_s(c1,ci))) is Real.
+  !! L.96: Matlab function int2str not yet converted, original calling sequence used.
+  !! L.103: Matlab function int2str not yet converted, original calling sequence used.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be wrong (see the //!! comments).
+  ****** End of mfile2sci() session ******
