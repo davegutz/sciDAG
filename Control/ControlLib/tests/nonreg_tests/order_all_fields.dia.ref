@@ -30,13 +30,13 @@ Bs = order_all_fields(B);
 errmsg = msprintf('**** Just plain struct, not array*****');
 assert_checkerror("Cs = order_all_fields(C);", errmsg);
 D(1)=As; D(2) = As;
-[fdo, err] = mopen('order_all_fields_tst.csv', 'wt');
+[fdo, err] = mopen('tests/nonreg_tests/order_all_fields_tst.csv', 'wt');
 print_struct(D, 'D', fdo, ',');
 mclose(fdo);
-mgetl('order_all_fields_tst.csv')
+mgetl('tests/nonreg_tests/order_all_fields_tst.csv')
  ans  =
-!D.f,D.e,D.d,D.c,D.b,D.a,                 !
-!                                         !
-!'myF',Nan,T,3.000000,1.000000,2.000000,  !
-!                                         !
-!'myF',Nan,T,3.000000,1.000000,2.000000,  !
+!D.f,D.e,D.d,D.c,D.b,D.a,                                               !
+!                                                                       !
+!'myF',Nan,T,3.0000000000000000,1.0000000000000000,2.0000000000000000,  !
+!                                                                       !
+!'myF',Nan,T,3.0000000000000000,1.0000000000000000,2.0000000000000000,  !

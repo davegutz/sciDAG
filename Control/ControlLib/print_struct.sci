@@ -40,7 +40,7 @@
 // Sep 24, 2018 	DA Gutz		Created
 // 
 function print_struct(st, st_str, fd, sep, titling)
-    verbosep = %f;
+    global titled
     if argn(2)<5 then
         titling = %f;
     end
@@ -54,24 +54,18 @@ function print_struct(st, st_str, fd, sep, titling)
         st_str = '<blank>';
     end
     [n_cases, mc] = size(st);
-    if ~titling & n_cases>1 then // Only first call
+    if ~titling & n_cases>0 & isempty(titled) then // Only first call
         titling = %t;
         print_struct(st(1), st_str, fd, sep, titling);
         mfprintf(fd, '\n');
         titling = %f;
+        titled = %t;
     end
     for i_case = 1:n_cases  // Only first call will have n_cases > 1
         field_names = fieldnames(st(i_case));
         [n_fields, m] = size(field_names);
         if n_fields==0 then  // Found the bottom of recursion
             element = st(i_case, :);
-            if verbosep then
-                [n, m] = size(element);
-                for i = 1:m
-                    mprintf('%s(%d)=%s,', st_str, i, string(element(i)));
-                end
-                mprintf('\n');
-            end
             if titling then
                 mfprintf(fd, '%s%s', st_str, sep);
             else
@@ -83,13 +77,15 @@ function print_struct(st, st_str, fd, sep, titling)
                         mfprintf(fd, '[');
                     end
                     if type_element==1 then
-                        mfprintf(fd, '%f', element(instance));
+                        mfprintf(fd, '%#3.17g', element(instance));
                     elseif type_element==4 then
                         if element(instance) then
                             mfprintf(fd, 'T');
                         else
                             mfprintf(fd, 'field_names');
                         end
+                    elseif type_element==8 then
+                        mfprintf(fd, '%d', element(instance));
                     elseif type_element==10 then
                         mfprintf(fd, '''%s''', element(instance));
                     else
@@ -106,12 +102,6 @@ function print_struct(st, st_str, fd, sep, titling)
         else // Recursion in progress
             if titling, ting = 1; else ting = 0; end
             if n_cases<>1
-                if verbosep then
-                    element = st(i_case);
-                    mprintf('element n_cases<>1:')
-                    disp(element)
-                    mprintf('\n');
-                end
                 print_struct(st(i_case), st_str, fd, sep, titling);
                 mfprintf(fd, '\n');
             else
@@ -123,11 +113,6 @@ function print_struct(st, st_str, fd, sep, titling)
                     end
                     exec_name = 'st.' + field_names(i_field);
                     new_val = evstr(exec_name);
-                    if verbosep then
-                        [n,m]=size(new_val);
-                        mprintf('%s=%s (%d,%d):', exec_name, new_name, n, m);
-                        disp(new_val)
-                    end
                     print_struct(evstr(exec_name), new_name, fd, sep, titling);
                 end
             end

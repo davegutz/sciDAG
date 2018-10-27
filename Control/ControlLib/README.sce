@@ -20,8 +20,11 @@
 // Aug 25, 2018 	DA Gutz		Created
 // 
 
+// Example of sorting structures
+test_run(pwd(), 'order_all_fields')
+
 // Example of reading and writing structures to file
-test_run(pwd(), 'p_struct')
+test_run(pwd(), 'print_struct')
 
 // Example of pade lti
 test_run(pwd(), 'pade')

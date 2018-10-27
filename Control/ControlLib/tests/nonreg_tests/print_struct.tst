@@ -19,34 +19,17 @@
 // SOFTWARE.
 // Sep 26, 2018 	DA Gutz		Created
 // 
-
-//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
-
-// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
-
-// run this in Work_Matlab_Final_Translated
 clear
 funcprot(0);
 getd('../ControlLib')
 
-// Read from file
-testInFile = 'tests/nonreg_tests/p_struct.csv';
-M = csvRead(testInFile,[],[],'string');
-[nrow, ncol] = size(M);
-Mnames = csvRead(testInFile,[],[],'string',[],[],[2 1 nrow 1]);
-Mvals =  csvRead(testInFile,[],[],'string',[],[],[2 2 nrow ncol]);
-j = 2;
-for i=1:nrow-1
-    execstr(Mnames(i)+'='+Mvals(i,j))
-end
+A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'd',int8(4), 'e', int16(5), 'f', int32(6));
+B = struct('second', A, 'third', A, 'first', A, 'fourth', %t);
+D = struct('primary', A, 'secondary', B);
 
-// Recursive extraction experiment
-// exec('p_struct.sci', -1)
-p_struct(sys, 'sys');
-p_struct(sys, 'sys', 6, ';');
+[fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
+print_struct(D, 'D', fdo, ',');
+mclose(fdo);
 
-testOutFile = 'tests/nonreg_tests/p_struct.txt';
-fd = mopen(testOutFile, 'wt');
-p_struct(sys, 'sys', fd, ';');
-mclose(fd);
-mgetl(testOutFile)
+mgetl('tests/nonreg_tests/print_struct_tst.csv')
+

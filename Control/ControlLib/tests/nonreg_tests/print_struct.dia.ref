@@ -22,21 +22,23 @@
 clear
 funcprot(0);
 getd('../ControlLib')
-
-A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3);
+A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'd',int8(4), 'e', int16(5), 'f', int32(6));
 B = struct('second', A, 'third', A, 'first', A, 'fourth', %t);
-C(1) = A; C(2) = B;
-
-As = order_all_fields(A);
-Bs = order_all_fields(B);
-errmsg = msprintf('**** Just plain struct, not array*****');
-assert_checkerror("Cs = order_all_fields(C);", errmsg);
-
-D(1)=As; D(2) = As;
-
-[fdo, err] = mopen('tests/nonreg_tests/order_all_fields_tst.csv', 'wt');
+D = struct('primary', A, 'secondary', B);
+[fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
 print_struct(D, 'D', fdo, ',');
 mclose(fdo);
-
-mgetl('tests/nonreg_tests/order_all_fields_tst.csv')
-
+mgetl('tests/nonreg_tests/print_struct_tst.csv')
+ ans  =
+!D.primary.d,D.primary.b,D.primary.e,D.primary.a,D.primary.f,D.primary.!
+!c,D.secondary.second.d,D.secondary.second.b,D.secondary.second.e,D.sec!
+!ondary.second.a,D.secondary.second.f,D.secondary.second.c,D.secondary.!
+!third.d,D.secondary.third.b,D.secondary.third.e,D.secondary.third.a,D.!
+!secondary.third.f,D.secondary.third.c,D.secondary.first.d,D.secondary.!
+!first.b,D.secondary.first.e,D.secondary.first.a,D.secondary.first.f,D.!
+!secondary.first.c,D.secondary.fourth,                                 !
+!                                                                      !
+!4,1.0000000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.000!
+!0000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000!
+!000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000000000,!
+!5,2.0000000000000000,6,3.0000000000000000,T,                          !
