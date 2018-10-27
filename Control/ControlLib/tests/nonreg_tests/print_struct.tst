@@ -30,6 +30,11 @@ D = struct('primary', A, 'secondary', B);
 [fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
 print_struct(D, 'D', fdo, ',');
 mclose(fdo);
-
 mgetl('tests/nonreg_tests/print_struct_tst.csv')
 
+print_struct(D, 'D', 6, ',');
+
+[fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
+print_struct(D, 'D', fdo, ',');
+mclose(fdo);
+mgetl('tests/nonreg_tests/print_struct_tst.csv')

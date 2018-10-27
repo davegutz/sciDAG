@@ -42,3 +42,96 @@ mgetl('tests/nonreg_tests/print_struct_tst.csv')
 !0000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000!
 !000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000000000,!
 !5,2.0000000000000000,6,3.0000000000000000,T,                          !
+print_struct(D, 'D', 6, ',');
+D.primary.d,
+D.primary.b,
+D.primary.e,
+D.primary.a,
+D.primary.f,
+D.primary.c,
+D.secondary.second.d,
+D.secondary.second.b,
+D.secondary.second.e,
+D.secondary.second.a,
+D.secondary.second.f,
+D.secondary.second.c,
+D.secondary.third.d,
+D.secondary.third.b,
+D.secondary.third.e,
+D.secondary.third.a,
+D.secondary.third.f,
+D.secondary.third.c,
+D.secondary.first.d,
+D.secondary.first.b,
+D.secondary.first.e,
+D.secondary.first.a,
+D.secondary.first.f,
+D.secondary.first.c,
+D.secondary.fourth,
+4
+,
+1.0000000000000000
+,
+5
+,
+2.0000000000000000
+,
+6
+,
+3.0000000000000000
+,
+4
+,
+1.0000000000000000
+,
+5
+,
+2.0000000000000000
+,
+6
+,
+3.0000000000000000
+,
+4
+,
+1.0000000000000000
+,
+5
+,
+2.0000000000000000
+,
+6
+,
+3.0000000000000000
+,
+4
+,
+1.0000000000000000
+,
+5
+,
+2.0000000000000000
+,
+6
+,
+3.0000000000000000
+,
+T
+,
+[fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
+print_struct(D, 'D', fdo, ',');
+mclose(fdo);
+mgetl('tests/nonreg_tests/print_struct_tst.csv')
+ ans  =
+!D.primary.d,D.primary.b,D.primary.e,D.primary.a,D.primary.f,D.primary.!
+!c,D.secondary.second.d,D.secondary.second.b,D.secondary.second.e,D.sec!
+!ondary.second.a,D.secondary.second.f,D.secondary.second.c,D.secondary.!
+!third.d,D.secondary.third.b,D.secondary.third.e,D.secondary.third.a,D.!
+!secondary.third.f,D.secondary.third.c,D.secondary.first.d,D.secondary.!
+!first.b,D.secondary.first.e,D.secondary.first.a,D.secondary.first.f,D.!
+!secondary.first.c,D.secondary.fourth,                                 !
+!                                                                      !
+!4,1.0000000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.000!
+!0000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000!
+!000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000000000,!
+!5,2.0000000000000000,6,3.0000000000000000,T,                          !

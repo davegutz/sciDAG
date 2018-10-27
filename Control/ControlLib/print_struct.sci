@@ -40,9 +40,8 @@
 // Sep 24, 2018 	DA Gutz		Created
 // 
 function print_struct(st, st_str, fd, sep, titling)
-    global titled
     if argn(2)<5 then
-        titling = %f;
+        titling = '';
     end
     if argn(2)<4 then
         sep = '';
@@ -54,12 +53,11 @@ function print_struct(st, st_str, fd, sep, titling)
         st_str = '<blank>';
     end
     [n_cases, mc] = size(st);
-    if ~titling & n_cases>0 & isempty(titled) then // Only first call
+    if isempty(titling) then // Only first call
         titling = %t;
         print_struct(st(1), st_str, fd, sep, titling);
         mfprintf(fd, '\n');
         titling = %f;
-        titled = %t;
     end
     for i_case = 1:n_cases  // Only first call will have n_cases > 1
         field_names = fieldnames(st(i_case));
