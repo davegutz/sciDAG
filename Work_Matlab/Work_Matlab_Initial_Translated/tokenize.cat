@@ -1,0 +1,4 @@
+ function [nTok, tokens, ctokens] = tokenize(targ, delims)
+ tokenize using optional delims (default is Matlab default:  'help strtok').  Return number, cell array result, and the ctokens
+ stripped (the first ctokens elemement preceeds the first tokens element
+ on reconstruction

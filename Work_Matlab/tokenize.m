@@ -37,9 +37,9 @@ while true
         if ~isempty(oldRem),
             ncTok = ncTok+1;
             if isempty(col3),
-                cTokens{ncTok} = oldRem;
+                %cTokens{ncTok} = oldRem;
             else
-                cTokens{ncTok} = oldRem(1:col3-1);
+                %cTokens{ncTok} = oldRem(1:col3-1);
             end
         end
     end
@@ -49,3 +49,5 @@ while true
     if isempty(str),  break;  end
     nTok            = nTok + 1;
     tokens{nTok}    =   str;
+end
+return

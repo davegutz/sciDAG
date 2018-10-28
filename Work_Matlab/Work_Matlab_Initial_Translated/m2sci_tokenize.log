@@ -1,0 +1,29 @@
+  ****** Beginning of mfile2sci() session ******
+  File to convert: ./tokenize.m
+  Result file path: C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/
+  Recursive mode: OFF
+  Only double values used in M-file: YES
+  Verbose mode: 3
+  Generate formated code: NO
+  M-file reading...
+  M-file reading: Done
+  Syntax modification...
+  Syntax modification: Done
+  Macro to tree conversion...
+  Conversion of M-tree...
+  !! L.16: Matlab function strtok not yet converted, original calling sequence used.
+  L.16: (Warning name conflict: function name changed from strtok to %strtok).
+  !! L.18: Matlab function strtok not yet converted, original calling sequence used.
+  L.18: (Warning name conflict: function name changed from strtok to %strtok).
+  !! L.26: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.26: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.29: Unknown function mtlb_s not converted, original calling sequence used.
+  !! L.29: Unknown function mtlb_imp not converted, original calling sequence used.
+  !! L.55: Unknown function tokens not converted, original calling sequence used.
+  L.55: (Warning name conflict: function name changed from tokens to %tokens).
+  ! L.57: mtlb(resume) can be replaced by resume() or resume whether resume is an M-file or not.
+  Conversion of M-tree: Done
+  Macro to tree conversion: Done
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be wrong (see the //!! comments).
+  ****** End of mfile2sci() session ******
