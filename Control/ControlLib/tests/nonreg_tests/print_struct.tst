@@ -21,6 +21,7 @@
 // 
 clear
 funcprot(0);
+mclose('all');
 getd('../ControlLib')
 
 A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'd',int8(4), 'e', int16(5), 'f', int32(6));

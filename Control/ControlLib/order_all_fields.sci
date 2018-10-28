@@ -46,7 +46,7 @@ function sorted_struct = order_all_fields(struct_to_sort)
         sorted_struct = struct_to_sort;
     else // Recursion in progress
         [n, m] = size(fields);
-        sorted_fields = gsort(fields);
+        sorted_fields = gsort(fields, 'g', 'i');
         for i=1:n
             field = sorted_fields(i);
             execstr('sorted_struct.' + field +..
