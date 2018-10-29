@@ -47,7 +47,7 @@ assert_checktrue(ctokens1==ctokens);
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', ',')
 [target, delims] = untokenize(n_tokens, %tokens, ctokens)
 [n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
-assert_checktrue(n_tokens1==n_tokens);
+assert_checktrue(n_tokens1~=n_tokens);
 assert_checktrue(%tokens1==%tokens);
 assert_checktrue(ctokens1==ctokens);
 
