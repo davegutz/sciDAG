@@ -19,35 +19,42 @@
 // SOFTWARE.
 // Sep 26, 2018 	DA Gutz		Created
 // 
+
 //mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
+
 // Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
+
 // run this in Work_Matlab_Final_Translated
 clear
 funcprot(0);
 getd('../ControlLib')
-[n_tokens, %tokens, ctokens]=tokenize(',,,,,every,good,boy,does,,,fine,,,', ',');
-for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
-<,,,,,>|<every>|<,>|<good>|<,>|<boy>|<,>|<does>|<,,,>|<fine>|<,,,>
-[n_tokens, %tokens, ctokens]=tokenize('every,good,boy,does,,,fine', ',');
-for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
-<>|<every>|<,>|<good>|<,>|<boy>|<,>|<does>|<,,,>|<fine>|<>
+
+[n_tokens, %tokens, ctokens]=tokenize(',,,,,every,good,boy,does,,,fine,,,', ',')
+[target, delims] = untokenize(n_tokens, %tokens, ctokens)
+[n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
+assert_checktrue(n_tokens1==n_tokens);
+assert_checktrue(%tokens1==%tokens);
+assert_checktrue(ctokens1==ctokens);
+
+
+[n_tokens, %tokens, ctokens]=tokenize('every,good,boy,does,,,fine', ',')
+[target, delims] = untokenize(n_tokens, %tokens, ctokens)
+[n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
+assert_checktrue(n_tokens1==n_tokens);
+assert_checktrue(%tokens1==%tokens);
+assert_checktrue(ctokens1==ctokens);
+
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', ',')
- ctokens  = 
-!  !
-!  !
-!  !
-!  !
-!  !
- %tokens  = 
- every good boy does fine
- n_tokens  = 
-   1.
-for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
-<>|<every good boy does fine>|<>
-[n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', [',', ' ']);
-for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
-<>|<every>|< >|<good>|< >|<boy>|< >|<does>|< >|<fine>|<>
-[n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', '');
-operation +: Warning adding a matrix with the empty matrix will give an empty matrix result.
-for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
-<>
+[target, delims] = untokenize(n_tokens, %tokens, ctokens)
+[n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
+assert_checktrue(n_tokens1==n_tokens);
+assert_checktrue(%tokens1==%tokens);
+assert_checktrue(ctokens1==ctokens);
+
+[n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', [',', ' '])
+[target, delims] = untokenize(n_tokens, %tokens, ctokens)
+[n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
+assert_checktrue(n_tokens1==n_tokens);
+assert_checktrue(%tokens1==%tokens);
+assert_checktrue(ctokens1==ctokens);
+

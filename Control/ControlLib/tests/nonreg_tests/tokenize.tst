@@ -30,13 +30,16 @@ funcprot(0);
 getd('../ControlLib')
 
 [n_tokens, %tokens, ctokens]=tokenize(',,,,,every,good,boy,does,,,fine,,,', ',');
-for k=1:n_tokens,  mprintf('%s | ', ctokens(k));mprintf('%s | ', %tokens(k));end; mprintf('%s\n', ctokens(n_tokens+1));
+for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
 
 [n_tokens, %tokens, ctokens]=tokenize('every,good,boy,does,,,fine', ',');
-for k=1:n_tokens,  mprintf('%s | ', ctokens(k));mprintf('%s | ', %tokens(k));end; mprintf('%s\n', ctokens(n_tokens+1));
+for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
 
-[n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', ',');
-for k=1:n_tokens,  mprintf('%s | ', ctokens(k));mprintf('%s | ', %tokens(k));end; mprintf('%s\n', ctokens(n_tokens+1));
+[n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', ',')
+for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
 
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', [',', ' ']);
-for k=1:n_tokens,  mprintf('%s | ', ctokens(k));mprintf('%s | ', %tokens(k));end; mprintf('%s\n', ctokens(n_tokens+1));
+for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
+
+[n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', '');
+for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));

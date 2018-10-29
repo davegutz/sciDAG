@@ -29,7 +29,7 @@
 function [n_tokens, %tokens, ctokens] = tokenize(target, delims)
 
     // For debugging    
-    verbosep = %t;
+    verbosep = %f;
 
     // Number of arguments in function call
     [%nargout, %nargin] = argn(0)
@@ -41,12 +41,17 @@ function [n_tokens, %tokens, ctokens] = tokenize(target, delims)
     ieee(1);
 
     // Do it
-    places = tokenpos(target, delims);
+    if isempty(delims)then
+        places = [];
+    else
+         places = tokenpos(target, delims);
+    end
     [n_tokens, dummy] = size(places);
     for i_token = 1:n_tokens
         %tokens(i_token) = part(target, places(i_token,1):places(i_token,2));
     end
     n_ctokens = n_tokens-1;
+    ctokens = '';
     for i_token = 1:n_ctokens
         ctokens(i_token) = part(target, places(i_token,2)+1:places(i_token+1,1)-1);
     end
@@ -57,15 +62,20 @@ function [n_tokens, %tokens, ctokens] = tokenize(target, delims)
     else
         ctokens = [''; ctokens];
     end
-    ctokens = [ctokens; part(target, places(n_tokens,2)+1:length(target))];
+    if  places(n_tokens,2)+1<=length(target) then
+        ctokens = [ctokens; part(target, places(n_tokens,2)+1:length(target))];
+    else
+        ctokens = [ctokens; ''];
+    end
     n_ctokens = n_ctokens + 2;
+
 
     if verbosep == %t then
         for k=1:n_tokens
-            mprintf('%s | ', ctokens(k));
-            mprintf('%s | ', %tokens(k));
+            mprintf('<%s>|', ctokens(k));
+            mprintf('<%s>|', %tokens(k));
         end
-        mprintf('%s\n', ctokens(n_tokens+1));
+        mprintf('<%s>\n', ctokens(n_tokens+1));
     end
 
 endfunction
