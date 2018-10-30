@@ -35,6 +35,7 @@
 // Sep 24, 2018 	DA Gutz		Created
 // 
 function rotate_file(in_file, out_file, comment_delim)
+    
     // Rotate string file, saving header comment block
     // Assumes all rows have same number of columns
     [M, comments] = csvRead(in_file, [], [], 'string', [], commentDelim);
@@ -53,4 +54,5 @@ function rotate_file(in_file, out_file, comment_delim)
         mfprintf(fdo, '\n');
     end
     mclose(fdo);
+
 endfunction
