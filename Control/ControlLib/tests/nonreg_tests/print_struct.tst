@@ -24,8 +24,8 @@ funcprot(0);
 mclose('all');
 getd('../ControlLib')
 
-A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'd',int8(4), 'e', int16(5), 'f', int32(6));
-B = struct('second', A, 'third', A, 'first', A, 'fourth', %t);
+A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'e',int8(4), 'f', int16(5), 'g', int32(6), 'h', %inf, 'i', -%inf);
+B = struct('second', A, 'third', A, 'first', A, 'fourth', %f);
 D = struct('primary', A, 'secondary', B);
 
 [fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');

@@ -1,19 +1,19 @@
-// function rotate_file(in_file, out_file, comment_delim)
-// Read in a text file, rotate it and write it out.
+// function write_csv_row_data(out_file, Mnames, Mvals, C)
+// Write a csv data file with parameters in rows, saving comments too.
+// All comments get collected into one blob.
 // 17-October-2018  DA Gutz     Written
 // 
 // Inputs:
-//  in_file         csv text file with rectangular matrix in rows, columns
-//  out_file        csv text file with rotated rectangular matrix
-//  comment_delim   deliminiter for comments to be preserved in out_file header
+//   out_file        csv file name
+//   Mnames         Row vector of parameter names
+//   Mvals          Matrix of data
+//   C              Column vector of comments
 //
 // Outputs:
-//  none
 //
 // Local:
 //  
-//
-// Copyright (C) 2018 - Dave Gutz
+//// Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,35 +32,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Sep 24, 2018 	DA Gutz		Created
-// 
-function rotate_file(in_file, out_file, comment_delim)
+// Oct 31, 2018 	DA Gutz		Created
+//******************************************************************************
+function write_csv_row_data(out_file, Mnames, Mvals, C)
 
-    if argn(2)<3 then
-        comment_delim = '/\/\//';
-    end
-
-    // Rotate string file, saving header comment block
-    // Assumes all rows have same number of columns
-    [M, comments] = csvRead(in_file, [], [], 'string', [], comment_delim);
-    [n_rows, n_elements] = size(M);
-    [fdo, err] = mopen(out_file, 'wt');
+    [fdt, err] = mopen(out_file, 'wt');
     if err<>0 then
         msg = msprintf('could not open %s;  is it open in excel?', out_file);
         error(msg)
     end
-    [n_comments, m_comments] = size(comments);
-    for i_comment = 1:n_comments
-        mfprintf(fdo, '%s\n', comments(i_comment))
-    end
-    for i = 1:n_elements
-        if ~isempty(M(1, i)) then // Strip blanks
-            for j = 1:n_rows
-                mfprintf(fdo, '%s,', M(j, i));
-            end
-            mfprintf(fdo, '\n');
+    [n_cases, n_elements] = size(Mvals);
+    for i_case = 1:n_cases
+        for i_element = 1:n_elements
+            execstr("D("+string(i_case)+")."+Mnames(i_element)+'='+string(Mvals(i_case, i_element)))
         end
     end
-    mclose(fdo);
+    [n_comments, m_comments] = size(comments);
+    for i_comment = 1:n_comments
+        mfprintf(fdt, '%s\n', comments(i_comment))
+    end
+    print_struct(D, '', fdt, ',');
+    mclose(fdt);
 
 endfunction

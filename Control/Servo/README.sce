@@ -20,10 +20,6 @@
 // Aug 25, 2018 	DA Gutz		Created
 // 
 
-// Developing print_struct that prints arrays of struct
-// need to save in column form then transpose at print step
-exec('testIn.sce', -1)
-
 // Example of running servo models
 //      Uses Particle Swarm Optimization
 exec('myServo-PSO_run.sce');

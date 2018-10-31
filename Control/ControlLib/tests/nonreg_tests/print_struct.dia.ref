@@ -23,8 +23,8 @@ clear
 funcprot(0);
 mclose('all');
 getd('../ControlLib')
-A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'd',int8(4), 'e', int16(5), 'f', int32(6));
-B = struct('second', A, 'third', A, 'first', A, 'fourth', %t);
+A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'e',int8(4), 'f', int16(5), 'g', int32(6), 'h', %inf, 'i', -%inf);
+B = struct('second', A, 'third', A, 'first', A, 'fourth', %f);
 D = struct('primary', A, 'secondary', B);
 [fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
 print_struct(D, 'D', fdo, ',');
@@ -32,17 +32,21 @@ mclose(fdo);
 mgetl('tests/nonreg_tests/print_struct_tst.csv')
  ans  =
 !D.primary.d,D.primary.b,D.primary.e,D.primary.a,D.primary.f,D.primary.!
-!c,D.secondary.second.d,D.secondary.second.b,D.secondary.second.e,D.sec!
-!ondary.second.a,D.secondary.second.f,D.secondary.second.c,D.secondary.!
-!third.d,D.secondary.third.b,D.secondary.third.e,D.secondary.third.a,D.!
-!secondary.third.f,D.secondary.third.c,D.secondary.first.d,D.secondary.!
-!first.b,D.secondary.first.e,D.secondary.first.a,D.secondary.first.f,D.!
-!secondary.first.c,D.secondary.fourth,                                 !
+!c,D.primary.g,D.primary.h,D.primary.i,D.secondary.second.d,D.secondary!
+!.second.b,D.secondary.second.e,D.secondary.second.a,D.secondary.second!
+!.f,D.secondary.second.c,D.secondary.second.g,D.secondary.second.h,D.se!
+!condary.second.i,D.secondary.third.d,D.secondary.third.b,D.secondary.t!
+!hird.e,D.secondary.third.a,D.secondary.third.f,D.secondary.third.c,D.s!
+!econdary.third.g,D.secondary.third.h,D.secondary.third.i,D.secondary.f!
+!irst.d,D.secondary.first.b,D.secondary.first.e,D.secondary.first.a,D.s!
+!econdary.first.f,D.secondary.first.c,D.secondary.first.g,D.secondary.f!
+!irst.h,D.secondary.first.i,D.secondary.fourth,                        !
 !                                                                      !
-!4,1.0000000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.000!
-!0000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000!
-!000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000000000,!
-!5,2.0000000000000000,6,3.0000000000000000,T,                          !
+!%t,1.0000000000000000,4,2.0000000000000000,5,3.0000000000000000,6,%inf!
+!,-%inf,%t,1.0000000000000000,4,2.0000000000000000,5,3.0000000000000000!
+!,6,%inf,-%inf,%t,1.0000000000000000,4,2.0000000000000000,5,3.000000000!
+!0000000,6,%inf,-%inf,%t,1.0000000000000000,4,2.0000000000000000,5,3.00!
+!00000000000000,6,%inf,-%inf,%f,                                       !
 print_struct(D, 'D', 6, ',');
 D.primary.d,
 D.primary.b,
@@ -50,74 +54,110 @@ D.primary.e,
 D.primary.a,
 D.primary.f,
 D.primary.c,
+D.primary.g,
+D.primary.h,
+D.primary.i,
 D.secondary.second.d,
 D.secondary.second.b,
 D.secondary.second.e,
 D.secondary.second.a,
 D.secondary.second.f,
 D.secondary.second.c,
+D.secondary.second.g,
+D.secondary.second.h,
+D.secondary.second.i,
 D.secondary.third.d,
 D.secondary.third.b,
 D.secondary.third.e,
 D.secondary.third.a,
 D.secondary.third.f,
 D.secondary.third.c,
+D.secondary.third.g,
+D.secondary.third.h,
+D.secondary.third.i,
 D.secondary.first.d,
 D.secondary.first.b,
 D.secondary.first.e,
 D.secondary.first.a,
 D.secondary.first.f,
 D.secondary.first.c,
+D.secondary.first.g,
+D.secondary.first.h,
+D.secondary.first.i,
 D.secondary.fourth,
-4
+%t
 ,
 1.0000000000000000
 ,
-5
+4
 ,
 2.0000000000000000
 ,
-6
+5
 ,
 3.0000000000000000
 ,
-4
+6
+,
+%inf
+,
+-%inf
+,
+%t
 ,
 1.0000000000000000
 ,
-5
+4
 ,
 2.0000000000000000
 ,
-6
+5
 ,
 3.0000000000000000
 ,
-4
+6
+,
+%inf
+,
+-%inf
+,
+%t
 ,
 1.0000000000000000
 ,
-5
+4
 ,
 2.0000000000000000
 ,
-6
+5
 ,
 3.0000000000000000
 ,
-4
+6
+,
+%inf
+,
+-%inf
+,
+%t
 ,
 1.0000000000000000
 ,
-5
+4
 ,
 2.0000000000000000
 ,
-6
+5
 ,
 3.0000000000000000
 ,
-T
+6
+,
+%inf
+,
+-%inf
+,
+%f
 ,
 [fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
 print_struct(D, 'D', fdo, ',');
@@ -125,14 +165,18 @@ mclose(fdo);
 mgetl('tests/nonreg_tests/print_struct_tst.csv')
  ans  =
 !D.primary.d,D.primary.b,D.primary.e,D.primary.a,D.primary.f,D.primary.!
-!c,D.secondary.second.d,D.secondary.second.b,D.secondary.second.e,D.sec!
-!ondary.second.a,D.secondary.second.f,D.secondary.second.c,D.secondary.!
-!third.d,D.secondary.third.b,D.secondary.third.e,D.secondary.third.a,D.!
-!secondary.third.f,D.secondary.third.c,D.secondary.first.d,D.secondary.!
-!first.b,D.secondary.first.e,D.secondary.first.a,D.secondary.first.f,D.!
-!secondary.first.c,D.secondary.fourth,                                 !
+!c,D.primary.g,D.primary.h,D.primary.i,D.secondary.second.d,D.secondary!
+!.second.b,D.secondary.second.e,D.secondary.second.a,D.secondary.second!
+!.f,D.secondary.second.c,D.secondary.second.g,D.secondary.second.h,D.se!
+!condary.second.i,D.secondary.third.d,D.secondary.third.b,D.secondary.t!
+!hird.e,D.secondary.third.a,D.secondary.third.f,D.secondary.third.c,D.s!
+!econdary.third.g,D.secondary.third.h,D.secondary.third.i,D.secondary.f!
+!irst.d,D.secondary.first.b,D.secondary.first.e,D.secondary.first.a,D.s!
+!econdary.first.f,D.secondary.first.c,D.secondary.first.g,D.secondary.f!
+!irst.h,D.secondary.first.i,D.secondary.fourth,                        !
 !                                                                      !
-!4,1.0000000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.000!
-!0000000000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000!
-!000000,5,2.0000000000000000,6,3.0000000000000000,4,1.0000000000000000,!
-!5,2.0000000000000000,6,3.0000000000000000,T,                          !
+!%t,1.0000000000000000,4,2.0000000000000000,5,3.0000000000000000,6,%inf!
+!,-%inf,%t,1.0000000000000000,4,2.0000000000000000,5,3.0000000000000000!
+!,6,%inf,-%inf,%t,1.0000000000000000,4,2.0000000000000000,5,3.000000000!
+!0000000,6,%inf,-%inf,%t,1.0000000000000000,4,2.0000000000000000,5,3.00!
+!00000000000000,6,%inf,-%inf,%f,                                       !

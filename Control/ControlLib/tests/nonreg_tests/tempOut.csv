@@ -1,0 +1,5 @@
+// Sample comment, total 2 lines
+// End of sample comment
+D.a,D.b,D.c,D.d,D.e,D.f,D.g,
+2.0000000000000000,1.0000000000000000,3.0000000000000000,%t,%nan,'myF',-%inf,
+2.0000000000000000,1.0000000000000000,3.0000000000000000,%f,%nan,'myF',%inf,

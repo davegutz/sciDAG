@@ -20,6 +20,18 @@
 // Aug 25, 2018 	DA Gutz		Created
 // 
 
+// Run all tests
+test_run(pwd())
+
+// Example of reading xls input data files
+test_run(pwd(), 'read_xls_row_data')
+
+// Example of writing csv input data files
+test_run(pwd(), 'write_csv_row_data')
+
+// Example of rotating csv file
+test_run(pwd(), 'rotate_file')
+
 // Example of sorting structures
 test_run(pwd(), 'order_all_fields')
 
@@ -32,3 +44,6 @@ test_run(pwd(), 'pade')
 // Example of step response performance
 test_run(pwd(), 'myStepPerf')
 
+// Example of string tokenizer
+test_run(pwd(), 'tokeninze')
+test_run(pwd(), 'untokeninze')

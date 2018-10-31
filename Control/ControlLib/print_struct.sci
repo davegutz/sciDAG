@@ -75,12 +75,22 @@ function print_struct(st, st_str, fd, sep, titling)
                         mfprintf(fd, '[');
                     end
                     if type_element==1 then
-                        mfprintf(fd, '%#3.17g', element(instance));
+                        if isnan(element(instance)) then
+                            mfprintf(fd, '%snan', '%');
+                         elseif isinf(element(instance)) then
+                             if element(instance)>0 then
+                                 mfprintf(fd, '%sinf', '%');
+                             else
+                                 mfprintf(fd, '-%sinf', '%');
+                             end
+                         else
+                             mfprintf(fd, '%#3.17g', element(instance));
+                         end
                     elseif type_element==4 then
                         if element(instance) then
-                            mfprintf(fd, 'T');
+                            mfprintf(fd, '%st', '%');
                         else
-                            mfprintf(fd, 'field_names');
+                            mfprintf(fd, '%sf', '%');
                         end
                     elseif type_element==8 then
                         mfprintf(fd, '%d', element(instance));
