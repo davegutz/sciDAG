@@ -23,7 +23,7 @@ function [time_rise, time_peak, magnitude_peak, time_us, magnitude_us, time_sett
     // Unit step response performance
     // Assume regular update interval of unit response y
     // Assume final value y = 1
-    global dT t_step verbose
+    global verbose
 
     // Rise time
     r = 1;

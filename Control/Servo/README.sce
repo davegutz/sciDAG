@@ -20,6 +20,15 @@
 // Aug 25, 2018 	DA Gutz		Created
 // 
 
+// Run all tests
+test_run(pwd())
+
+// Example of running servo model
+//      Uses Particle Swarm Optimization
+exec('allServo-PSO_run.sce');
+//test_run(pwd(), 'allServo-PSO_run')
+
+
 // Example of running servo models
 //      Uses Particle Swarm Optimization
 exec('myServo-PSO_run.sce');

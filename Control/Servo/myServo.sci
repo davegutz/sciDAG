@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Aug 30, 2018 	DA Gutz		Created
 // 
-function [sys_ol, sys_cl] = myServo(dT, P, C)
+function [sys_ol, sys_cl] = myServo(dT, G, C)
     s = %s;
     ff1 = syslin('c', (C.tld1*s+1)/(C.tlg1*s+1));
     ff2 = syslin('c', (C.tld2*s+1)/(C.tlg2*s+1));
@@ -27,8 +27,8 @@ function [sys_ol, sys_cl] = myServo(dT, P, C)
     pade1 = pade(dT/2, 2);
     cg = ff1*ff2*C.gain*pade1;
     ch = fb*pade1;
-    plant = syslin('c', 1/(P.tehsv1*s+1))*syslin('c', ..
-                    1/(P.tehsv2*s+1))*syslin('c', P.gain/(s));
+    plant = syslin('c', 1/(G.tehsv1*s+1))*syslin('c', ..
+                    1/(G.tehsv2*s+1))*syslin('c', G.gain/(s));
     sys_ol = cg*plant*ch;
     sys_cl = cg*plant/(1 + cg*plant*ch);
 endfunction
