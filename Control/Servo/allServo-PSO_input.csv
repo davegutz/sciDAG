@@ -17,17 +17,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Aug 25, 2018 	DA Gutz		Created
+// Aug 25, 2018  DA Gutz  Created
 // 
-dT,0.01,
 verbose,0,
-f_min,1/2/%pi,
-f_max,1/dT,
-// Plant parameters
-P.tehsv1, 0.007,
-P.tehsv2, 0.01,
-P.gain, 1,
-// Control parameters
+P.case_title, 'myAllServoTestCase',
+G.tehsv1, 0.007,
+G.tehsv2, 0.01,
+G.gain, 1,
+C.dT, 0.010,
 C.tld1, 0.013,
 C.tlg1, 0.009,
 C.tld2, 0.013,
@@ -35,7 +32,6 @@ C.tlg2, 0.009,
 C.tldh, 0.015,
 C.tlgh, 0.008,
 C.gain, 32.6,
-// Solver scaling
 MU.gm, 9,
 MU.pm, 60,
 MU.pwr, 30,
@@ -45,7 +41,6 @@ MU.Mu, 0.15,
 MU.ts, 0.2,
 MU.sum, 0,
 MU.invgain, 1/30,
-// Requirements
 R.gm, 6,
 R.pm, 45,
 R.pwr, 40,
@@ -62,25 +57,17 @@ WC.Mu, 1,
 WC.ts, 0.2,
 WC.sum, 0. ,
 WC.invgain, 2,
-// Particle Swarm control parameters
-//   initial weight parameter
-wmax,0.9,
-//   final weight parameter
-wmin,0.4,
-//   maximum iteration number
-itmax,5,
-//   knowledge factors for personnal best
-c1,0.7,
-c2,1.47,
-//   problem dimensions: number of particles
-N,50,
-//   problem in R^2
-D,7,
-//   launch probability, default,0.9 (?)
-launchp,0.9,
-//   speed factor, default,2
-speedf,[2;2]',
-//   1 to activate autosave and graphics
-verbosef,1,
-boundsmax,[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],
-boundsmin,[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125],
+PSO.wmax,0.9,
+PSO.wmin,0.4,
+PSO.itmax,5,
+PSO.c1,0.7,
+PSO.c2,1.47,
+PSO.n_raptor,50,
+PSO.D,7,
+PSO.launchp,0.9,
+PSO.speedf,[2;2]',
+PSO.verbosef,1,
+PSO.boundsmax,[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],
+PSO.boundsmin,[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125],
+f_min,1/2/%pi,
+f_max,1/C.dT,

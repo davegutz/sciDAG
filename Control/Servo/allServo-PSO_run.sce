@@ -25,24 +25,25 @@ exec('myServo.sci', -1)
 n_fig = -1;
 xdel(winsid())
 
-// Globals for solver PSO.allServo_PSO_Obj
-global dT G C W P t_step
 // Global for debug
 global verbose
-dT = 0.01;
-t_step = 0:dT:2;
+// Globals for solver PSO.allServo_PSO_Obj
+global G C W P
 verbose = 0;
 
-// Frequency range
-f_min = 1/2/%pi;
-f_max = 1/dT;
+// Objective function linked into PSO
+exec('Objectives/allServo_PSO_Obj.sci', -1);
+exec('Objectives/decode.sci', -1);
 
 // System parameters
-G = struct('tehsv1', 0.007, 'tehsv2', 0.01, 'gain', 1);
-C = struct( 'tld1', 0.013, 'tlg1', 0.009,..
-            'tld2', 0.013, 'tlg2', 0.009,..
-            'tldh', 0.015, 'tlgh', 0.008,..
-            'gain', 32.6);
+G = struct( 'tehsv1', 0.007,..              // Plant driver lag, s
+            'tehsv2', 0.01,..               // Plant hydraulic lag, s
+            'gain', 1);                     // Plant gain, %/s/mA
+C = struct( 'dT', 0.01,..                   // Update time, s
+            'tld1', 0.013, 'tlg1', 0.009,.. // Forward path lead/lag #1
+            'tld2', 0.013, 'tlg2', 0.009,.. // Forward path lead/lag #2
+            'tldh', 0.015, 'tlgh', 0.008,.. // Feedback path lead/lag
+            'gain', 32.6);                  // Control gain, mA/%
 MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
             'tr', 0.05, 'Mp', 0.15, 'Mu', 0.15, 'ts', 0.2, 'sum', 0,..
             'invgain', 1/30);
@@ -64,14 +65,23 @@ PSO    = struct('wmax',     0.9,..      // initial weight parameter
                 ..// Bounds for hunting around C
                 'boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
                 'boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
+P  = struct('case_title', 'un-named',.. // Case title for plots etc
+            'f_min_s',      1,..        // scalar on min of frequency range
+            'f_max_s',      1);         // scalar on max of frequency range
+[Mnames, Mvals, Comments] = read_xls_column_data('./allServo-PSO_input.xls');
+[G, C, W, P] = decode(Mnames, Mvals, G, C, W, P);
+
 PSO.weights = [PSO.wmax; PSO.wmin];
 PSO.c = [PSO.c1; PSO.c2];
+P.t_step = 0:C.dT:2;
 
-// Objective function linked into PSO
-exec('Objectives/allServo_PSO_Obj.sci', -1);
+// Frequency range
+P.f_min = 1/2/%pi*P.f_min_s;
+P.f_max = 1/C.dT*P.f_max_s;
+
 
 // Performance function called by objective function
-function [P, C] = myPerf(dT, G, C, t_step, R, I, P)
+function [P, C] = myPerf(G, C, R, I, P)
     global verbose
     C.raw = I;
     if verbose>2 then
@@ -84,14 +94,14 @@ function [P, C] = myPerf(dT, G, C, t_step, R, I, P)
     C.tlg2 = max(I(5), 0.008);
     C.tldh = max(I(6), 0);
     C.tlgh = max(I(7), 0.008);
-    [P.sys_ol, P.sys_cl] = myServo(dT, G, C);
+    [P.sys_ol, P.sys_cl] = myServo(C.dT, G, C);
     [P.gm, gfr] = g_margin(P.sys_ol);
     [P.pm, pfr] = p_margin(P.sys_ol);
     P.gwr = gfr*2*%pi;
     P.pwr = pfr*2*%pi;
-    P.y_step = csim('step', t_step, P.sys_cl);
+    P.y_step = csim('step', P.t_step, P.sys_cl);
     [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
-               myStepPerf(P.y_step, t_step, R.rise, R.settle, dT);
+               myStepPerf(P.y_step, P.t_step, R.rise, R.settle, C.dT);
 endfunction
 
 MU.sum = MU.tr + MU.Mp + MU.Mu + MU.ts + MU.invgain;
@@ -127,7 +137,7 @@ mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
 n_fig = n_fig+1;
 n_fig_step = n_fig;
 scf(n_fig_step); clf(); 
-plot(t_step, P.y_step, 'k')
+plot(P.t_step, P.y_step, 'k')
 xgrid(0);
 y_step_i = P.y_step;
 sys_ol_i = P.sys_ol;
@@ -165,8 +175,8 @@ mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
 
 // plots
 scf(n_fig_step);
-plot(t_step, P.y_step, 'b')
-title("Step Response","fontsize",3);
+plot(P.t_step, P.y_step, 'b')
+title(P.case_title,"fontsize",3);
 xlabel("t, sec","fontsize",4);
 ylabel("$y$","fontsize",4);
 legend([casestr_i, casestr_f]);
@@ -174,4 +184,19 @@ legend([casestr_i, casestr_f]);
 n_fig = n_fig+1;
 n_fig_bode = n_fig;
 scf(n_fig_bode); clf();
-bode([sys_ol_i; P.sys_ol], f_min, f_max, [casestr_i, casestr_f], 'rad')
+bode([sys_ol_i; P.sys_ol], P.f_min, P.f_max, [casestr_i, casestr_f], 'rad')
+
+// Save results
+mkdir('./saves');
+[fdo, err] = mopen('saves/allServo-PSO_run.csv', 'wt');
+D.G = G;
+D.C = C;
+D.R = R;
+D.P = P;
+D.PSO = PSO;
+D.W = W;
+D.WC = WC;
+D.MU = MU;
+print_struct(D, '', fdo, ',');
+mclose(fdo);
+rotate_file('saves/allServo-PSO_run.csv', 'saves/allServo-PSO_run.csv');

@@ -17,17 +17,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Sep 26, 2018 	DA Gutz		Created
+// Oct 18, 2018 	DA Gutz		Created
 // 
-clear
-funcprot(0);
-getd('../ControlLib')
-mclose('all');
+function [G, C, W, P] = decode(Mnames, Mvals, G, C, W, P)
 
-// Load some sample data, assuming data columnar
-// Read data
-[Mnames, Mvals, comments] = read_xls_row_data('tests/nonreg_tests/order_all_fields_tst.xls');
-[n_cases, n_elements] = size(Mvals);
+    global verbose
+    [n_cases, n_elements] = size(Mvals);
+    // Check for validity
+    for i_element = 1:n_elements
+        candidate = Mnames(i_element);
+        if members(candidate, G)==0 ..
+            & members(candidate, C)==0..
+            & members(candidate, W)==0..
+            & members(candidate, P)==0 then
+            mprintf('-->%s \n', candidate);
+            error('is not part of declared structure.   Add it.')
+        end
+    end
+        
+    // Process
+    for i_case = 1:n_cases
+        for i_element = 1:n_elements
+            execstr(Mnames(i_element)+'='+string(Mvals(i_case, i_element)))
+        end
+    end
 
-write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, comments);
-mgetl('tests/nonreg_tests/tempOut.csv')
+endfunction

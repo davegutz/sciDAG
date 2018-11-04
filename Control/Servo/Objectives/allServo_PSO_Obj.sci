@@ -20,7 +20,7 @@
 // Oct 18, 2018 	DA Gutz		Created
 // 
 function obj_score = allServo_PSO_Obj(swarm)
-    global dT G C W P t_step
+    global G C W P
     global verbose
     [n_particles, m] = size(swarm);
     obj_score = zeros(n_particles,1);
@@ -29,7 +29,7 @@ function obj_score = allServo_PSO_Obj(swarm)
         if verbose>2 then
             mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.3f tlg1 = %6.3f tld2 = %6.3f tlg2 = %6.3f tldh = %6.3f tlgh = %6.3f\ n_particles', I);
         end
-        [P, C] = myPerf(dT, G, C, t_step, R, I, P);
+        [P, C] = myPerf(G, C, R, I, P);
         if verbose>3 then
             mprintf('allServo_PSO_Obj:  W.tr=%6.3f   W.Mp=%6.3f, W.Mu=%6.3f, W.ts=%6.3f, W.invgain=%6.3f\ n_particles',..
                     W.tr, W.Mp, W.Mu, W.ts, W.invgain);

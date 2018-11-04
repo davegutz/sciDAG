@@ -26,8 +26,4 @@ mclose('all');
 
 // Load some sample data, assuming data columnar
 // Read data
-[Mnames, Mvals, comments] = read_xls_row_data('tests/nonreg_tests/order_all_fields_tst.xls');
-[n_cases, n_elements] = size(Mvals);
-
-write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, comments);
-mgetl('tests/nonreg_tests/tempOut.csv')
+[Mnames, Mvals, C] = read_xls_column_data('tests/nonreg_tests/order_all_fields_tst_column.xls')
