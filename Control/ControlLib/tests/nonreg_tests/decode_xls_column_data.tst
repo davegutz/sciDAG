@@ -28,4 +28,9 @@ mclose('all');
 // Read data
 [Mnames, Mvals, C] = read_xls_column_data('tests/nonreg_tests/order_all_fields_tst_column.xls');
 V = decode_xls_column_data(Mnames, Mvals)
-V(1).D.a
+[fdo, err] = mopen('tests/nonreg_tests/decode_xls_column_data.csv', 'wt');
+print_struct(V, 'V', fdo, ',');
+mclose(fdo);
+mgetl('tests/nonreg_tests/decode_xls_column_data.csv')
+
+

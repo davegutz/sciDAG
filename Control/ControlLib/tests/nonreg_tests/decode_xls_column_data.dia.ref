@@ -34,6 +34,22 @@ V = decode_xls_column_data(Mnames, Mvals)
     myBoolVariable
     myStrVariable
     myVariable
-V(1).D.a
+[fdo, err] = mopen('tests/nonreg_tests/decode_xls_column_data.csv', 'wt');
+print_struct(V, 'V', fdo, ',');
+mclose(fdo);
+mgetl('tests/nonreg_tests/decode_xls_column_data.csv')
  ans  =
-   2.
+!V.D.a,V.D.b,V.D.c,V.D.d,V.D.e,V.D.f,V.D.g,V.E.a,V.E.b,V.myBoolVariable!
+!,V.myStrVariable,V.myVariable,                                        !
+!                                                                      !
+!2.0000000000000000,1.0000000000000000,3.0000000000000000,%t,%nan,'myF'!
+!,-%inf,6.0000000000000000,8.0000000000000000,%t,'my1',10.0000000000000!
+!00,                                                                   !
+!                                                                      !
+!2.0000000000000000,1.0000000000000000,3.0000000000000000,%f,%nan,'myF'!
+!,%inf,7.0000000000000000,9.0000000000000000,%f,'my2',11.00000000000000!
+!0,                                                                    !
+!                                                                      !
+!2.0000000000000000,1.0000000000000000,3.0000000000000000,%f,%nan,'myF'!
+!,%inf,7.0000000000000000,9.0000000000000000,%f,'my2',11.00000000000000!
+!0,                                                                    !
