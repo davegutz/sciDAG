@@ -72,15 +72,12 @@ function [Mnames, Mvals, C] = read_xls_column_data(in_file, comment_delim)
         end
     end
     Mnames = M_in(i_vals, 1)';
-//    Mvals = M_in(i_vals, 2:n_col_in)';
-    Mvals = [];
-    for j = 2:n_col_in
-        new_row = [];
-        for i = 1:length(i_vals)
-            new_row = [new_row M_in(i_vals(i), j)];
-        end
-        Mvals = [Mvals; new_row];
-    end
+    Mvals = M_in(i_vals, 2:$);
+//    Mvals = [];
+//    for i = 1:length(i_vals)
+//        new_row = M_in(i_vals(i), 2:n_col_in);
+//        Mvals = [Mvals; new_row];
+//    end
     C = C(:, 1);
 
 endfunction

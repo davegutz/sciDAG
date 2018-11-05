@@ -25,24 +25,15 @@ getd('../ControlLib')
 mclose('all');
 // Load some sample data, assuming data columnar
 // Read data
-[Mnames, Mvals, C] = read_xls_column_data('tests/nonreg_tests/order_all_fields_tst_column.xls')
- C  = 
-!// Sample comment, total 2 lines  !
-!                                  !
-!// End of sample comment          !
- Mvals  = 
-!2      2      !
-!              !
-!1      1      !
-!              !
-!3      3      !
-!              !
-!%t     %f     !
-!              !
-!%nan   %nan   !
-!              !
-!'myF'  'myF'  !
-!              !
-!-%inf  %inf   !
- Mnames  = 
-!D.a  D.b  D.c  D.d  D.e  D.f  D.g  !
+[Mnames, Mvals, C] = read_xls_column_data('tests/nonreg_tests/order_all_fields_tst_column.xls');
+V = decode_xls_column_data(Mnames, Mvals)
+ V  = 
+  3x1 struct array with fields:
+    D
+    E
+    myBoolVariable
+    myStrVariable
+    myVariable
+V(1).D.a
+ ans  =
+   2.
