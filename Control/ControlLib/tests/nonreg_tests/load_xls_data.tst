@@ -17,31 +17,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Oct 18, 2018 	DA Gutz		Created
+// Sep 26, 2018 	DA Gutz		Created
 // 
-function V = decode_xls_column_data(Mnames, Mvals)
+clear
+funcprot(0);
+getd('../ControlLib')
+mclose('all');
 
-    global verbose
-    [n_elements, n_cases] = size(Mvals); //
-    // Find names
-    for i_element = 1:n_elements
-        candidate = Mnames(i_element);
-        els = strsplit(candidate, '.');
-        names_raw($+1) = els(1);
-    end
-    names = unique(gsort(names_raw));
-    [n_names, m_names] = size(names);
-
-    // Process
-    for i_case = 1:n_cases
-        for i_element = 1:n_elements
-            execstr(Mnames(i_element)+'='+string(Mvals(i_element, i_case))) //
-        end
-        for i_name = 1:n_names
-            top_struct = names(i_name);
-            execstr('v.'+top_struct+'='+top_struct+';');
-        end
-        V($+1) = v;
-    end
-    
-endfunction
+// Load some sample data, assuming data columnar
+// Read data
+[V_col, C_col, Mnames_col, Mvals_col] = load_xls_data('tests/nonreg_tests/order_all_fields_tst_column.xls', 'col')
+[V_row, C_row, Mnames_row, Mvals_row] = load_xls_data('tests/nonreg_tests/order_all_fields_tst.xls', 'row')
+[fdo, err] = mopen('tests/nonreg_tests/load_xls_data.csv', 'wt');
+print_struct(V_col, 'V_col', fdo, ',');
+print_struct(V_row, 'V_row', fdo, ',');
+mclose(fdo);
+mgetl('tests/nonreg_tests/load_xls_data.csv')

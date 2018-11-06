@@ -19,10 +19,10 @@
 // SOFTWARE.
 // Oct 18, 2018 	DA Gutz		Created
 // 
-function V = decode_xls_column_data(Mnames, Mvals)
+function V = decode_xls_row_data(Mnames, Mvals)
 
     global verbose
-    [n_elements, n_cases] = size(Mvals); //
+    [n_cases, n_elements] = size(Mvals);  //
     // Find names
     for i_element = 1:n_elements
         candidate = Mnames(i_element);
@@ -35,7 +35,7 @@ function V = decode_xls_column_data(Mnames, Mvals)
     // Process
     for i_case = 1:n_cases
         for i_element = 1:n_elements
-            execstr(Mnames(i_element)+'='+string(Mvals(i_element, i_case))) //
+            execstr(Mnames(i_element)+'='+string(Mvals(i_case, i_element))) //
         end
         for i_name = 1:n_names
             top_struct = names(i_name);
