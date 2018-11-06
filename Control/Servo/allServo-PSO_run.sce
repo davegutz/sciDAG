@@ -33,7 +33,6 @@ verbose = 0;
 
 // Objective function linked into PSO
 exec('Objectives/allServo_PSO_Obj.sci', -1);
-exec('Objectives/decode.sci', -1);
 
 // System parameters
 G = struct( 'tehsv1', 0.007,..              // Plant driver lag, s
@@ -68,8 +67,12 @@ PSO    = struct('wmax',     0.9,..      // initial weight parameter
 P  = struct('case_title', 'un-named',.. // Case title for plots etc
             'f_min_s',      1,..        // scalar on min of frequency range
             'f_max_s',      1);         // scalar on max of frequency range
-[Mnames, Mvals, Comments] = read_xls_column_data('./allServo-PSO_input.xls');
-[G, C, W, P] = decode(Mnames, Mvals, G, C, W, P);
+[V, Comments, Mnames, Mvals] = load_xls_data('./allServo-PSO_input.xls', 'col');
+G = V.G(1);
+C = V.C(1);
+WC = V.WC(1);
+P = V.P(1);
+verbose = V.verbose;
 
 PSO.weights = [PSO.wmax; PSO.wmin];
 PSO.c = [PSO.c1; PSO.c2];

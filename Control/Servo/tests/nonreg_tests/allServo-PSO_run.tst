@@ -17,29 +17,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Oct 18, 2018 	DA Gutz		Created
+// Sep 26, 2018 	DA Gutz		Created
 // 
-function [G, C, W, P] = decode(Mnames, Mvals, G, C, W, P)
 
-    global verbose
-    [n_cases, n_elements] = size(Mvals);
-    // Check for validity
-    for i_element = 1:n_elements
-        candidate = Mnames(i_element);
-        if members(candidate, G)==0 ..
-            & members(candidate, C)==0..
-            & members(candidate, W)==0..
-            & members(candidate, P)==0 then
-            mprintf('-->%s \n', candidate);
-            error('is not part of declared structure.   Add it.')
-        end
-    end
-        
-    // Process
-    for i_case = 1:n_cases
-        for i_element = 1:n_elements
-            execstr(Mnames(i_element)+'='+string(Mvals(i_case, i_element)))
-        end
-    end
+//mfile2sci('./<mfile>.m', 'C:/Users/Dave/Documents/GitHub/sciDAG/Work_Matlab/Work_Matlab_Initial_Translated/')
 
-endfunction
+// Copy ./Work_Matlab_Initial_Translated/<mfile>.sci to Work_Matlab_Final_Translated/pack_ss.sci and edit it
+
+// run this in Work_Matlab_Final_Translated
+clear
+funcprot(0);
+getd('../Servo')
+exec('allServo-PSO_run.sce');

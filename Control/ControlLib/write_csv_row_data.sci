@@ -34,7 +34,7 @@
 // SOFTWARE.
 // Oct 31, 2018 	DA Gutz		Created
 //******************************************************************************
-function write_csv_row_data(out_file, Mnames, Mvals, C)
+function write_csv_row_data(out_file, Mnames, Mvals, comments)
 
     [fdt, err] = mopen(out_file, 'wt');
     if err<>0 then

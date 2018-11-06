@@ -31,8 +31,13 @@ mclose('all');
 !                                  !
 !// End of sample comment          !
  Mvals  = 
-!2  1  3  %t  %nan  'myF'  -%inf  !
-!                                 !
-!2  1  3  %f  %nan  'myF'  %inf   !
+!2  1  3  %t  %nan  "myF"  -%inf  6  8  10  "my1"  %t  !
+!                                                      !
+!2  1  3  %f  %nan  "myF"  %inf   7  9  11  "my2"  %f  !
+!                                                      !
+!2  1  3  %f  %nan  "myF"  %inf   7  9  11  "my2"  %f  !
  Mnames  = 
-!D.a  D.b  D.c  D.d  D.e  D.f  D.g  !
+         column 1 to 11
+!D.a  D.b  D.c  D.d  D.e  D.f  D.g  E.a  E.b  myVariable  myStrVariable  !
+         column 12
+!myBoolVariable  !

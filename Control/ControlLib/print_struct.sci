@@ -117,6 +117,8 @@ function print_struct(st, st_str, fd, sep, titling)
                         mfprintf(fd, '%d', element(instance));
                     elseif type_element==10 then
                         mfprintf(fd, '''%s''', element(instance));
+                    elseif type_element==16 then
+                        mfprintf(fd, '%snan', '%');
                     else
                         mfprintf(0, 'type %d for %s unknown\n', type_element, st_str);
                     end

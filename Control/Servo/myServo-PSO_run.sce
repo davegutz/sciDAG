@@ -37,9 +37,9 @@ f_max = 1/dT;
 // System parameters
 P = struct('tehsv1', 0.007, 'tehsv2', 0.01, 'gain', 1);
 C = struct( 'tld1', 0.013, 'tlg1', 0.009,..
-            'tld2', 0.013, 'tlg2', 0.009,..
-            'tldh', 0.015, 'tlgh', 0.008,..
-            'gain', 32.6);
+            'tld2', 0.014, 'tlg2', 0.012,..
+            'tldh', 0.017, 'tlgh', 0.009,..
+            'gain', 32.8);
 MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
             'tr', 0.05, 'Mp', 0.15, 'Mu', 0.15, 'ts', 0.2, 'sum', 0,..
             'invgain', 1/30);
@@ -169,7 +169,7 @@ sys_ol_i = p.sys_ol;
 wmax = 0.9; // initial weight parameter
 wmin = 0.4; // final weight parameter
 weights = [wmax; wmin];
-itmax = 80; //Maximum iteration number
+itmax = 10; //Maximum iteration number
 c1 = 0.7; // knowledge factors for personnal best
 c2 = 1.47; // knowledge factors for global best
 c = [c1; c2];

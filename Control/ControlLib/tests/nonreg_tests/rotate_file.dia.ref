@@ -25,27 +25,37 @@ getd('../ControlLib')
 mclose('all');
 // Load some sample data, assuming data columnar
 // Read data
-[Mnames, Mvals, comments] = read_xls_row_data('tests/nonreg_tests/order_all_fields_tst.xls');
+[V, C, Mnames, Mvals] = load_xls_data('tests/nonreg_tests/order_all_fields_tst.xls', 'row');
 // Write to output file in row format (cases in rows)
-write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, comments);
+write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, C);
 // Finally rotate the file
 rotate_file('tests/nonreg_tests/tempOut.csv', 'tests/nonreg_tests/testOut.csv');
 mgetl('tests/nonreg_tests/testOut.csv')
  ans  =
-!// Sample comment, total 2 lines            !
-!                                            !
-!// End of sample comment                    !
-!                                            !
-!D.a,2.0000000000000000,2.0000000000000000,  !
-!                                            !
-!D.b,1.0000000000000000,1.0000000000000000,  !
-!                                            !
-!D.c,3.0000000000000000,3.0000000000000000,  !
-!                                            !
-!D.d,%t,%f,                                  !
-!                                            !
-!D.e,%nan,%nan,                              !
-!                                            !
-!D.f,'myF','myF',                            !
-!                                            !
-!D.g,-%inf,%inf,                             !
+!// Sample comment, total 2 lines                                      !
+!                                                                      !
+!// End of sample comment                                              !
+!                                                                      !
+!D.a,2.0000000000000000,2.0000000000000000,2.0000000000000000,         !
+!                                                                      !
+!D.b,1.0000000000000000,1.0000000000000000,1.0000000000000000,         !
+!                                                                      !
+!D.c,3.0000000000000000,3.0000000000000000,3.0000000000000000,         !
+!                                                                      !
+!D.d,%t,%f,%f,                                                         !
+!                                                                      !
+!D.e,%nan,%nan,%nan,                                                   !
+!                                                                      !
+!D.f,'myF','myF','myF',                                                !
+!                                                                      !
+!D.g,-%inf,%inf,%inf,                                                  !
+!                                                                      !
+!E.a,6.0000000000000000,7.0000000000000000,7.0000000000000000,         !
+!                                                                      !
+!E.b,8.0000000000000000,9.0000000000000000,9.0000000000000000,         !
+!                                                                      !
+!myVariable,10.000000000000000,11.000000000000000,11.000000000000000,  !
+!                                                                      !
+!myStrVariable,'my1','my2','my2',                                      !
+!                                                                      !
+!myBoolVariable,%t,%f,%f,                                              !

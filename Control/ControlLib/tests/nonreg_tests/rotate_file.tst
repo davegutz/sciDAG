@@ -26,10 +26,10 @@ mclose('all');
 
 // Load some sample data, assuming data columnar
 // Read data
-[Mnames, Mvals, comments] = read_xls_row_data('tests/nonreg_tests/order_all_fields_tst.xls');
+[V, C, Mnames, Mvals] = load_xls_data('tests/nonreg_tests/order_all_fields_tst.xls', 'row');
 
 // Write to output file in row format (cases in rows)
-write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, comments);
+write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, C);
 
 // Finally rotate the file
 rotate_file('tests/nonreg_tests/tempOut.csv', 'tests/nonreg_tests/testOut.csv');
