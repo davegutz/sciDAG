@@ -27,40 +27,42 @@ mclose('all');
 // Read data
 [V_col, C_col, Mnames_col, Mvals_col] = load_xls_data('tests/nonreg_tests/load_xls_data.xls', 'col', 'col sheet')
  Mvals_col  = 
-!2        2        2                  !
-!                                     !
-!1        1        1                  !
-!                                     !
-!3        3        3                  !
-!                                     !
-!%t       %f       %f                 !
-!                                     !
-!%nan     %nan     %nan               !
-!                                     !
-!"myF"    "myF"    "myF"              !
-!                                     !
-!-%inf    %inf     %inf               !
-!                                     !
-!6        7        7                  !
-!                                     !
-!8        9        9                  !
-!                                     !
-!10       11       11                 !
-!                                     !
-!"my1"    "my2"    "my2"              !
-!                                     !
-!%t       %f       %f                 !
-!                                     !
-![1 2 3]  [4 5 6]  [7 8 9; 10 11 12]  !
+!2        2        2        !
+!                           !
+!1        1        1        !
+!                           !
+!3        3        3        !
+!                           !
+!%t       %f       %f       !
+!                           !
+!%nan     %nan     %nan     !
+!                           !
+!"myF"    "myF"    "myF"    !
+!                           !
+!-%inf    %inf     %inf     !
+!                           !
+!6        7        7        !
+!                           !
+!8        9        9        !
+!                           !
+!10       11       11       !
+!                           !
+!"my1"    "my2"    "my2"    !
+!                           !
+!%t       %f       %f       !
+!                           !
+![1 2 3]  [4 5 6]  [7 8 9]  !
  Mnames_col  = 
          column 1 to 11
 !D.a  D.b  D.c  D.d  D.e  D.f  D.g  E.a  E.b  myVariable  myStrVariable  !
          column 12 to 13
 !myBoolVariable  V  !
  C_col  = 
-!// Sample comment, total 2 lines  !
-!                                  !
-!// End of sample comment          !
+!// Sample comment, total 2 lines           !
+!                                           !
+!// End of sample comment                   !
+!                                           !
+!// Cannot input multi-dimensional vectors  !
  V_col  = 
   3x1 struct array with fields:
     D
@@ -76,24 +78,25 @@ V_col.V
        ans(2)
    4.   5.   6.
        ans(3)
-   7.    8.    9. 
-   10.   11.   12.
+   7.   8.   9.
 [V_row, C_row, Mnames_row, Mvals_row] = load_xls_data('tests/nonreg_tests/load_xls_data.xls', 'row', 'row sheet')
  Mvals_row  = 
-!2  1  3  %t  %nan  "myF"  -%inf  6  8  10  "my1"  %t  [1 2 3]            !
-!                                                                         !
-!2  1  3  %f  %nan  "myF"  %inf   7  9  11  "my2"  %f  [4 5 6]            !
-!                                                                         !
-!2  1  3  %f  %nan  "myF"  %inf   7  9  11  "my2"  %f  [7 8 9; 10 11 12]  !
+!2  1  3  %t  %nan  "myF"  -%inf  6  8  10  "my1"  %t  [1 2 3]  !
+!                                                               !
+!2  1  3  %f  %nan  "myF"  %inf   7  9  11  "my2"  %f  [4 5 6]  !
+!                                                               !
+!2  1  3  %f  %nan  "myF"  %inf   7  9  11  "my2"  %f  [7 8 9]  !
  Mnames_row  = 
          column 1 to 11
 !D.a  D.b  D.c  D.d  D.e  D.f  D.g  E.a  E.b  myVariable  myStrVariable  !
          column 12 to 13
 !myBoolVariable  V  !
  C_row  = 
-!// Sample comment, total 2 lines  !
-!                                  !
-!// End of sample comment          !
+!// Sample comment, total 2 lines           !
+!                                           !
+!// End of sample comment                   !
+!                                           !
+!// Cannot input multi-dimensional vectors  !
  V_row  = 
   3x1 struct array with fields:
     D
@@ -109,8 +112,7 @@ V_row.V
        ans(2)
    4.   5.   6.
        ans(3)
-   7.    8.    9. 
-   10.   11.   12.
+   7.   8.   9.
 [fdo, err] = mopen('tests/nonreg_tests/load_xls_data.csv', 'wt');
 print_struct(V_col, 'V_col', fdo, ',');
 print_struct(V_row, 'V_row', fdo, ',');
@@ -131,8 +133,7 @@ mgetl('tests/nonreg_tests/load_xls_data.csv')
 !                                                                      !
 !2.0000000000000000,1.0000000000000000,3.0000000000000000,%f,%nan,'myF'!
 !,%inf,7.0000000000000000,9.0000000000000000,[7.0000000000000000 8.0000!
-!000000000000 9.0000000000000000],[10.000000000000000 11.00000000000000!
-!0 12.000000000000000],%f,'my2',11.000000000000000,                    !
+!000000000000 9.0000000000000000],%f,'my2',11.000000000000000,         !
 !                                                                      !
 !V_row.D.a,V_row.D.b,V_row.D.c,V_row.D.d,V_row.D.e,V_row.D.f,V_row.D.g,!
 !V_row.E.a,V_row.E.b,V_row.V,V_row.myBoolVariable,V_row.myStrVariable,V!
@@ -148,5 +149,4 @@ mgetl('tests/nonreg_tests/load_xls_data.csv')
 !                                                                      !
 !2.0000000000000000,1.0000000000000000,3.0000000000000000,%f,%nan,'myF'!
 !,%inf,7.0000000000000000,9.0000000000000000,[7.0000000000000000 8.0000!
-!000000000000 9.0000000000000000],[10.000000000000000 11.00000000000000!
-!0 12.000000000000000],%f,'my2',11.000000000000000,                    !
+!000000000000 9.0000000000000000],%f,'my2',11.000000000000000,         !

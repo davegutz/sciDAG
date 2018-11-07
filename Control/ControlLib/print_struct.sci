@@ -93,6 +93,9 @@ function print_struct(st, st_str, fd, sep, titling)
                 mult_sep = ' ';
                 for instance=1:m_instance
                     if m_instance>1 & instance==1 then
+                        if n_cases>1 & i_case==1 then
+                            mfprintf(fd, '[');
+                        end
                         mfprintf(fd, '[');
                     end
                     if type_element==1 then
@@ -123,6 +126,9 @@ function print_struct(st, st_str, fd, sep, titling)
                         mfprintf(0, 'type %d for %s unknown\n', type_element, st_str);
                     end
                     if m_instance>1 & instance==m_instance then
+                        if n_cases>1 & i_case==n_cases then
+                            mfprintf(fd, ']');
+                        end
                         mfprintf(fd, ']');
                     elseif m_instance>1
                         mfprintf(fd, '%s', mult_sep);
