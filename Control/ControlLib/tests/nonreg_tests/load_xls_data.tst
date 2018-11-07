@@ -26,8 +26,10 @@ mclose('all');
 
 // Load some sample data, assuming data columnar
 // Read data
-[V_col, C_col, Mnames_col, Mvals_col] = load_xls_data('tests/nonreg_tests/order_all_fields_tst_column.xls', 'col')
-[V_row, C_row, Mnames_row, Mvals_row] = load_xls_data('tests/nonreg_tests/order_all_fields_tst.xls', 'row')
+[V_col, C_col, Mnames_col, Mvals_col] = load_xls_data('tests/nonreg_tests/load_xls_data.xls', 'col', 'col sheet')
+V_col.V
+[V_row, C_row, Mnames_row, Mvals_row] = load_xls_data('tests/nonreg_tests/load_xls_data.xls', 'row', 'row sheet')
+V_row.V
 [fdo, err] = mopen('tests/nonreg_tests/load_xls_data.csv', 'wt');
 print_struct(V_col, 'V_col', fdo, ',');
 print_struct(V_row, 'V_row', fdo, ',');

@@ -15,7 +15,7 @@
 //   Mvals          Matrix of strings of data
 //
 // Local:
-//  function V = decode_xls_data(Mnames, Mvals, %type)
+//  function V_decode_xls_data = decode_xls_data(Mnames, Mvals, %type)
 //      Turn strings into variables
 //
 //// Copyright (C) 2018 - Dave Gutz
@@ -39,9 +39,8 @@
 // SOFTWARE.
 // Oct 31, 2018 	DA Gutz		Created
 //******************************************************************************
-function V = decode_xls_data(Mnames, Mvals, %type)
+function V_decode_xls_data = decode_xls_data(Mnames, Mvals, %type)
 
-    global verbose
     if %type=='col' then
         [n_elements, n_cases] = size(Mvals); 
     elseif %type=='row' then
@@ -74,23 +73,33 @@ function V = decode_xls_data(Mnames, Mvals, %type)
             top_struct = names(i_name);
             execstr('v.'+top_struct+'='+top_struct+';');
         end
-        V($+1) = v;
+        V_decode_xls_data($+1) = v;
     end
     
 endfunction
 
-function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, comment_delim)
+function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, sheet, comment_delim)
     
-    if argn(2)<3 then
+    if argn(2)<4 then
         comment_delim = '/\/\//';
+    end
+    if argn(2)<3 then
+        sheet = '';
     end
     
     // Load some sample data, assuming data columnar
     // Read data
     sheets = readxls(in_file);
+    [fd, SST, Sheetnames, Sheetpos] = xls_open(in_file);
+    mclose(fd);
+    if isempty(sheet) then
+        sheet_index = 1;
+    else
+        sheet_index = find(Sheetnames==sheet);
+    end
+    M_in = sheets(sheet_index);
 
     // Strip comments and find data
-    M_in = sheets(1);
     [n_row_in, n_col_in] = size(M_in);
     C = [];
     i_vals = []; n_row = 0;
@@ -128,7 +137,7 @@ function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, comment_delim)
         mprintf('%s-->', %type)
         error('unknown type')
     end
-    V = decode_xls_data(Mnames, Mvals, %type)
+    V = decode_xls_data(Mnames, Mvals, %type);
     C = C(:, 1);
 
 endfunction
