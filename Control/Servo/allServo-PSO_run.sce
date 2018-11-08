@@ -131,9 +131,9 @@ W.invgain = WC.invgain/(MU.invgain*MU.sum);
 
 
 f1 = allServo_PSO_Obj([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);
-casestr_i = msprintf('Init    %4.1f*(%4.3f/%4.3f)*(%4.3f/%4.3f)*(%4.3f/%4.3f): %4.1f/%4.0f',..
+casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
                    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm)
-mprintf('%4.1f*(%4.3f/%4.3f)*(%4.3f/%4.3f)*(%4.3f/%4.3f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
+mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
         C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
 mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
         P.tr, P.Mp*100, P.Mu*100, P.ts)
@@ -165,10 +165,10 @@ end
                 PSO.speed, PSO.itmax, PSO.n_raptor,..
                 PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
                 PSO.n_raptor, PSO.verbosef, PSO.x0);
-casestr_f = msprintf('Final %4.1f*(%4.3f/%4.3f)*(%4.3f/%4.3f)*(%4.3f/%4.3f): %4.1f/%4.0f',..
+casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
                    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm)
-mprintf('xopt= %4.1f/%4.3f, fopt=%e\n', xopt, fopt);
-mprintf('%4.1f*(%4.3f/%4.3f)*(%4.3f/%4.3f)*(%4.3f/%4.3f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
+mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', xopt, fopt);
+mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
         C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
 mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
         P.tr, P.Mp*100, P.Mu*100, P.ts)

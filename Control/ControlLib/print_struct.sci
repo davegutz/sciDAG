@@ -73,68 +73,88 @@ function print_struct(st, st_str, fd, sep, titling)
     if argn(2)<2 then
         st_str = '<blank>';
     end
-    [n_cases, mc] = size(st);
+    if isempty(fieldnames(st)) then
+        n_cases = 1;
+    else
+        [n_cases, mc] = size(st);
+    end
+//    if ~isempty(titling) & ~titling then
+//        mprintf('HEAD:  st_str=%s, n_cases=%d\n', st_str, n_cases)
+//    end
     if isempty(titling) then // Only first call
         titling = %t;
         print_struct(st(1), st_str, fd, sep, titling);
         mfprintf(fd, '\n');
         titling = %f;
     end
-    for i_case = 1:n_cases  // Only first call will have n_cases > 1
+    for i_case = 1:n_cases  // Only first call with vector struct will have n_cases > 1
         field_names = fieldnames(st(i_case));
         [n_fields, m] = size(field_names);
         if n_fields==0 then  // Found the bottom of recursion
-            element = st(i_case, :);
+            element = st;
             if titling then
                 mfprintf(fd, '%s%s', st_str, sep);
             else
                 type_element = type(element);
                 [n_instance, m_instance] = size(element);
+                mult_row = n_instance>1;
+                mult_col = m_instance>1;
                 mult_sep = ' ';
-                for instance=1:m_instance
-                    if m_instance>1 & instance==1 then
-                        if n_cases>1 & i_case==1 then
+                for jnstance=1:n_instance
+                    last_row = jnstance==n_instance;
+                    first_row = jnstance==1;
+                    for instance=1:m_instance
+                        last_col = instance==m_instance;
+                        first_col = instance==1;
+
+                        if mult_col & first_col & first_row then
                             mfprintf(fd, '[');
                         end
-                        mfprintf(fd, '[');
-                    end
-                    if type_element==1 then
-                        if isnan(element(instance)) then
+                        if type_element==1 then
+                            if isnan(element(jnstance,instance)) then
+                                mfprintf(fd, '%snan', '%');
+                            elseif isinf(element(jnstance,instance)) then
+                                if element(jnstance,instance)>0 then
+                                    mfprintf(fd, '%sinf', '%');
+                                else
+                                    mfprintf(fd, '-%sinf', '%');
+                                end
+                            else
+                                mfprintf(fd, '%#3.17g', element(jnstance,instance));
+                            end
+                        elseif type_element==4 then
+                            if element(jnstance,instance) then
+                                mfprintf(fd, '%st', '%');
+                            else
+                                mfprintf(fd, '%sf', '%');
+                            end
+                        elseif type_element==8 then
+                            mfprintf(fd, '%d', element(jnstance,instance));
+                        elseif type_element==10 then
+                            mfprintf(fd, '''%s''', element(jnstance,instance));
+                        elseif type_element==16 then
                             mfprintf(fd, '%snan', '%');
-                         elseif isinf(element(instance)) then
-                             if element(instance)>0 then
-                                 mfprintf(fd, '%sinf', '%');
-                             else
-                                 mfprintf(fd, '-%sinf', '%');
-                             end
-                         else
-                             mfprintf(fd, '%#3.17g', element(instance));
-                         end
-                    elseif type_element==4 then
-                        if element(instance) then
-                            mfprintf(fd, '%st', '%');
                         else
-                            mfprintf(fd, '%sf', '%');
+                            mfprintf(0, 'type %d for %s unknown\n', type_element, st_str);
                         end
-                    elseif type_element==8 then
-                        mfprintf(fd, '%d', element(instance));
-                    elseif type_element==10 then
-                        mfprintf(fd, '''%s''', element(instance));
-                    elseif type_element==16 then
-                        mfprintf(fd, '%snan', '%');
-                    else
-                        mfprintf(0, 'type %d for %s unknown\n', type_element, st_str);
+                        if mult_col then
+                            if last_col then
+                                if last_row then
+                                    mfprintf(fd, ']');
+                                elseif mult_col & ~last_row
+                                    mfprintf(fd, ';');
+                                else
+                                    mfprintf(fd, '%s', mult_sep);
+                                end
+                            else
+                                mfprintf(fd, '%s', mult_sep);
+                            end
+                        end
                     end
-                    if m_instance>1 & instance==m_instance then
-                        if n_cases>1 & i_case==n_cases then
-                            mfprintf(fd, ']');
-                        end
-                        mfprintf(fd, ']');
-                    elseif m_instance>1
-                        mfprintf(fd, '%s', mult_sep);
+                    if last_col & last_row then
+                        mfprintf(fd, '%s', sep);
                     end
                 end
-                mfprintf(fd, '%s', sep);
             end  // if titling
         else // Recursion in progress
             if titling, ting = 1; else ting = 0; end

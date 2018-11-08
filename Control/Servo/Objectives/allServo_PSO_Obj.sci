@@ -27,7 +27,7 @@ function obj_score = allServo_PSO_Obj(swarm)
     for i = 1:n_particles
         I = swarm(i,:);
         if verbose>2 then
-            mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.3f tlg1 = %6.3f tld2 = %6.3f tlg2 = %6.3f tldh = %6.3f tlgh = %6.3f\ n_particles', I);
+            mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.4f tlg1 = %6.4f tld2 = %6.4f tlg2 = %6.4f tldh = %6.4f tlgh = %6.4f\ n_particles', I);
         end
         [P, C] = myPerf(G, C, R, I, P);
         if verbose>3 then
