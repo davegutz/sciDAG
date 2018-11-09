@@ -66,3 +66,9 @@ mclose(fdo);
 if ~flag then
     error(errmsg)
 end
+// Check a real world case
+[V_servo, C_servo, Mnames_servo, Mvals_servo] = load_xls_data('tests/nonreg_tests/allServo-PSO_input.xls', 'col');
+[fdo, err] = mopen('tests/nonreg_tests/load_xls_real_data.csv', 'wt');
+print_struct(V_servo, 'V_servo', fdo, ',');
+mclose(fdo);
+mgetl('tests/nonreg_tests/load_xls_real_data.csv')

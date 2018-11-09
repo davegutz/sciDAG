@@ -105,8 +105,13 @@ function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, sheet, comment_de
     i_vals = []; n_row = 0;
 
     for i_row_in = 1:n_row_in
-        empty_elements = find(M_in(i_row_in,:)=='');
-        if isempty(empty_elements) then
+        if type(M_in(i_row_in,1)) == 10 then
+            [n_tok, tok, ctok] = tokenize(M_in(i_row_in,1), ' ');
+            is_comment = strcmp(tok(1), '//') == 0;
+        else
+            is_comment = %f;
+        end
+        if ~is_comment then
             n_row = n_row + 1;
             if %type=='row' & n_row==1 then
                 Mnames = M_in(i_row_in, :);
@@ -114,6 +119,7 @@ function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, sheet, comment_de
                 i_vals = [i_vals; i_row_in];
             end
         else
+            empty_elements = find(M_in(i_row_in,:)=='');
             if length(empty_elements)==n_col_in-1 then
                 comment = M_in(i_row_in, 1);
                 if strspn(comment, '//')==2 then
@@ -124,19 +130,30 @@ function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, sheet, comment_de
                 end
             else
                 mprintf('-->%s\n', M_in(i_row_in));
-                error('Incorrect format input .xls file.  Comments= one entire cell, one cell on line.')
+                error('Incorrect format input .xls file.  Comments= one entire cell, in first cell, begins with ''// ''.')
             end
         end
     end
     if %type=='col' then
         Mnames = M_in(i_vals, 1)';
-        Mvals = M_in(i_vals, 2:$);
+        MvalsX = M_in(i_vals, 2:$);
     elseif %type=='row' then
-        Mvals = M_in(i_vals, :);
+        MvalsX = M_in(i_vals, :);
     else
         mprintf('%s-->', %type)
         error('unknown type')
     end
+
+    // Cull empties
+    [n_row_x, n_col_x] = size(MvalsX);
+    j_vals = [];
+    for j_col_x = 1:n_col_x
+        if ~isempty(MvalsX(:,j_col_x)) then
+            j_vals = [j_vals; j_col_x];
+        end
+    end
+    Mvals = MvalsX(:, j_vals);
+    
     V = decode_xls_data(Mnames, Mvals, %type);
     C = C(:, 1);
 
