@@ -24,6 +24,7 @@ getd('../ControlLib')
 exec('myServo.sci', -1)
 n_fig = -1;
 xdel(winsid())
+mclose('all');
 
 // Global for debug
 global verbose
@@ -67,6 +68,12 @@ PSO    = struct('wmax',     0.9,..      // initial weight parameter
 P  = struct('case_title', 'un-named',.. // Case title for plots etc
 'f_min_s',      1,..        // scalar on min of frequency range
 'f_max_s',      1);         // scalar on max of frequency range
+mkdir('./saves');
+[fdo, err] = mopen('saves/allServo-PSO_run.csv', 'wt');
+if err<0 then
+    mprintf('%s--->', 'saves/allServo-PSO_run.csv')
+    error('is output file still open?')
+end
 [V, Comments, Mnames, Mvals] = load_xls_data('./allServo-PSO_input.xls', 'col');
 [n_cases, m_V] = size(V);
 
@@ -137,12 +144,13 @@ for case_num=1:n_cases
 
 
     f1 = allServo_PSO_Obj([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);
-    casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
+    P.casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm)
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
-    P.tr, P.Mp*100, P.Mu*100, P.ts)
+    P.tr, P.Mp*100, P.Mu*100, P.ts);
+    disp(P.casestr_i)
     n_fig = n_fig+1;
     n_fig_step = n_fig;
     scf(n_fig_step); clf(); 
@@ -171,13 +179,14 @@ for case_num=1:n_cases
     PSO.speed, PSO.itmax, PSO.n_raptor,..
     PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
     PSO.n_raptor, PSO.verbosef, PSO.x0);
-    casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
+    P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm)
     mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', xopt, fopt);
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
-    P.tr, P.Mp*100, P.Mu*100, P.ts)
+    P.tr, P.Mp*100, P.Mu*100, P.ts);
+    disp(P.casestr_f)
     mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     P.gm, P.gwr, P.pm, P.pwr)
 
@@ -188,16 +197,14 @@ for case_num=1:n_cases
     title(P.case_title,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
-    legend([casestr_i, casestr_f]);
+    legend([P.casestr_i, P.casestr_f]);
 
     n_fig = n_fig+1;
     n_fig_bode = n_fig;
     scf(n_fig_bode); clf();
-    bode([sys_ol_i; P.sys_ol], P.f_min, P.f_max, [casestr_i, casestr_f], 'rad')
+    bode([sys_ol_i; P.sys_ol], P.f_min, P.f_max, [P.casestr_i, P.casestr_f], 'rad')
 
     // Save results
-    mkdir('./saves');
-    [fdo, err] = mopen('saves/allServo-PSO_run.csv', 'wt');
     D.G = G;
     D.C = C;
     D.R = R;
@@ -211,3 +218,8 @@ end
 
 mclose(fdo);
 rotate_file('saves/allServo-PSO_run.csv', 'saves/allServo-PSO_run.csv');
+if getos()=='Windows' then
+    winopen('saves/allServo-PSO_run.csv');
+else
+    editor('saves/allServo-PSO_run.csv');
+end

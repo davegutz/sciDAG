@@ -78,14 +78,13 @@ function print_struct(st, st_str, fd, sep, titling)
     else
         [n_cases, mc] = size(st);
     end
-//    if ~isempty(titling) & ~titling then
-//        mprintf('HEAD:  st_str=%s, n_cases=%d\n', st_str, n_cases)
-//    end
     if isempty(titling) then // Only first call
-        titling = %t;
-        print_struct(st(1), st_str, fd, sep, titling);
-        mfprintf(fd, '\n');
+        if mtell(fd)==0 then // Only first, first call
+            titling = %t;
+            print_struct(st(1), st_str, fd, sep, titling);
+        end
         titling = %f;
+        mfprintf(fd, '\n');
     end
     for i_case = 1:n_cases  // Only first call with vector struct will have n_cases > 1
         field_names = fieldnames(st(i_case));
@@ -157,7 +156,6 @@ function print_struct(st, st_str, fd, sep, titling)
                 end
             end  // if titling
         else // Recursion in progress
-            if titling, ting = 1; else ting = 0; end
             if n_cases<>1
                 print_struct(st(i_case), st_str, fd, sep, titling);
                 mfprintf(fd, '\n');
