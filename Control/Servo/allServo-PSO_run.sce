@@ -161,6 +161,7 @@ for case_num=1:n_cases
     W.ts = WC.ts/(MU.ts*MU.sum);
     W.invgain = WC.invgain/(MU.invgain*MU.sum);
 
+    mprintf('\n\n****************Case %d of %d:\n', case_num, n_cases);
     f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
     P.casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
