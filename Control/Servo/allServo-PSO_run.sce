@@ -32,8 +32,10 @@ global verbose
 global G C W P
 verbose = 0;
 
-// Objective function linked into PSO
-exec('Objectives/allServo_PSO_Obj.sci', -1);
+// Filenames
+this = 'allServo-PSO';
+input_file = './' + this + '_input.xls';
+save_file = 'saves/' + this + '_run.csv';
 
 // System parameters
 G = struct( 'tehsv1', 0.007,..              // Plant driver lag, s
@@ -49,9 +51,10 @@ MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
 'invgain', 1/30);
 W = struct('tr', 0, 'Mp', 0, 'ts', 0, 'invgain', 0);
 R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
-'rise', 0.95, 'settle', 0.02,..
-'invgain', 1/30,..
-'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2);
+            'rise', 0.95, 'settle', 0.02,..
+            'invgain', 1/30,..
+            'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2,..
+            'obj_function', 'allServo_PSO_Obj');
 WC = struct('tr', 1, 'Mp', 1, 'Mu', 1, 'ts', 0.2, 'sum', 0. , 'invgain', 2);
 PSO    = struct('wmax',     0.9,..      // initial weight parameter
 'wmin',     0.4,..      // final weight parameter)
@@ -70,12 +73,12 @@ P  = struct('case_title', 'un-named',.. // Case title for plots etc
             'f_min_s',      1,..        // scalar on min of frequency range
             'f_max_s',      1);         // scalar on max of frequency range
 mkdir('./saves');
-[fdo, err] = mopen('saves/allServo-PSO_run.csv', 'wt');
+[fdo, err] = mopen(save_file, 'wt');
 if err<0 then
-    mprintf('%s--->', 'saves/allServo-PSO_run.csv')
+    mprintf('%s--->', save_file)
     error('is output file still open?')
 end
-[V, Comments, Mnames, Mvals] = load_xls_data('./allServo-PSO_input.xls', 'col');
+[V, Comments, Mnames, Mvals] = load_xls_data(input_file, 'col');
 [n_cases, m_V] = size(V);
 [n_comments, m_comments] = size(Comments);
 for i_comment = 1:n_comments
@@ -120,9 +123,15 @@ for case_num=1:n_cases
     PSO.weights = [PSO.wmax; PSO.wmin];
     PSO.c = [PSO.c1; PSO.c2];
     P.t_step = 0:C.dT:2;
+    ierr = execstr(['obj_function = R.obj_function;'], 'errcatch');
+    if ierr then
+        obj_function = 'allServo_PSO_Obj';
+    end
+    obj_function_file = 'Objectives/' + obj_function + '.sci';
+    exec(obj_function_file, -1);
 
     // File saving
-    P.save_file_name = 'saves/allServo-PSO_run_' + P.sys_name + '_' + P.case_title + '.dat';
+    P.save_file_name = 'saves/' + this + '_' + P.sys_name + '_' + P.case_title + '.dat';
 
     // Frequency range
     P.f_min = 1/2/%pi*P.f_min_s;
@@ -152,10 +161,9 @@ for case_num=1:n_cases
     W.ts = WC.ts/(MU.ts*MU.sum);
     W.invgain = WC.invgain/(MU.invgain*MU.sum);
 
-
-    f1 = allServo_PSO_Obj([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);
+    f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
     P.casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm)
+    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
@@ -185,13 +193,13 @@ for case_num=1:n_cases
         figure(n_fig);
         scf(n_fig);
     end
-    [fopt, xopt]=PSO_bsg_starcraft(allServo_PSO_Obj, [PSO.boundsmin, PSO.boundsmax],..
+    [fopt, xopt]=PSO_bsg_starcraft(evstr(obj_function), [PSO.boundsmin, PSO.boundsmax],..
     PSO.speed, PSO.itmax, PSO.n_raptor,..
     PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
     PSO.n_raptor, PSO.verbosef, PSO.x0);
     [d, P.case_date_str] = get_stamp(); 
     P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm)
+    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
     mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', xopt, fopt);
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
