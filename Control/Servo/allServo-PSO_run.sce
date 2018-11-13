@@ -66,8 +66,9 @@ PSO    = struct('wmax',     0.9,..      // initial weight parameter
 'boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
 'boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
 P  = struct('case_title', 'un-named',.. // Case title for plots etc
-'f_min_s',      1,..        // scalar on min of frequency range
-'f_max_s',      1);         // scalar on max of frequency range
+            'case_date_str', '',..      // Date stamp
+            'f_min_s',      1,..        // scalar on min of frequency range
+            'f_max_s',      1);         // scalar on max of frequency range
 mkdir('./saves');
 [fdo, err] = mopen('saves/allServo-PSO_run.csv', 'wt');
 if err<0 then
@@ -76,9 +77,38 @@ if err<0 then
 end
 [V, Comments, Mnames, Mvals] = load_xls_data('./allServo-PSO_input.xls', 'col');
 [n_cases, m_V] = size(V);
+[n_comments, m_comments] = size(Comments);
+for i_comment = 1:n_comments
+    mfprintf(fdo, '%s\n', Comments(i_comment))
+end
 
+// Performance function called by objective function
+function [P, C] = myPerf(G, C, R, I, P)
+    global verbose
+    C.raw = I;
+    if verbose>2 then
+        mprintf('C.raw=%6.3f/%6.3f/%6.3f/%6.3f%6.3f/%6.3f%6.3f\n', C.raw);
+    end
+    C.gain = max(I(1), 3);
+    C.tld1 = max(I(2), 0);
+    C.tlg1 = max(I(3), 0.008);
+    C.tld2 = max(I(4), 0);
+    C.tlg2 = max(I(5), 0.008);
+    C.tldh = max(I(6), 0);
+    C.tlgh = max(I(7), 0.008);
+    [P.sys_ol, P.sys_cl] = myServo(C.dT, G, C);
+    [P.gm, gfr] = g_margin(P.sys_ol);
+    [P.pm, pfr] = p_margin(P.sys_ol);
+    P.gwr = gfr*2*%pi;
+    P.pwr = pfr*2*%pi;
+    P.y_step = csim('step', P.t_step, P.sys_cl);
+    [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
+    myStepPerf(P.y_step, P.t_step, R.rise, R.settle, C.dT);
+endfunction
 
+// Da Loop
 for case_num=1:n_cases
+        
     G = V(case_num).G;
     C = V(case_num).C;
     WC = V(case_num).WC;
@@ -91,34 +121,14 @@ for case_num=1:n_cases
     PSO.c = [PSO.c1; PSO.c2];
     P.t_step = 0:C.dT:2;
 
+    // File saving
+    P.save_file_name = 'saves/allServo-PSO_run_' + P.sys_name + '_' + P.case_title + '.dat';
+
     // Frequency range
     P.f_min = 1/2/%pi*P.f_min_s;
     P.f_max = 1/C.dT*P.f_max_s;
 
 
-    // Performance function called by objective function
-    function [P, C] = myPerf(G, C, R, I, P)
-        global verbose
-        C.raw = I;
-        if verbose>2 then
-            mprintf('C.raw=%6.3f/%6.3f/%6.3f/%6.3f%6.3f/%6.3f%6.3f\n', C.raw);
-        end
-        C.gain = max(I(1), 3);
-        C.tld1 = max(I(2), 0);
-        C.tlg1 = max(I(3), 0.008);
-        C.tld2 = max(I(4), 0);
-        C.tlg2 = max(I(5), 0.008);
-        C.tldh = max(I(6), 0);
-        C.tlgh = max(I(7), 0.008);
-        [P.sys_ol, P.sys_cl] = myServo(C.dT, G, C);
-        [P.gm, gfr] = g_margin(P.sys_ol);
-        [P.pm, pfr] = p_margin(P.sys_ol);
-        P.gwr = gfr*2*%pi;
-        P.pwr = pfr*2*%pi;
-        P.y_step = csim('step', P.t_step, P.sys_cl);
-        [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
-        myStepPerf(P.y_step, P.t_step, R.rise, R.settle, C.dT);
-    endfunction
 
     MU.sum = MU.tr + MU.Mp + MU.Mu + MU.ts + MU.invgain;
     R.sum = R.tr + R.Mp + R.Mu + R.ts + R.invgain;
@@ -179,6 +189,7 @@ for case_num=1:n_cases
     PSO.speed, PSO.itmax, PSO.n_raptor,..
     PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
     PSO.n_raptor, PSO.verbosef, PSO.x0);
+    [d, P.case_date_str] = get_stamp(); 
     P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm)
     mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', xopt, fopt);
@@ -213,7 +224,9 @@ for case_num=1:n_cases
     D.W = W;
     D.WC = WC;
     D.MU = MU;
-    print_struct(D, '', fdo, ',');
+    print_struct(D, '', fdo, ',', case_num>1);
+    save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO');
+
 end
 
 mclose(fdo);

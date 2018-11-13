@@ -60,9 +60,12 @@
 // SOFTWARE.
 // Sep 24, 2018 	DA Gutz		Created
 // 
-function print_struct(st, st_str, fd, sep, titling)
-    if argn(2)<5 then
+function print_struct(st, st_str, fd, sep, suppress_titling, titling)
+    if argn(2)<6 then
         titling = '';
+    end
+    if argn(2)<5 then
+        suppress_titling = %f;
     end
     if argn(2)<4 then
         sep = '';
@@ -79,9 +82,9 @@ function print_struct(st, st_str, fd, sep, titling)
         [n_cases, mc] = size(st);
     end
     if isempty(titling) then // Only first call
-        if mtell(fd)==0 then // Only first, first call
+        if ~suppress_titling && (%t | fd==6 | mtell(fd)==0) then // Only first, first call
             titling = %t;
-            print_struct(st(1), st_str, fd, sep, titling);
+            print_struct(st(1), st_str, fd, sep, suppress_titling, titling);
         end
         titling = %f;
         mfprintf(fd, '\n');
@@ -157,7 +160,7 @@ function print_struct(st, st_str, fd, sep, titling)
             end  // if titling
         else // Recursion in progress
             if n_cases<>1
-                print_struct(st(i_case), st_str, fd, sep, titling);
+                print_struct(st(i_case), st_str, fd, sep, suppress_titling, titling);
                 mfprintf(fd, '\n');
             else
                 for i_field=1:n_fields
@@ -168,7 +171,7 @@ function print_struct(st, st_str, fd, sep, titling)
                     end
                     exec_name = 'st.' + field_names(i_field);
                     new_val = evstr(exec_name);
-                    print_struct(evstr(exec_name), new_name, fd, sep, titling);
+                    print_struct(evstr(exec_name), new_name, fd, sep, suppress_titling, titling);
                 end
             end
         end  // if n_fields==0
