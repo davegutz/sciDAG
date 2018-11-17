@@ -80,6 +80,9 @@ endfunction
 
 function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, sheet, comment_delim)
     
+    if argn(2)<5 then
+        DEFAULT = struct();
+    end
     if argn(2)<4 then
         comment_delim = '/\/\//';
     end
@@ -153,7 +156,6 @@ function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, sheet, comment_de
         end
     end
     Mvals = MvalsX(:, j_vals);
-    
     V = decode_xls_data(Mnames, Mvals, %type);
     C = C(:, 1);
 
