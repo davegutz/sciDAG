@@ -109,7 +109,7 @@ function print_struct(st, st_str, fd, sep, suppress_titling, titling)
                         last_col = instance==m_instance;
                         first_col = instance==1;
 
-                        if mult_col & first_col & first_row then
+                        if (mult_col | mult_row) & first_col & first_row then
                             mfprintf(fd, '[');
                         end
                         if type_element==1 then
@@ -139,11 +139,13 @@ function print_struct(st, st_str, fd, sep, suppress_titling, titling)
                         else
                             mfprintf(0, 'type %d for %s unknown\n', type_element, st_str);
                         end
-                        if mult_col then
+                        if (mult_col | mult_row) then
                             if last_col then
                                 if last_row then
                                     mfprintf(fd, ']');
                                 elseif mult_col & ~last_row
+                                    mfprintf(fd, ';');
+                                elseif mult_row
                                     mfprintf(fd, ';');
                                 else
                                     mfprintf(fd, '%s', mult_sep);

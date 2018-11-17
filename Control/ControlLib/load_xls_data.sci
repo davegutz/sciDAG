@@ -71,9 +71,9 @@ function V_decode_xls_data = decode_xls_data(Mnames, Mvals, %type)
         end
         for i_name = 1:n_names
             top_struct = names(i_name);
-            execstr('v.'+top_struct+'='+top_struct+';');
+            execstr('v_decode_xls_data.'+top_struct+'='+top_struct+';');
         end
-        V_decode_xls_data($+1) = v;
+        V_decode_xls_data($+1) = v_decode_xls_data;
     end
     
 endfunction

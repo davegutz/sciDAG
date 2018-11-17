@@ -24,7 +24,7 @@ funcprot(0);
 mclose('all');
 getd('../ControlLib')
 
-A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'e',int8(4), 'f', int16(5), 'g', int32(6), 'h', %inf, 'i', -%inf);
+A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'e',int8(4), 'f', int16(5), 'g', int32(6), 'h', %inf, 'i', -%inf, 'v', [1 2 3], 'vt', [1; 2; 3]);
 B = struct('second', A, 'third', A, 'first', A, 'fourth', %f);
 D = struct('primary', A, 'secondary', B);
 
