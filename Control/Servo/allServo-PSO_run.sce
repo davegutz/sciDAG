@@ -20,6 +20,7 @@
 // Oct 18, 2018 	DA Gutz		Created
 // 
 clear
+funcprot(0);
 getd('../ControlLib')
 exec('myServo.sci', -1)
 n_fig = -1;
@@ -29,7 +30,7 @@ mclose('all');
 // Global for debug
 global verbose
 // Globals for solver PSO.allServo_PSO_Obj
-global G C W P
+global G C W P X
 verbose = 0;
 
 // Filenames
@@ -51,10 +52,10 @@ MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
 'invgain', 1/30);
 W = struct('tr', 0, 'Mp', 0, 'ts', 0, 'invgain', 0);
 R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
-            'rise', 0.95, 'settle', 0.02,..
-            'invgain', 1/30,..
-            'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2,..
-            'obj_function', 'allServo_PSO_Obj');
+'rise', 0.95, 'settle', 0.02,..
+'invgain', 1/30,..
+'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2,..
+'obj_function', 'allServo_PSO_Obj');
 WC = struct('tr', 1, 'Mp', 1, 'Mu', 1, 'ts', 0.2, 'sum', 0. , 'invgain', 2);
 PSO    = struct('wmax',     0.9,..      // initial weight parameter
 'wmin',     0.4,..      // final weight parameter)
@@ -64,14 +65,32 @@ PSO    = struct('wmax',     0.9,..      // initial weight parameter
 'n_raptor', 50,..       // problem dimensions: number of particles
 'D',        7,..        // problem in R^2
 'launchp',  0.9,..      // launch probability, default = 0.9 (?)
-'speedf',   2*ones(1,7),..// PSO.speed factor, default = 2*D
+'speedf',   2*ones(1,7),..// X.speed factor, default = 2*D
 ..// Bounds for hunting around C
 'boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
 'boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
-P  = struct('case_title', 'un-named',.. // Case title for plots etc
-            'case_date_str', '',..      // Date stamp
-            'f_min_s',      1,..        // scalar on min of frequency range
-            'f_max_s',      1);         // scalar on max of frequency range
+P  = struct('case_title',   '',..       // Case title for plots etc
+'case_date_str','',..       // Date stamp
+'sys_name',     '',..       // System name
+'f_min_s',      %nan,..     // scalar on min of frequency range
+'f_max_s',      %nan,..     // scalar on max of frequency range
+'save_file_name', '',..     // Saved binary information file name
+'f_min',        %nan,..     // Used frequency lower limit, Hz
+'f_max',        %nan,..     // Used frequency upper limit, Hz
+'sys_cl',       %nan,..     // lti closed looop
+'sys_ol',       %nan,..     // lti open looop
+'gm',           %nan,..     // Resulting gain margin, dB
+'pm',           %nan,..     // Resulting phase margin, deg
+'gwr',          %nan,..     // Resulting gain crossover, rad/s 
+'pwr',          %nan,..     // Resulting phase crossover, rad/s 
+'ts',           %nan,..     // Resulting settle time, s
+'Mu',           %nan,..     // Resulting magnitude undershoot, %
+'tu',           %nan,..     // Resulting time at undershoot, s
+'Mp',           %nan,..     // Resulting magnitude overshoot, %
+'tp',           %nan,..     // Resulting time at overshoot, s
+'tr',           %nan,..     // Resulting rise time, s
+'casestr_i',    '',..       // Resulting initial result
+'casestr_f',    '');        // Resulting final result
 mkdir('./saves');
 [fdo, err] = mopen(save_file, 'wt');
 if err<0 then
@@ -86,32 +105,32 @@ for i_comment = 1:n_comments
 end
 
 // Performance function called by objective function
-function [P, C] = myPerf(G, C, R, I, P)
+function [P, C, X] = myPerf(G, C, R, swarm, P, X)
     global verbose
-    C.raw = I;
+    C.raw = swarm;
     if verbose>2 then
         mprintf('C.raw=%6.3f/%6.3f/%6.3f/%6.3f%6.3f/%6.3f%6.3f\n', C.raw);
     end
-    C.gain = max(I(1), 3);
-    C.tld1 = max(I(2), 0);
-    C.tlg1 = max(I(3), 0.008);
-    C.tld2 = max(I(4), 0);
-    C.tlg2 = max(I(5), 0.008);
-    C.tldh = max(I(6), 0);
-    C.tlgh = max(I(7), 0.008);
-    [P.sys_ol, P.sys_cl] = myServo(C.dT, G, C);
-    [P.gm, gfr] = g_margin(P.sys_ol);
-    [P.pm, pfr] = p_margin(P.sys_ol);
+    C.gain = max(swarm(1), 3);
+    C.tld1 = max(swarm(2), 0);
+    C.tlg1 = max(swarm(3), 0.008);
+    C.tld2 = max(swarm(4), 0);
+    C.tlg2 = max(swarm(5), 0.008);
+    C.tldh = max(swarm(6), 0);
+    C.tlgh = max(swarm(7), 0.008);
+    [X.sys_ol, X.sys_cl] = myServo(C.dT, G, C);
+    [P.gm, gfr] = g_margin(X.sys_ol);
+    [P.pm, pfr] = p_margin(X.sys_ol);
     P.gwr = gfr*2*%pi;
     P.pwr = pfr*2*%pi;
-    P.y_step = csim('step', P.t_step, P.sys_cl);
+    X.y_step = csim('step', X.t_step, X.sys_cl);
     [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
-    myStepPerf(P.y_step, P.t_step, R.rise, R.settle, C.dT);
+    myStepPerf(X.y_step, X.t_step, R.rise, R.settle, C.dT);
 endfunction
 
 // Da Loop
 for case_num=1:n_cases
-        
+
     G = V(case_num).G;
     C = V(case_num).C;
     WC = V(case_num).WC;
@@ -120,9 +139,10 @@ for case_num=1:n_cases
     PSO = V(case_num).PSO;
     MU = V(case_num).MU;
     verbose = V(case_num).verbose;
+    active = V(case_num).active;
     PSO.weights = [PSO.wmax; PSO.wmin];
     PSO.c = [PSO.c1; PSO.c2];
-    P.t_step = 0:C.dT:2;
+    X.t_step = 0:C.dT:2;
     ierr = execstr(['obj_function = R.obj_function;'], 'errcatch');
     if ierr then
         obj_function = 'allServo_PSO_Obj';
@@ -134,8 +154,8 @@ for case_num=1:n_cases
     P.save_file_name = 'saves/' + this + '_' + P.sys_name + '_' + P.case_title + '.dat';
 
     // Frequency range
-    P.f_min = 1/2/%pi*P.f_min_s;
-    P.f_max = 1/C.dT*P.f_max_s;
+    X.f_min = 1/2/%pi*P.f_min_s;
+    X.f_max = 1/C.dT*P.f_max_s;
 
 
 
@@ -161,6 +181,7 @@ for case_num=1:n_cases
     W.ts = WC.ts/(MU.ts*MU.sum);
     W.invgain = WC.invgain/(MU.invgain*MU.sum);
 
+
     mprintf('\n\n****************Case %d of %d:\n', case_num, n_cases);
     f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
     P.casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
@@ -173,17 +194,17 @@ for case_num=1:n_cases
     n_fig = n_fig+1;
     n_fig_step = n_fig;
     scf(n_fig_step); clf(); 
-    plot(P.t_step, P.y_step, 'k')
+    plot(X.t_step, X.y_step, 'k')
     xgrid(0);
-    y_step_i = P.y_step;
-    sys_ol_i = P.sys_ol;
+    y_step_init = X.y_step;
+    sys_ol_i = X.sys_ol;
 
 
     // PSO inputs
     PSO.x0 = [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh];
     speed_max = 0.1*PSO.boundsmax;
     speed_min = 0.1*PSO.boundsmin;
-    PSO.speed = [speed_min, speed_max];
+    X.speed = [speed_min, speed_max];
     grand('setsd', 0); // must initialize random generator.  Want same result on repeated runs.
     PSO.verbosef = 1; // 1 to activate autosave and graphics by default
 
@@ -194,11 +215,16 @@ for case_num=1:n_cases
         figure(n_fig);
         scf(n_fig);
     end
-    [fopt, xopt]=PSO_bsg_starcraft(evstr(obj_function), [PSO.boundsmin, PSO.boundsmax],..
-    PSO.speed, PSO.itmax, PSO.n_raptor,..
-    PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-    PSO.n_raptor, PSO.verbosef, PSO.x0);
-    [d, P.case_date_str] = get_stamp(); 
+    if active then
+        [fopt, xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
+        [PSO.boundsmin, PSO.boundsmax],..
+        X.speed, PSO.itmax, PSO.n_raptor,..
+        PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
+        PSO.n_raptor, PSO.verbosef, PSO.x0);
+        [dummy, P.case_date_str] = get_stamp(); 
+    else
+        P.case_date_str = '';
+    end
     P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
     mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', xopt, fopt);
@@ -213,7 +239,7 @@ for case_num=1:n_cases
 
     // plots
     scf(n_fig_step);
-    plot(P.t_step, P.y_step, 'b')
+    plot(X.t_step, X.y_step, 'b')
     title(P.case_title,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
@@ -222,13 +248,15 @@ for case_num=1:n_cases
     n_fig = n_fig+1;
     n_fig_bode = n_fig;
     scf(n_fig_bode); clf();
-    bode([sys_ol_i; P.sys_ol], P.f_min, P.f_max, [P.casestr_i, P.casestr_f], 'rad')
+    bode([sys_ol_i; X.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
 
     // Save results
+    D.active = active;
+    D.verbose = verbose;
+    D.P = P;
     D.G = G;
     D.C = C;
     D.R = R;
-    D.P = P;
     D.PSO = PSO;
     D.W = W;
     D.WC = WC;

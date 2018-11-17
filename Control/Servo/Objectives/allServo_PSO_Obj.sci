@@ -19,17 +19,17 @@
 // SOFTWARE.
 // Oct 18, 2018 	DA Gutz		Created
 // 
-function obj_score = allServo_PSO_Obj(swarm)
-    global G C W P
+function obj_score = allServo_PSO_Obj(particles)
+    global G C W P X
     global verbose
-    [n_particles, m] = size(swarm);
+    [n_particles, m] = size(particles);
     obj_score = zeros(n_particles,1);
     for i = 1:n_particles
-        I = swarm(i,:);
+        swarm = particles(i,:);
         if verbose>2 then
-            mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.4f tlg1 = %6.4f tld2 = %6.4f tlg2 = %6.4f tldh = %6.4f tlgh = %6.4f\ n_particles', I);
+            mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.4f tlg1 = %6.4f tld2 = %6.4f tlg2 = %6.4f tldh = %6.4f tlgh = %6.4f\ n_particles', swarm);
         end
-        [P, C] = myPerf(G, C, R, I, P);
+        [P, C, X] = myPerf(G, C, R, swarm, P, X);
         if verbose>3 then
             mprintf('allServo_PSO_Obj:  W.tr=%6.3f   W.Mp=%6.3f, W.Mu=%6.3f, W.ts=%6.3f, W.invgain=%6.3f\ n_particles',..
                     W.tr, W.Mp, W.Mu, W.ts, W.invgain);
