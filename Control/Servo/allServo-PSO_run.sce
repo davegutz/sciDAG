@@ -27,6 +27,13 @@ n_fig = -1;
 xdel(winsid())
 mclose('all');
 
+// Setup comparison plots
+n_fig = n_fig + 1;
+n_fig_step_compare = n_fig;
+n_fig = n_fig + 1;
+n_fig_bode_compare = n_fig;
+
+
 // Global for debug
 global verbose
 // Globals for solver PSO.allServo_PSO_Obj
@@ -103,6 +110,9 @@ end
 for i_comment = 1:n_comments
     mfprintf(fdo, '%s\n', Comments(i_comment))
 end
+dt_plot = 0.01;
+t_step_compare = 0:dt_plot:2;
+X.t_step = t_step_compare;
 
 // Performance function called by objective function
 function [P, C, X] = myPerf(G, C, R, swarm, P, X)
@@ -125,7 +135,7 @@ function [P, C, X] = myPerf(G, C, R, swarm, P, X)
     P.pwr = pfr*2*%pi;
     X.y_step = csim('step', X.t_step, X.sys_cl);
     [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
-    myStepPerf(X.y_step, X.t_step, R.rise, R.settle, C.dT);
+        myStepPerf(X.y_step, X.t_step, R.rise, R.settle, C.dT);
 endfunction
 
 // Da Loop
@@ -142,7 +152,7 @@ for case_num=1:n_cases
     active = V(case_num).active;
     PSO.weights = [PSO.wmax; PSO.wmin];
     PSO.c = [PSO.c1; PSO.c2];
-    X.t_step = 0:C.dT:2;
+
     ierr = execstr(['obj_function = R.obj_function;'], 'errcatch');
     if ierr then
         obj_function = 'allServo_PSO_Obj';
@@ -216,18 +226,18 @@ for case_num=1:n_cases
         scf(n_fig);
     end
     if active then
-        [fopt, xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
-        [PSO.boundsmin, PSO.boundsmax],..
-        X.speed, PSO.itmax, PSO.n_raptor,..
-        PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-        PSO.n_raptor, PSO.verbosef, PSO.x0);
+        [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
+            [PSO.boundsmin, PSO.boundsmax],..
+            X.speed, PSO.itmax, PSO.n_raptor,..
+            PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
+            PSO.n_raptor, PSO.verbosef, PSO.x0);
         [dummy, P.case_date_str] = get_stamp(); 
     else
         P.case_date_str = '';
     end
     P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
-    mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', xopt, fopt);
+    mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', P.xopt, P.fopt);
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
@@ -244,19 +254,31 @@ for case_num=1:n_cases
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
     legend([P.casestr_i, P.casestr_f]);
+    
+    scf(n_fig_step_compare);clf();
+    y_step_compare($+1,:) = X.y_step;
+    plot(t_step_compare, y_step_compare)
+    title(this,"fontsize",3);
+    xlabel("t, sec","fontsize",4);
+    ylabel("$y$","fontsize",4);
+    step_compare_legend($+1) = P.case_title;
+    legend(step_compare_legend);
 
     n_fig = n_fig+1;
     n_fig_bode = n_fig;
     scf(n_fig_bode); clf();
     bode([sys_ol_i; X.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
 
+    scf(n_fig_bode_compare);
+    bode(X.sys_ol, X.f_min, X.f_max, P.case_title, 'rad')
+
     // Save results
     D.active = active;
     D.verbose = verbose;
     D.P = P;
+    D.R = R;
     D.G = G;
     D.C = C;
-    D.R = R;
     D.PSO = PSO;
     D.W = W;
     D.WC = WC;

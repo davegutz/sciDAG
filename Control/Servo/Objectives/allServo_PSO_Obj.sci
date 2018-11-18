@@ -30,6 +30,7 @@ function obj_score = allServo_PSO_Obj(particles)
             mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.4f tlg1 = %6.4f tld2 = %6.4f tlg2 = %6.4f tldh = %6.4f tlgh = %6.4f\ n_particles', swarm);
         end
         [P, C, X] = myPerf(G, C, R, swarm, P, X);
+        P.invgain = 1/C.gain;
         if verbose>3 then
             mprintf('allServo_PSO_Obj:  W.tr=%6.3f   W.Mp=%6.3f, W.Mu=%6.3f, W.ts=%6.3f, W.invgain=%6.3f\ n_particles',..
                     W.tr, W.Mp, W.Mu, W.ts, W.invgain);
@@ -37,6 +38,7 @@ function obj_score = allServo_PSO_Obj(particles)
                     P.tr, P.Mp*100, P.tp, P.Mu*100, P.tu, P.ts, C.gain);
         end
         obj_score(i) = W.tr*P.tr + W.Mp*P.Mp - W.Mu*P.Mu + W.ts*P.ts + W.invgain/C.gain;
+
         // "Soft" limit
         if P.gm<R.gm then
             obj_score(i)= obj_score(i) + 10;
@@ -45,7 +47,7 @@ function obj_score = allServo_PSO_Obj(particles)
             obj_score(i) = obj_score(i) + 10;
         end
         if P.Mp>R.Mp then
-            obj_score(i) = obj_score(i) + 10;
+            obj_score(i) = obj_score(i) + 100;
         end
         if P.Mu<(R.rise-1) then
             obj_score(i) = obj_score(i) + 10;
@@ -53,11 +55,13 @@ function obj_score = allServo_PSO_Obj(particles)
         if P.tr>R.tr then
             obj_score(i) = obj_score(i) + 10;
         end
-        if 1/C.gain>R.invgain then
+        if P.invgain>R.invgain then
             obj_score(i) = obj_score(i) + 10;
         end
+        
         // "Hard" limit - PSO does not respect the input bounds
-        if C.raw(2)<0 | C.raw(3)<0.008 | C.raw(4)<0 | C.raw(5)<0.008 | C.raw(6)<0 | C.raw(7)<0.008 then
+        P.minlag = C.dT*0.8;
+        if C.raw(2)<0 | C.raw(3)<P.minlag | C.raw(4)<0 | C.raw(5)<P.minlag | C.raw(6)<0 | C.raw(7)<P.minlag then
             obj_score(i) = obj_score(i) + 100;
         end
         
