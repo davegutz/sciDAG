@@ -46,4 +46,4 @@ p.y_step = csim('step', t_step, p.sys_cl);
 [p.tr, p.tp, p.Mp, p.tu, p.Mu, p.ts] =  myStepPerf(p.y_step, t_step, R.rise, R.settle, dT);
 mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
         p.tr, p.Mp*100, p.Mu*100, p.ts)
-tr=0.300 s Mp100= 0.000  Mu100=-0.000  ts=0.391 s
+tr=0.300 s Mp100= 0.000  Mu100= 0.000  ts=0.391 s

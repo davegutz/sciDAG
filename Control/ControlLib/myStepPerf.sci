@@ -90,7 +90,7 @@ function [time_rise, time_peak, magnitude_peak, time_us, magnitude_us, time_sett
     [y_u, r_u] = min(y(r:n));
     r_under = r_u + r;
     time_us = (r_under-1)*dT;
-    magnitude_us = min(y_u-1, 0);
+    magnitude_us = max(1-y_u, 0);
     if verbose>3 then
         mprintf('r_under=%ld,y_u=%e, r_rise=%ld\n', r_under, y_u, ceil(r_rise));
     end

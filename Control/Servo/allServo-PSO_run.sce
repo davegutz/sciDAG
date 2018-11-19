@@ -39,6 +39,7 @@ global verbose
 // Globals for solver PSO.allServo_PSO_Obj
 global G C W P X
 verbose = 0;
+global PSO
 
 // Filenames
 this = 'allServo-PSO';
@@ -49,20 +50,25 @@ save_file = 'saves/' + this + '_run.csv';
 G = struct( 'tehsv1', 0.007,..              // Plant driver lag, s
 'tehsv2', 0.01,..               // Plant hydraulic lag, s
 'gain', 1);                     // Plant gain, %/s/mA
+// Control
 C = struct( 'dT', 0.01,..                   // Update time, s
 'tld1', 0.013, 'tlg1', 0.009,.. // Forward path lead/lag #1
 'tld2', 0.013, 'tlg2', 0.009,.. // Forward path lead/lag #2
 'tldh', 0.015, 'tlgh', 0.008,.. // Feedback path lead/lag
 'gain', 32.6);                  // Control gain, mA/%
+// Typical averages ('mu')
 MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
 'tr', 0.05, 'Mp', 0.15, 'Mu', 0.15, 'ts', 0.2, 'sum', 0,..
 'invgain', 1/30);
+// Final weights
 W = struct('tr', 0, 'Mp', 0, 'ts', 0, 'invgain', 0);
+// Requirements
 R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
 'rise', 0.95, 'settle', 0.02,..
 'invgain', 1/30,..
 'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2,..
 'obj_function', 'allServo_PSO_Obj');
+// Cost weights
 WC = struct('tr', 1, 'Mp', 1, 'Mu', 1, 'ts', 0.2, 'sum', 0. , 'invgain', 2);
 PSO    = struct('wmax',     0.9,..      // initial weight parameter
 'wmin',     0.4,..      // final weight parameter)
@@ -138,6 +144,20 @@ function [P, C, X] = myPerf(G, C, R, swarm, P, X)
         myStepPerf(X.y_step, X.t_step, R.rise, R.settle, C.dT);
 endfunction
 
+// PSO verbose
+function stop =  outputfun(i, fopt, xopt)
+    global PSO, P
+    PSO.iters = i;
+    if i==0 | PSO.verbose>0 then
+        mprintf('PSO(%03d): %14.9f<--- %6.3f*(%6.4f/%6.4f)(%6.4f/%6.4f)(%6.4f/%6.4f)\n', PSO.iters, fopt, xopt);
+    end
+    if i==0 | PSO.verbose>1 then
+        mprintf('PSO(%03d):  tr=%5.3f s Mp100=%6.3e tp=%6.3f Mu100=%6.3e tu=%6.3f ts=%5.3f s gain=%6.3f\n',..
+        PSO.iters, P.tr, P.Mp*100, P.tp, P.Mu*100, P.tu, P.ts, xopt(1));
+    end
+    stop = %f;
+endfunction
+
 // Da Loop
 for case_num=1:n_cases
 
@@ -169,13 +189,13 @@ for case_num=1:n_cases
 
 
 
-    MU.sum = MU.tr + MU.Mp + MU.Mu + MU.ts + MU.invgain;
-    R.sum = R.tr + R.Mp + R.Mu + R.ts + R.invgain;
-    W.tr = R.sum/R.tr * MU.sum/MU.tr;
-    W.Mp = R.sum/R.Mp * MU.sum/MU.Mp;
-    W.Mu = R.sum/R.Mu * MU.sum/MU.Mu;
-    W.ts = R.sum/R.ts * MU.sum/MU.ts;
-    W.invgain = R.sum/R.invgain * MU.sum/MU.invgain;
+//    MU.sum = MU.tr + MU.Mp + MU.Mu + MU.ts + MU.invgain;
+//    R.sum = R.tr + R.Mp + R.Mu + R.ts + R.invgain;
+//    W.tr = R.sum/R.tr * MU.sum/MU.tr;
+//    W.Mp = R.sum/R.Mp * MU.sum/MU.Mp;
+//    W.Mu = R.sum/R.Mu * MU.sum/MU.Mu;
+//    W.ts = R.sum/R.ts * MU.sum/MU.ts;
+//    W.invgain = R.sum/R.invgain * MU.sum/MU.invgain;
 
     WC.sum = WC.tr + WC.Mp + WC.Mu + WC.ts + WC.invgain;
     WC.tr = WC.tr/WC.sum;
@@ -196,11 +216,13 @@ for case_num=1:n_cases
     f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
     P.casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
+    outputfun(0, f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);
+    C.raw_i = C.raw;
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
     P.tr, P.Mp*100, P.Mu*100, P.ts);
-    disp(P.casestr_i)
+//    disp(P.casestr_i)
     n_fig = n_fig+1;
     n_fig_step = n_fig;
     scf(n_fig_step); clf(); 
@@ -216,30 +238,29 @@ for case_num=1:n_cases
     speed_min = 0.1*PSO.boundsmin;
     X.speed = [speed_min, speed_max];
     grand('setsd', 0); // must initialize random generator.  Want same result on repeated runs.
-    PSO.verbosef = 1; // 1 to activate autosave and graphics by default
 
     // Particle Swarm algorithm
-    PSO.verbosef = 1; // 1 to activate autosave and graphics by default
-    if PSO.verbosef>0 then
+    if PSO.verbose>0 then
         n_fig = n_fig+1;
         figure(n_fig);
         scf(n_fig);
     end
     if active then
+        PSO.iters = 0;
         [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
             [PSO.boundsmin, PSO.boundsmax],..
             X.speed, PSO.itmax, PSO.n_raptor,..
             PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-            PSO.n_raptor, PSO.verbosef, PSO.x0);
+            PSO.n_raptor, outputfun, PSO.x0);
+        PSO.iters = PSO.iters + 1;
+        outputfun(PSO.iters, P.fopt, P.xopt);
         [dummy, P.case_date_str] = get_stamp(); 
     else
         P.case_date_str = '';
     end
     P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
-    mprintf('xopt= %4.1f/%5.4f, fopt=%e\n', P.xopt, P.fopt);
-    mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
+    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);    mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
+    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr);
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
     P.tr, P.Mp*100, P.Mu*100, P.ts);
     disp(P.casestr_f)

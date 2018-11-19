@@ -30,6 +30,7 @@ function obj_score = allServo_PSO_Obj(particles)
             mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.4f tlg1 = %6.4f tld2 = %6.4f tlg2 = %6.4f tldh = %6.4f tlgh = %6.4f\ n_particles', swarm);
         end
         [P, C, X] = myPerf(G, C, R, swarm, P, X);
+        P.minlag = C.dT*0.8;
         P.invgain = 1/C.gain;
         if verbose>3 then
             mprintf('allServo_PSO_Obj:  W.tr=%6.3f   W.Mp=%6.3f, W.Mu=%6.3f, W.ts=%6.3f, W.invgain=%6.3f\ n_particles',..
@@ -37,34 +38,57 @@ function obj_score = allServo_PSO_Obj(particles)
             mprintf('allServo_PSO_Obj:  tr=%5.3f s Mp100=%6.3e tp=%6.3f Mu100=%6.3e tu=%6.3f ts=%5.3f s gain=%6.3f\ n_particles',..
                     P.tr, P.Mp*100, P.tp, P.Mu*100, P.tu, P.ts, C.gain);
         end
-        obj_score(i) = W.tr*P.tr + W.Mp*P.Mp - W.Mu*P.Mu + W.ts*P.ts + W.invgain/C.gain;
-
-        // "Soft" limit
+        X.Score.tr = W.tr*P.tr;
+        X.Score.Mp = W.Mp*P.Mp;
+        X.Score.Mu = W.Mu*P.Mu;
+        X.Score.ts = W.ts*P.ts;
+        X.Score.invgain = W.invgain/C.gain;
+        X.Score.gm = 0;
+        X.Score.pm = 0;
+        X.Score.hard = 0;
+                
+        // Soft Limits
+        if P.tr>R.tr then
+            X.Score.tr = X.Score.tr + 10;
+        end
         if P.gm<R.gm then
-            obj_score(i)= obj_score(i) + 10;
+            X.Score.gm = X.Score.gm + 10;
         end
         if P.pm<R.pm then
-            obj_score(i) = obj_score(i) + 10;
+            X.Score.pm = X.Score.pm + 10;
         end
         if P.Mp>R.Mp then
-            obj_score(i) = obj_score(i) + 100;
+            X.Score.Mp = X.Score.Mp + 100;
         end
-        if P.Mu<(R.rise-1) then
-            obj_score(i) = obj_score(i) + 10;
+        if P.Mu>R.Mu then
+            X.Score.Mu = X.Score.Mu + 10;
         end
         if P.tr>R.tr then
-            obj_score(i) = obj_score(i) + 10;
+            X.Score.tr = X.Score.tr + 10;
         end
         if P.invgain>R.invgain then
-            obj_score(i) = obj_score(i) + 10;
+            X.Score.invgain = X.Score.invgain + 10;
         end
-        
+
         // "Hard" limit - PSO does not respect the input bounds
-        P.minlag = C.dT*0.8;
-        if C.raw(2)<0 | C.raw(3)<P.minlag | C.raw(4)<0 | C.raw(5)<P.minlag | C.raw(6)<0 | C.raw(7)<P.minlag then
-            obj_score(i) = obj_score(i) + 100;
+        if C.raw(2)<0 | C.raw(3)<P.minlag | C.raw(4)<0 |..
+             C.raw(5)<P.minlag | C.raw(6)<0 | C.raw(7)<P.minlag then
+            X.Score.hard = X.Score.hard + 100;
         end
         
+        obj_score(i) = X.Score.tr + X.Score.Mp + X.Score.Mu +..
+         X.Score.ts + X.Score.invgain + X.Score.gm + X.Score.pm +..
+         X.Score.hard;
+        X.Score.total = obj_score(i);
+        P.ScoreN.tr = X.Score.tr/X.Score.total;
+        P.ScoreN.Mp = X.Score.Mp/X.Score.total;
+        P.ScoreN.Mu = X.Score.Mu/X.Score.total;
+        P.ScoreN.ts = X.Score.ts/X.Score.total;
+        P.ScoreN.invgain = X.Score.invgain/X.Score.total;
+        P.ScoreN.gm = X.Score.gm/X.Score.total;
+        P.ScoreN.pm = X.Score.pm/X.Score.total;
+        P.ScoreN.hard = X.Score.hard/X.Score.total;
+
     end
     
 endfunction
