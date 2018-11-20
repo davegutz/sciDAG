@@ -32,9 +32,9 @@ write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, C);
 rotate_file('tests/nonreg_tests/tempOut.csv', 'tests/nonreg_tests/testOut.csv');
 mgetl('tests/nonreg_tests/testOut.csv')
  ans  =
-!// Sample comment, total 2 lines                                      !
+!"// Sample comment, total 2 lines"                                    !
 !                                                                      !
-!// End of sample comment                                              !
+!"// End of sample comment"                                            !
 !                                                                      !
 !D.a,2.0000000000000000,2.0000000000000000,2.0000000000000000,         !
 !                                                                      !

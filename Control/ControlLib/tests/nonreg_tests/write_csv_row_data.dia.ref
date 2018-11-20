@@ -30,9 +30,9 @@ mclose('all');
 write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, comments);
 mgetl('tests/nonreg_tests/tempOut.csv')
  ans  =
-!// Sample comment, total 2 lines                                      !
+!"// Sample comment, total 2 lines"                                    !
 !                                                                      !
-!// End of sample comment                                              !
+!"// End of sample comment"                                            !
 !                                                                      !
 !D.a,D.b,D.c,D.d,D.e,D.f,D.g,E.a,E.b,myVariable,myStrVariable,myBoolVar!
 !iable,                                                                !

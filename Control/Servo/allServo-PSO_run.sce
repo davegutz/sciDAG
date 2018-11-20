@@ -310,9 +310,9 @@ for case_num=1:n_cases
 end
 
 mclose(fdo);
-rotate_file('saves/allServo-PSO_run.csv', 'saves/allServo-PSO_run.csv');
+rotate_file(save_file, save_file);
 if getos()=='Windows' then
-    winopen('saves/allServo-PSO_run.csv');
+    winopen(save_file);
 else
-    editor('saves/allServo-PSO_run.csv');
+    editor(save_file);
 end

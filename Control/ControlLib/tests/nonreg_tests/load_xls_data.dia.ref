@@ -138,11 +138,11 @@ mclose('all');
          column 12 to 14
 !myBoolVariable  v  vt  !
  C_col  = 
-!// Sample comment, total 2 lines           !
-!                                           !
-!// End of sample comment                   !
-!                                           !
-!// Cannot input multi-dimensional vectors  !
+!"// Sample comment, total 2 lines"           !
+!                                             !
+!"// End of sample comment"                   !
+!                                             !
+!"// Cannot input multi-dimensional vectors"  !
  V_col  = 
   3x1 struct array with fields:
     D
@@ -207,11 +207,11 @@ V_col.vt
          column 12 to 14
 !myBoolVariable  v  vt  !
  C_row  = 
-!// Sample comment, total 2 lines           !
-!                                           !
-!// End of sample comment                   !
-!                                           !
-!// Cannot input multi-dimensional vectors  !
+!"// Sample comment, total 2 lines"           !
+!                                             !
+!"// End of sample comment"                   !
+!                                             !
+!"// Cannot input multi-dimensional vectors"  !
  V_row  = 
   3x1 struct array with fields:
     D
