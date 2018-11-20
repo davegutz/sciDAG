@@ -29,6 +29,7 @@ function obj_score = allServo_PSO_Obj(particles)
         if verbose>2 then
             mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.4f tlg1 = %6.4f tld2 = %6.4f tlg2 = %6.4f tldh = %6.4f tlgh = %6.4f\ n_particles', swarm);
         end
+        // The following function is found in allServo-PSO_run.sce
         [P, C, X] = myPerf(G, C, R, swarm, P, X);
         P.minlag = C.dT*0.8;
         P.invgain = 1/C.gain;

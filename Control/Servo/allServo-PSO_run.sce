@@ -75,7 +75,7 @@ PSO    = struct('wmax',     0.9,..      // initial weight parameter
 'itmax',    5,..        // maximum iteration number
 'c1',       0.7,..      // knowledge factors for personnal best
 'c2',       1.47,..     // knowledge factors for global best
-'n_raptor', 50,..       // problem dimensions: number of particles
+'N',        50,..       // problem dimensions: number of particles
 'D',        7,..        // problem in R^2
 'launchp',  0.9,..      // launch probability, default = 0.9 (?)
 'speedf',   2*ones(1,7),..// X.speed factor, default = 2*D
@@ -84,7 +84,6 @@ PSO    = struct('wmax',     0.9,..      // initial weight parameter
 'boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
 P  = struct('case_title',   '',..       // Case title for plots etc
 'case_date_str','',..       // Date stamp
-'sys_name',     '',..       // System name
 'f_min_s',      %nan,..     // scalar on min of frequency range
 'f_max_s',      %nan,..     // scalar on max of frequency range
 'save_file_name', '',..     // Saved binary information file name
@@ -107,8 +106,8 @@ P  = struct('case_title',   '',..       // Case title for plots etc
 mkdir('./saves');
 [fdo, err] = mopen(save_file, 'wt');
 if err<0 then
-    mprintf('%s--->', save_file)
-    error('is output file still open?')
+    msg = msprintf('%s---> is csv output file still open in excel/oo?', save_file)
+    error(msg)
 end
 [V, Comments, Mnames, Mvals] = load_xls_data(input_file, 'col');
 [n_cases, m_V] = size(V);
@@ -127,13 +126,30 @@ function [P, C, X] = myPerf(G, C, R, swarm, P, X)
     if verbose>2 then
         mprintf('C.raw=%6.3f/%6.3f/%6.3f/%6.3f%6.3f/%6.3f%6.3f\n', C.raw);
     end
-    C.gain = max(swarm(1), 3);
-    C.tld1 = max(swarm(2), 0);
-    C.tlg1 = max(swarm(3), 0.008);
-    C.tld2 = max(swarm(4), 0);
-    C.tlg2 = max(swarm(5), 0.008);
-    C.tldh = max(swarm(6), 0);
-    C.tlgh = max(swarm(7), 0.008);
+    if X.D>0 then
+        C.gain = max(swarm(1), 3);
+        if X.D>1 then
+            C.tld1 = max(swarm(2), 0);
+            if X.D>2 then
+                C.tlg1 = max(swarm(3), P.minlag);
+                if X.D>3 then
+                    C.tld2 = max(swarm(4), 0);
+                    if X.D>4 then
+                        C.tlg2 = max(swarm(5), P.minlag);
+                        if X.D>5 then
+                            C.tldh = max(swarm(6), 0);
+                            if X.D>6 then
+                                C.tlgh = max(swarm(7), P.minlag);
+                            else
+                                msg = msprintf('PSO.N not compatible with myPerf function in %s', this);
+                                error(msg)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
     [X.sys_ol, X.sys_cl] = myServo(C.dT, G, C);
     [P.gm, gfr] = g_margin(X.sys_ol);
     [P.pm, pfr] = p_margin(X.sys_ol);
@@ -172,6 +188,7 @@ for case_num=1:n_cases
     active = V(case_num).active;
     PSO.weights = [PSO.wmax; PSO.wmin];
     PSO.c = [PSO.c1; PSO.c2];
+    X.D = PSO.D;
 
     ierr = execstr(['obj_function = R.obj_function;'], 'errcatch');
     if ierr then
@@ -181,7 +198,7 @@ for case_num=1:n_cases
     exec(obj_function_file, -1);
 
     // File saving
-    P.save_file_name = 'saves/' + this + '_' + P.sys_name + '_' + P.case_title + '.dat';
+    P.save_file_name = 'saves/' + this + '_' + P.case_title + '.dat';
 
     // Frequency range
     X.f_min = 1/2/%pi*P.f_min_s;
@@ -249,9 +266,9 @@ for case_num=1:n_cases
         PSO.iters = 0;
         [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
             [PSO.boundsmin, PSO.boundsmax],..
-            X.speed, PSO.itmax, PSO.n_raptor,..
+            X.speed, PSO.itmax, PSO.N,..
             PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-            PSO.n_raptor, outputfun, PSO.x0);
+            PSO.N, outputfun, PSO.x0);
         PSO.iters = PSO.iters + 1;
         outputfun(PSO.iters, P.fopt, P.xopt);
         [dummy, P.case_date_str] = get_stamp(); 
@@ -259,13 +276,14 @@ for case_num=1:n_cases
         P.case_date_str = '';
     end
     P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);    mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr);
+        C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
+    mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
+        C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr);
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
-    P.tr, P.Mp*100, P.Mu*100, P.ts);
+        P.tr, P.Mp*100, P.Mu*100, P.ts);
     disp(P.casestr_f)
     mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-    P.gm, P.gwr, P.pm, P.pwr)
+        P.gm, P.gwr, P.pm, P.pwr)
 
 
     // plots
