@@ -175,6 +175,8 @@ function stop =  outputfun(i, fopt, xopt)
 endfunction
 
 // Da Loop
+composite_lti_bode_compare = [];
+legend_bode_compare = [];
 for case_num=1:n_cases
 
     G = V(case_num).G;
@@ -308,8 +310,10 @@ for case_num=1:n_cases
     scf(n_fig_bode); clf();
     bode([sys_ol_i; X.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
 
-    scf(n_fig_bode_compare);
-    bode(X.sys_ol, X.f_min, X.f_max, P.case_title, 'rad')
+    scf(n_fig_bode_compare); clf();
+    composite_lti_bode_compare = [composite_lti_bode_compare; X.sys_ol];
+    legend_bode_compare = [legend_bode_compare; P.case_title];
+    bode(composite_lti_bode_compare, X.f_min, X.f_max, legend_bode_compare, 'rad')
 
     // Save results
     D.active = active;
@@ -325,6 +329,7 @@ for case_num=1:n_cases
     print_struct(D, '', fdo, ',', case_num>1);
     save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO');
 
+    scf(n_fig_bode_compare);  f=gcf(); f.visible="on";
     scf(n_fig_step_compare);  f=gcf(); f.visible="on";
 end
 
