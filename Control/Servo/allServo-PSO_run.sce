@@ -294,7 +294,7 @@ for case_num=1:n_cases
     ylabel("$y$","fontsize",4);
     legend([P.casestr_i, P.casestr_f]);
     
-    scf(n_fig_step_compare);clf();
+    scf(n_fig_step_compare); clf();
     y_step_compare($+1,:) = X.y_step;
     plot(t_step_compare, y_step_compare)
     title(this,"fontsize",3);
@@ -325,6 +325,7 @@ for case_num=1:n_cases
     print_struct(D, '', fdo, ',', case_num>1);
     save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO');
 
+    scf(n_fig_step_compare);  f=gcf(); f.visible="on";
 end
 
 mclose(fdo);

@@ -126,7 +126,8 @@ function [V, C, Mnames, Mvals] = load_xls_data(in_file, %type, sheet, comment_de
             if length(empty_elements)==n_col_in-1 then
                 comment = M_in(i_row_in, 1);
                 if strspn(comment, '//')==2 then
-                    comment_csv = msprintf('""%s""',comment)
+                    comment_csv = strsubst(comment, '""', '""""');
+                    comment_csv = msprintf('""%s""', comment_csv);
                     C = [C; comment_csv];
                 else
                     mprintf('-->%s\n', comment);

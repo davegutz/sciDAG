@@ -1,7 +1,7 @@
 "// Copyright (C) 2018 - Dave Gutz"
 "//"
 "// Permission is hereby granted, free of charge, to any person obtaining a copy"
-"// of this software and associated documentation files (the "Software"), to deal"
+"// of this software and associated documentation files (the ""Software""), to deal"
 "// in the Software without restriction, including without limitation the rights"
 "// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell"
 "// copies of the Software, and to permit persons to whom the Software is"
@@ -10,7 +10,7 @@
 "// The above copyright notice and this permission notice shall be included in all"
 "// copies or substantial portions of the Software."
 "//"
-"// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR"
+"// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR"
 "// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,"
 "// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE"
 "// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER"
@@ -48,7 +48,7 @@ P.ScoreN.hard,0.00000000000000000,0.00000000000000000,0.00000000000000000,
 P.casestr_i,'Init    32.01*(0.0142/0.0080)*(0.0180/0.0286)*(0.0217/0.0088):  8.15/ 58.3','Init    62.58*(0.0993/0.0120)*(0.0517/0.5231)*(0.1845/0.1500):  7.43/ 53.8','Init    18.86*(0.0280/0.0080)*(0.0080/0.0080)*(0.0080/0.0080): 11.33/ 66.4',
 P.xopt,[32.011412999999997 0.014229700000000000 0.0080432999999999998 0.017982499999999998 0.028553700000000001 0.021701100000000001 0.0088207000000000008],[62.577046000000003 0.099326399999999995 0.012026500000000001 0.051710699999999998 0.52313359999999998 0.18451550000000000 0.15001770000000000],[18.858153000000001 0.028011100000000001 0.0080000000000000002 0.0080000000000000002 0.0080000000000000002 0.0080000000000000002 0.0080000000000000002],
 P.fopt,0.0074563383568007485,0.0090102953016612253,10.008426464761325,
-P.case_date_str,'20181120_055350','20181120_055401','20181120_055410',
+P.case_date_str,'20181120_195843','20181120_195854','20181120_195903',
 P.casestr_f,'Final 32.0*(0.0142/0.0080)*(0.0180/0.0286)*(0.0217/0.0088):  8.2/  58','Final 62.6*(0.0993/0.0120)*(0.0517/0.5231)*(0.1845/0.1500):  7.4/  54','Final 18.9*(0.0280/0.0080)*(0.0080/0.0080)*(0.0080/0.0080): 11.3/  66',
 R.obj_function,'allServo_PSO_Obj','allServo_PSO_Obj','allServo_PSO_Obj',
 R.gm,6.0000000000000000,6.0000000000000000,6.0000000000000000,
