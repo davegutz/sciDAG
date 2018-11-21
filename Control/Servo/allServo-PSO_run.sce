@@ -296,7 +296,7 @@ for case_num=1:n_cases
     
     scf(n_fig_step_compare); clf();
     y_step_compare($+1,:) = X.y_step;
-    plot(t_step_compare, y_step_compare)
+    plot(t_step_compare', y_step_compare')
     title(this,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
