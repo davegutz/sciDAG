@@ -42,67 +42,76 @@ verbose = 0;
 global PSO
 
 // Filenames
-this = 'allServo-PSO';
+this = 'allServo_PSO';
 input_file = './' + this + '_input.xls';
 save_file = 'saves/' + this + '_run.csv';
+perf_file = 'Objectives/' + this + '_perf.sci';
+lti_file = 'Objectives/' + this + '_lti.sci';
+outputfun_file = 'Objectives/' + this  + '_Outputfun.sci';
+outputfun_str = this + '_Outputfun';
+obj_function_default = this + '_Obj';
+exec(perf_file);
+exec(lti_file);
+exec(outputfun_file);
+
 
 // System parameters
-G = struct( 'tehsv1', 0.007,..              // Plant driver lag, s
-'tehsv2', 0.01,..               // Plant hydraulic lag, s
-'gain', 1);                     // Plant gain, %/s/mA
-// Control
-C = struct( 'dT', 0.01,..                   // Update time, s
-'tld1', 0.013, 'tlg1', 0.009,.. // Forward path lead/lag #1
-'tld2', 0.013, 'tlg2', 0.009,.. // Forward path lead/lag #2
-'tldh', 0.015, 'tlgh', 0.008,.. // Feedback path lead/lag
-'gain', 32.6);                  // Control gain, mA/%
-// Typical averages ('mu')
-MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
-'tr', 0.05, 'Mp', 0.15, 'Mu', 0.15, 'ts', 0.2, 'sum', 0,..
-'invgain', 1/30);
-// Final weights
-W = struct('tr', 0, 'Mp', 0, 'ts', 0, 'invgain', 0);
-// Requirements
-R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
-'rise', 0.95, 'settle', 0.02,..
-'invgain', 1/30,..
-'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2,..
-'obj_function', 'allServo_PSO_Obj');
-// Cost weights
-WC = struct('tr', 1, 'Mp', 1, 'Mu', 1, 'ts', 0.2, 'sum', 0. , 'invgain', 2);
-PSO    = struct('wmax',     0.9,..      // initial weight parameter
-'wmin',     0.4,..      // final weight parameter)
-'itmax',    5,..        // maximum iteration number
-'c1',       0.7,..      // knowledge factors for personnal best
-'c2',       1.47,..     // knowledge factors for global best
-'N',        50,..       // problem dimensions: number of particles
-'D',        7,..        // problem in R^2
-'launchp',  0.9,..      // launch probability, default = 0.9 (?)
-'speedf',   2*ones(1,7),..// X.speed factor, default = 2*D
-..// Bounds for hunting around C
-'boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
-'boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
-P  = struct('case_title',   '',..       // Case title for plots etc
-'case_date_str','',..       // Date stamp
-'f_min_s',      %nan,..     // scalar on min of frequency range
-'f_max_s',      %nan,..     // scalar on max of frequency range
-'save_file_name', '',..     // Saved binary information file name
-'f_min',        %nan,..     // Used frequency lower limit, Hz
-'f_max',        %nan,..     // Used frequency upper limit, Hz
-'sys_cl',       %nan,..     // lti closed looop
-'sys_ol',       %nan,..     // lti open looop
-'gm',           %nan,..     // Resulting gain margin, dB
-'pm',           %nan,..     // Resulting phase margin, deg
-'gwr',          %nan,..     // Resulting gain crossover, rad/s 
-'pwr',          %nan,..     // Resulting phase crossover, rad/s 
-'ts',           %nan,..     // Resulting settle time, s
-'Mu',           %nan,..     // Resulting magnitude undershoot, %
-'tu',           %nan,..     // Resulting time at undershoot, s
-'Mp',           %nan,..     // Resulting magnitude overshoot, %
-'tp',           %nan,..     // Resulting time at overshoot, s
-'tr',           %nan,..     // Resulting rise time, s
-'casestr_i',    '',..       // Resulting initial result
-'casestr_f',    '');        // Resulting final result
+//G = struct( 'tehsv1', 0.007,..              // Plant driver lag, s
+//'tehsv2', 0.01,..               // Plant hydraulic lag, s
+//'gain', 1);                     // Plant gain, %/s/mA
+//// Control
+//C = struct( 'dT', 0.01,..                   // Update time, s
+//'tld1', 0.013, 'tlg1', 0.009,.. // Forward path lead/lag #1
+//'tld2', 0.013, 'tlg2', 0.009,.. // Forward path lead/lag #2
+//'tldh', 0.015, 'tlgh', 0.008,.. // Feedback path lead/lag
+//'gain', 32.6);                  // Control gain, mA/%
+//// Typical averages ('mu')
+//MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
+//'tr', 0.05, 'Mp', 0.15, 'Mu', 0.15, 'ts', 0.2, 'sum', 0,..
+//'invgain', 1/30);
+//// Final weights
+//W = struct('tr', 0, 'Mp', 0, 'ts', 0, 'invgain', 0);
+//// Requirements
+//R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
+//'rise', 0.95, 'settle', 0.02,..
+//'invgain', 1/30,..
+//'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2,..
+//'obj_function', 'allServo_PSO_Obj');
+//// Cost weights
+//WC = struct('tr', 1, 'Mp', 1, 'Mu', 1, 'ts', 0.2, 'sum', 0. , 'invgain', 2);
+//PSO    = struct('wmax',     0.9,..      // initial weight parameter
+//'wmin',     0.4,..      // final weight parameter)
+//'itmax',    5,..        // maximum iteration number
+//'c1',       0.7,..      // knowledge factors for personnal best
+//'c2',       1.47,..     // knowledge factors for global best
+//'N',        50,..       // problem dimensions: number of particles
+//'D',        7,..        // problem in R^2
+//'launchp',  0.9,..      // launch probability, default = 0.9 (?)
+//'speedf',   2*ones(1,7),..// X.speed factor, default = 2*D
+//..// Bounds for hunting around C
+//'boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
+//'boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
+//P  = struct('case_title',   '',..       // Case title for plots etc
+//'case_date_str','',..       // Date stamp
+//'f_min_s',      %nan,..     // scalar on min of frequency range
+//'f_max_s',      %nan,..     // scalar on max of frequency range
+//'save_file_name', '',..     // Saved binary information file name
+//'f_min',        %nan,..     // Used frequency lower limit, Hz
+//'f_max',        %nan,..     // Used frequency upper limit, Hz
+//'sys_cl',       %nan,..     // lti closed looop
+//'sys_ol',       %nan,..     // lti open looop
+//'gm',           %nan,..     // Resulting gain margin, dB
+//'pm',           %nan,..     // Resulting phase margin, deg
+//'gwr',          %nan,..     // Resulting gain crossover, rad/s 
+//'pwr',          %nan,..     // Resulting phase crossover, rad/s 
+//'ts',           %nan,..     // Resulting settle time, s
+//'Mu',           %nan,..     // Resulting magnitude undershoot, %
+//'tu',           %nan,..     // Resulting time at undershoot, s
+//'Mp',           %nan,..     // Resulting magnitude overshoot, %
+//'tp',           %nan,..     // Resulting time at overshoot, s
+//'tr',           %nan,..     // Resulting rise time, s
+//'casestr_i',    '',..       // Resulting initial result
+//'casestr_f',    '');        // Resulting final result
 mkdir('./saves');
 [fdo, err] = mopen(save_file, 'wt');
 if err<0 then
@@ -119,62 +128,7 @@ dt_plot = 0.01;
 t_step_compare = 0:dt_plot:2;
 X.t_step = t_step_compare;
 
-// Performance function called by objective function
-function [P, C, X] = myPerf(G, C, R, swarm, P, X)
-    global verbose
-    C.raw = swarm;
-    if verbose>2 then
-        mprintf('C.raw=%6.3f/%6.3f/%6.3f/%6.3f%6.3f/%6.3f%6.3f\n', C.raw);
-    end
-    if X.D>0 then
-        C.gain = max(swarm(1), 3);
-        if X.D>1 then
-            C.tld1 = max(swarm(2), 0);
-            if X.D>2 then
-                C.tlg1 = max(swarm(3), P.minlag);
-                if X.D>3 then
-                    C.tld2 = max(swarm(4), 0);
-                    if X.D>4 then
-                        C.tlg2 = max(swarm(5), P.minlag);
-                        if X.D>5 then
-                            C.tldh = max(swarm(6), 0);
-                            if X.D>6 then
-                                C.tlgh = max(swarm(7), P.minlag);
-                            else
-                                msg = msprintf('PSO.N not compatible with myPerf function in %s', this);
-                                error(msg)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-    [X.sys_ol, X.sys_cl] = myServo(C.dT, G, C);
-    [P.gm, gfr] = g_margin(X.sys_ol);
-    [P.pm, pfr] = p_margin(X.sys_ol);
-    P.gwr = gfr*2*%pi;
-    P.pwr = pfr*2*%pi;
-    X.y_step = csim('step', X.t_step, X.sys_cl);
-    [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
-        myStepPerf(X.y_step, X.t_step, R.rise, R.settle, C.dT);
-endfunction
-
-// PSO verbose
-function stop =  outputfun(i, fopt, xopt)
-    global PSO, P
-    PSO.iters = i;
-    if i==0 | PSO.verbose>0 then
-        mprintf('PSO(%03d): %14.9f<--- %6.3f*(%6.4f/%6.4f)(%6.4f/%6.4f)(%6.4f/%6.4f)\n', PSO.iters, fopt, xopt);
-    end
-    if i==0 | PSO.verbose>1 then
-        mprintf('PSO(%03d):  tr=%5.3f s Mp100=%6.3e tp=%6.3f Mu100=%6.3e tu=%6.3f ts=%5.3f s gain=%6.3f\n',..
-        PSO.iters, P.tr, P.Mp*100, P.tp, P.Mu*100, P.tu, P.ts, xopt(1));
-    end
-    stop = %f;
-endfunction
-
-// Da Loop
+// The Loop
 composite_lti_bode_compare = [];
 legend_bode_compare = [];
 for case_num=1:n_cases
@@ -194,7 +148,7 @@ for case_num=1:n_cases
 
     ierr = execstr(['obj_function = R.obj_function;'], 'errcatch');
     if ierr then
-        obj_function = 'allServo_PSO_Obj';
+        obj_function = obj_function_default;
     end
     obj_function_file = 'Objectives/' + obj_function + '.sci';
     exec(obj_function_file, -1);
@@ -205,16 +159,6 @@ for case_num=1:n_cases
     // Frequency range
     X.f_min = 1/2/%pi*P.f_min_s;
     X.f_max = 1/C.dT*P.f_max_s;
-
-
-
-//    MU.sum = MU.tr + MU.Mp + MU.Mu + MU.ts + MU.invgain;
-//    R.sum = R.tr + R.Mp + R.Mu + R.ts + R.invgain;
-//    W.tr = R.sum/R.tr * MU.sum/MU.tr;
-//    W.Mp = R.sum/R.Mp * MU.sum/MU.Mp;
-//    W.Mu = R.sum/R.Mu * MU.sum/MU.Mu;
-//    W.ts = R.sum/R.ts * MU.sum/MU.ts;
-//    W.invgain = R.sum/R.invgain * MU.sum/MU.invgain;
 
     WC.sum = WC.tr + WC.Mp + WC.Mu + WC.ts + WC.invgain;
     WC.tr = WC.tr/WC.sum;
@@ -235,7 +179,7 @@ for case_num=1:n_cases
     f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
     P.casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
-    outputfun(0, f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);
+    evstr(outputfun_str + '(0, f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh])');
     C.raw_i = C.raw;
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
@@ -270,9 +214,9 @@ for case_num=1:n_cases
             [PSO.boundsmin, PSO.boundsmax],..
             X.speed, PSO.itmax, PSO.N,..
             PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-            PSO.N, outputfun, PSO.x0);
+            PSO.N, allServo_PSO_Outputfun, PSO.x0);
         PSO.iters = PSO.iters + 1;
-        outputfun(PSO.iters, P.fopt, P.xopt);
+        evstr(outputfun_str + '(PSO.iters, P.fopt, P.xopt)');
         [dummy, P.case_date_str] = get_stamp(); 
     else
         P.case_date_str = '';
@@ -336,7 +280,9 @@ end
 mclose(fdo);
 rotate_file(save_file, save_file);
 if getos()=='Windows' then
+   [fdo, err] = mopen(save_file, 'a+');
     winopen(save_file);
+    mclose(fdo);
 else
     editor(save_file);
 end
