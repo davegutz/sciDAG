@@ -54,64 +54,87 @@ exec(perf_file);
 exec(lti_file);
 exec(outputfun_file);
 
-
+// Parameters.   Values in parenthesis are typical.
+// These all MUST appear in input_file.
+// Other items in allServo_PSO_input.xls may be results copied from save_file.
 // System parameters
-//G = struct( 'tehsv1', 0.007,..              // Plant driver lag, s
-//'tehsv2', 0.01,..               // Plant hydraulic lag, s
-//'gain', 1);                     // Plant gain, %/s/mA
-//// Control
-//C = struct( 'dT', 0.01,..                   // Update time, s
-//'tld1', 0.013, 'tlg1', 0.009,.. // Forward path lead/lag #1
-//'tld2', 0.013, 'tlg2', 0.009,.. // Forward path lead/lag #2
-//'tldh', 0.015, 'tlgh', 0.008,.. // Feedback path lead/lag
-//'gain', 32.6);                  // Control gain, mA/%
-//// Typical averages ('mu')
-//MU = struct('gm', 9, 'pm', 60, 'pwr', 30,..
-//'tr', 0.05, 'Mp', 0.15, 'Mu', 0.15, 'ts', 0.2, 'sum', 0,..
-//'invgain', 1/30);
-//// Final weights
-//W = struct('tr', 0, 'Mp', 0, 'ts', 0, 'invgain', 0);
-//// Requirements
-//R = struct('gm', 6, 'pm', 45, 'pwr', 40,..
-//'rise', 0.95, 'settle', 0.02,..
-//'invgain', 1/30,..
-//'tr', 0.07, 'Mp', 0.10, 'Mu', 0.05, 'ts', 0.2,..
-//'obj_function', 'allServo_PSO_Obj');
-//// Cost weights
-//WC = struct('tr', 1, 'Mp', 1, 'Mu', 1, 'ts', 0.2, 'sum', 0. , 'invgain', 2);
+//  G.tehsv1    Plant driver lag, s  (0.007)
+//  G.tehsv2    Plant hydraulic lag, s (0.010)
+//  G.gain      Plant gain, %/s/mA  (1 - use C.gain as loopgain)
+// Control parameters
+//  C.dT            Update time, s (0.010)
+//  C.tld1/C.tlg1   Forward path lead/lag #1, s
+//  C.tld2/C.tlg2   Forward path lead/lag #2, s
+//  C.tldh/C.tlgh   Feedback path lead/lag, s
+//  C.gain          Control gain, mA/% (30 loopgain)
+// Typical averages ('mu') guidelines for PSO
+//  MU.gm           Gain margin, dB (9)
+//  MU.pm           Phase margin, deg (55)
+//  MU.pwr          Phase crossover, r/s (30)
+//  MU.tr           Rise time, s (0.05)
+//  MU.Mp           Maximum peak overshoot, fraction (0.05)
+//  MU.Mu           Maximum undershoot after peak, fraction (0.05)
+//  MU.ts           Settle time, s (0.2)
+//  MU.sum          Sum used for weighting
+//  MU.invgain      Inverse loopgain, r/s (1/30)
+// Final weights that were calculated in PSO objective.   See MU for units.
+//  W.tr
+//  W.Mp
+//  W.ts
+//  W.invgain
+// Requirements
+//  R.gm
+//  R.pm
+//  R.pwr
+//  R.rise          Threshold for unit step response rise, fraction (0.95)
+//  R.settle        Threshold for unit step response settling, fraction (0.02)
+//  R.invgain       Target loopgain, sec (1/30)
+//  R.tr ', 0.07, 
+//  R.Mp', 0.10, 
+//  R.Mu', 0.05, 
+//  R.ts', 0.2,..
+//  R.obj_function', 'allServo_PSO_Obj');
+// Cost weights
+//  WC.tr', 1, 
+//  WC.Mp', 1, 
+//  WC.Mu', 1, '
+//  WC.ts', 0.2, 
+//  WC.sum', 0. , 
+//  WC.invgain', 2);
 //PSO    = struct('wmax',     0.9,..      // initial weight parameter
-//'wmin',     0.4,..      // final weight parameter)
-//'itmax',    5,..        // maximum iteration number
-//'c1',       0.7,..      // knowledge factors for personnal best
-//'c2',       1.47,..     // knowledge factors for global best
-//'N',        50,..       // problem dimensions: number of particles
-//'D',        7,..        // problem in R^2
-//'launchp',  0.9,..      // launch probability, default = 0.9 (?)
-//'speedf',   2*ones(1,7),..// X.speed factor, default = 2*D
+//  PSO.wmin',     0.4,..      // final weight parameter)
+//  PSO.itmax',    5,..        // maximum iteration number
+//  PSO.c1',       0.7,..      // knowledge factors for personnal best
+//  PSO.c2',       1.47,..     // knowledge factors for global best
+//  PSO.N',        50,..       // problem dimensions: number of particles
+//  PSO.D',        7,..        // problem in R^2
+//  PSO.launchp',  0.9,..      // launch probability, default = 0.9 (?)
+//  PSO.speedf',   2*ones(1,7),..// X.speed factor, default = 2*D
 //..// Bounds for hunting around C
-//'boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
-//'boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
-//P  = struct('case_title',   '',..       // Case title for plots etc
-//'case_date_str','',..       // Date stamp
-//'f_min_s',      %nan,..     // scalar on min of frequency range
-//'f_max_s',      %nan,..     // scalar on max of frequency range
-//'save_file_name', '',..     // Saved binary information file name
-//'f_min',        %nan,..     // Used frequency lower limit, Hz
-//'f_max',        %nan,..     // Used frequency upper limit, Hz
-//'sys_cl',       %nan,..     // lti closed looop
-//'sys_ol',       %nan,..     // lti open looop
-//'gm',           %nan,..     // Resulting gain margin, dB
-//'pm',           %nan,..     // Resulting phase margin, deg
-//'gwr',          %nan,..     // Resulting gain crossover, rad/s 
-//'pwr',          %nan,..     // Resulting phase crossover, rad/s 
-//'ts',           %nan,..     // Resulting settle time, s
-//'Mu',           %nan,..     // Resulting magnitude undershoot, %
-//'tu',           %nan,..     // Resulting time at undershoot, s
-//'Mp',           %nan,..     // Resulting magnitude overshoot, %
-//'tp',           %nan,..     // Resulting time at overshoot, s
-//'tr',           %nan,..     // Resulting rise time, s
-//'casestr_i',    '',..       // Resulting initial result
-//'casestr_f',    '');        // Resulting final result
+//  PSO.boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
+//  PSO.boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
+// Performance results
+//  P.case_title',   '',..       // Case title for plots etc
+//  P.case_date_str','',..       // Date stamp
+//  P.f_min_s',      %nan,..     // scalar on min of frequency range
+//  P.f_max_s',      %nan,..     // scalar on max of frequency range
+//  P.save_file_name', '',..     // Saved binary information file name
+//  P.f_min',        %nan,..     // Used frequency lower limit, Hz
+//  P.f_max',        %nan,..     // Used frequency upper limit, Hz
+//  P.sys_cl',       %nan,..     // lti closed looop
+//  P.sys_ol',       %nan,..     // lti open looop
+//  P.gm',           %nan,..     // Resulting gain margin, dB
+//  P.pm',           %nan,..     // Resulting phase margin, deg
+//  P.gwr',          %nan,..     // Resulting gain crossover, rad/s 
+//  P.pwr',          %nan,..     // Resulting phase crossover, rad/s 
+//  P.ts',           %nan,..     // Resulting settle time, s
+//  P.Mu',           %nan,..     // Resulting magnitude undershoot, %
+//  P.tu',           %nan,..     // Resulting time at undershoot, s
+//  P.Mp',           %nan,..     // Resulting magnitude overshoot, %
+//  P.tp',           %nan,..     // Resulting time at overshoot, s
+//  P.tr',           %nan,..     // Resulting rise time, s
+//  P.casestr_i',    '',..       // Resulting initial result
+//  P.casestr_f',    '');        // Resulting final result
 mkdir('./saves');
 [fdo, err] = mopen(save_file, 'wt');
 if err<0 then
