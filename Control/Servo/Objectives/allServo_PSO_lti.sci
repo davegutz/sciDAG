@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Aug 30, 2018 	DA Gutz		Created
 // 
-function [sys_ol, sys_cl] = allServo_lti(dT, G, C)
+function [sys_ol, sys_cl] = allServo_PSO_lti(dT, G, C)
     s = %s;
     ff1 = syslin('c', (C.tld1*s+1)/(C.tlg1*s+1));
     ff2 = syslin('c', (C.tld2*s+1)/(C.tlg2*s+1));

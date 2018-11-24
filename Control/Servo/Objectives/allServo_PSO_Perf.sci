@@ -50,7 +50,7 @@ function [P, C, X] = allServo_PSO_Perf(G, C, R, swarm, P, X)
             end
         end
     end
-    [X.sys_ol, X.sys_cl] = allServo_lti(C.dT, G, C);
+    [X.sys_ol, X.sys_cl] = allServo_PSO_lti(C.dT, G, C);
     [P.gm, gfr] = g_margin(X.sys_ol);
     [P.pm, pfr] = p_margin(X.sys_ol);
     P.gwr = gfr*2*%pi;
