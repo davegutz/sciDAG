@@ -55,7 +55,7 @@ function [P, C, X, S] = allServo_PSO_Perf(G, C, R, swarm, P, X)
     [P.pm, pfr] = p_margin(S.sys_ol);
     P.gwr = gfr*2*%pi;
     P.pwr = pfr*2*%pi;
-    S.y_step = csim('step', X.t_step, S.sys_cl);
+    X.y_step = csim('step', X.t_step, S.sys_cl);
     [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
-        myStepPerf(S.y_step, X.t_step, R.rise, R.settle, C.dT);
+        myStepPerf(X.y_step, X.t_step, R.rise, R.settle, C.dT);
 endfunction

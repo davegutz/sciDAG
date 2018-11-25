@@ -294,9 +294,9 @@ for case_num=1:n_cases
     n_fig = n_fig+1;
     n_fig_step = n_fig;
     scf(n_fig_step); clf(); 
-    plot(X.t_step, S.y_step, 'k')
+    plot(X.t_step, X.y_step, 'k')
     xgrid(0);
-    y_step_init = S.y_step;
+    y_step_init = X.y_step;
     sys_ol_i = S.sys_ol;
 
 
@@ -339,14 +339,14 @@ for case_num=1:n_cases
 
     // plots
     scf(n_fig_step);
-    plot(X.t_step, S.y_step, 'b')
+    plot(X.t_step, X.y_step, 'b')
     title(P.case_title,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
     legend([P.casestr_i, P.casestr_f]);
     
     scf(n_fig_step_compare); clf();
-    X.y_step_all($+1,:) = S.y_step;
+    X.y_step_all($+1,:) = csim('step', X.t_step, S.sys_cl);
     plot(X.t_step', X.y_step_all')
     title(this,"fontsize",3);
     xlabel("t, sec","fontsize",4);
