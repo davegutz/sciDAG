@@ -23,7 +23,7 @@
 // design (particle in particles)
 // function obj_score = allServo_PSO_Obj(particles)
 function obj_score = allServo_PSO_Obj(particles)
-    global G C W P X
+    global G C W P X S
     global verbose
     [n_particles, m] = size(particles);
     obj_score = zeros(n_particles,1);
@@ -32,7 +32,7 @@ function obj_score = allServo_PSO_Obj(particles)
         if verbose>2 then
             mprintf('allServo_PSO_Obj:  gain=%6.3f   tld1=%6.4f tlg1 = %6.4f tld2 = %6.4f tlg2 = %6.4f tldh = %6.4f tlgh = %6.4f\ n_particles', particle);
         end
-        [P, C, X] = allServo_PSO_Perf(G, C, R, particle, P, X);
+        [P, C, X, S] = allServo_PSO_Perf(G, C, R, particle, P, X);
         P.minlag = C.dT*0.8;
         P.invgain = 1/C.gain;
         if verbose>3 then

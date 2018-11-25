@@ -20,7 +20,7 @@
 // Nov 22, 2018 	DA Gutz		Created
 // 
 // Performance function called by objective function
-function [P, C, X] = allServo_PSO_Perf(G, C, R, swarm, P, X)
+function [P, C, X, S] = allServo_PSO_Perf(G, C, R, swarm, P, X)
     global verbose
     C.raw = swarm;
     if verbose>2 then
@@ -50,12 +50,12 @@ function [P, C, X] = allServo_PSO_Perf(G, C, R, swarm, P, X)
             end
         end
     end
-    [X.sys_ol, X.sys_cl] = allServo_PSO_lti(C.dT, G, C);
-    [P.gm, gfr] = g_margin(X.sys_ol);
-    [P.pm, pfr] = p_margin(X.sys_ol);
+    [S.sys_ol, S.sys_cl] = allServo_PSO_lti(C.dT, G, C);
+    [P.gm, gfr] = g_margin(S.sys_ol);
+    [P.pm, pfr] = p_margin(S.sys_ol);
     P.gwr = gfr*2*%pi;
     P.pwr = pfr*2*%pi;
-    X.y_step = csim('step', X.t_step, X.sys_cl);
+    S.y_step = csim('step', X.t_step, S.sys_cl);
     [P.tr, P.tp, P.Mp, P.tu, P.Mu, P.ts] = ..
-        myStepPerf(X.y_step, X.t_step, R.rise, R.settle, C.dT);
+        myStepPerf(S.y_step, X.t_step, R.rise, R.settle, C.dT);
 endfunction

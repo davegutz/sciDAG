@@ -53,6 +53,10 @@
 //                              (and outputs) to control all phases of operation.
 //                              Nomenclature is summarized below.   Use Microsoft
 //                              Excel or Open Office (TODO: untested) to edit this file.
+//                              If you have trouble with quoted parameters in Excel being
+//                              read properly by this script and from being displayed
+//                              properly in Excel, then enter ''mytext' into the
+//                              cell instead of 'mytext'.   "mytext" will also work.
 // saves/allServo_PSO_outputs.csv       Comma-separated-variable file of results.   All 
 //                              the inputs are saved in here to to create a re-do
 //                              loop mechanism for convenient design iteration.
@@ -167,6 +171,7 @@
 
 // Initiialization
 clear
+clearglobal
 funcprot(0);
 getd('../ControlLib')
 n_fig = -1;
@@ -183,7 +188,7 @@ n_fig_bode_compare = n_fig;
 // Global for debug
 global verbose
 // Globals for solver PSO.allServo_PSO_Obj
-global G C W P X
+global G C W P X S
 verbose = 0;
 global PSO
 
@@ -196,9 +201,9 @@ lti_file = 'Objectives/' + this + '_lti.sci';
 outputfun_file = 'Objectives/' + this  + '_Outputfun.sci';
 outputfun_str = this + '_Outputfun';
 obj_function_default = this + '_Obj';
-exec(perf_file);
-exec(lti_file);
-exec(outputfun_file);
+exec(perf_file, -1);
+exec(lti_file, -1);
+exec(outputfun_file, -1);
 
 mkdir('./saves');
 [fdo, err] = mopen(save_file, 'wt');
@@ -285,14 +290,14 @@ for case_num=1:n_cases
     C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
     P.tr, P.Mp*100, P.Mu*100, P.ts);
-//    disp(P.casestr_i)
+    //    disp(P.casestr_i)
     n_fig = n_fig+1;
     n_fig_step = n_fig;
     scf(n_fig_step); clf(); 
-    plot(X.t_step, X.y_step, 'k')
+    plot(X.t_step, S.y_step, 'k')
     xgrid(0);
-    y_step_init = X.y_step;
-    sys_ol_i = X.sys_ol;
+    y_step_init = S.y_step;
+    sys_ol_i = S.sys_ol;
 
 
     // PSO inputs
@@ -311,10 +316,10 @@ for case_num=1:n_cases
     if active then
         PSO.iters = 0;
         [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
-            [PSO.boundsmin, PSO.boundsmax],..
-            X.speed, PSO.itmax, PSO.N,..
-            PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-            PSO.N, allServo_PSO_Outputfun, PSO.x0);
+        [PSO.boundsmin, PSO.boundsmax],..
+        X.speed, PSO.itmax, PSO.N,..
+        PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
+        PSO.N, allServo_PSO_Outputfun, PSO.x0);
         PSO.iters = PSO.iters + 1;
         evstr(outputfun_str + '(PSO.iters, P.fopt, P.xopt)');
         [dummy, P.case_date_str] = get_stamp(); 
@@ -322,26 +327,26 @@ for case_num=1:n_cases
         P.case_date_str = '';
     end
     P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
-        C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
+    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
     mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-        C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr);
+    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr);
     mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
-        P.tr, P.Mp*100, P.Mu*100, P.ts);
+    P.tr, P.Mp*100, P.Mu*100, P.ts);
     disp(P.casestr_f)
     mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-        P.gm, P.gwr, P.pm, P.pwr)
+    P.gm, P.gwr, P.pm, P.pwr)
 
 
     // plots
     scf(n_fig_step);
-    plot(X.t_step, X.y_step, 'b')
+    plot(X.t_step, S.y_step, 'b')
     title(P.case_title,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
     legend([P.casestr_i, P.casestr_f]);
     
     scf(n_fig_step_compare); clf();
-    X.y_step_all($+1,:) = X.y_step;
+    X.y_step_all($+1,:) = S.y_step;
     plot(X.t_step', X.y_step_all')
     title(this,"fontsize",3);
     xlabel("t, sec","fontsize",4);
@@ -352,10 +357,10 @@ for case_num=1:n_cases
     n_fig = n_fig+1;
     n_fig_bode = n_fig;
     scf(n_fig_bode); clf();
-    bode([sys_ol_i; X.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
+    bode([sys_ol_i; S.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
 
     scf(n_fig_bode_compare); clf();
-    composite_lti_bode_compare = [composite_lti_bode_compare; X.sys_ol];
+    composite_lti_bode_compare = [composite_lti_bode_compare; S.sys_ol];
     legend_bode_compare = [legend_bode_compare; P.case_title];
     bode(composite_lti_bode_compare, X.f_min, X.f_max, legend_bode_compare, 'rad')
 
@@ -373,8 +378,9 @@ for case_num=1:n_cases
     D.WC = WC;
     D.MU = MU;
     print_struct(D, '', fdo, ',', case_num>1);
-    save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO');
-
+    if ~replot_only then
+        save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO', 'S');
+    end 
     scf(n_fig_bode_compare);  f=gcf(); f.visible="on";
     scf(n_fig_step_compare);  f=gcf(); f.visible="on";
 end
