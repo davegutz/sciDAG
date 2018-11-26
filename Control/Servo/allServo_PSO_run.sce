@@ -220,6 +220,14 @@ end
 X.dt_plot = 0.01;
 X.t_step = 0:X.dt_plot:2;
 
+// Color maps
+//cmap=get(sdf(),"color_map");
+r = ([0   0   0   0   255 255 0   0   0   135 0  ]')/255;
+g = ([0   0   255 255 0   0   0   0   0   206 144]')/255;
+b = ([0   255 0   255 0   255 144 176 208 255 0  ]')/255;
+cmap = [r g b];
+clear r g b
+
 // The Loop
 composite_lti_bode_compare = [];
 legend_bode_compare = [];
@@ -338,31 +346,32 @@ for case_num=1:n_cases
 
 
     // plots
+    n_fig = n_fig+1;
+    n_fig_bode = n_fig;
+    scf(n_fig_bode); clf();
+    bode([sys_ol_i; S.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
+
     scf(n_fig_step);
     plot(X.t_step, X.y_step, 'b')
     title(P.case_title,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
     legend([P.casestr_i, P.casestr_f]);
-    
-    scf(n_fig_step_compare); clf();
+
+    scf(n_fig_bode_compare); clf(); g=gcf();
+    composite_lti_bode_compare = [composite_lti_bode_compare; S.sys_ol];
+    legend_bode_compare = [legend_bode_compare; P.case_title];
+    myBodePlot(composite_lti_bode_compare, X.f_min, X.f_max, legend_bode_compare, 'rad')
+
+    scf(n_fig_step_compare); clf(); f=gcf();
     X.y_step_all($+1,:) = csim('step', X.t_step, S.sys_cl);
     plot(X.t_step', X.y_step_all')
+//    set(f, "color_map", cmap);
     title(this,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
     X.step_compare_legend($+1) = P.case_title;
     legend(X.step_compare_legend);
-
-    n_fig = n_fig+1;
-    n_fig_bode = n_fig;
-    scf(n_fig_bode); clf();
-    bode([sys_ol_i; S.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
-
-    scf(n_fig_bode_compare); clf();
-    composite_lti_bode_compare = [composite_lti_bode_compare; S.sys_ol];
-    legend_bode_compare = [legend_bode_compare; P.case_title];
-    bode(composite_lti_bode_compare, X.f_min, X.f_max, legend_bode_compare, 'rad')
 
     // Save results
     D.active = active;
@@ -381,8 +390,8 @@ for case_num=1:n_cases
     if ~replot_only then
         save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO', 'S');
     end 
-    scf(n_fig_bode_compare);  f=gcf(); f.visible="on";
-    scf(n_fig_step_compare);  f=gcf(); f.visible="on";
+    g.visible="on";
+    f.visible="on";
 end
 
 mclose(fdo);
