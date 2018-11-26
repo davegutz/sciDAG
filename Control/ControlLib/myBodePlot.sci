@@ -11,7 +11,10 @@
 
 function [] = myBodePlot(varargin)
     rhs = size(varargin)
-    myFgMap = [2 3 5 38 39 40 37];
+    myFgMap = [2 13 5 4 6 32 1];
+    for i = 1:5
+        myFgMap = [myFgMap myFgMap];
+    end
     if rhs == 0 then
         s = poly(0, "s");
         h1 = syslin("c", (s^2+2*0.9*10*s+100)/(s^2+2*0.3*10.1*s+102.01));
@@ -139,9 +142,10 @@ function [] = myBodePlot(varargin)
     // Set datatips info
     e = gce();
 
-    for i=1:size(e.children, "*")
+    n_lines = size(e.children, "*");
+    for i=1:n_lines
         e.children(i).display_function = "formatBodeMagTip"
-        e.children(i).foreground = myFgMap(i);
+        e.children(i).foreground = myFgMap(n_lines-i+1);
     end
 
     if discr & fmax <> [] & max(frq) < fmax then
@@ -168,9 +172,10 @@ function [] = myBodePlot(varargin)
     end
     ephi = gce();
     // Set datatips info
-    for i=1:size(ephi.children, "*")
+    n_lines = size(ephi.children, "*");
+    for i=1:n_lines
         ephi.children(i).display_function = "formatBodePhaseTip";
-        ephi.children(i).foreground = myFgMap(i);
+        ephi.children(i).foreground = myFgMap(n_lines-i+1);
     end
 
     if discr & fmax <> [] & max(frq) < fmax then
