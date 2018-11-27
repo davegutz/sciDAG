@@ -1,5 +1,3 @@
-// function foreIDs = myColorMap(N)
-// Return a list of foreground colors; refer to "help color"
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,15 +17,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Nov 26, 2018 	DA Gutz		Created
+// Sep 26, 2018 	DA Gutz		Created
 // 
-//******************************************************************************
-function fore_ids = myColorMap(N)
-    cyclic_map = [2 13 5 4 6 32 1];
-    n_map = size(cyclic_map, 2);
-    fore_ids = [];
-    for i = 1:ceil(N/n_map)
-        fore_ids = [fore_ids cyclic_map];
-    end
-    fore_ids = fore_ids(1:N);
-endfunction
+clear
+clearglobal
+funcprot(0);
+mclose('all');
+getd('../ControlLib')
+n_fig = -1;
+xdel(winsid())
+myBodePlot();
+xs2pdf(0, 'tests\nonreg_tests\myBodePlotTest')
+winopen('tests\nonreg_tests\myBodePlotTestRef.pdf')
+copyfile('tests\nonreg_tests\myBodePlotTest.pdf', 'tests\nonreg_tests\myBodePlotTestNow.pdf')
+ ans  =
+   1.
+winopen('tests\nonreg_tests\myBodePlotTestNow.pdf')
+xs2png(0, 'tests\nonreg_tests\myBodePlotTest')
+winopen('tests\nonreg_tests\myBodePlotTestRef.png')
+copyfile('tests\nonreg_tests\myBodePlotTest.png', 'tests\nonreg_tests\myBodePlotTestNow.png')
+ ans  =
+   1.
+winopen('tests\nonreg_tests\myBodePlotTestNow.png')
+assert_checkfilesequal ('tests\nonreg_tests\myBodePlotTest.png' , 'tests\nonreg_tests\myBodePlotTestRef.png')
+ ans  =
+  T

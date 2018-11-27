@@ -43,10 +43,6 @@ xlabel("t", "fontsize",4);
 ylabel("$y$","fontsize",4);
 legend(normal_legend);
 
-myFgMap = [2 13 5 4 6 32 1];
-for i = 1:5
-    myFgMap = [myFgMap myFgMap];
-end
 hx = 0.48;
 n_fig = n_fig+1;
 n_fig_xpolys = n_fig;
@@ -56,12 +52,10 @@ fig.immediate_drawing = "off";
 sciCurAxes = gca();
 axes = sciCurAxes;
 wrect = axes.axes_bounds;
-//axes.axes_bounds = [wrect(1)+0, wrect(2)+0, wrect(3)*1.0, wrect(4)*hx*0.95];
 axes.data_bounds = [min(t), min(x); max(t), max(x)];
 axes.grid = color("lightgrey")*ones(1, 3);
 axes.axes_visible = "on";
 axes.clip_state = "clipgrf";
-//plot2d(0,0,1,rect=[0,0,max(t),max(x)], frameflag=3)
 [n, mn] = size(x);
 if size(x, 2) > 1 & size(t, 2) == 1 then
     xpolys(t(:, ones(1, mn)), x);
@@ -70,6 +64,7 @@ else
 end
 e = gce();
 n_lines = size(e.children, "*");
+myFgMap = myColorMap(n_lines);
 for i=1:n_lines
     e.children(i).foreground = myFgMap(n_lines-i+1);
 end
@@ -86,6 +81,15 @@ set("current_axes", sciCurAxes);
 legend(normal_legend);
 title('Manual cyclic map shown',"fontsize",3);
 
+xs2png(0, 'tests\nonreg_tests\myColorMapBuiltInTest')
+winopen('tests\nonreg_tests\myColorMapBuiltInTestRef.png')
+copyfile('tests\nonreg_tests\myColorMapBuiltInTest.png', 'tests\nonreg_tests\myColorMapBuiltInTestNow.png')
+winopen('tests\nonreg_tests\myColorMapBuiltInTestNow.png')
+assert_checkfilesequal ('tests\nonreg_tests\myColorMapBuiltInTest.png', 'tests\nonreg_tests\myColorMapBuiltInTestRef.png')
 
 
-
+xs2png(1, 'tests\nonreg_tests\myColorMap_myMapTest')
+winopen('tests\nonreg_tests\myColorMap_myMapTestRef.png')
+copyfile('tests\nonreg_tests\myColorMap_myMapTest.png', 'tests\nonreg_tests\myColorMap_myMapTestNow.png')
+winopen('tests\nonreg_tests\myColorMap_myMapTestNow.png')
+assert_checkfilesequal ('tests\nonreg_tests\myColorMap_myMapTest.png', 'tests\nonreg_tests\myColorMap_myMapTestRef.png')

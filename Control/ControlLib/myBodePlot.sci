@@ -11,10 +11,6 @@
 
 function [] = myBodePlot(varargin)
     rhs = size(varargin)
-    myFgMap = [2 13 5 4 6 32 1];
-    for i = 1:5
-        myFgMap = [myFgMap myFgMap];
-    end
     if rhs == 0 then
         s = poly(0, "s");
         h1 = syslin("c", (s^2+2*0.9*10*s+100)/(s^2+2*0.3*10.1*s+102.01));
@@ -143,6 +139,7 @@ function [] = myBodePlot(varargin)
     e = gce();
 
     n_lines = size(e.children, "*");
+    myFgMap = myColorMap(n_lines);
     for i=1:n_lines
         e.children(i).display_function = "formatBodeMagTip"
         e.children(i).foreground = myFgMap(n_lines-i+1);
