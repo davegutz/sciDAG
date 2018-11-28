@@ -180,10 +180,11 @@ mclose('all');
 
 // Local preferences
 PREF.show_pngs = %f;
+PREF.show_csv = %f;
 
 // Setup comparison plots
 n_fig = n_fig + 1;
-n_fig_step_compare = n_fig;
+X.n_fig_step_compare = n_fig;
 n_fig = n_fig + 1;
 n_fig_bode_compare = n_fig;
 
@@ -295,11 +296,11 @@ for case_num=1:n_cases
         evstr(outputfun_str + '(0, PSO.f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh])');
         C.raw_i = C.raw;
         n_fig = n_fig+1;
-        n_fig_step = n_fig;
-        scf(n_fig_step); clf(); 
+        X.n_fig_step = n_fig;
+        scf(X.n_fig_step); clf(); X.gcf_step = gcf();
         plot(X.t_step, X.y_step, 'k')
         xgrid(0);
-        y_step_init = X.y_step;
+        X.y_step_init = X.y_step;
         sys_ol_i = S.sys_ol;
 
 
@@ -311,7 +312,7 @@ for case_num=1:n_cases
         grand('setsd', 0); // must initialize random generator.  Want same result on repeated runs.
 
         // Particle Swarm algorithm
-        if PSO.verbose>0 then
+        if PSO.verbose>1 then
             n_fig = n_fig+1;
             figure(n_fig);
             scf(n_fig);
@@ -336,23 +337,24 @@ for case_num=1:n_cases
         n_fig_bode = n_fig;
         scf(n_fig_bode); clf();
         bode([sys_ol_i; S.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
-        scf(n_fig_step);
+        scf(X.n_fig_step);
+        plot(X.t_step, X.y_step_init, 'k')
         plot(X.t_step, X.y_step, 'b')
         title(P.case_title,"fontsize",3);
         xlabel("t, sec","fontsize",4);
-    ylabel("$y$","fontsize",4);
-    legend([P.casestr_i, P.casestr_f]);
+        ylabel("$y$","fontsize",4);
+        legend([P.casestr_i, P.casestr_f]);
 
     else
         load(P.save_file_name);
     end  // if ~replot_only
 
-    scf(n_fig_bode_compare); clf(); gcf_bode_compare=gcf();
+    scf(n_fig_bode_compare); clf(); X.gcf_bode_compare=gcf();
     composite_lti_bode_compare = [composite_lti_bode_compare; S.sys_ol];
     legend_bode_compare = [legend_bode_compare; P.case_title];
     myBodePlot(composite_lti_bode_compare, X.f_min, X.f_max, legend_bode_compare, 'rad')
 
-    scf(n_fig_step_compare); clf(); gcf_step_compare = gcf();
+    scf(X.n_fig_step_compare); clf(); X.gcf_step_compare = gcf();
     X.y_step_all($+1,:) = csim('step', X.t_step, S.sys_cl);
     plot(X.t_step', X.y_step_all')
     title(this,"fontsize",3);
@@ -379,12 +381,12 @@ for case_num=1:n_cases
         save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO', 'S');
     end 
     mprintf('------------------------------------------------------\n');
-    gcf_bode_compare.visible="on";
-    gcf_step_compare.visible="on";
+    X.gcf_bode_compare.visible="on";
+    X.gcf_step_compare.visible="on";
 end
 
 // Plot summary graphics for import into other programs
-xs2png(n_fig_step_compare, png_step_file);
+xs2png(X.n_fig_step_compare, png_step_file);
 xs2png(n_fig_bode_compare, png_bode_file);
 if PREF.show_pngs then
     winopen(png_step_file+'.png')
@@ -394,10 +396,12 @@ end
 // Open csv results file
 mclose(fdo);
 rotate_file(save_file, save_file);
-if getos()=='Windows' then
-   [fdo, err] = mopen(save_file, 'a+');
-    winopen(save_file);
-    mclose(fdo);
-else
-    editor(save_file);
+if PREF.show_csv then
+    if getos()=='Windows' then
+        [fdo, err] = mopen(save_file, 'a+');
+        winopen(save_file);
+        mclose(fdo);
+    else
+        editor(save_file);
+    end
 end
