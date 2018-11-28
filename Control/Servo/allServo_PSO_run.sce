@@ -178,6 +178,9 @@ n_fig = -1;
 xdel(winsid())
 mclose('all');
 
+// Local preferences
+PREF.show_pngs = %f;
+
 // Setup comparison plots
 n_fig = n_fig + 1;
 n_fig_step_compare = n_fig;
@@ -196,6 +199,10 @@ global PSO
 this = 'allServo_PSO';
 input_file = './' + this + '_input.xls';
 save_file = 'saves/' + this + '_output.csv';
+[dummy, date_str] = get_stamp(); 
+pdf_file = 'saves/' + this + date_str;
+png_step_file = 'saves/' + this + '_step_' + date_str;
+png_bode_file = 'saves/' + this + '_bode_' + date_str;
 perf_file = 'Objectives/' + this + '_perf.sci';
 lti_file = 'Objectives/' + this + '_lti.sci';
 outputfun_file = 'Objectives/' + this  + '_Outputfun.sci';
@@ -220,21 +227,13 @@ end
 X.dt_plot = 0.01;
 X.t_step = 0:X.dt_plot:2;
 
-// Color maps
-//cmap=get(sdf(),"color_map");
-r = ([0   0   0   0   255 255 0   0   0   135 0  ]')/255;
-g = ([0   0   255 255 0   0   0   0   0   206 144]')/255;
-b = ([0   255 0   255 0   255 144 176 208 255 0  ]')/255;
-cmap = [r g b];
-clear r g b
-
 // The Loop
 composite_lti_bode_compare = [];
 legend_bode_compare = [];
 for case_num=1:n_cases
 
     // Print banner
-    mprintf('\n\n****************Case %d of %d:\n', case_num, n_cases);
+    mprintf('\n****************Case %d of %d:\n', case_num, n_cases);
 
     // Load parameters
     G = V(case_num).G;
@@ -247,13 +246,15 @@ for case_num=1:n_cases
     active = V(case_num).active;
     replot_only = V(case_num).replot_only;
     verbose = V(case_num).verbose;
+    status = V(case_num).status;
     PSO.weights = [PSO.wmax; PSO.wmin];
     PSO.c = [PSO.c1; PSO.c2];
     X.D = PSO.D;
-    
-    // Initialize
-    status = 'OK';
-    
+    if replot_only then
+        W = V(case_num).W;
+        evstr(outputfun_str + '(0, PSO.f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh])');
+    end
+   
     // Configure the objective function
     try
         obj_function = R.obj_function;
@@ -270,103 +271,90 @@ for case_num=1:n_cases
     // File saving
     P.save_file_name = 'saves/' + this + '_' + P.case_title + '.dat';
 
-    // Frequency range
+    // Frequency range for plots
     X.f_min = 1/2/%pi*P.f_min_s;
     X.f_max = 1/C.dT*P.f_max_s;
 
-    WC.sum = WC.tr + WC.Mp + WC.Mu + WC.ts + WC.invgain;
-    X.tr = WC.tr/WC.sum;
-    X.Mp = WC.Mp/WC.sum;
-    X.Mu = WC.Mu/WC.sum;
-    X.ts = WC.ts/WC.sum;
-    X.invgain = WC.invgain/WC.sum;
+    if ~replot_only then
+        WC.sum = WC.tr + WC.Mp + WC.Mu + WC.ts + WC.invgain;
+        X.tr = WC.tr/WC.sum;
+        X.Mp = WC.Mp/WC.sum;
+        X.Mu = WC.Mu/WC.sum;
+        X.ts = WC.ts/WC.sum;
+        X.invgain = WC.invgain/WC.sum;
 
-    MU.sum = 1/MU.tr + 1/MU.Mp + 1/MU.Mu + 1/MU.ts + 1/MU.invgain;
-    W.tr = X.tr/(MU.tr*MU.sum);
-    W.Mp = X.Mp/(MU.Mp*MU.sum);
-    W.Mu = X.Mu/(MU.Mu*MU.sum);
-    W.ts = X.ts/(MU.ts*MU.sum);
-    W.invgain = X.invgain/(MU.invgain*MU.sum);
+        MU.sum = 1/MU.tr + 1/MU.Mp + 1/MU.Mu + 1/MU.ts + 1/MU.invgain;
+        W.tr = X.tr/(MU.tr*MU.sum);
+        W.Mp = X.Mp/(MU.Mp*MU.sum);
+        W.Mu = X.Mu/(MU.Mu*MU.sum);
+        W.ts = X.ts/(MU.ts*MU.sum);
+        W.invgain = X.invgain/(MU.invgain*MU.sum);
 
-
-    f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
-    P.casestr_i = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
-    evstr(outputfun_str + '(0, f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh])');
-    C.raw_i = C.raw;
-    mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr)
-    mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
-    P.tr, P.Mp*100, P.Mu*100, P.ts);
-    //    disp(P.casestr_i)
-    n_fig = n_fig+1;
-    n_fig_step = n_fig;
-    scf(n_fig_step); clf(); 
-    plot(X.t_step, X.y_step, 'k')
-    xgrid(0);
-    y_step_init = X.y_step;
-    sys_ol_i = S.sys_ol;
-
-
-    // PSO inputs
-    PSO.x0 = [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh];
-    speed_max = 0.1*PSO.boundsmax;
-    speed_min = 0.1*PSO.boundsmin;
-    X.speed = [speed_min, speed_max];
-    grand('setsd', 0); // must initialize random generator.  Want same result on repeated runs.
-
-    // Particle Swarm algorithm
-    if PSO.verbose>0 then
+        PSO.f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
+        P.casestr_i = X.casestr;
+        evstr(outputfun_str + '(0, PSO.f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh])');
+        C.raw_i = C.raw;
         n_fig = n_fig+1;
-        figure(n_fig);
-        scf(n_fig);
-    end
-    if active then
-        PSO.iters = 0;
-        [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
-        [PSO.boundsmin, PSO.boundsmax],..
-        X.speed, PSO.itmax, PSO.N,..
-        PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-        PSO.N, allServo_PSO_Outputfun, PSO.x0);
-        PSO.iters = PSO.iters + 1;
-        evstr(outputfun_str + '(PSO.iters, P.fopt, P.xopt)');
-        [dummy, P.case_date_str] = get_stamp(); 
-    else
-        P.case_date_str = '';
-    end
-    P.casestr_f = msprintf('Final %4.1f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %4.1f/%4.0f',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
-    mprintf('%5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f):  gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-    C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.gwr, P.pm, P.pwr);
-    mprintf('tr=%5.3f s Mp100=%6.3f  Mu100=%6.3f  ts=%5.3f s\n',..
-    P.tr, P.Mp*100, P.Mu*100, P.ts);
-    disp(P.casestr_f)
-    mprintf('gm=%4.2f dB @ %4.1f r/s.  pm=%4.0f deg @ %4.1f r/s\n',..
-    P.gm, P.gwr, P.pm, P.pwr)
+        n_fig_step = n_fig;
+        scf(n_fig_step); clf(); 
+        plot(X.t_step, X.y_step, 'k')
+        xgrid(0);
+        y_step_init = X.y_step;
+        sys_ol_i = S.sys_ol;
 
 
-    // plots
-    n_fig = n_fig+1;
-    n_fig_bode = n_fig;
-    scf(n_fig_bode); clf();
-    bode([sys_ol_i; S.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
+        // PSO inputs
+        PSO.x0 = [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh];
+        speed_max = 0.1*PSO.boundsmax;
+        speed_min = 0.1*PSO.boundsmin;
+        X.speed = [speed_min, speed_max];
+        grand('setsd', 0); // must initialize random generator.  Want same result on repeated runs.
 
-    scf(n_fig_step);
-    plot(X.t_step, X.y_step, 'b')
-    title(P.case_title,"fontsize",3);
-    xlabel("t, sec","fontsize",4);
+        // Particle Swarm algorithm
+        if PSO.verbose>0 then
+            n_fig = n_fig+1;
+            figure(n_fig);
+            scf(n_fig);
+        end
+        if active then
+            PSO.iters = 0;
+            [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
+            [PSO.boundsmin, PSO.boundsmax],..
+            X.speed, PSO.itmax, PSO.N,..
+            PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
+            PSO.N, allServo_PSO_Outputfun, PSO.x0);
+            PSO.iters = PSO.iters + 1;
+            evstr(outputfun_str + '(PSO.iters, P.fopt, P.xopt)');
+            [dummy, P.case_date_str] = get_stamp(); 
+        else
+            P.case_date_str = '';
+        end
+        P.casestr_f = X.casestr;
+
+        // plots
+        n_fig = n_fig+1;
+        n_fig_bode = n_fig;
+        scf(n_fig_bode); clf();
+        bode([sys_ol_i; S.sys_ol], X.f_min, X.f_max, [P.casestr_i, P.casestr_f], 'rad')
+        scf(n_fig_step);
+        plot(X.t_step, X.y_step, 'b')
+        title(P.case_title,"fontsize",3);
+        xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
     legend([P.casestr_i, P.casestr_f]);
 
-    scf(n_fig_bode_compare); clf(); g=gcf();
+    else
+        load(P.save_file_name);
+    end  // if ~replot_only
+
+    scf(n_fig_bode_compare); clf(); gcf_bode_compare=gcf();
     composite_lti_bode_compare = [composite_lti_bode_compare; S.sys_ol];
     legend_bode_compare = [legend_bode_compare; P.case_title];
     myBodePlot(composite_lti_bode_compare, X.f_min, X.f_max, legend_bode_compare, 'rad')
 
-    scf(n_fig_step_compare); clf(); f=gcf();
+    scf(n_fig_step_compare); clf(); gcf_step_compare = gcf();
     X.y_step_all($+1,:) = csim('step', X.t_step, S.sys_cl);
     plot(X.t_step', X.y_step_all')
-//    set(f, "color_map", cmap);
     title(this,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
@@ -390,10 +378,20 @@ for case_num=1:n_cases
     if ~replot_only then
         save(P.save_file_name, 'G', 'C', 'WC', 'P', 'R', 'PSO', 'MU', 'PSO', 'S');
     end 
-    g.visible="on";
-    f.visible="on";
+    mprintf('------------------------------------------------------\n');
+    gcf_bode_compare.visible="on";
+    gcf_step_compare.visible="on";
 end
 
+// Plot summary graphics for import into other programs
+xs2png(n_fig_step_compare, png_step_file);
+xs2png(n_fig_bode_compare, png_bode_file);
+if PREF.show_pngs then
+    winopen(png_step_file+'.png')
+    winopen(png_bode_file+'.png')
+end
+
+// Open csv results file
 mclose(fdo);
 rotate_file(save_file, save_file);
 if getos()=='Windows' then

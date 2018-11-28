@@ -91,6 +91,7 @@ function obj_score = allServo_PSO_Obj(particles)
         P.ScoreN.gm = X.Score.gm/X.Score.total;
         P.ScoreN.pm = X.Score.pm/X.Score.total;
         P.ScoreN.hard = X.Score.hard/X.Score.total;
+        X.casestr = msprintf('Init    %5.2f*(%5.4f/%5.4f)*(%5.4f/%5.4f)*(%5.4f/%5.4f): %5.2f/%5.1f', C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh, P.gm, P.pm);
 
     end
     
