@@ -356,7 +356,7 @@ for case_num=1:n_cases
     composite_lti_bode_compare = [composite_lti_bode_compare; S.sys_ol];
     X.legend_bode_compare = [X.legend_bode_compare; P.case_title];
     myBodePlot(composite_lti_bode_compare, X.f_min, X.f_max, 'rad')
-    legend(X.legend_bode_compare)
+    legend(X.legend_bode_compare);
 
     scf(X.n_fig_step_compare); clf(); X.gcf_step_compare = gcf();
     X.y_step_all($+1,:) = csim('step', X.t_step, S.sys_cl);
