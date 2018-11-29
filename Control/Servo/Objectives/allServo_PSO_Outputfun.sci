@@ -21,7 +21,7 @@
 // 
 // PSO verbose
 function stop =  allServo_PSO_Outputfun(i, fopt, xopt)
-    global PSO P X
+    global PSO P X R
     PSO.iters = i;
     if i==0 | PSO.verbose>0 then
         mprintf('PSO(%03d): %14.9f<--- %6.3f*(%6.4f/%6.4f)(%6.4f/%6.4f)(%6.4f/%6.4f)\n', PSO.iters, fopt, xopt);
@@ -34,6 +34,10 @@ function stop =  allServo_PSO_Outputfun(i, fopt, xopt)
         scf(X.n_fig_step); clf();
         plot(X.t_step, X.y_step_init, 'k')
         plot(X.t_step, X.y_step, 'r')
+        X.gcf.auto_scale = "off";
+        X.gcf.tight_limits = "on";
+        replot([0, 0.8, 5*R.ts, 1+2*R.Mp]);
+        xgrid(0);
         X.gcf_step.visible="on";
         title(P.case_title,"fontsize",3);
         xlabel("t, sec","fontsize",4);

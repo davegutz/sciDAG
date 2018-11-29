@@ -60,7 +60,7 @@ function [] = myBodePlot(varargin)
         else
             error(msprintf(_("%s: Wrong number of input arguments: %d to %d expected.\n"), fname, 1, 5))
         end
-        [phi, d] = phasemag(repf);
+        [phi, d] = phasemag(repf, 'm'); // 'm' for phasewrap, 'c' for not
         if rhs >= 3 then fmax = varargin(3); end
     elseif type(varargin(1)) == 1 then
         // frq, db, phi [,comments] or frq, repf [,comments]
@@ -129,10 +129,8 @@ function [] = myBodePlot(varargin)
     axes.axes_visible = "on";
     axes.clip_state = "clipgrf";
     if size(d, 2) > 1 & size(frq, 2) == 1 then
-//        xpolys(frq(:, ones(1, mn)), d, 1:mn);
         xpolys(frq(:, ones(1, mn)), d);
     else
-//        xpolys(frq, d, 1:mn);
         xpolys(frq, d);
     end
     // Set datatips info
@@ -161,10 +159,8 @@ function [] = myBodePlot(varargin)
     axes.axes_visible = "on";
     axes.clip_state = "clipgrf";
     if size(phi, 2) > 1 & size(frq, 2) == 1 then
-//        xpolys(frq(:, ones(1, mn)), phi, 1:mn);
         xpolys(frq(:, ones(1, mn)), phi);
     else
-//        xpolys(frq, phi, 1:mn);
         xpolys(frq, phi);
     end
     ephi = gce();

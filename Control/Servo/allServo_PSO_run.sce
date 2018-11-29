@@ -230,7 +230,7 @@ X.t_step = 0:X.dt_plot:2;
 
 // The Loop
 composite_lti_bode_compare = [];
-legend_bode_compare = [];
+X.legend_bode_compare = [];
 for case_num=1:n_cases
 
     // Print banner
@@ -299,6 +299,7 @@ for case_num=1:n_cases
         X.n_fig_step = n_fig;
         scf(X.n_fig_step); clf(); X.gcf_step = gcf();
         plot(X.t_step, X.y_step, 'k')
+        replot([0, 0.8, 5*R.ts, 1+2*R.Mp]);
         xgrid(0);
         X.y_step_init = X.y_step;
         sys_ol_i = S.sys_ol;
@@ -340,6 +341,8 @@ for case_num=1:n_cases
         scf(X.n_fig_step);
         plot(X.t_step, X.y_step_init, 'k')
         plot(X.t_step, X.y_step, 'b')
+        replot([0, 0.8, 5*R.ts, 1+2*R.Mp]);
+        xgrid(0);
         title(P.case_title,"fontsize",3);
         xlabel("t, sec","fontsize",4);
         ylabel("$y$","fontsize",4);
@@ -351,12 +354,15 @@ for case_num=1:n_cases
 
     scf(n_fig_bode_compare); clf(); X.gcf_bode_compare=gcf();
     composite_lti_bode_compare = [composite_lti_bode_compare; S.sys_ol];
-    legend_bode_compare = [legend_bode_compare; P.case_title];
-    myBodePlot(composite_lti_bode_compare, X.f_min, X.f_max, legend_bode_compare, 'rad')
+    X.legend_bode_compare = [X.legend_bode_compare; P.case_title];
+    myBodePlot(composite_lti_bode_compare, X.f_min, X.f_max, 'rad')
+    legend(X.legend_bode_compare)
 
     scf(X.n_fig_step_compare); clf(); X.gcf_step_compare = gcf();
     X.y_step_all($+1,:) = csim('step', X.t_step, S.sys_cl);
     plot(X.t_step', X.y_step_all')
+    replot([0, 0.8, 5*R.ts, 1+2*R.Mp]);
+    xgrid(0);
     title(this,"fontsize",3);
     xlabel("t, sec","fontsize",4);
     ylabel("$y$","fontsize",4);
