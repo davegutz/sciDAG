@@ -258,14 +258,14 @@ for case_num=1:n_cases
    
     // Configure the objective function
     try
-        obj_function = R.obj_function;
-        obj_function_file = 'Objectives/' + obj_function + '.sci';
+        P.obj_function = R.obj_function;
+        obj_function_file = 'Objectives/' + P.obj_function + '.sci';
         exec(obj_function_file, -1);
     catch
         status = msprintf('R.obj_function defines a file %s that cannot be opened.  Default used.', R.obj_function);
         warning(status)
-        obj_function = obj_function_default;
-        obj_function_file = 'Objectives/' + obj_function + '.sci';
+        P.obj_function = obj_function_default;
+        obj_function_file = 'Objectives/' + P.obj_function + '.sci';
         exec(obj_function_file, -1);
     end
 
@@ -291,7 +291,7 @@ for case_num=1:n_cases
         W.ts = X.ts/(MU.ts*MU.sum);
         W.invgain = X.invgain/(MU.invgain*MU.sum);
 
-        PSO.f1 = evstr(obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
+        PSO.f1 = evstr(P.obj_function + '([C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh]);');
         P.casestr_i = X.casestr;
         evstr(outputfun_str + '(0, PSO.f1, [C.gain, C.tld1, C.tlg1, C.tld2, C.tlg2, C.tldh, C.tlgh])');
         C.raw_i = C.raw;
@@ -320,13 +320,23 @@ for case_num=1:n_cases
         end
         if active then
             PSO.iters = 0;
-            [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(obj_function), ..
+//            [P.fopt, P.xopt]=PSO_bsg_starcraft(evstr(P.obj_function), ..
+//            [PSO.boundsmin, PSO.boundsmax],..
+//            X.speed, PSO.itmax, PSO.N,..
+//            PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
+//            PSO.N, allServo_PSO_Outputfun, PSO.x0);
+radius = [32 .01 .01 .01 .01 .01 .01]/100; n_radius = 5;
+            [P.fopt, P.xopt, iopt]=myPSO_bsg_starcraft_radius(evstr(P.obj_function),.. 
             [PSO.boundsmin, PSO.boundsmax],..
             X.speed, PSO.itmax, PSO.N,..
             PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-            PSO.N, allServo_PSO_Outputfun, PSO.x0);
+            PSO.N,.. 
+            radius,n_radius,..
+            allServo_PSO_Outputfun, PSO.x0);
             PSO.iters = PSO.iters + 1;
             evstr(outputfun_str + '(PSO.iters, P.fopt, P.xopt)');
+
+   
             [dummy, P.case_date_str] = get_stamp(); 
         else
             P.case_date_str = '';

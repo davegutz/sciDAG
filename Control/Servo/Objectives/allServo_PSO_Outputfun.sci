@@ -23,6 +23,7 @@
 function stop =  allServo_PSO_Outputfun(i, fopt, xopt)
     global PSO P X R
     PSO.iters = i;
+    execstr('fopt= ' + P.obj_function + '(xopt)');  // To recalculate P, X at solution particle
     if i==0 | PSO.verbose>0 then
         mprintf('PSO(%03d): %14.9f<--- %6.3f*(%6.4f/%6.4f)(%6.4f/%6.4f)(%6.4f/%6.4f)\n', PSO.iters, fopt, xopt);
     end
@@ -42,7 +43,7 @@ function stop =  allServo_PSO_Outputfun(i, fopt, xopt)
         title(P.case_title,"fontsize",3);
         xlabel("t, sec","fontsize",4);
         ylabel("$y$","fontsize",4);
-        casestr = msprintf('iteration=%d', i);
+        casestr = msprintf('iteration=%d, score=%f', i, fopt);
         legend([P.casestr_i, casestr]);
     end
     stop = %f;
