@@ -40,7 +40,7 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
     endfunction
 
     [lhs, rhs] = argn();
-    apifun_checkrhs ( "PSO_bsg_starcraft_radius" , rhs , 3 : 14 )
+    apifun_checkrhs ( "PSO_bsg_starcraft_radius" , rhs , 3 : 15 )
     apifun_checklhs ( "PSO_bsg_starcraft_radius" , lhs , [0 1 2 3] )
     //
     // Get input arguments
@@ -62,6 +62,7 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
     n_radius =              argindefault ( rhs , varargin , 12 , 10 )
     verbose =       argindefault ( rhs , varargin , 13 , 0 )
     sol_initiale =  argindefault ( rhs , varargin , 14 , [] )
+    n_stuck = argindefault(rhs, varargin, 15, 1e6 )
     //
     // Check input arguments
     //
@@ -79,7 +80,8 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
     apifun_checktype ( "PSO_inertial_radius" , radius , "radius" ,  11 , "constant" )
     apifun_checktype ( "PSO_inertial_radius" , n_radius ,       "n_radius" ,  12 , "constant" )
     apifun_checktype ( "PSO_bsg_starcraft_radius" , verbose ,       "verbose" ,  13 , [ "constant" "function" "list" ] )
-    apifun_checktype ( "PSO_inertial" , sol_initiale ,       "sol_initiale" ,  14 , "constant" )
+    apifun_checktype ( "PSO_inertial" , sol_initiale ,       "sol_initiale" ,  14 , "constant"    )
+    apifun_checktype ( "myPSO_inertial_radius" , n_stuck,     "n_stuck" ,  15 , "constant"  )
     //
 
     // Check size
@@ -100,6 +102,7 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
     if ( length(sol_initiale) > 0 ) then
         apifun_checkdims ( "PSO_inertial" , sol_initiale , "sol_initiale" , 14 , [1 D] )
     end
+    apifun_checkscalar ( "myPSO_bsg_starcraft_radius" , n_stuck,  "n_stuck" , 15 )
     //
     // Check content
     apifun_checkgreq ( "PSO_bsg_starcraft_radius" , itmax ,  "itmax" ,  4 , 1 )
@@ -113,6 +116,7 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
     if ( typeof(verbose)=="constant") then
         apifun_checkgreq ( "PSO_bsg_starcraft_radius" , verbose ,  "verbose" ,  13 , 0 )
     end
+    apifun_checkgreq ( "myPSO_bsg_starcraft_radius" , n_stuck,  "n_stuck" ,  15 , 1 )
     //
     verbose_type = typeof(verbose)
     if verbose_type == 'list' then 
@@ -157,6 +161,8 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
     // actual mesurability status
     mesurability=1;
     counter=0;
+    mesurability_stuck=1;
+    counter_stuck=0;
 
     //---------------------------------------------------
     // First evaluation of the costf function
@@ -207,7 +213,7 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
     //---------------------------------------------------
     // Entering to the optimization loop
     //---------------------------------------------------
-    while (j<itmax & mesurability==1)
+    while (j<itmax & mesurability==1 & mesurability_stuck==1)
 
         //---------------------------------------------------
         // Computing measurability - generating radius capacity
@@ -234,19 +240,41 @@ function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
 
             end
         end
-        disp(max_dist)
-
+        Fhist=Fbest-Fbest(1,1,$);
+        Fhist = Fhist(:);
+        stuck = %f;
+        if j>n_stuck then
+            if sum(Fhist(j-n_stuck:j)-Fhist($))==0 then
+                stuck = %t;
+            end
+        end
+        //        disp(Fhist, stuck, counter_stuck, n_stuck)
+        //        disp([radius', max_dist, res_rad], counter)
         if res_rad==zeros(D,1) & counter<n_radius
-        counter=counter+1;
-
+            counter=counter+1;
         else
             mesurability=1;
             counter=0;
         end
 
+//        if ((counter>=n_radius)& ~stuck) | ((counter>=n_stuck) & stuck) 
         if counter>=n_radius
             mesurability=0;
         end
+
+
+        if stuck
+            counter_stuck=counter_stuck+1;
+        else
+            mesurability_stuck=1;
+            counter_stuck=0;
+        end
+
+//        if ((counter>=n_radius)& ~stuck) | ((counter>=n_stuck) & stuck) 
+        if counter_stuck>=n_stuck
+            mesurability_stuck=0;
+        end
+
 
 
         //---------------------------------------------------

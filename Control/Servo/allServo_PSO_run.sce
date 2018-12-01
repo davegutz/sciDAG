@@ -131,41 +131,45 @@
 //  W.Mp
 //  W.ts
 //  W.invgain
-//PSO    = struct('wmax',     0.9,..      // initial weight parameter
-//  PSO.wmin',     0.4,..      // final weight parameter)
-//  PSO.itmax',    5,..        // maximum iteration number
-//  PSO.c1',       0.7,..      // knowledge factors for personnal best
-//  PSO.c2',       1.47,..     // knowledge factors for global best
-//  PSO.N',        50,..       // problem dimensions: number of particles
-//  PSO.D',        7,..        // problem in R^2
-//  PSO.launchp',  0.9,..      // launch probability, default = 0.9 (?)
-//  PSO.speedf',   2*ones(1,7),..// X.speed factor, default = 2*D
-//..// Bounds for hunting around C
-//  PSO.boundsmax',[50; 0.250; 0.025; 0.250; 0.025; 0.250; 0.250],..
-//  PSO.boundsmin',[25; 0.000; 0.008; 0.000; 0.008; 0.000; 0.125]);
-//  PSO.verbose         level of verbosity for debugging.
+// Particle Swarm Optimizer Settings
+//  PSO.wmax        Initial weight parameter
+//  PSO.wmin        Final weight parameter
+//  PSO.itmax       Maximum iteration number
+//  PSO.c1          Knowledge factors for personnal best
+//  PSO.c2          Knowledge factors for global best
+//  PSO.N           Number of particles
+//  PSO.D           Problem dimension in R^2
+//  PSO.launchp     Launch probability, default = 0.9 (?)
+//  PSO.speedf      Speed factor, default = 2*D
+//  PSO.boundsmax   Bounds for hunting around C
+//  PSO.boundsmin   Bounds for hunting around C
+//  PSO.verbose     Level of verbosity for debugging.
+//  PSO.radius      Independent cluster convergence
+//  PSO.n_radius    Confirmation counts for cluster convergence
+//  PSO.n_stuck     Score repeat allowance.  Waits n_stuck before checking
+//                  then waits another n_stuck
 // Performance results
-//  P.case_title',   '',..       // Case title for plots etc
-//  P.case_date_str','',..       // Date stamp
-//  P.f_min_s',      %nan,..     // scalar on min of frequency range
-//  P.f_max_s',      %nan,..     // scalar on max of frequency range
-//  P.save_file_name', '',..     // Saved binary information file name
-//  P.f_min',        %nan,..     // Used frequency lower limit, Hz
-//  P.f_max',        %nan,..     // Used frequency upper limit, Hz
-//  P.sys_cl',       %nan,..     // lti closed looop
-//  P.sys_ol',       %nan,..     // lti open looop
-//  P.gm',           %nan,..     // Resulting gain margin, dB
-//  P.pm',           %nan,..     // Resulting phase margin, deg
-//  P.gwr',          %nan,..     // Resulting gain crossover, rad/s 
-//  P.pwr',          %nan,..     // Resulting phase crossover, rad/s 
-//  P.ts',           %nan,..     // Resulting settle time, s
-//  P.Mu',           %nan,..     // Resulting magnitude undershoot, %
-//  P.tu',           %nan,..     // Resulting time at undershoot, s
-//  P.Mp',           %nan,..     // Resulting magnitude overshoot, %
-//  P.tp',           %nan,..     // Resulting time at overshoot, s
-//  P.tr',           %nan,..     // Resulting rise time, s
-//  P.casestr_i',    '',..       // Resulting initial result
-//  P.casestr_f',    '');        // Resulting final result
+//  P.case_title    Case title for plots etc
+//  P.case_date_str Date stamp
+//  P.f_min_s       scalar on min of frequency range
+//  P.f_max_s       scalar on max of frequency range
+//  P.save_file_name    Saved binary information file name
+//  P.f_min         Used frequency lower limit, Hz
+//  P.f_max         Used frequency upper limit, Hz
+//  P.sys_cl        lti closed looop
+//  P.sys_ol        lti open looop
+//  P.gm            Resulting gain margin, dB
+//  P.pm            Resulting phase margin, deg
+//  P.gwr           Resulting gain crossover, rad/s 
+//  P.pwr           Resulting phase crossover, rad/s 
+//  P.ts            Resulting settle time, s
+//  P.Mu            Resulting magnitude undershoot, %
+//  P.tu            Resulting time at undershoot, s
+//  P.Mp            Resulting magnitude overshoot, %
+//  P.tp            Resulting time at overshoot, s
+//  P.tr            Resulting rise time, s
+//  P.casestr_i     Resulting initial result
+//  P.casestr_f     Resulting final result
 // X    Structure used to manage local parameters not needed as output.
 // W    Sstructure used to manage final cost weightings.
 
@@ -325,14 +329,15 @@ for case_num=1:n_cases
 //            X.speed, PSO.itmax, PSO.N,..
 //            PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
 //            PSO.N, allServo_PSO_Outputfun, PSO.x0);
-radius = [32 .01 .01 .01 .01 .01 .01]/100; n_radius = 5;
+//radius = [32 .01 .01 .01 .01 .01 .01]/1; n_radius = 5;
             [P.fopt, P.xopt, iopt]=myPSO_bsg_starcraft_radius(evstr(P.obj_function),.. 
             [PSO.boundsmin, PSO.boundsmax],..
             X.speed, PSO.itmax, PSO.N,..
             PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
             PSO.N,.. 
-            radius,n_radius,..
-            allServo_PSO_Outputfun, PSO.x0);
+            PSO.radius, PSO.n_radius,..
+            allServo_PSO_Outputfun, PSO.x0,..
+            PSO.n_stuck);
             PSO.iters = PSO.iters + 1;
             evstr(outputfun_str + '(PSO.iters, P.fopt, P.xopt)');
 
