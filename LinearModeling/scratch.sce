@@ -24,33 +24,34 @@
 //S1=syslin('c',A,B,C);   //Linear system definition
 //[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
 //
+global A B C plant
 A=[0];B=[1];C=[1];
+S1=syslin('c',A,B,C);   //Linear system definition
+[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+
 //S1=syslin('c',A,B,C);   //Linear system definition
 //[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
 //
 function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
+    global A B C plant
     S1=syslin('c',A,B,C);   //Linear system definition
     [plant.a, plant.b, plant.c, plant.d] = abcd(S1);
     continueSimulation = %t;
 endfunction
 
+function post_xcos_simulate(%cpr, scs_m, needcompile)
+    for i=1:length(scs_m.objs)
+        if typeof(scs_m.objs(i))=="Block" & scs_m.objs(i).gui=="SUPER_f" then
+            scs_m = scs_m.objs(i).model.rpar;
+            break;
+        end
+    end
+    sys = lincos(scs_m);
+    figure()
+    bode(sys);
+endfunction
+
+
 
 importXcosDiagram("./scratch.xcos")
 xcos_simulate(scs_m, 4);
-
-
-typeof(scs_m)
-scs_m.props.context
-
-
-for i=1:length(scs_m.objs)
-    if typeof(scs_m.objs(i))=="Block" & scs_m.objs(i).gui=="SUPER_f" then
-        scs_m = scs_m.objs(i).model.rpar;
-        break;
-    end
-end
-
-sys = lincos(scs_m);
-figure()
-bode(sys);
-
