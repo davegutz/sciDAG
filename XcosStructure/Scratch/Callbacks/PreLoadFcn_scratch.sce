@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
-function post_xcos_simulate(%cpr, scs_m, needcompile)
-    exec('Callbacks\StopFcn_scratch.sce', -1);
-    mprintf('Completed post_xcos_simulate\n')  
-endfunction
+global plant
+plant.A=[0];plant.B=[1];plant.C=[1];
+S1=syslin('c',plant.A,plant.B,plant.C);   //Linear system definition
+[plant.a, plant.b, plant.c, plant.d] = abcd(S1);

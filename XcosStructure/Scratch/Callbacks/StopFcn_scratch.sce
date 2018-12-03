@@ -19,6 +19,7 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
+global plant
 for i=1:length(scs_m.objs)
     if typeof(scs_m.objs(i))=="Block" & scs_m.objs(i).gui=="SUPER_f" then
         scs_m = scs_m.objs(i).model.rpar;
@@ -28,3 +29,6 @@ end
 sys = lincos(scs_m);
 figure()
 bode(sys);
+disp(plant.B)
+disp(plant.b)
+mprintf('Completed StopFcn_scratch.sce\n')  

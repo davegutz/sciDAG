@@ -19,7 +19,13 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
-function post_xcos_simulate(%cpr, scs_m, needcompile)
-    exec('Callbacks\StopFcn_scratch.sce', -1);
-    mprintf('Completed post_xcos_simulate\n')  
-endfunction
+funcprot(0);
+
+global plant
+global loaded_scratch
+
+exec('Callbacks\pre_xcos_simulate.sci');
+exec('Callbacks\post_xcos_simulate.sci');
+xcos('./scratch.xcos')
+importXcosDiagram("./scratch.xcos")
+

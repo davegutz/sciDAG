@@ -22,10 +22,8 @@
 
 funcprot(0);
 
-global A B C plant
-A=[0];B=[1];C=[1];
-S1=syslin('c',A,B,C);   //Linear system definition
-[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+global plant
+global loaded_scratch
 
 exec('Callbacks\pre_xcos_simulate.sci');
 exec('Callbacks\post_xcos_simulate.sci');

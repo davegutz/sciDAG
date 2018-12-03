@@ -1,6 +1,11 @@
 <?xml version="1.0" ?>
 <XcosDiagram debugLevel="0" finalIntegrationTime="40.0" integratorAbsoluteTolerance="1.0E-6" integratorRelativeTolerance="1.0E-6" toleranceOnTime="1.0E-10" maxIntegrationTimeInterval="100001.0" maximumStepSize="0.0" realTimeScaling="0.0" solver="1.0" background="-1" gridEnabled="1" title="scratch"><!--Xcos - 2.0 - scilab-6.0.1 - 20180215 0947-->
-  <Array as="context" scilabClass="String[]"></Array>
+  <Array as="context" scilabClass="String[]">
+    <add value="global plant"/>
+    <add value="global loaded_scratch"/>
+    <add value="exec('Callbacks\pre_xcos_simulate.sci');"/>
+    <add value="exec('Callbacks\post_xcos_simulate.sci');"/>
+  </Array>
   <mxGraphModel as="model">
     <root>
       <mxCell id="0:1:0"/>

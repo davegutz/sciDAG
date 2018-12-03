@@ -19,7 +19,5 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
-function post_xcos_simulate(%cpr, scs_m, needcompile)
-    exec('Callbacks\StopFcn_scratch.sce', -1);
-    mprintf('Completed post_xcos_simulate\n')  
-endfunction
+clear
+clear global
