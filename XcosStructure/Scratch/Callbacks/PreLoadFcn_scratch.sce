@@ -19,7 +19,15 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
-global plant
-plant.A=[0];plant.B=[1];plant.C=[1];
-S1=syslin('c',plant.A,plant.B,plant.C);   //Linear system definition
-[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+
+global A B C D plant
+global loaded_scratch
+mprintf('In PreLoadFcn_scratch\n')  
+A=0;B=1;C=1;D=0;
+plant.a = A;
+plant.b = B;
+plant.c = C;
+plant.d = D;
+//S1=syslin('c',A,B,C);   //Linear system definition
+//[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
+mprintf('Completed PreLoadFcn_scratch\n')  

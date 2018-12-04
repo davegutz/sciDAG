@@ -20,4 +20,5 @@
 // Dec 3, 2018 	DA Gutz		Created
 // 
 clear
-clear global
+clearglobal
+

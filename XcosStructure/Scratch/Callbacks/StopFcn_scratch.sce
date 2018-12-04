@@ -19,16 +19,19 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
-global plant
+global plant A B C D
+mprintf('In StopFcn_scratch\n')  
 for i=1:length(scs_m.objs)
-    if typeof(scs_m.objs(i))=="Block" & scs_m.objs(i).gui=="SUPER_f" then
-        scs_m = scs_m.objs(i).model.rpar;
+    if typeof(scs_m.objs(i))=="Block" & (scs_m.objs(i).gui=="DSUPER" | scs_m.objs(i).gui=="SUPER_f") then
+        scs_m_lin = scs_m.objs(i).model.rpar;
         break;
     end
 end
-sys = lincos(scs_m);
+mprintf('In StopFcn_scratch before lincos\n')  
+sys = lincos(scs_m_lin);
+mprintf('In StopFcn_scratch after lincos\n')  
 figure()
 bode(sys);
-disp(plant.B)
+disp(B)
 disp(plant.b)
 mprintf('Completed StopFcn_scratch.sce\n')  

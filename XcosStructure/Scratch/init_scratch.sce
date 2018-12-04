@@ -20,8 +20,12 @@
 // Dec 3, 2018 	DA Gutz		Created
 // 
 funcprot(0);
+getd('../../Control/ControlLib')
+n_fig = -1;
+xdel(winsid())
+mclose('all');
 
-global plant
+global plant A B C D
 global loaded_scratch
 
 exec('Callbacks\pre_xcos_simulate.sci');

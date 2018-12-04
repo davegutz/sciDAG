@@ -19,9 +19,10 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
-global A B C plant
-S1=syslin('c',plant.A,plant.B,plant.C);   //Linear system definition
+global A B C D plant
+mprintf('In InitFcn_scratch\n')  
+S1=syslin('c',A,B,C);   //Linear system definition
 [plant.a, plant.b, plant.c, plant.d] = abcd(S1);
-disp(plant.B)
+disp(B)
 disp(plant.b)
 mprintf('Completed InitFcn_scratch.sce\n')  
