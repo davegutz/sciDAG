@@ -21,4 +21,7 @@
 // 
 clear
 clearglobal
+xdel(winsid())
+mclose('all');
+
 

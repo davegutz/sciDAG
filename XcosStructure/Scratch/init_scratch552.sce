@@ -19,19 +19,24 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
+funcprot(0);
+//getd('../../Control/ControlLib')
+n_fig = -1;
+xdel(winsid())
+//mclose('all');
 global plant A B C D
-mprintf('In StopFcn_scratch\n')  
-for i=1:length(scs_m.objs)
-    if typeof(scs_m.objs(i))=="Block" & (scs_m.objs(i).gui=="DSUPER" | scs_m.objs(i).gui=="SUPER_f") then
-        scs_m_lin = scs_m.objs(i).model.rpar;
-        break;
-    end
-end
-mprintf('In StopFcn_scratch before lincos\n')  
-sys = lincos(scs_m_lin);
-mprintf('In StopFcn_scratch after lincos\n')  
-figure()
-bode(sys, 'rad');
-disp(B)
-disp(plant.b)
-mprintf('Completed StopFcn_scratch.sce\n')  
+global loaded_scratch
+A=0;B=1;C=1;D=0;
+plant.a = A;
+plant.b = B;
+plant.c = C;
+plant.d = D;
+exec('Callbacks\pre_xcos_simulate.sci');
+exec('Callbacks\post_xcos_simulate.sci');
+loadXcosLibs(); loadScicos();
+importXcosDiagram("./scratch552.xcos");
+xcos('./scratch552.xcos');
+scicos_simulate(scs_m);
+scs_m.props.context
+
+
