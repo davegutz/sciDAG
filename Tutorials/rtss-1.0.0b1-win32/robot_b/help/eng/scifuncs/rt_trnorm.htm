@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_trnorm</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_trnorm</b> -   normalize a homogeneous transform</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>TN = rt_trnorm(T)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The homogeneous transform which has to be normalized.
+       </li>
+<li>
+<tt><b>TC</b></tt>
+       : 4-by-4 matrix. The resulting normalized homogeneous transform.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return a normalized copy of the homogeneous transform <tt><b>T</b></tt>. Finite word length arithmetic can lead to homogeneous transformations in which the rotational submatrix is not orthogonal, that is, det(R) ~= 1.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_trnorm() can be used to normalize
+   // a given homogeneous transform.
+
+   // generate a homogeneous transform
+   T = rt_roty(%pi/3),
+
+   // perturb T
+   T = [rt_tr2rot(T) + 1e-7*ones(3, 3), [0; 0; 0]; 0, 0, 0, 1],
+
+   // compute determinant of its rotational submatrix
+   det(rt_tr2rot(T)),
+
+   // generate a normalized copy of T
+   T2 = rt_trnorm(T),
+
+   // compute determinant of its rotational submatrix
+   det(rt_tr2rot(T2)),
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_diff2tr.htm"><tt><b>rt_diff2tr</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    Funda, J. "Quaternions and homogeneous transform in robotics."   Master's thesis, University of Pennsylvania, Apr. 1988.
+    </p>
+</body>
+</html>

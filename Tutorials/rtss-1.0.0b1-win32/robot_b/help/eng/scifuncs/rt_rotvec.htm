@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_rotvec</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_rotvec</b> -   rotation about arbitrary axis</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>T = rt_rotvec(v, theta)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>v</b></tt>
+       : 3-element vector. It represents the arbitrary axis in the space around which the rotation is made.
+       </li>
+<li>
+<tt><b>theta</b></tt>
+       : scalar. The angular displacement for rotation around <tt><b>v</b></tt>, in radians.
+       </li>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The homogeneous transform resulting from the rotation transformation.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return a homogeneous transformation representing a rotation of <tt><b>theta</b></tt> radians about the vector <tt><b>v</b></tt>.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_rotvec() can be used to generate
+   // a homogeneous transform for a specified axis/angle form in a direct
+   // approach.
+
+   // Let r be the versor which represents an axis of rotation in the space
+   r = rt_unit([1, 1, 1]),
+
+   // compute the homogeneous transform representing a rotation of 0.2 rad.
+   // about r
+   // by compounded transforms
+   a = atan(r(2), r(1));
+   b = atan((r(1)^2 + r(2)^2)^(1/2), r(3));
+   T = rt_rotz(a) * rt_roty(b) * rt_rotz(0.2) * rt_roty(-b) * rt_rotz(-a),
+
+   // by using rt_rotvec() (direct approach)
+   T2 = rt_rotvec(r, 0.2),
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_rotx.htm"><tt><b>rt_rotx</b></tt></a>,&nbsp;&nbsp;<a href="rt_roty.htm"><tt><b>rt_roty</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotz.htm"><tt><b>rt_rotz</b></tt></a>,&nbsp;&nbsp;<a href="rt_unit.htm"><tt><b>rt_unit</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+        L. Sciavicco, B. Siciliano, <em>Modelling and Control of Robot Manipulators.</em>   2nd Edition,  Springer-Verlag Advanced Textbooks in Control and Signal Processing Series, London, UK, 2000.
+      </p>
+</body>
+</html>

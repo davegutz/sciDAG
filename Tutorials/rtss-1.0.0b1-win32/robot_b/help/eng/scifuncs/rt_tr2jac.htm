@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_tr2jac</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_tr2jac</b> -   compute a Jacobian to map differential motion between frames</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>J = rt_tr2jac(T)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The homogeneous transform which relates the two frames.
+       </li>
+<li>
+<tt><b>J</b></tt>
+       : 6-by-6 matrix. The Jacobian matrix which maps differential motions between the two frames related by <tt><b>T</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function returns a Jacobian matrix to map differential motions or velocities between frames related by the homogeneous transform <tt><b>T</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      If <tt><b>T</b></tt> is a homogeneous transformation from frame A to frame B, <tt><b>T_AB</b></tt>, then
+     <center><pre>
+     dx_B = J_BA * dx_A
+
+</pre></center>
+     where <tt><b>J_BA</b></tt> is given by <tt><b>rt_tr2jac(T_AB)</b></tt>.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // A differential motion can be represented by a 6-element vector with
+   // elements [dx dy dz drx dry drz]. This example shows how rt_tr2jac()
+   // can be used to map a differential motion between frames A and B.
+
+   // Let A be the world frame and B be the frame represented by the
+   // transform
+   T_AB = rt_transl(100, 200, 300) * rt_roty(%pi/8) * rt_rotz(-%pi/4),
+
+   // now, let dx_A be the differential motion expressed with respect to A
+   dx_A = [0.1, 0.2, 0, -0.2, 0.1, 0.1].',
+
+   // then the differential motion in B would be given by
+   dx_B = rt_tr2jac(T_AB) * dx_A,
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_tr2diff.htm"><tt><b>rt_tr2diff</b></tt></a>,&nbsp;&nbsp;<a href="rt_diff2tr.htm"><tt><b>rt_diff2tr</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+</body>
+</html>

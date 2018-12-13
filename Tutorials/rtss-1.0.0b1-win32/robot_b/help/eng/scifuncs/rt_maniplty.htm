@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_maniplty</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_maniplty</b> -   compute the scalar manipulability index for the manipulator at the given pose</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>m = rt_maniplty(robot, q [, which])</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : p-by-n matrix (p is arbitrary). Each row of this matrix is interpreted as a joint state vector.
+       </li>
+<li>
+<tt><b>which</b></tt>
+       : string. This argument permits to specify the manipulability measure to use. Valid strings are "yoshikawa" (default) and "asada", but also some abbreviation of them can be used. Infact, "yoshi", "y", "asa" and "a" are valid strings.
+       </li>
+<li>
+<tt><b>m</b></tt>
+       : p-element column vector. Each row in this vector is the manipulability index for the pose specified by the corresponding row in <tt><b>q</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function computes the scalar manipulability index for the manipulator <tt><b>robot</b></tt> at the given pose <tt><b>q</b></tt>. Manipulability varies from 0 (bad) to 1 (good).
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Two measures are supported and are selected by the optional argument <tt><b>which</b></tt>. Yoshikawa's manipulability measure is based purely on kinematic data, and gives an indication of how 'far ' the manipulator is from singularities and thus able to move and exert forces uniformly in all directions. Asada's manipulability measure utilizes manipulator dynamic data, and indicate how close the inertia ellipsoid is to spherical.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      If <tt><b>q</b></tt> is a vector (p = 1) <tt><b>rt_maniplty</b></tt> returns a scalar manipulability index. If <tt><b>q</b></tt> is a matrix (p &gt; 1) <tt><b>rt_maniplty</b></tt> returns a column vector and each row is the manipulability index for the pose specified by the corresponding row in <tt><b>q</b></tt>.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // To show how to obtain informations about how 'well-conditioned' the
+   // manipulator is for making certain motions starting from a given pose,
+   // the following code can be used.
+   exec &lt;PATH&gt;/models/rt_puma560.sce;           // load Puma 560 parameters
+   q = [0.1, 0.75, -2.25, 0 .75, 0],            // the given pose..
+   rank( rt_jacob0(p560, q) ),                  // ..is not singular
+
+   rt_maniplty(p560, q, "yoshikawa"),           // Yoshikaw measure
+   rt_maniplty(p560, q, "asada"),               // Asada measure
+
+   // Both of these measures would indicate that this particular pose is not
+   // 'well conditioned'.
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_jacob0.htm"><tt><b>rt_jacob0</b></tt></a>,&nbsp;&nbsp;<a href="rt_inertia.htm"><tt><b>rt_inertia</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    T. Yoshikawa, "Analysis and control of robot manipulators with redundancy", in <em>Proc. 1st Int. Symp. Robotics Research</em>, (Bretton Woods, NH), pp. 735-747, 1983.
+    </p>
+</body>
+</html>

@@ -82,7 +82,7 @@ function print_struct(st, st_str, fd, sep, suppress_titling, titling)
         [n_cases, mc] = size(st);
     end
     if isempty(titling) then // Only first call
-        if ~suppress_titling && (%t | fd==6 | mtell(fd)==0) then // Only first, first call
+        if ~suppress_titling & (%t | fd==6 | mtell(fd)==0) then // Only first, first call
             titling = %t;
             print_struct(st(1), st_str, fd, sep, suppress_titling, titling);
         end

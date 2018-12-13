@@ -1,10 +1,11 @@
 <?xml version="1.0" ?>
 <XcosDiagram debugLevel="0" finalIntegrationTime="40.0" integratorAbsoluteTolerance="1.0E-6" integratorRelativeTolerance="1.0E-6" toleranceOnTime="1.0E-10" maxIntegrationTimeInterval="100001.0" maximumStepSize="0.0" realTimeScaling="0.0" solver="1.0" background="-1" gridEnabled="1" title="scratch"><!--Xcos - 2.0 - scilab-6.0.1 - 20180215 0947-->
   <Array as="context" scilabClass="String[]">
-    <add value="global plant"/>
-    <add value="global loaded_scratch"/>
-    <add value="exec('Callbacks\pre_xcos_simulate.sci');"/>
-    <add value="exec('Callbacks\post_xcos_simulate.sci');"/>
+    <add value="A=0;"/>
+    <add value="B=1;"/>
+    <add value="C=1;"/>
+    <add value="D=0;"/>
+    <add value=""/>
   </Array>
   <mxGraphModel as="model">
     <root>
@@ -202,7 +203,7 @@
       <ExplicitOutputPort id="-3095d545:165ae54ab4a:-7f78" parent="-3095d545:165ae54ab4a:-7f7a" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="-1" initialState="0.0" style="ExplicitOutputPort;align=right;verticalAlign=middle;spacing=10.0"/>
       <ExplicitOutputPort id="-3095d545:165ae54ab4a:-7f77" parent="-3095d545:165ae54ab4a:-7f7a" ordering="2" dataType="REAL_MATRIX" dataColumns="1" dataLines="-1" initialState="0.0" style="ExplicitOutputPort;align=right;verticalAlign=middle;spacing=10.0"/>
       <ExplicitOutputPort id="-3095d545:165ae54ab4a:-7f76" parent="-3095d545:165ae54ab4a:-7f7a" ordering="3" dataType="REAL_MATRIX" dataColumns="1" dataLines="-1" initialState="0.0" style="ExplicitOutputPort;align=right;verticalAlign=middle;spacing=10.0"/>
-      <SuperBlock id="-3095d545:165ae54ab4a:-7f73" parent="0:2:0" interfaceFunctionName="SUPER_f" blockType="h" dependsOnU="0" dependsOnT="0" simulationFunctionName="super" simulationFunctionType="DEFAULT" style="SUPER_f;strokeColor=#FF33CC;fillColor=#99FFFF">
+      <SuperBlock id="-3095d545:165ae54ab4a:-7f73" parent="0:2:0" interfaceFunctionName="DSUPER" blockType="h" dependsOnU="0" dependsOnT="0" simulationFunctionName="csuper" simulationFunctionType="DEFAULT" style="SUPER_f;strokeColor=#FF33CC;fillColor=#99FFFF">
         <Array as="exprs" scilabClass="ScilabList">
           <ScilabDouble height="0" width="0"/>
           <Array scilabClass="ScilabList">
@@ -588,7 +589,7 @@
                         <Array as="equations" scilabClass="ScilabList"/>
                         <mxGeometry as="geometry" x="399.0" y="162.0" width="20.0" height="20.0"/>
                       </EventOutBlock>
-                      <ControlPort id="-71a2dcdd:16778af9c18:-7e52" parent="-71a2dcdd:16778af9c18:-7e53" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style=""/>
+                      <ControlPort id="-71a2dcdd:16778af9c18:-7e52" parent="-71a2dcdd:16778af9c18:-7e53" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style="ControlPort;align=center;verticalAlign=top;spacing=10.0"/>
                       <BasicBlock id="-71a2dcdd:16778af9c18:-7e51" parent="-71a2dcdd:16778af9c1a:-7e6d" interfaceFunctionName="EVTDLY_c" blockType="d" dependsOnU="0" dependsOnT="0" simulationFunctionName="evtdly4" simulationFunctionType="C_OR_FORTRAN" style="">
                         <ScilabString as="exprs" height="2" width="1">
                           <data line="0" column="0" value="0.1"/>
@@ -612,8 +613,8 @@
                         <Array as="equations" scilabClass="ScilabList"/>
                         <mxGeometry as="geometry" x="320.0" y="232.0" width="40.0" height="40.0"/>
                       </BasicBlock>
-                      <ControlPort id="-71a2dcdd:16778af9c18:-7e50" parent="-71a2dcdd:16778af9c18:-7e51" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style=""/>
-                      <CommandPort id="-71a2dcdd:16778af9c18:-7e4f" parent="-71a2dcdd:16778af9c18:-7e51" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.1" style=""/>
+                      <ControlPort id="-71a2dcdd:16778af9c18:-7e50" parent="-71a2dcdd:16778af9c18:-7e51" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style="ControlPort;align=center;verticalAlign=top;spacing=10.0"/>
+                      <CommandPort id="-71a2dcdd:16778af9c18:-7e4f" parent="-71a2dcdd:16778af9c18:-7e51" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.1" style="CommandPort;align=center;verticalAlign=bottom;spacing=10.0"/>
                       <SplitBlock id="-71a2dcdd:16778af9c18:-7e4e" parent="-71a2dcdd:16778af9c1a:-7e6d" interfaceFunctionName="CLKSPLIT_f" blockType="d" dependsOnU="0" dependsOnT="0" simulationFunctionName="split" simulationFunctionType="DEFAULT" style="">
                         <ScilabDouble as="exprs" height="0" width="0"/>
                         <ScilabDouble as="realParameters" height="0" width="0"/>
@@ -631,10 +632,10 @@
                         <Array as="equations" scilabClass="ScilabList"/>
                         <mxGeometry as="geometry" x="380.71066" y="172.0" width="0.3333333333333333" height="0.3333333333333333"/>
                       </SplitBlock>
-                      <ControlPort id="-71a2dcdd:16778af9c18:-7e4d" parent="-71a2dcdd:16778af9c18:-7e4e" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style=""/>
-                      <CommandPort id="-71a2dcdd:16778af9c18:-7e4c" parent="-71a2dcdd:16778af9c18:-7e4e" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style=""/>
-                      <CommandPort id="-71a2dcdd:16778af9c18:-7e4b" parent="-71a2dcdd:16778af9c18:-7e4e" ordering="2" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style=""/>
-                      <CommandControlLink id="-71a2dcdd:16778af9c18:-7e4a" parent="-71a2dcdd:16778af9c1a:-7e6d" source="-71a2dcdd:16778af9c18:-7e4f" target="-71a2dcdd:16778af9c18:-7e4d" style="" value="">
+                      <ControlPort id="-71a2dcdd:16778af9c18:-7e4d" parent="-71a2dcdd:16778af9c18:-7e4e" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style="ControlPort;align=center;verticalAlign=top;spacing=10.0"/>
+                      <CommandPort id="-71a2dcdd:16778af9c18:-7e4c" parent="-71a2dcdd:16778af9c18:-7e4e" ordering="1" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style="CommandPort;align=center;verticalAlign=bottom;spacing=10.0"/>
+                      <CommandPort id="-71a2dcdd:16778af9c18:-7e4b" parent="-71a2dcdd:16778af9c18:-7e4e" ordering="2" dataType="REAL_MATRIX" dataColumns="1" dataLines="1" initialState="0.0" style="CommandPort;align=center;verticalAlign=bottom;spacing=10.0"/>
+                      <CommandControlLink id="-71a2dcdd:16778af9c18:-7e4a" parent="-71a2dcdd:16778af9c1a:-7e6d" source="-71a2dcdd:16778af9c18:-7e4f" target="-71a2dcdd:16778af9c18:-7e4d" style="CommandControlLink" value="">
                         <mxGeometry as="geometry">
                           <mxPoint as="sourcePoint" x="340.0" y="226.29"/>
                           <Array as="points">
@@ -643,14 +644,14 @@
                           <mxPoint as="targetPoint" x="380.71" y="172.0"/>
                         </mxGeometry>
                       </CommandControlLink>
-                      <CommandControlLink id="-71a2dcdd:16778af9c18:-7e49" parent="-71a2dcdd:16778af9c1a:-7e6d" source="-71a2dcdd:16778af9c18:-7e4c" target="-71a2dcdd:16778af9c18:-7e52" style="" value="">
+                      <CommandControlLink id="-71a2dcdd:16778af9c18:-7e49" parent="-71a2dcdd:16778af9c1a:-7e6d" source="-71a2dcdd:16778af9c18:-7e4c" target="-71a2dcdd:16778af9c18:-7e52" style="CommandControlLink" value="">
                         <mxGeometry as="geometry">
                           <mxPoint as="sourcePoint" x="380.71" y="172.0"/>
                           <Array as="points"></Array>
                           <mxPoint as="targetPoint" x="399.0" y="172.0"/>
                         </mxGeometry>
                       </CommandControlLink>
-                      <CommandControlLink id="-71a2dcdd:16778af9c18:-7e48" parent="-71a2dcdd:16778af9c1a:-7e6d" source="-71a2dcdd:16778af9c18:-7e4b" target="-71a2dcdd:16778af9c18:-7e50" style="" value="">
+                      <CommandControlLink id="-71a2dcdd:16778af9c18:-7e48" parent="-71a2dcdd:16778af9c1a:-7e6d" source="-71a2dcdd:16778af9c18:-7e4b" target="-71a2dcdd:16778af9c18:-7e50" style="CommandControlLink" value="">
                         <mxGeometry as="geometry">
                           <mxPoint as="sourcePoint" x="380.71" y="172.0"/>
                           <Array as="points">

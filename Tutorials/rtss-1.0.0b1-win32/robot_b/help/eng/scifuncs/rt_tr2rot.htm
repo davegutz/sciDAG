@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_tr2rot</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_tr2rot</b> -   homogeneous transform to rotation submatrix</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>R = rt_tr2rot(T)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The homogeneous transform.
+       </li>
+<li>
+<tt><b>R</b></tt>
+       : 3-by-3 matrix. It corresponds to the rotational part of the homogeneous transform <tt><b>T</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return the rotational part of the homogeneous transform <tt><b>T</b></tt>.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // A rotation of 45degrees about the Z-axis
+   T = rt_rotz(%pi/4),
+
+   // Extract the rotational part of T
+   R = rt_tr2rot(T),
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_transl.htm"><tt><b>rt_transl</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotx.htm"><tt><b>rt_rotx</b></tt></a>,&nbsp;&nbsp;<a href="rt_roty.htm"><tt><b>rt_roty</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotz.htm"><tt><b>rt_rotz</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotvec.htm"><tt><b>rt_rotvec</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

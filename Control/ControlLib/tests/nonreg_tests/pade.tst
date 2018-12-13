@@ -31,4 +31,3 @@ getd('../ControlLib')
 
 myPade = pade(0.1, 1)
 myPade = pade(0.1, 2)
-

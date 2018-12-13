@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_transl</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_transl</b> -   set or extract the translational component of a homogeneous transform</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>T = rt_transl(x, y, z)</tt></dd>
+<dd><tt>T = rt_transl(v)</tt></dd>
+<dd><tt>v = rt_transl(T)</tt></dd>
+<dd><tt>XZY = rt_transl(TC)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>x</b></tt>
+       : scalar. It represents the X-axis component of the translation vector, with respect to a basic reference frame.
+       </li>
+<li>
+<tt><b>y</b></tt>
+       : scalar. It represents the Y-axis component of the translation vector, with respect to a basic reference frame.
+       </li>
+<li>
+<tt><b>z</b></tt>
+       : scalar. It represents the Z-axis component of the translation vector, with respect to a basic reference frame.
+       </li>
+<li>
+<tt><b>v</b></tt>
+       : 3-element vector. Depending from which call has been executed, it can represent the translation (row or column) vector generating the homogeneous transform <tt><b>T</b></tt>, or the (column vector) translational component extracted from the homogeneous transform <tt><b>T</b></tt>. In both cases, it is expressed with respect to a basic reference frame.
+       </li>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. Depending from which call has been executed, it can represent the homogeneous transform resulting from the translation transformation, or the homogeneous transform from which we want to extract the translational component.
+       </li>
+<li>
+<tt><b>TC</b></tt>
+       : 4-by-4-by-m hypermatrix (m is arbitrary). A Cartesian trajectory matrix.
+       </li>
+<li>
+<tt><b>XYZ</b></tt>
+       : m-by-3 matrix. Its columns i.e. <tt><b>XYZ(:,1)</b></tt>, <tt><b>XYZ(:,2)</b></tt> and <tt><b>XYZ(:,3)</b></tt> are formed, respectively, by appropriately stacking the <tt><b>x</b></tt>, <tt><b>y</b></tt> and <tt><b>z</b></tt> components of translational component of the Cartesian trajectory matrix <tt><b>TC</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      The first two forms return a homogeneous transformation representing a translation expressed as three scalar <tt><b>x</b></tt>, <tt><b>y</b></tt> and <tt><b>z</b></tt>, or a Cartesian vector <tt><b>v</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The third form returns the translational part of a homogeneous transform as a 3-element column vector.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The fourth form returns a matrix whose columns are the X, Y, and Z columns of the 4-by-4-by-m Cartesian trajectory matrix <tt><b>TC</b></tt>.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // A pure translation of 0.5m in the X direction:
+   T = rt_transl(0.5, 0, 0);
+
+   // Extract the translational part of T
+   p = rt_transl(T);
+
+   // Generate a Cartesian trajectory between T0 and T1
+   T0 = rt_transl(0, 0, 0);
+   T1 = rt_transl([-1 2 1]);
+   t = 0:0.056:10;
+   r = rt_jtraj(0, 1, t);
+   TC = rt_ctraj(T0, T1, r);
+
+   // Extract the translational part from Cartesian trajectory
+   XYZ = rt_transl(TC);
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_ctraj.htm"><tt><b>rt_ctraj</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotx.htm"><tt><b>rt_rotx</b></tt></a>,&nbsp;&nbsp;<a href="rt_roty.htm"><tt><b>rt_roty</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotz.htm"><tt><b>rt_rotz</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotvec.htm"><tt><b>rt_rotvec</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

@@ -22,7 +22,7 @@
 function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
     global loaded_scratch
     mprintf('\nIn pre_xcos_simulate\n')  
-    if isempty(loaded_scratch) then
+    if ~loaded_scratch then
         exec('Callbacks\PreLoadFcn_scratch.sce', -1); 
         mprintf('Ran PreLoadFcn_scratch\n')  
         loaded_scratch = %t;

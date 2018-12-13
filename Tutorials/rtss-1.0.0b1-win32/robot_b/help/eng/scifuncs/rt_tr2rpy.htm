@@ -1,0 +1,115 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_tr2rpy</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_tr2rpy</b> -   homogeneous transform to roll/pitch/yaw angles</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>[a b c] = rt_tr2rpy(T)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The homogeneous transform.
+       </li>
+<li>
+<tt><b>a</b></tt>
+       : scalar. The roll angle in radians, i.e. a rotation about the Z-axis of current reference frame.
+       </li>
+<li>
+<tt><b>b</b></tt>
+       : scalar. The pitch angle in radians, i.e. a rotation about the Y-axis of current reference frame.
+       </li>
+<li>
+<tt><b>c</b></tt>
+       : scalar. The yaw angle in radians, i.e. a rotation about the X-axis of current reference frame.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return a vector of roll/pitch/yaw angles, in radians, corresponding to the rotational part of the homogeneous transform <tt><b>T</b></tt>.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_tr2rpy() can be used to get the
+   // orientation of a coordinate frame, described by a given homogeneous
+   // transform, expressed in terms of roll/pitch/yaw (RPY) angles.
+
+   // generate a homogeneous transform
+   rpy = [%pi/6, -%pi/4, -2/5*%pi], // RPY angles set
+   T = rt_rpy2tr(rpy);
+
+   // corresponding RPY angles set
+   rpy_comp = rt_tr2rpy(T),
+
+   // Remember that the solution to the problem of computing a set of RPY
+   // angles corresponding to the rotational part of a homogeneous
+   // transform is not univoque.
+   // rt_tr2rpy() computes the solution reducing the range to whom the
+   // pitch angle belongs to (-%pi/2, %pi/2) radians.
+   // Therefore, if you generate a coordinate frame from a set of RPY
+   // angles with the pitch belonging to (%pi/2, 3/2*%pi) and then you try
+   // to get its orientation by using rt_tr2rpy() function, be aware that
+   // you won't obtain the starting set of angles.
+   
+   rpy1 = [0.6, 2.85, -1.75],       // RPY angles set
+   T = rt_rpy2tr(rpy1);
+   rpy2 = rt_tr2rpy(T),             // rpy2 is different from rpy1, but
+                                    // they are equivalent in their effects
+
+   // Lastly, note that rt_tr2rpy() provides a single solution when the
+   // computed set of RPY angles has pitch = %pi/2 or pitch = -%pi/2. But
+   // you should remember that in these cases infinitely many solutions are
+   // corresponding to the rotational part of the homogeneous transform.
+
+   rpy1 = [0.6, %pi/2, -1.75];      // RPY angles set with pitch = %pi/2
+   T = rt_rpy2tr(rpy1),
+   // all solutions for which yaw - roll = -1.75 - 0.6 are equivalent in
+   // their effects
+   rpy1_a = rt_tr2rpy(T);               Ta = rt_rpy2tr(rpy1_a), 
+   rpy1_b = [0.25, %pi/2, -2.35+0.25];  Tb = rt_rpy2tr(rpy1_b),
+   rpy1_c = [2.6, %pi/2, -2.35+2.6];    Tc = rt_rpy2tr(rpy1_c),
+   rpy1_d = [-1.35, %pi/2, -2.35-1.35]; Td = rt_rpy2tr(rpy1_d),
+   rpy1_e = [-0.9, %pi/2, -2.35-0.9];   Te = rt_rpy2tr(rpy1_e),
+
+   rpy2 = [-2.2, -%pi/2, 0.95];     // RPY angles set with pitch = -%pi/2
+   T = rt_rpy2tr(rpy2),
+   // all solutions for which roll + yaw = -2.2 + 0.95 are equivalent in
+   // their effects
+   rpy2_a = rt_tr2rpy(T);               Ta = rt_rpy2tr(rpy2_a), 
+   rpy2_b = [0, -%pi/2, -1.25];         Tb = rt_rpy2tr(rpy2_b),
+   rpy2_c = [-2.1, -%pi/2, -1.25+2.1];  Tc = rt_rpy2tr(rpy2_c),
+   rpy2_d = [2.85, -%pi/2, -1.25-2.85]; Td = rt_rpy2tr(rpy2_d),
+   rpy2_e = [0.5, -%pi/2, -1.25-0.5];   Te = rt_rpy2tr(rpy2_e),
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_rpy2tr.htm"><tt><b>rt_rpy2tr</b></tt></a>,&nbsp;&nbsp;<a href="rt_tr2eul.htm"><tt><b>rt_tr2eul</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+<p>
+        L. Sciavicco, B. Siciliano, <em>Modelling and Control of Robot Manipulators.</em>   2nd Edition,  Springer-Verlag Advanced Textbooks in Control and Signal Processing Series, London, UK, 2000.
+      </p>
+</body>
+</html>

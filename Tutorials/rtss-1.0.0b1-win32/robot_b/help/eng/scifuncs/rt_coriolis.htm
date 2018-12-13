@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_coriolis</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_coriolis</b> -   compute the manipulator Coriolis/centripetal torque components</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>tau_c = rt_coriolis(robot, q, qd)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator dynamics and kinematics.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : p-by-n matrix (p is arbitrary). Each row of this matrix is interpreted as a joint state vector.
+       </li>
+<li>
+<tt><b>qd</b></tt>
+       : p-by-n matrix. Each row of this matrix is interpreted as a joint velocity vector.
+       </li>
+<li>
+<tt><b>tau_c</b></tt>
+       : p-by-n matrix. If <tt><b>q</b></tt> and <tt><b>qd</b></tt> are row vectors (p = 1), <tt><b>tau_c</b></tt> is a row vector of joint torques. If <tt><b>q</b></tt> and <tt><b>qd</b></tt> are matrices (p &gt; 1), <tt><b>tau_c</b></tt> is a matrix each row being the corresponding joint torques.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return the joint torques due to rigid-body Coriolis and centripetal effects for the specified joint state <tt><b>q</b></tt> and velocity <tt><b>qd</b></tt>. Coriolis/centripetal torque components are evaluated from the equations of motion using recursive Newton-Euler formulation, with joint acceleration and gravitational acceleration set to zero. Joints frictions are ignored in this calculation.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following code can be used to simulate the motion of the Puma 560
+   // from rest in the zero angle pose with zero applied joint torques
+   exec &lt;PATH&gt;/models/rt_puma560.sce;           // load Puma 560 parameters
+   p560nf = rt_nofriction(p560);                // remove friction
+   t = [0:0.05:10];
+   tic(); [q, qd] = rt_fdyn(p560nf, 0, t); toc(),
+
+   // In this condition the robot is collapsing under gravity. An
+   // animation using rt_plot() clearly depicts this
+   cfh = scf(); a0 = cfh.children; a0.tight_limits = "on";
+   a0.rotation_angles = [74, -30];              // set point of view
+   rt_plot(p560nf, q.');
+
+   // It is interesting to note that rotational velocity of the upper and
+   // lower arm are exerting centripetal and Coriolis torques on the waist
+   // joint, causing it to rotate
+   tic(); tauc = rt_coriolis(p560nf, q.', qd.'); toc(),
+   cfh = scf();
+   drawlater();
+   subplot(2,1,1); plot(t, tauc(:,1));          // Coriolis/centripetal (J1)
+   xgrid(); xtitle("", "Time (s)", "Coriolis/centripetal 1 (Nm)");
+   subplot(2,1,2); plot(t, q(1,:));
+   xgrid(); xtitle("", "Time (s)", "Joint 1 (rad)");
+   drawnow();
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_frne.htm"><tt><b>rt_frne</b></tt></a>,&nbsp;&nbsp;<a href="rt_rne.htm"><tt><b>rt_rne</b></tt></a>,&nbsp;&nbsp;<a href="rt_itorque.htm"><tt><b>rt_itorque</b></tt></a>,&nbsp;&nbsp;<a href="rt_gravload.htm"><tt><b>rt_gravload</b></tt></a>,&nbsp;&nbsp;<a href="rt_link.htm"><tt><b>rt_link</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    M.W. Walker and D.E. Orin. Efficient dynamic computer simulation of robotic mechanisms. <em>ASME Journal of Dynamic Systems, Measurement and Control</em>, 104:205-211, 1982
+    </p>
+</body>
+</html>

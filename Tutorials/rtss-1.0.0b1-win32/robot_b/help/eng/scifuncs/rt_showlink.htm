@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_showlink</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_showlink</b> -   show link/robot data in detail</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>rt_showlink(link)</tt></dd>
+<dd><tt>rt_showlink(robot)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>link</b></tt>
+       : link object. It describes the link kinematics and dynamics.
+       </li>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function displays in detail all the parameters, including all defined inertial parameters, of a link. All angles are in radians.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The second form provides this level of detail for all links in the specified manipulator.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // load Puma 560 parameters
+   exec &lt;PATH&gt;/models/rt_puma560.sce;
+
+   // To show details of Puma link 2
+   rt_showlink(p560.links(2));
+
+   // To show details of all Puma links
+   rt_showlink(p560);
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_link.htm"><tt><b>rt_link</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

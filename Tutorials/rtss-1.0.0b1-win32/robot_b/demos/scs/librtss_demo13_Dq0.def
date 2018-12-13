@@ -1,0 +1,3 @@
+LIBRARY    librtss_demo13_Dq0.dll
+EXPORTS
+	rtss_demo13_Dq0

@@ -1,0 +1,259 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_quaternion</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_quaternion</b> -   construct/clone a quaternion object</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>q = rt_quaternion(qq)</tt></dd>
+<dd><tt>q = rt_quaternion(v, theta)</tt></dd>
+<dd><tt>q = rt_quaternion(R)</tt></dd>
+<dd><tt>q = rt_quaternion(T)</tt></dd>
+<dd><tt>q = rt_quaternion(ELEMS)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>qq</b></tt>
+       : quaternion object. The quaternion object to copy.
+       </li>
+<li>
+<tt><b>v</b></tt>
+       : 3-element vector. A rotation axis in space.
+       </li>
+<li>
+<tt><b>theta</b></tt>
+       : scalar. The angular displacement for rotation about <tt><b>v</b></tt>, in radians.
+       </li>
+<li>
+<tt><b>R</b></tt>
+       : 3-by-3 matrix. A rotation matrix.
+       </li>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. A homogeneous transform.
+       </li>
+<li>
+<tt><b>ELEMS</b></tt>
+       : 4-element row vector. This vector is formed by stacking the scalar component and the vector part of the unit quaternion as follows <tt><b>ELEMS = [s, vx, vy, vz]</b></tt>, where
+       <ul>
+<li>
+<tt><b>s</b></tt>
+                : scalar. The scalar component of the quaternion.
+                </li>
+<li>
+<tt><b>vx</b></tt>
+                : scalar. The X-component of the quaternion's vector part.
+                </li>
+<li>
+<tt><b>vy</b></tt>
+                : scalar. The Y-component of the quaternion's vector part.
+                </li>
+<li>
+<tt><b>vz</b></tt>
+                : scalar. The Z-component of the quaternion's vector part.
+                </li>
+</ul>
+</li>
+<li>
+<tt><b>q</b></tt>
+       : quaternion object. The quaternion object created.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function is the constructor for a quaternion object. The quaternion object has type <tt><b>quat</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The first form returns a new object with the same value as its argument.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The second form initializes the quaternion to a rotation of <tt><b>theta</b></tt> radians about the vector <tt><b>v</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The third and the fourth forms set the quaternion to a rotation equivalent to the given rotation matrix <tt><b>R</b></tt>, or to the rotation submatrix of the given homogeneous transform <tt><b>T</b></tt>, respectively.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The fifth form sets the four quaternion elements directly.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      All forms, except the last, return a unit quaternion, i.e. one whose magnitude is unity.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Since Scilab does not support the concept of public class, variables methods have been written to allow quaternion object parameters to be referenced (r) or assigned (a) as given by the following table:
+      <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>Method</td>
+<td>Operation</td>
+<td>Returns</td>
+<td>Type</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>quat</b></tt>.d</td>
+<td>r</td>
+<td>the vector formed by stacking of quaternion elements</td>
+<td>4-element vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>quat</b></tt>.s</td>
+<td>r</td>
+<td>the scalar component of the quaternion</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>quat</b></tt>.v</td>
+<td>r</td>
+<td>the vector part of the quaternion</td>
+<td>3-element vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>quat</b></tt>.t</td>
+<td>r</td>
+<td>the equivalent homogeneous transform matrix</td>
+<td>4-by-4 matrix</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>quat</b></tt>.r</td>
+<td>r</td>
+<td>the equivalent orthonormal rotation matrix</td>
+<td>3-by-3 matrix</td>
+</tr>
+</table></center></p>
+</dd>
+</dl>
+<h3><font color="blue">Overloaded Operators and Functions</font></h3>
+<dl>
+<dd>
+<b></b><p>
+    In Scilab variable display and operators may be defined for new objects using Scilab-coded functions. The following is a list of all overloaded operators for the new Scilab object, the quaternion:
+     <dl><dd>
+<li>
+<tt>q1 * q2</tt>: returns quaternion product or compounding</li>
+<li>
+<tt>q * v</tt>: returns a quaternion vector product, that is the vector <em>v</em> (a 3-element vector) is rotated by the quaternion</li>
+<li>
+<tt>q1 / q2</tt>: returns quaternion division, that is <em>q1</em> * (<em>q2</em>)^(-1)</li>
+<li>
+<tt>q / s</tt>: divide quaternion by scalar</li>
+<li>
+<tt>q ^ (j)</tt>: raise quaternion to integer power (<em>j</em> is an integer exponent). For <em>j</em> &gt; 0 the result is obtained by repeated multiplication. For <em>j</em> &lt; 0 the final result is inverted</li>
+</dd></dl></p>
+</dd>
+<dd>
+<b></b><p>
+    In Scilab some basic primitive functions may be overloaded for new data types. The following is a list of all overloaded functions for the new Scilab object, the quaternion:
+     <dl><dd>
+<li>
+<tt>disp(q)</tt>: displays the quaternion as one-line summary of its scalar component and vector part</li>
+<li>
+<tt>double(q)</tt>: returns the quaternion coefficients as a 4-element row vector</li>
+<li>
+<tt>inv(q)</tt>: returns the quaternion inverse</li>
+<li>
+<tt>norm(q)</tt>: returns the quaternion magnitude</li>
+<li>
+<tt>rt_plot(q)</tt>: displays a 3D plot showing the standard coordinate frame after rotation by <em>q</em>
+</li>
+<li>
+<tt>rt_unit(q)</tt>: returns the corresponding unit quaternion</li>
+</dd></dl></p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // set the four quaternion elements directly
+   rt_quaternion([1, 1, 0, 0]),
+
+   // a quaternion obtained from a rotation matrix
+   rt_quaternion(rt_tr2rot(rt_rotx(1))),
+
+   // The following example shows how to use the public class variables
+   // methods
+   T = rt_rotx(0.2),                    // A rotation of 0.2rads about the
+                                        // X-axis (homogeneous transform)
+
+   q1 = rt_quaternion(T),               // set q1 from a homog. transform
+
+   q1.r,                                // get the equivalent orthonormal
+                                        // rotation matrix
+
+   q1.t,                                // returns T
+
+   q1.s,                                // the scalar component
+   q1.v,                                // the vector part
+
+   q1.d,                                // the 4-element vector [q1.s, q1.v]
+
+   q1.s = 1,                            // error! all methods can be
+   q1.v = [1, 0, 0],                    // only referenced
+
+   // Playing with overloaded operators and functions...
+   q2 = rt_quaternion(rt_roty(0.3)),    // another quaternion
+
+   q1*q2,                               // quaternion product
+
+   q1*q1,                               // square quaternion
+   q1^2,
+
+   q1 * inv(q1),                        // invert quaternion
+   q1/q1,
+
+   q1/q2,                               // quaternion division
+   q1 * q2^(-1),
+
+   // Get the type of a quaternion object
+   typeof(q1) == "quat",                // returns %T (true)
+   typeof(q1) == "quaternion",          // returns %F (false)
+
+  </pre>
+<h3><font color="blue">Cautionary</font></h3>
+<dl><dd>
+<b></b><p>
+     At the moment vectors or arrays of quaternions are not supported. You can however use Scilab lists to hold a number of quaternions.
+     </p>
+</dd></dl>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_plot-quaternion.htm"><tt><b>quaternion/rt_plot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    K. Shoemake, "Animating rotation with quaternion curves", in <em>Proceedings of ACM SIGGRAPH</em>, (San Francisco), pp. 245-254, The Singer Company, Link Flight Simulator Division, 1985.
+    </p>
+</body>
+</html>

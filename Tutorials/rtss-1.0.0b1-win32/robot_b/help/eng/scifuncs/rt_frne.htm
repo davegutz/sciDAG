@@ -1,0 +1,333 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_frne</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_frne</b> -   fast rne. C version of algorithm that computes inverse dynamics via recursive Newton-Euler formulation</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>tau = rt_frne(robot, q, qd, qdd [, grav [, fext]])</tt></dd>
+<dd><tt>tau = rt_frne(robot, Q [, grav [, fext]])</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : p-by-n matrix (p is arbitrary). Each row of this matrix is interpreted as a joint state vector.
+       </li>
+<li>
+<tt><b>qd</b></tt>
+       : p-by-n matrix. Each row of this matrix is interpreted as a joint velocity vector.
+       </li>
+<li>
+<tt><b>qdd</b></tt>
+       : p-by-n matrix. Each row of this matrix is interpreted as a joint acceleration vector.
+       </li>
+<li>
+<tt><b>Q</b></tt>
+       : p-by-3n matrix. This matrix is formed by stacking the matrices <tt><b>q</b></tt>, <tt><b>qd</b></tt> and <tt><b>qdd</b></tt> as follows <tt><b>Q = [q, qd, qdd]</b></tt>.
+       </li>
+<li>
+<tt><b>grav</b></tt>
+       : 3-element vector. It represents an alternative direction for gravity which will override the default one.
+       </li>
+<li>
+<tt><b>fext</b></tt>
+       : 6-element vector. It represents an external generalized force acting on the end of manipulator and it has to be expressed in the end-effector coordinate frame.
+       </li>
+<li>
+<tt><b>tau</b></tt>
+       : p-by-n matrix. Each row is the joint torque for the corresponding row in <tt><b>q</b></tt>, <tt><b>qd</b></tt> and <tt><b>qdd</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function is a C-code implementation of recursive Newton-Euler (RNE) algorithm for robot inverse dynamics computation. Just like its Scilab-coded counterpart (<tt><b>rt_rne</b></tt>), it computes the equation of motion in an efficent manner, giving joint torques as a function of joint position, velocity and acceleration.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      If <tt><b>q</b></tt>, <tt><b>qd</b></tt> and <tt><b>qdd</b></tt> are row vectors (p = 1), then <tt><b>tau</b></tt> is a row vector of joint torques. Else (p &gt; 1) <tt><b>tau</b></tt> is a matrix in which each row is the joint torque for the corresponding rows of <tt><b>q</b></tt>, <tt><b>qd</b></tt> and <tt><b>qdd</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Gravity direction is defined by the robot object but may be overridden by providing the gravity acceleration vector <tt><b>grav</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      An external generalized force acting on the end of the manipulator may also be specified by the 6-element vector <tt><b>fext</b></tt> in the end-effector coordinate frame.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The torque computed may contain contributions due to armature inertia and joint friction if these are specified in the parameter matrix <tt><b>dyn</b></tt>.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example is a typical IDP (Inverse Dynamics Problem) in
+   // robotics. It shows why rt_frne() is more suitable than rt_rne() to
+   // be used to solve IDPs.
+   // Here is shown how to compute the joint torques for a simple two link
+   // RR planar, isolating each single torque contribution (i.e. inertial,
+   // Coriolis/centripetal and gravitational), when joint trajectories in
+   // terms of position, velocity and acceleration are given.
+   // Trajectories have the same duration and a triangular-velocity profile.
+   // Initially the manipulator has a down-elbow configuration such that its
+   // end-effector is at point (0.2, 0) metres in the operating space.
+   // Both its joints move through an excursion of %pi/2 radians in 0.5 sec.
+   //
+   // References: Chapter 4, Example 4.2, of
+   // L. Sciavicco, B. Siciliano, "Modelling and Control of Robot
+   // Manipulators", 2nd Edition, Springer-Verlag Advanced Textbooks in
+   // Control and Signal Processing Series, London, UK, 2000
+
+   // load the joint trajectories
+   load("&lt;PATH&gt;/demos/rne/config-tlexamp.dat",..
+        "t_tlexamp", "q_tlexamp", "qd_tlexamp", "qdd_tlexamp");
+
+   // load RR parameters
+   exec &lt;PATH&gt;/demos/rne/manip-tlexamp.sce;
+
+   // joint trajectories plotting
+   cfh = scf(); drawlater();
+   subplot(3,2,1); plot(t_tlexamp, q_tlexamp(:,1));             // POS.
+   xgrid(); xtitle("Position Joint 1", "[s]", "[rad]");
+   a1 = cfh.children(1); a1.data_bounds = [0 -2; 0.6 5];
+   a1.tight_limits = "on"; a1.auto_ticks = ["off" "off" "off"];
+   a1.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a1.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-2 -1 0 1 2 3 4 5], ["-2" "-1" "0" "1" "2" "3" "4" "5"]);
+   subplot(3,2,2); plot(t_tlexamp, q_tlexamp(:,2));
+   xgrid(); xtitle("Position Joint 2", "[s]", "[rad]");
+   a2 = cfh.children(1); a2.data_bounds = [0 -2; 0.6 5];
+   a2.tight_limits = "on"; a2.auto_ticks = ["off" "off" "off"];
+   a2.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a2.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-2 -1 0 1 2 3 4 5], ["-2" "-1" "0" "1" "2" "3" "4" "5"]);;
+
+   subplot(3,2,3); plot(t_tlexamp, qd_tlexamp(:,1));            // VEL.
+   xgrid(); xtitle("Velocity Joint 1", "[s]", "[rad/s]");
+   a3 = cfh.children(1); a3.data_bounds = [0 -1; 0.6 7];
+   a3.tight_limits = "on"; a3.auto_ticks = ["off" "off" "off"];
+   a3.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a3.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 2 4 6], ["0" "2" "4" "6"]);
+   subplot(3,2,4); plot(t_tlexamp, qd_tlexamp(:,2));
+   xgrid(); xtitle("Velocity Joint 2", "[s]", "[rad/s]");
+   a4 = cfh.children(1); a4.data_bounds = [0 -1; 0.6 7];
+   a4.tight_limits = "on"; a4.auto_ticks = ["off" "off" "off"];
+   a4.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a4.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 2 4 6], ["0" "2" "4" "6"]);
+
+   subplot(3,2,5); plot(t_tlexamp, qdd_tlexamp(:,1));           // ACCEL.
+   xgrid(); xtitle("Accel. Joint 1", "[s]", "[rad/s^2]");
+   a5 = cfh.children(1); a5.data_bounds = [0 -30; 0.6 30];
+   a5.tight_limits = "on"; a5.auto_ticks = ["off" "off" "off"];
+   a5.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a5.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-30 -20 -10 0 10 20 30],..
+        ["-30" "-20" "-10" "0" "10" "20" "30"]);
+   subplot(3,2,6); plot(t_tlexamp, qdd_tlexamp(:,2));
+   xgrid(); xtitle("Accel. Joint 2", "[s]", "[rad/s^2]");
+   a6 = cfh.children(1); a6.data_bounds = [0 -30; 0.6 30];
+   a6.tight_limits = "on"; a6.auto_ticks = ["off" "off" "off"];
+   a6.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a6.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-30 -20 -10 0 10 20 30],..
+        ["-30" "-20" "-10" "0" "10" "20" "30"]);
+   drawnow();
+
+   // joint torques computation
+   tic();..                                         // start timer
+   tau = rt_frne(manip_tlexamp, q_tlexamp, qd_tlexamp, qdd_tlexamp);..
+   toc(),                                           // stop timer
+
+   // compute each inertia torque contribution
+   // rt_inertia uses RNE formulation
+   tic();..                                         // start timer
+   I = rt_inertia(manip_tlexamp, q_tlexamp);..
+   toc(),                                           // stop timer
+   I11 = I(1, 1, :); i11 = matrix(I11, length(t_tlexamp), 1);
+   I12 = I(1, 2, :); i12 = matrix(I12, length(t_tlexamp), 1);
+   I21 = I(2, 1, :); i21 = matrix(I21, length(t_tlexamp), 1);
+   I22 = I(2, 2, :); i22 = matrix(I22, length(t_tlexamp), 1);
+   taui_11 = i11 .* qdd_tlexamp(:, 1);              // at J1, by J1 accel
+   taui_12 = i12 .* qdd_tlexamp(:, 2);              // at J1, by J2 accel
+   taui_21 = i21 .* qdd_tlexamp(:, 1);              // at J2, by J1 accel
+   taui_22 = i22 .* qdd_tlexamp(:, 2);              // at J2, by J2 accel
+
+   // compute each Coriolis/centripetal torque contribution
+   // rt_coriolis uses RNE formulation
+   tic();..                                         // start timer
+   tauc = rt_coriolis(manip_tlexamp, q_tlexamp, qd_tlexamp);..
+   toc(),                                           // stop timer
+
+   // compute each gravitational torque contribution
+   // rt_gravload uses RNE formulation
+   tic();..                                         // start timer
+   taug = rt_gravload(manip_tlexamp, q_tlexamp);..
+   toc(),                                           // stop timer
+
+   // This task has shown that RNE formulation is very recurrent in
+   // pratice and have a fast routine which implements it is needed.
+   // Function rt_rne() takes too much time for a single computation,
+   // therefore it is suitable to be used neither in this simple case
+   // of study.
+   //
+   // Finally, simulation results are showed
+   // joint torques
+   cfh = scf();
+   drawlater();
+   subplot(2,1,1); plot(t_tlexamp, tau(:,1));                   // JOINT 1
+   xgrid(); xtitle("Joint 1 Torque", "[s]", "[N*m]");
+   a7 = cfh.children(1); a7.data_bounds = [0 -6000; 0.6 7000];
+   a7.tight_limits = "on"; a7.auto_ticks = ["off" "off" "off"];
+   a7.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a7.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-6000 -4000 -2000 0 2000 4000 6000],..
+        ["-6000" "-4000" "-2000" "0" "2000" "4000" "6000"]);
+
+   subplot(2,1,2); plot(t_tlexamp, tau(:,2));                   // JOINT 2
+   xgrid(); xtitle("Joint 2 Torque", "[s]", "[N*m]");
+   a8 = cfh.children(1); a8.data_bounds = [0 -6000; 0.6 7000];
+   a8.tight_limits = "on"; a8.auto_ticks = ["off" "off" "off"];
+   a8.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a8.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-6000 -4000 -2000 0 2000 4000 6000],..
+        ["-6000" "-4000" "-2000" "0" "2000" "4000" "6000"]);
+   drawnow();
+
+   // inertial torque contributions
+   cfh = scf();
+   drawlater();
+   subplot(2,2,1); plot(t_tlexamp, taui_11);                    // JOINT 1
+   xgrid(); xtitle("Inertial Torque 11", "[s]", "[N*m]");
+   a9 = cfh.children(1); a9.data_bounds = [0 -5000; 0.6 5000];
+   a9.tight_limits = "on"; a9.auto_ticks = ["off" "off" "off"];
+   a9.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a9.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-5000 0 5000], ["-5000" "0" "5000"]);
+
+   subplot(2,2,2); plot(t_tlexamp, taui_12);
+   xgrid(); xtitle("Inertial Torque 12", "[s]", "[N*m]");
+   a10 = cfh.children(1); a10.data_bounds = [0 -500; 0.6 100];
+   a10.tight_limits = "on"; a10.auto_ticks = ["off" "off" "off"];
+   a10.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a10.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-500 -400 -300 -200 -100 0 100],..
+        ["-500" "-400" "-300" "-200" "-100" "0" "100"]);
+
+   subplot(2,2,3); plot(t_tlexamp, taui_21);                    // JOINT 2
+   xgrid(); xtitle("Inertial Torque 21", "[s]", "[N*m]");
+   a11 = cfh.children(1); a11.data_bounds = [0 -500; 0.6 100];
+   a11.tight_limits = "on"; a11.auto_ticks = ["off" "off" "off"];
+   a11.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a11.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-500 -400 -300 -200 -100 0 100],..
+        ["-500" "-400" "-300" "-200" "-100" "0" "100"]);
+
+   subplot(2,2,4); plot(t_tlexamp, taui_22);
+   xgrid(); xtitle("Inertial Torque 22", "[s]", "[N*m]");
+   a12 = cfh.children(1); a12.data_bounds = [0 -5000; 0.6 5000];
+   a12.tight_limits = "on"; a12.auto_ticks = ["off" "off" "off"];
+   a12.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a12.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-5000 0 5000], ["-5000" "0" "5000"]);
+   drawnow();
+
+   // Coriolis/centripetal torque contributions
+   cfh = scf();
+   drawlater();
+   subplot(2,1,1); plot(t_tlexamp, tauc(:,1));                  // JOINT 1
+   xgrid(); xtitle("Coriolis_12 &amp; Centrif_2", "[s]", "[N*m]");
+   a13 = cfh.children(1); a13.data_bounds = [0 -600; 0.6 1800];
+   a13.tight_limits = "on"; a13.auto_ticks = ["off" "off" "off"];
+   a13.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a13.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-500 0 500 1000 1500], ["-500" "0" "500" "1000" "1500"]);
+
+   subplot(2,1,2); plot(t_tlexamp, tauc(:,2));                  // JOINT 2
+   xgrid(); xtitle("Centrif_1", "[s]", "[N*m]");
+   a14 = cfh.children(1); a14.data_bounds = [0 -600; 0.6 1800];
+   a14.tight_limits = "on"; a14.auto_ticks = ["off" "off" "off"];
+   a14.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a14.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-500 0 500 1000], ["-500" "0" "500" "1000"]);
+   drawnow();
+
+   // gravitational torque contributions
+   cfh = scf();
+   drawlater();
+   subplot(2,1,1); plot(t_tlexamp, taug(:,1));                  // JOINT 1
+   xgrid(); xtitle("Grav. Torque 1", "[s]", "[N*m]");
+   a15 = cfh.children(1); a15.data_bounds = [0 -300; 0.6 850];
+   a15.tight_limits = "on"; a15.auto_ticks = ["off" "off" "off"];
+   a15.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a15.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-200 0 200 400 600 800], ["-200" "0" "200" "400" "600" "800"]);
+
+   subplot(2,1,2); plot(t_tlexamp, taug(:,2));                  // JOINT 2
+   xgrid(); xtitle("Grav. Torque 2", "[s]", "[N*m]");
+   a16 = cfh.children(1); a16.data_bounds = [0 -300; 0.6 850];
+   a16.tight_limits = "on"; a16.auto_ticks = ["off" "off" "off"];
+   a16.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.1 0.2 0.3 0.4 0.5], ["0" "0.1" "0.2" "0.3" "0.4" "0.5"]);
+   a16.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-200 0 200 400 600 800], ["-200" "0" "200" "400" "600" "800"]);
+   drawnow();
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_rne.htm"><tt><b>rt_rne</b></tt></a>,&nbsp;&nbsp;<a href="rt_itorque.htm"><tt><b>rt_itorque</b></tt></a>,&nbsp;&nbsp;<a href="rt_coriolis.htm"><tt><b>rt_coriolis</b></tt></a>,&nbsp;&nbsp;<a href="rt_gravload.htm"><tt><b>rt_gravload</b></tt></a>,&nbsp;&nbsp;<a href="rt_inertia.htm"><tt><b>rt_inertia</b></tt></a>,&nbsp;&nbsp;<a href="rt_cinertia.htm"><tt><b>rt_cinertia</b></tt></a>,&nbsp;&nbsp;<a href="rt_accel.htm"><tt><b>rt_accel</b></tt></a>,&nbsp;&nbsp;<a href="rt_fdyn.htm"><tt><b>rt_fdyn</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    M.W. Walker and D.E. Orin. Efficient dynamic computer simulation of robotic mechanisms. <em>ASME Journal of Dynamic Systems, Measurement and Control</em>, 104:205-211, 1982
+    </p>
+<p>
+        L. Sciavicco, B. Siciliano, <em>Modelling and Control of Robot Manipulators.</em>   2nd Edition,  Springer-Verlag Advanced Textbooks in Control and Signal Processing Series, London, UK, 2000.
+      </p>
+</body>
+</html>

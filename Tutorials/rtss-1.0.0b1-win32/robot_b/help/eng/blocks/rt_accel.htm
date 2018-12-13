@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>rt_accel_if</TITLE>
+</head>
+<body>
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A><UL>
+<li>
+<A HREF="#link1">Library</A><li>
+<A HREF="#link2">Description</A><li>
+<A HREF="#link3">Dialog Box</A><li>
+<A HREF="#link4">Default Properties</A><li>
+<A HREF="#link5">Interfacing Function</A><li>
+<A HREF="#link6">Computational Function (type 4)</A><li>
+<A HREF="#link7">See Also</A><li>
+<A HREF="#link8">Bibliography</A>
+</UL>
+<hr>
+<H2>
+<A NAME="link0"></A>rt_accel_if<br><DIV ALIGN="CENTER"><A><IMG src="../../../scicos/gif_icons/rt_accel_if.gif"></A></DIV>
+</H2>
+<H3><font color="blue"><A NAME="link1">Library</A></font></H3>
+<p>Robotics</p>
+<br><H3><font color="blue"><A NAME="link2">Description</A></font></H3>
+<P>
+This block computes a vector of joint accelerations that result from applying the actuator <tt>torque</tt> to the manipulator <tt>robot</tt> with joint coordinates <tt>q</tt> and velocities <tt>qd</tt>.
+    </P>
+<P>
+The number of inputs to this block is three and all inputs are regular inputs.
+The first input represents the joint state vector <tt>q</tt>.
+The second input is the joint velocity vector <tt>qd</tt>.
+The third input represents the vector <tt>torque</tt> of generalized torques applied to manipulator's end-effector. Each of these vector valued signals must have <tt>n</tt> elements, where <tt>n</tt> is the number of <tt>robot</tt>'s consituent links. 
+    </P>
+<P>
+This block has one regular output, the joint acceleration vector.
+    </P>
+<P>
+The robot model <tt>robot</tt> can be specified as block parameter.
+    </P>
+<br><H3><font color="blue"><A NAME="link3">Dialog Box</A></font></H3>
+<DIV ALIGN="CENTER"><TABLE BORDER="1" BGCOLOR="#FFFFFF" CELLPADDING="8">
+<TR>
+<TD ALIGN="CENTER">Compute robot joint accelerations</TD>
+<TD ALIGN="CENTER"></TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Robot object</TD>
+<TD ALIGN="CENTER">rt_robot()</TD>
+</TR>
+</TABLE></DIV>
+<UL><LI>Robot object : 
+                robot object. It represents the robot model to be simulated. Note that this variable is a symbolic parameter which has to be defined in the context of the Scicos diagram, in order that it can be used.
+                </LI></UL>
+<br><H3><font color="blue"><A NAME="link4">Default Properties</A></font></H3>
+<UL>
+<LI>always active:<b>no</b>
+</LI>
+<LI>direct-feedthrough:<b>yes</b>
+</LI>
+<LI>zero-crossing:<b>no</b>
+</LI>
+<LI>mode:<b>no</b>
+</LI>
+<LI>number/sizes of inputs:<b>3 / [-1,1], [-1,1], [-1,1]</b>
+</LI>
+<LI>number/sizes of activation inputs:<b>0 / </b>
+</LI>
+<LI>number/sizes of outputs:<b>1 / [-1,1]</b>
+</LI>
+<LI>number/sizes of activation outputs:<b>0 / </b>
+</LI>
+<LI>continuous-time state:<b>no</b>
+</LI>
+<LI>discrete-time state:<b>no</b>
+</LI>
+<LI>name of computational function:<b>rtss_scs_accel_cf4</b>
+</LI>
+</UL>
+<br><H3><font color="blue"><A NAME="link5">Interfacing Function</A></font></H3>
+<PRE>&lt;RTSSDIR&gt;/macros/rt_accel_if.sci</PRE>
+<br><H3><font color="blue"><A NAME="link6">Computational Function (type 4)</A></font></H3>
+<PRE>&lt;RTSSDIR&gt;/src/rtss_scs_accel.c</PRE>
+<br><H3><font color="blue"><A NAME="link7">See Also</A></font></H3>
+<p><a href=".htm"><a href="rt_robot.htm"><tt><b>rt_robot_if</b></tt></a></a>,&nbsp;&nbsp;<a href=".htm"><a href="rt_rne.htm"><tt><b>rt_rne_if</b></tt></a></a>,&nbsp;&nbsp;<a href=".htm"><a href="../scifuncs/rt_accel.htm"><tt><b>rt_accel</b></tt></a></a>,&nbsp;&nbsp;</p>
+<br><H3><font color="blue"><A NAME="link8">Bibliography</A></font></H3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<br><HR>
+<author><i>Matteo Morelli - Interdepartmental Research Center "E. Piaggio", University of Pisa,    </i><i>September 2009</i></author>
+</body>
+</html>

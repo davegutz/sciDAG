@@ -1,0 +1,166 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_jtraj</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_jtraj</b> -   compute a joint space trajectory between two joint coordinates poses</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>[q [, qd [, qdd]]] = rt_jtraj(q0, q1, n [, qd0, qd1])</tt></dd>
+<dd><tt>[q [, qd [, qdd]]] = rt_jtraj(q0, q1, t [, qd0, qd1])</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>q0</b></tt>
+       : p-element vector (p is arbitrary). A first joint coordinate configuration.
+       </li>
+<li>
+<tt><b>q1</b></tt>
+       : p-element vector. A second joint coordinate pose.
+       </li>
+<li>
+<tt><b>n</b></tt>
+       : scalar. The number of intermediate configurations between the given two poses <tt><b>q0</b></tt> and <tt><b>q1</b></tt>.
+       </li>
+<li>
+<tt><b>t</b></tt>
+       : n-element vector (n is arbitrary). Time vector.
+       </li>
+<li>
+<tt><b>qd0</b></tt>
+       : p-element vector. Initial joint velocity vector.
+       </li>
+<li>
+<tt><b>qd1</b></tt>
+       : p-element vector. Final joint velocity vector.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : n-by-p matrix. The joint space trajectory between the given two poses <tt><b>q0</b></tt> and <tt><b>q1</b></tt>. This matrix has one row per time step and one column per joint.
+       </li>
+<li>
+<tt><b>qd</b></tt>
+       : n-by-p matrix. The joint velocity trajectory. This matrix has one row per time step and one column per joint.
+       </li>
+<li>
+<tt><b>qdd</b></tt>
+       : n-by-p matrix. The joint acceleration trajectory. This matrix has one row per time step and one column per joint.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function returns a joint space trajectory <tt><b>q</b></tt> from joint coordinates <tt><b>q0</b></tt> to <tt><b>q1</b></tt>. The number of points is <tt><b>n</b></tt> or the length of the given time vector <tt><b>t</b></tt>. A 7th order polynomial is used with default zero boundary conditions for velocity and acceleration.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Non-zero boundary velocities can be optionally specified as <tt><b>qd0</b></tt> and <tt><b>qd1</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The trajectory is a matrix with one row per time step and one column per joint. The function can optionally return a velocity and acceleration trajectories as <tt><b>qd</b></tt> and <tt><b>qdd</b></tt> respectively.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // Consider the example of a path which will move the Puma robot from its
+   // zero-angle pose to the "ready" pose.
+   // load Puma 560 parameters
+   exec &lt;PATH&gt;/models/rt_puma560.sce;
+
+   // create a time vector: motion in 2s with a sample time of 56ms
+   t = [0:0.056:2];
+
+   // compute a joint space trajectory: initial and final velocities are
+   // zero
+   q = rt_jtraj(qz, qready, t);
+
+   // For this particular trajectory most of the motion is done by joints 2
+   // and 3, and this can be conveniently plotted using standard Scilab
+   // plotting commands
+   cfh = scf();
+   drawlater();
+   subplot(2,1,1); plot(t, q(:,2));                             // JOINT 2
+   xgrid(); xtitle("", "Time (s)", "Joint 2 (rad)");
+   a0 = cfh.children(1); a0.data_bounds = [0 0; t($) 2];
+   a0.tight_limits = "on"; a0.auto_ticks = ["off" "off" "off"];
+   a0.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8],..
+        ["0" "0.2" "0.4" "0.6" "0.8" "1" "1.2" "1.4" "1.6" "1.8"]);
+   a0.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.5 1 1.5 2], ["0" "0.5" "1" "1.5" "2"]);
+
+   subplot(2,1,2); plot(t, q(:,3));                             // JOINT 3
+   xgrid(); xtitle("", "Time (s)", "Joint 3 (rad)");
+   a1 = cfh.children(1); a1.data_bounds = [0 -2; t($) 0];
+   a1.tight_limits = "on"; a1.auto_ticks = ["off" "off" "off"];
+   a1.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8],..
+        ["0" "0.2" "0.4" "0.6" "0.8" "1" "1.2" "1.4" "1.6" "1.8"]);
+   a1.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 -0.5 -1 -1.5 -2], ["0" "-0.5" "-1" "-1.5" "-2"]);
+   drawnow();
+
+   // or even creating an animation of the Puma movement
+   cfh = scf(); a2 = cfh.children;
+   a2.tight_limits = "on"; a2.rotation_angles = [74, -30];
+   rt_plot(p560, q);                                            // ANIMATION
+
+   // We can also look at the velocity and acceleration profiles. We could
+   // differentiate the angle trajectory using diff() but more accurate
+   // results can be obtained by requesting that rt_jtraj() return angular
+   // velocity and acceleration as follows
+   [q, qd, qdd] = rt_jtraj(qz, qready, t);
+
+   // plot acceleration profiles
+   cfh = scf();
+   drawlater();
+   subplot(2,1,1); plot(t, qdd(:,2));                           // ACCEL J2
+   xgrid(); xtitle("", "Time (s)", "Joint 2 accel (rad/s^2)");
+   a3 = cfh.children(1); a3.data_bounds = [0 -3; t($) 3];
+   a3.tight_limits = "on"; a3.auto_ticks = ["off" "off" "off"];
+   a3.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8],..
+        ["0" "0.2" "0.4" "0.6" "0.8" "1" "1.2" "1.4" "1.6" "1.8"]);
+   a3.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-3 -2 -1 0 1 2 3], ["-3" "-2" "-1" "0" "1" "2" "3"]);
+
+   subplot(2,1,2); plot(t, qdd(:,3));                           // ACCEL J3
+   xgrid(); xtitle("", "Time (s)", "Joint 3 accel (rad/s^2)");
+   a4 = cfh.children(1); a4.data_bounds = [0 -3; t($) 3];
+   a4.tight_limits = "on"; a4.auto_ticks = ["off" "off" "off"];
+   a4.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8],..
+        ["0" "0.2" "0.4" "0.6" "0.8" "1" "1.2" "1.4" "1.6" "1.8"]);
+   a4.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-3 -2 -1 0 1 2 3], ["-3" "-2" "-1" "0" "1" "2" "3"]);
+   drawnow();
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_ctraj.htm"><tt><b>rt_ctraj</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

@@ -41,10 +41,10 @@ function [n_tokens, %tokens, ctokens] = tokenize(target, delims)
     ieee(1);
 
     // Do it
-    if isempty(delims)then
+    if isempty(delims) then
         places = [];
     else
-         places = tokenpos(target, delims);
+        places = tokenpos(target, delims);
     end
     [n_tokens, dummy] = size(places);
     for i_token = 1:n_tokens
@@ -56,13 +56,12 @@ function [n_tokens, %tokens, ctokens] = tokenize(target, delims)
         ctokens(i_token) = part(target, places(i_token,2)+1:places(i_token+1,1)-1);
     end
 
-
     if  places(1,1)>=1 then
         ctokens = [part(target, 1:places(1,1)-1); ctokens];
     else
         ctokens = [''; ctokens];
     end
-    if  places(n_tokens,2)+1<=length(target) then
+    if n_tokens>0 & places(n_tokens,2)+1<=length(target) then
         ctokens = [ctokens; part(target, places(n_tokens,2)+1:length(target))];
     else
         ctokens = [ctokens; ''];

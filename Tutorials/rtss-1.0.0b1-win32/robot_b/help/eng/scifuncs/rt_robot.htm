@@ -1,0 +1,635 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_robot</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 16/09/2009</div>
+<p><b>rt_robot</b> -   construct/clone a robot object</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>r = rt_robot()</tt></dd>
+<dd><tt>r = rt_robot(L [, name [, manuf [, comment]]])</tt></dd>
+<dd><tt>r = rt_robot(DH [, name [, manuf [, comment]]])</tt></dd>
+<dd><tt>r = rt_robot(DYN [, name [, manuf [, comment]]])</tt></dd>
+<dd><tt>r2 = rt_robot(r [, L])</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>L</b></tt>
+       : n-element list of link objects (n is arbitrary). Each element of this list contains kinematic and dynamic parameters, as well as actuator and transmission parameters, for the corresponding constituent link of the robot model.
+       </li>
+<li>
+<tt><b>name</b></tt>
+       : string. The robot's name. Note that <tt><b>robot/rt_plot</b></tt> uses the robot's name as unique tag to identify each existing robot object, therefore is highly recommended that different robots have different names.
+       </li>
+<li>
+<tt><b>manuf</b></tt>
+       : string. The robot's manufacturer.
+       </li>
+<li>
+<tt><b>comment</b></tt>
+       : string. Additional annotation.
+       </li>
+<li>
+<tt><b>DH</b></tt>
+       : n-by-5 matrix. The legacy DH matrix, that is, the matricial representation of manipulator kinematics (see below).
+       </li>
+<li>
+<tt><b>DYN</b></tt>
+       : n-by-20 matrix. The legacy DYN matrix, that is, the matricial representation of manipulator kinematics and dynamics (see below).
+       </li>
+<li>
+<tt><b>r</b></tt>
+       : robot object. The robot object created. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+<li>
+<tt><b>r2</b></tt>
+       : robot object. A copy of the robot <tt><b>r</b></tt>. Note that <tt><b>r</b></tt> and <tt><b>r2</b></tt> are distinct variables, therefore a change in one won't affect the other.
+       </li>
+</ul>
+<h3><font color="blue">The Legacy DH Matrix</font></h3>
+<dl>
+<dd>
+<b></b><p>
+    A DH matrix describes the kinematics of a manipulator in a general way using the standard Denavit and Hartenberg conventions. Each row represents one link of the manipulator and the columns are assigned according to the following table.
+        <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>Column</td>
+<td>Symbol</td>
+<td>Description</td>
+</tr>
+<tr align="center">
+<td>1</td>
+<td><tt>alpha</tt></td>
+<td>link twist angle</td>
+</tr>
+<tr align="center">
+<td>2</td>
+<td><tt>A</tt></td>
+<td>link length</td>
+</tr>
+<tr align="center">
+<td>3</td>
+<td><tt>theta</tt></td>
+<td>link rotation angle</td>
+</tr>
+<tr align="center">
+<td>4</td>
+<td><tt>D</tt></td>
+<td>link offset distance</td>
+</tr>
+<tr align="center">
+<td>5</td>
+<td><tt>sigma</tt></td>
+<td>joint type: 0 for revolute, non-zero for prismatic</td>
+</tr>
+</table></center></p>
+</dd>
+<dd>
+<b></b><p>
+    The last column is optional. If it is not given then toolbox functions assume that the manipulator is all-revolute. Hence really n-by-5 is the high dimension of the DH matrix. For a n-axis manipulator DH can be an n-by-4 or a n-by-5 matrix.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+    Lengths <tt>A</tt> and <tt>D</tt> may be expressed in any unit, and this choice will flow on to the units in which homogeneous transforms and Jacobians are represented. All angles are in radians.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">The Legacy DYN Matrix</font></h3>
+<dl>
+<dd>
+<b></b><p>
+    A DYN matrix describes the kinematics and dynamics of a manipulator in a general way using the standard Denavit and Hartenberg conventions. Each row represents one link of the manipulator and the columns are assigned according to the following table.
+        <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>Column</td>
+<td>Symbol</td>
+<td>Description</td>
+</tr>
+<tr align="center">
+<td>1</td>
+<td><tt>alpha</tt></td>
+<td>link twist angle</td>
+</tr>
+<tr align="center">
+<td>2</td>
+<td><tt>A</tt></td>
+<td>link length</td>
+</tr>
+<tr align="center">
+<td>3</td>
+<td><tt>theta</tt></td>
+<td>link rotation angle</td>
+</tr>
+<tr align="center">
+<td>4</td>
+<td><tt>D</tt></td>
+<td>link offset distance</td>
+</tr>
+<tr align="center">
+<td>5</td>
+<td><tt>sigma</tt></td>
+<td>joint type: 0 for revolute, non-zero for prismatic</td>
+</tr>
+<tr align="center">
+<td>6</td>
+<td><tt>mass</tt></td>
+<td>mass of the link</td>
+</tr>
+<tr align="center">
+<td>7</td>
+<td><tt>rx</tt></td>
+<td>link COG with respect to the link coordinate frame</td>
+</tr>
+<tr align="center">
+<td>8</td>
+<td><tt>ry</tt></td>
+<td></td>
+</tr>
+<tr align="center">
+<td>9</td>
+<td><tt>rz</tt></td>
+<td></td>
+</tr>
+<tr align="center">
+<td>10</td>
+<td><tt>Ixx</tt></td>
+<td>elements of the link inertia tensor about the link COG</td>
+</tr>
+<tr align="center">
+<td>11</td>
+<td><tt>Iyy</tt></td>
+<td></td>
+</tr>
+<tr align="center">
+<td>12</td>
+<td><tt>Izz</tt></td>
+<td></td>
+</tr>
+<tr align="center">
+<td>13</td>
+<td><tt>Ixy</tt></td>
+<td></td>
+</tr>
+<tr align="center">
+<td>14</td>
+<td><tt>Iyz</tt></td>
+<td></td>
+</tr>
+<tr align="center">
+<td>15</td>
+<td><tt>Ixz</tt></td>
+<td></td>
+</tr>
+<tr align="center">
+<td>16</td>
+<td><tt>Jm</tt></td>
+<td>armature inertia</td>
+</tr>
+<tr align="center">
+<td>17</td>
+<td><tt>G</tt></td>
+<td>reduction gear ratio: joint speed/link speed</td>
+</tr>
+<tr align="center">
+<td>18</td>
+<td><tt>B</tt></td>
+<td>viscous friction, motor referred</td>
+</tr>
+<tr align="center">
+<td>19</td>
+<td><tt>Tc+</tt></td>
+<td>Coulomb friction (positive rotation), motor referred</td>
+</tr>
+<tr align="center">
+<td>20</td>
+<td><tt>Tc-</tt></td>
+<td>Coulomb friction (negative rotation), motor referred</td>
+</tr>
+</table></center></p>
+</dd>
+<dd>
+<b></b><p>
+    Columns 17, 18 and 19 (and 20 which is related to column 19) are optional. If they are not given then toolbox functions assume the following default values:
+     <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>Symbol</td>
+<td>Value</td>
+</tr>
+<tr align="center">
+<td><tt>G</tt></td>
+<td>1</td>
+</tr>
+<tr align="center">
+<td><tt>B</tt></td>
+<td>0.0</td>
+</tr>
+<tr align="center">
+<td>[<tt>Tc+</tt>, <tt>Tc-</tt>]</td>
+<td>[0, 0]</td>
+</tr>
+</table></center>
+    Hence really n-by-20 is the high dimension of the DYN matrix.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+    The first 5 columns of a DYN matrix contain the kinematic parameters and may be used anywhere that a DH kinematic matrix is required (the dynamic data is ignored).
+     </p>
+</dd>
+<dd>
+<b></b><p>
+    All angles are in radians. The choice of all other units is up to the user, and this choice will flow on to the units in which homogeneous transforms, Jacobians inertias and torques are represented.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      The <tt><b>rt_robot</b></tt> function is the constructor for a robot object. The robot object has type <tt><b>robot</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The first form returns a default robot.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The second form creates a robot from a Scilab <tt><b>list</b></tt> of robot objects which define the robot's kinematics and optionally dynamics.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The third and the fourth forms create a robot object from legacy DH and DYN format matrices.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The fifth form is the copy constructor for the robot object and returns a new robot object with the same value as its argument. If the optional argument <tt><b>L</b></tt> is provided, then its lenght must equal the number of constituent links of the robot <tt><b>r</b></tt> which you are attempting to clone.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The last three forms all accept optional trailing string arguments which are taken in order as being robot name, manufacturer and comment.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Since Scilab does not support the concept of public class, variables methods have been written to allow robot object parameters to be referenced (r) or assigned (a) as given by the following table:
+      <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>Method</td>
+<td>Operation</td>
+<td>Returns</td>
+<td>Type</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.n</td>
+<td>r</td>
+<td>number of joints</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.links</td>
+<td>r + a</td>
+<td>constituent links</td>
+<td>list of link objects</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.name</td>
+<td>r + a</td>
+<td>robot name</td>
+<td>string</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.manuf</td>
+<td>r + a</td>
+<td>robot manufacturer</td>
+<td>string</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.comment</td>
+<td>r + a</td>
+<td>general comment</td>
+<td>string</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.gravity</td>
+<td>r + a</td>
+<td>vector defining gravity direction</td>
+<td>3-element column vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.mdh</td>
+<td>r</td>
+<td>DH convention: 0 if standard, 1 if modified. Determined from the constituent links</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.mdh</td>
+<td>a</td>
+<td>DH convention: 0 if standard, 1 if modified. Set all mdh values in the constituent links</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.base</td>
+<td>r + a</td>
+<td>homogeneous transform defining base of robot</td>
+<td>4-by-4 matrix</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.tool</td>
+<td>r + a</td>
+<td>homogeneous transform defining base of robot</td>
+<td>4-by-4 matrix</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.dh</td>
+<td>r</td>
+<td>legacy DH matrix</td>
+<td>n-by-5 matrix</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.dyn</td>
+<td>r</td>
+<td>legacy DYN matrix</td>
+<td>n-by-20 matrix</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.q</td>
+<td>r + a</td>
+<td>joint coordinates</td>
+<td>n-element column vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.qlim</td>
+<td>r + a</td>
+<td>joint coordinate limits</td>
+<td>n-by-2 matrix</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.islimit</td>
+<td>r</td>
+<td>joint limit vector, for each joint set to -1, 0 or 1 depending if below low limit, OK or greater than upper limit</td>
+<td>n-element column vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.offset</td>
+<td>r + a</td>
+<td>joint coordinate offsets</td>
+<td>n-element column vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.plotopt</td>
+<td>r + a</td>
+<td>options for <tt><b>robot/rt_plot</b></tt>
+</td>
+<td>list of valid options for robot plotting (see <tt><b>robot/rt_plot</b></tt>)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.lineopt</td>
+<td>r + a</td>
+<td>line style for robot graphical links</td>
+<td>2-element list: string (valid Scilab color) and scalar (positive integer for line thickness property)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.shadowopt</td>
+<td>r + a</td>
+<td>line style for robot shadow links</td>
+<td>2-element list: string (valid Scilab color) and scalar (positive integer for line thickness property)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.handle</td>
+<td>r + a</td>
+<td>graphics handles</td>
+<td>structure</td>
+</tr>
+</table></center></p>
+</dd>
+<dd>
+<b></b><p>
+      The following are default values for parameters of a generic n-axis robot:
+      <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>Method</td>
+<td>Value</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.name</td>
+<td>"noname"</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.manuf</td>
+<td>""</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.comment</td>
+<td>""</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.gravity</td>
+<td>[0; 0; 9.81]</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.offset</td>
+<td>zeros(n, 1)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.base</td>
+<td>eye(4, 4)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.tool</td>
+<td>eye(4, 4)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.lineopt</td>
+<td>list("black", 4)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>robot</b></tt>.shadowopt</td>
+<td>list("black", 1)</td>
+</tr>
+</table></center></p>
+</dd>
+<dd>
+<b></b><p>
+      Some of these operations at the robot level are actually wrappers around similarly named link object functions: <tt>offset</tt>, <tt>qlim</tt> and <tt>islimit</tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The offset vector is added to the user specified joint angles before any kinematic or dynamic function is invoked (it is actually implemented whitin the link object). Similarly it is subtracted after an operation such as inverse kinematics. The need for a joint offset vector arises because of the constraints of the Denavit-Hartenberg (or modified Denavit-Hartenberg) notation. The pose of the robot with zero joint angles is frequently some rather unusual (or even unachievable) pose. The joint coordinate offset provides a means to make an arbitrary pose correspond to the zero joint angle case.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Overloaded Operators and Functions</font></h3>
+<dl>
+<dd>
+<b></b><p>
+    In Scilab variable display and operators may be defined for new objects using Scilab-coded functions. The following is a list of all overloaded operators for the new Scilab object, the robot:
+     <dl><dd><li>
+<tt>r1 * r2</tt>: returns a robot which is the series connection of the multiplicands. Tool transform of all but the last robot are ignored, base transform of all but the first robot are ignored.</li></dd></dl></p>
+</dd>
+<dd>
+<b></b><p>
+    In Scilab some basic primitive functions may be overloaded for new data types. The following is a list of all overloaded functions for the new Scilab object, the robot:
+     <dl><dd>
+<li>
+<tt>disp(r)</tt>: gives a multi-line summary of the robot's kinematic parameters</li>
+<li>
+<tt>rt_plot(r [, &lt;arguments&gt;])</tt>: creates a graphical animation for the robot</li>
+</dd></dl></p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // create a default robot model
+   rdef = rt_robot(),
+
+   // create a robot from a list of links:
+   // Puma 560 standard (kinematic data only)
+   L = list();
+   L(1) = rt_link([%pi/2 0 0 0 0], "standard");
+   L(2) = rt_link([0 0.4318 0 0 0], "standard");
+   L(3) = rt_link([-%pi/2 0.0203 0 0.15005 0], "standard");
+   L(4) = rt_link([%pi/2 0 0 0.4318 0], "standard");
+   L(5) = rt_link([-%pi/2 0 0 0 0], "standard");
+   L(6) = rt_link([0 0 0 0 0], "standard");
+   p560_kinem = rt_robot(L, "P560 (K)", "Unimation", "Kinematic data only");
+   clear L;
+   disp(p560_kinem);
+   // modified (AKB) Puma 560 (kinematic data, link masses and COGs)
+   L = list();
+   L(1) = rt_link([0, 0, 0, 0, 0], "mod");
+   L(2) = rt_link([-%pi/2, 0, 0, 0.2435, 0], "mod");
+   L(3) = rt_link([0, 0.4318, 0, -0.0934, 0], "mod");
+   L(4) = rt_link([%pi/2, -0.0203, 0, 0.4331, 0], "mod");
+   L(5) = rt_link([-%pi/2, 0, 0, 0, 0], "mod");
+   L(6) = rt_link([%pi/2, 0, 0, 0, 0], "mod");
+   L(1).m = 0;
+   L(2).m = 17.4;
+   L(3).m = 4.8;
+   L(4).m = 0.82;
+   L(5).m = 0.34;
+   L(6).m = 0.09;
+   L(1).r = [0, 0, 0];
+   L(2).r = [0.068, 0.006, -0.016];
+   L(3).r = [0, -0.070, 0.014];
+   L(4).r = [0, 0, -0.019];
+   L(5).r = [0, 0, 0];
+   L(6).r = [0, 0, 0.032];
+   p560m_kmr = rt_robot(L, "P560M (K&amp;D)", "Unimation"),
+   clear L;
+
+   // create a robot (planar RR) from a legacy DH matrix
+   rrplan_dh = [0, 1, 0, 0;..           // alpha, a, theta, d
+                0, 1, 0, 0;],           // sigma not given =&gt; all-revolute
+   rrplan = rt_robot(rrplan_dh, "Simple RR Planar", "", "from legacy DH"),
+
+   // create a robot (Stanford Arm) from a legacy DYN matrix
+   alpha = [-%pi/2; %pi/2; 0; -%pi/2; %pi/2; 0],    // kinematic parameters
+   A = [0; 0; 0; 0; 0; 0],
+   theta = [0; 0; -%pi/2; 0; 0; 0],
+   D = [0.412; 0.154; 0; 0; 0; 0.263],
+   sigma = [0; 0; 1; 0; 0; 0],          // Joint 3 is prismatic, therefore
+                                        // sigma has to be given
+
+   m = [9.29; 5.01; 4.25; 1.08; 0.63; 0.51],        // dynamic parameters
+   rx = [0; 0; 0; 0; 0; 0],
+   ry = [0.0175; -1.054; 0; 0.092; 0; 0],
+   rz = [-0.1105; 0; -6.447; -0.054; 0.566; 1.554],
+   Ixx = [0.276; 0.108; 2.51; 0.002; 0.003; 0.013],
+   Iyy = [0.255; 0.018; 2.51; 0.001; 0.003; 0.013],
+   Izz = [0.071; 0.100; 0.006; 0.001; 0.0004; 0.0003],
+   Ixy = [0; 0; 0; 0; 0; 0],
+   Iyz = [0; 0; 0; 0; 0; 0],
+   Ixz = [0; 0; 0; 0; 0; 0],
+   Jm = [0.953; 2.193; 0.782; 0.106; 0.097; 0.020],
+   G = [1; 1; 1; 1; 1; 1],
+
+   stanford_dyn = [..                               // legacy DYN matrix
+   alpha, A, theta, D, sigma, m, rx, ry, rz, Ixx, Iyy, Izz, Ixy, Iyz, Ixz, Jm, G];
+   stanf = rt_robot(stanford_dyn, "Stanford Arm"),  // B and Tc are not given
+
+   // clone a robot
+   stanf_copy = rt_robot(stanf);        // stanf and stanf_copy are distinct
+   stanf_copy.name = "Stanford Copy";
+   disp(stanf);                         // the two names are different
+   disp(stanf_copy);
+   stanf_copy2 = stanf;                 // As of version 1.0.0, there is no more
+                                        // any difference in copying objects by
+                                        // using their copy constructor compared
+                                        // to using the variable assignment
+                                        // operator (=)
+   stanf_copy2.name = "Stanf.Copy (2)";
+   disp(stanf);                         // stanf and stanf_copy2 are distinct and
+   disp(stanf_copy2);                   // the two names are different
+
+   // some other reference or assignment operations
+   p560.mdh,                                    // refer mdh
+   p560.mdh = 1,                                // assign mdh
+   p560.qlim = [-2.2*ones(6,1), 2.2*ones(6,1)]; // assign joint limits
+   q = 2*%pi*rand(6,1) - %pi,
+   p560.islimit(q),                             // test joint state vector
+   rt_showlink(p560);                           // show detailed robot data
+
+
+   // Get the type of a robot object
+   typeof(stanf) == "robot",            // returns %T (true)
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_link.htm"><tt><b>rt_link</b></tt></a>,&nbsp;&nbsp;<a href="rt_showlink.htm"><tt><b>rt_showlink</b></tt></a>,&nbsp;&nbsp;<a href="rt_plot-robot.htm"><tt><b>robot/rt_plot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

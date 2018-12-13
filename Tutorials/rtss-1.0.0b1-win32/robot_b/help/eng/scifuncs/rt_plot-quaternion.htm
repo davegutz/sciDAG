@@ -1,0 +1,90 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>quaternion/rt_plot</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>quaternion/rt_plot</b> -   display a quaternion as a 3D rotation</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>rt_plot(Q [, &lt;args&gt;])</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>Q</b></tt>
+       : quaternion object. It describes a 3D rotation.
+       </li>
+<li>
+<tt><b>&lt;args&gt;</b></tt>
+       : a comma separated sequence of strings. These are interpreted as options for plotting and the allowed values are:
+        <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>string</td>
+<td>optional value (string)</td>
+<td>meaning</td>
+</tr>
+<tr align="center">
+<td>"X"</td>
+<td>color1</td>
+<td>control display of X-axis color. Default color is "black"</td>
+</tr>
+<tr align="center">
+<td>"Y"</td>
+<td>color2</td>
+<td>control display of Y-axis color. Default color is "black"</td>
+</tr>
+<tr align="center">
+<td>"Z"</td>
+<td>color3</td>
+<td>control display of Z-axis color. Default color is "black"</td>
+</tr>
+</table></center>
+</li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p><tt><b>rt_plot</b></tt> is overloaded for quaternion objects and displays a 3D plot which shows how the standard axes are transformed under the rotation descibed by <tt><b>Q</b></tt>.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // This example shows how rt_plot() can be used to shows how the standard
+   // axes are transformed after a rotation of 0.3radians about the Z-axis.
+
+   // A rotation of 0.3radians about the Z-axis
+   T = rt_rotz(0.3),
+
+   // Create a new graphic window and set a point of view
+   h0 = scf(0); a0 = h0.children;
+   a0.tight_limits = "on"; a0.rotation_angles = [68, 40];
+
+   // Plot the Scilab-World coordinate frame.
+   // X, Y, and Z axes are in black (default color).
+   rt_plot(rt_quaternion(eye(3,3)));
+
+   // Plot the coordinate frame after the rotation.
+   // The Z-axis is in red whereas the X and the Y axes are in blue.
+   // Clearly the Z-axis is invariant under this rotation.
+   rt_plot(rt_quaternion(T), "X", "blue", "Y", "blue", "Z", "red");
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_quaternion.htm"><tt><b>rt_quaternion</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

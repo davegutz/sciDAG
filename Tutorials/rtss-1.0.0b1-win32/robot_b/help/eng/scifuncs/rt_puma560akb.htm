@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_puma560akb</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Script  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_puma560akb</b> -   create a Puma 560 robot object using the Armstrong, Khatib and Burdick kinematic notation</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>exec &lt;PATH&gt;/models/rt_puma560akb.sce;</tt></dd></dl>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+     This Scilab script creates the robot object <tt>p560m</tt> which describes the kinematic and dynamic characteristics of a Unimation Puma 560 manipulator. It uses Craig's modified Denavit-Hartenberg notation with the particular kinematic conventions from Armstrong, Khatib and Burdick. All quantities are in standard SI units.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+     Also defines the joint coordinate vectors <tt>qz</tt>, <tt>qready</tt> and <tt>qstretch</tt> corresponding to the zero-angle, ready and fully extended (in X-direction) poses respectively.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // load Puma 560 parameters
+   exec &lt;PATH&gt;/models/rt_puma560akb.sce;
+   disp(p560m);                                 // display the robot
+
+   // show it at qz, qready and qstretch poses
+   h0 = scf(0); a0 = h0.children;
+   a0.tight_limits = "on"; a0.rotation_angles = [73, -50];
+
+   disp(qz);                                    // QZ
+   disp(rt_fkine(p560m, qz));
+   rt_plot(p560m, qz);
+
+   disp(qready);                                // QREADY
+   disp(rt_fkine(p560m, qready));
+   rt_plot(p560m, qready);
+
+   disp(qstretch);                              // QSTRETCH
+   disp(rt_fkine(p560m, qstretch));
+   rt_plot(p560m, qstretch);
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_puma560.htm"><tt><b>rt_puma560</b></tt></a>,&nbsp;&nbsp;<a href="rt_stanford.htm"><tt><b>rt_stanford</b></tt></a>,&nbsp;&nbsp;<a href="rt_twolink.htm"><tt><b>rt_twolink</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    B. Armstrong, O. Khatib and J. Burdick. "The explicit dynamic model and inertial parameters of the Puma 560 arm." in <em>Proc. IEEE Int. Conf. Robotics and Automation</em>, vol. 1, (Washington, USA), pp. 510-18, 1986.
+    </p>
+</body>
+</html>

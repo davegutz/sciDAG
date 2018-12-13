@@ -1,0 +1,64 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_stanford</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Script  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_stanford</b> -   create a Stanford manipulator robot object</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>exec &lt;PATH&gt;/models/rt_stanford.sce;</tt></dd></dl>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+     This Scilab script creates the robot object <tt>stanf</tt> which describes the kinematic and dynamic characteristics of a Stanford manipulator. Specifies armature inertia and gear ratios. All quantities are in standard SI units.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+     Also defines the joint coordinate vectors <tt>qz</tt> corresponding to the zero-angle pose.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // load Puma 560 parameters
+   exec &lt;PATH&gt;/models/rt_stanford.sce;
+   disp(stanf);                                 // display the robot
+
+   // show it at qz pose
+   h0 = scf(0); a0 = h0.children;
+   a0.tight_limits = "on"; a0.rotation_angles = [73, -50];
+
+   disp(qz);                                    // QZ
+   disp(rt_fkine(stanf, qz));
+   rt_plot(stanf, qz);
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_puma560.htm"><tt><b>rt_puma560</b></tt></a>,&nbsp;&nbsp;<a href="rt_puma560akb.htm"><tt><b>rt_puma560akb</b></tt></a>,&nbsp;&nbsp;<a href="rt_twolink.htm"><tt><b>rt_twolink</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+<p>
+    R.P. Paul. "Modeling, trajectory calculation and servoing of a computer controlled arm", Tech. Rep. AIM-177, Stanford University, Artificial Intelligence Laboratory, 1972.
+    </p>
+</body>
+</html>

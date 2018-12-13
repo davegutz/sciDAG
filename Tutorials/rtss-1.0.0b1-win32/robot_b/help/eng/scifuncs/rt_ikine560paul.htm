@@ -1,0 +1,233 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_ikine560paul</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 15/09/2009</div>
+<p><b>rt_ikine560paul</b> -   compute all solutions for the inverse kinematics of a Puma 560 like robot arm using the Paul's algebraic method</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>Q = rt_ikine560paul(robot, T06)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the kinematics and dynamics for a Puma 560 like robot, that is for a robot with 6 revolute arms and a spherical wrist. In particular, the <tt><b>robot</b></tt>'s standard Denavit-Hartenberg kinematic parameters have to be as follows:
+        <center><table border="1" cellpadding="8">
+<tr align="center">
+<td></td>
+<td>alpha</td>
+<td>A</td>
+<td>theta</td>
+<td>D</td>
+<td>joint type</td>
+</tr>
+<tr align="center">
+<td>link 1</td>
+<td>%pi/2</td>
+<td>0</td>
+<td>arbitrary</td>
+<td>0</td>
+<td>R</td>
+</tr>
+<tr align="center">
+<td>link 2</td>
+<td>0</td>
+<td>not 0</td>
+<td>arbitrary</td>
+<td>0</td>
+<td>R</td>
+</tr>
+<tr align="center">
+<td>link 3</td>
+<td>+ or - %pi/2</td>
+<td>arbitrary</td>
+<td>arbitrary</td>
+<td>arbitrary</td>
+<td>R</td>
+</tr>
+<tr align="center">
+<td>link 4</td>
+<td>+ or - %pi/2</td>
+<td>0</td>
+<td>arbitrary</td>
+<td>not 0</td>
+<td>R</td>
+</tr>
+<tr align="center">
+<td>link 5</td>
+<td>+ or - %pi/2</td>
+<td>0</td>
+<td>arbitrary</td>
+<td>0</td>
+<td>R</td>
+</tr>
+<tr align="center">
+<td>link 6</td>
+<td>0</td>
+<td>0</td>
+<td>arbitrary</td>
+<td>arbitrary</td>
+<td>R</td>
+</tr>
+</table></center>
+</li>
+<li>
+<tt><b>T06</b></tt>
+       : 4-by-4 matrix. It represents the location of the <tt><b>robot</b></tt> end-effector expressed with respect to the World coordinate frame, i.e. <tt><b>x = [1, 0, 0]</b></tt>, <tt><b>y = [0, 1, 0]</b></tt> and <tt><b>z = [0, 0, 1]</b></tt>.
+       </li>
+<li>
+<tt><b>Q</b></tt>
+       : 4-by-6 matrix. This matrix is formed by appropriately stacking of all the 4 joint configurations which move the <tt><b>robot</b></tt> end-effector to the given position and orientation described by <tt><b>T06</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function returns all the 4 joint coordinates corresponding to the end-effector homogeneous transform <tt><b>T06</b></tt>. The <tt><b>robot</b></tt>'s base can be arbitrarily specified within the robot object. Joint coordinates are computed using the symbolic solution of algebraic method described by Paul for Puma 560 like robots, that is all revolute 6DOF arms with a sperichal wrist. The use of a symbolic solution means that it executes over XX times faster than rt_ikine() for a Puma 560 solution.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      A further advantage is that rt_ikine560paul() can identify singular configurations which lead to infinitely many solutions for the inverse kinematics problem and it informs the user about them displaying a warning.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // To show how the IKP (Inverse Kinematic Problem) for a Puma 560 can
+   // be solved, the following code could be used.
+
+   // load Puma 560 parameters
+   exec &lt;PATH&gt;/models/rt_puma560.sce;
+
+   // end-effector location for a generic joint state vector
+   q = [0.2, -1.35, 0.65, 0, 1.4, 2.55],
+   T06 = rt_fkine(p560, q),
+
+   // solve the IKP
+   Q = rt_ikine560paul(p560, T06),
+
+   // test solutions
+   T06 - rt_fkine(p560, Q(1,:)),
+   T06 - rt_fkine(p560, Q(2,:)),
+   T06 - rt_fkine(p560, Q(3,:)),
+   T06 - rt_fkine(p560, Q(4,:)),
+
+   // plot solutions
+   p560_1 = rt_robot(p560); p560_1.name = "Puma 560 (1)";   // robot copy
+   p560_2 = rt_robot(p560); p560_2.name = "Puma 560 (2)";   // robot copy
+   p560_3 = rt_robot(p560); p560_3.name = "Puma 560 (3)";   // robot copy
+   p560_4 = rt_robot(p560); p560_4.name = "Puma 560 (4)";   // robot copy
+   h0 = scf(0); a0 = h0.children;
+   a0.tight_limits = "on"; a0.rotation_angles = [73, -38];
+   h1 = scf(1); a1 = h1.children;
+   a1.tight_limits = "on"; a1.rotation_angles = [73, -38];
+   h2 = scf(2); a2 = h2.children;
+   a2.tight_limits = "on"; a2.rotation_angles = [73, -38];
+   h3 = scf(3); a3 = h3.children;
+   a3.tight_limits = "on"; a3.rotation_angles = [73, -38];
+
+   scf(0); rt_plot(p560_1, Q(1,:));         // ELBOW DOWN, SHOULDER FORE
+   scf(1); rt_plot(p560_2, Q(2,:));         // ELBOW UP, SHOULDER FORE
+   scf(2); rt_plot(p560_3, Q(4,:));         // ELBOW DOWN, SHOULDER AFT
+   scf(3); rt_plot(p560_4, Q(3,:));         // ELBOW UP, SHOULDER AFT
+
+   // solve the IKP for a Puma 560 with a modified base frame config.
+   p560_1.base = rt_transl(0.5, 0, 0);      // modify p560_1 base
+   T06 = rt_fkine(p560_1, q),               // compute end-effector location
+   Q = rt_ikine560paul(p560_1, T06),        // solve the IKP
+   T06 - rt_fkine(p560_1, Q(1,:)),          // test solutions
+   T06 - rt_fkine(p560_1, Q(2,:)),
+   T06 - rt_fkine(p560_1, Q(3,:)),
+   T06 - rt_fkine(p560_1, Q(4,:)),
+
+   // solution's feasibilty in presence of joint limits
+   p560_1.qlim = [  -%pi/2, %pi/2;..        // set joint coordinate limits
+                    -%pi/2, %pi/2;..        // (compatibles with q)
+                    -%pi/2, %pi/2;..
+                    -%pi/2, %pi/2;..
+                    -%pi/2, %pi/2;..
+                    0,      2*%pi];
+   p560_1.islimit(Q(1,:).'),                // workable joint state vector
+   p560_1.islimit(Q(2,:).'),                // joint limits exceeded!
+   p560_1.islimit(Q(3,:).'),                // joint limits exceeded!
+   p560_1.islimit(Q(4,:).'),                // joint limits exceeded!
+
+   // Note that, in both cases, the starting joint state vector (the state
+   // vector with which T06 has been computed) has been returned as a
+   // solution to the IKP (Q(1,:)). However, there are many cases in which
+   // this can not occur.
+   // Following examples are intended to illustrate some of these
+   // situations.
+
+   // When the starting joint state vector has q5 belonging to (-%pi, 0)
+   // radians it will be not returned as a solution, since the configuration
+   // of last three joints of robot coincides with a set of Euler angles and
+   // rt_ikine560paul() computes the solution reducing the range to whom q5
+   // belongs to (0, %pi) radians.
+   // (See help of rt_tr2eul() function for further details).
+   q = [0.2, -1.35, 0.65, 0, -1.4, 2.55],   // q5 in (-%pi, 0)
+   T06 = rt_fkine(p560, q),                 // compute end-effector location
+
+   Q = rt_ikine560paul(p560, T06),          // solve the IKP:
+                                            // Q(1,4:6) is different from
+                                            // q(4:6), but they are
+                                            // equivalent in their effects
+
+   // When the starting joint state vector is a singular configuration for
+   // the robot then it could not be returned as a solution to the IKP.
+   // Note that rt_ikine560paul() can identify singular configurations which
+   // lead to infinitely many solutions for the IKP and it informs you about
+   // them displaying a warning.
+   // You can use the following code to experience yourself with this.
+   L = p560.links;
+   L(3).A = 0;                              // Puma 560 without..
+   L(3).D = 0;                              // ..shoulder offset
+   p560_2 = rt_robot(p560, L);              // robot copy
+
+   q = [0, 0.3926991, %pi/4, 0, 0.2, 1];    // shoulder-singular config.
+   T06 = rt_fkine(p560_2, q),               // compute end-effector location
+   Q = rt_ikine560paul(p560_2, T06),        // Q(1,:) == q
+
+   q = [0.85, -0.5, %pi/2, 0, 0.2, 1];      // elbow-shoulder singularity
+   T06 = rt_fkine(p560_2, q),               // compute end-effector location
+   Q = rt_ikine560paul(p560_2, T06),        // q does not appear in Q
+
+   q = [0.85, -0.5, -%pi/2, 0, 0.2, 1];     // elbow singularity
+   T06 = rt_fkine(p560_2, q),               // This config doesn't lead to
+   Q = rt_ikine560paul(p560_2, T06),        // infinitely many solutions,
+                                            // therefore no warning is shown
+   
+  </pre>
+<h3><font color="blue">Cautionary</font></h3>
+<dl>
+<dd>
+<b></b><p>
+     Note that the dimensional units for the last column of the <tt><b>T06</b></tt> matrix must agree with the dimensional units used in the robot object <tt><b>robot</b></tt>. The units can be whatever you choose (metres, inches, cubits or furlongs) but they must be consistent. The toolbox definitions <tt><b>rt_puma560</b></tt> and <tt><b>rt_stanford</b></tt> all use SI units with dimensions in metres.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+     This function will not work for robot objects that use the modified Denavit-Hartenberg convention.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_drivebot.htm"><tt><b>rt_drivebot</b></tt></a>,&nbsp;&nbsp;<a href="rt_ikine.htm"><tt><b>rt_ikine</b></tt></a>,&nbsp;&nbsp;<a href="rt_ikine560.htm"><tt><b>rt_ikine560</b></tt></a>,&nbsp;&nbsp;<a href="rt_ikinestanfpaul.htm"><tt><b>rt_ikinestanfpaul</b></tt></a>,&nbsp;&nbsp;<a href="rt_fkine.htm"><tt><b>rt_fkine</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_tr2eul.htm"><tt><b>rt_tr2eul</b></tt></a>,&nbsp;&nbsp;<a href="rt_plot-robot.htm"><tt><b>robot/rt_plot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Author</font></h3>
+<dl><dd>
+<b>Matteo Morelli</b>
+    Interdepartmental Research Center "E. Piaggio", University of Pisa
+  </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+<p>
+        L. Sciavicco, B. Siciliano, <em>Modelling and Control of Robot Manipulators.</em>   2nd Edition,  Springer-Verlag Advanced Textbooks in Control and Signal Processing Series, London, UK, 2000.
+      </p>
+</body>
+</html>

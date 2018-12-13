@@ -1,0 +1,4 @@
+LIBRARY    librtss.dll
+EXPORTS
+	sci_rt_frne
+	librtss_

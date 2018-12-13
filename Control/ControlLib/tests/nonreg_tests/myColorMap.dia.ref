@@ -22,7 +22,7 @@
 clear
 clearglobal
 funcprot(0);
-mclose('all');
+//mclose('all');
 getd('../ControlLib')
 n_fig = -1;
 xdel(winsid())

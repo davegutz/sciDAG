@@ -1,0 +1,175 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_fdyn</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_fdyn</b> -   integrate the forward dynamics</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>[q, qd] = rt_fdyn(robot, t0, t [, torqfun [, q0 , qd0 [, &lt;args&gt;]]])</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. The n-link manipulator for which forward dynamics will be integrated.
+       </li>
+<li>
+<tt><b>t0</b></tt>
+       : scalar. It represents the time at which integration starts.
+       </li>
+<li>
+<tt><b>t</b></tt>
+       : p-element vector (p is arbitrary). It represents times at which the solution is computed.
+       </li>
+<li>
+<tt><b>torqfun</b></tt>
+       : string. It is the name of an external function provided by user to specify a torque law for <tt><b>robot</b></tt>'s actuators. External function can be a Scilab function, but a Fortran subroutine or a C function too. Of course, in these last two cases the external function has to be build and dynamically linked to Scilab before it can be used.
+       </li>
+<li>
+<tt><b>q0</b></tt>
+       : n-element vector. Initial joint coordinates.
+       </li>
+<li>
+<tt><b>qd0</b></tt>
+       : n-element vector. Initial joint velocities.
+       </li>
+<li>
+<tt><b>&lt;args&gt;</b></tt>
+       : a comma separated sequence of Scilab variable names. They are additional arguments for user-provided function <tt><b>torqfun</b></tt>.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : n-by-p matrix. It represents the matrix of <tt><b>robot</b></tt>'s joint state.
+       </li>
+<li>
+<tt><b>qd</b></tt>
+       : n-by-p matrix. It represents the matrix of <tt><b>robot</b></tt>'s joint velocities.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function integrates the manipulator equations of motion starting at time <tt><b>t0</b></tt> and for each time specified in vector <tt><b>t</b></tt> using Scilab's numerical integration function <tt><b>ode</b></tt> (calling default solver of package ODEPACK, <tt><b>lsoda</b></tt>). Given the manipulator kinematic and dynamic characteristics by means of robot object <tt><b>robot</b></tt>, it returns matrices of manipulator joint state <tt><b>q</b></tt> and joint velocities <tt><b>qd</b></tt>. These matrices have one row per joint and one column per time step.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Actuator torque may be specified by the user-provided external function named <tt><b>torqfun</b></tt>.
+     If <tt><b>torqfun</b></tt> is given, the Scilab syntax of corresponding external function must be as follows:
+     <center><pre>
+     tau = torqfun(t, q, qd, &lt;args&gt;)
+
+</pre></center>
+     where <tt><b>t</b></tt> is the current time (scalar), <tt><b>q</b></tt> and <tt><b>qd</b></tt> are the manipulator joint coordinate and velocity state respectively (both n-element vectors) and <tt><b>&lt;args&gt;</b></tt> is a comma separated sequence of existing Scilab variable names. Tipically this would be used to implement some axis control scheme.
+     If <tt><b>torqfun</b></tt> is not specified, or it's an empty string, then zero torque is applied to the manipulator.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+     Initial joint coordinates and velocities may be specified by the optional arguments <tt><b>q0</b></tt> and <tt><b>qd0</b></tt> respectively.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_fdyn() can be used to simulate a
+   // robot and its controller. The manipulator is a Puma 560 with simple
+   // proportional and derivative (PD) controller. The simulation results
+   // pick out the point that further gain tuning is required. Note the
+   // high gains are required on joints 2 and 3 in order to counter the
+   // significant disturbance torque due to gravity.
+
+   // taufunc definition
+   taufunc_code = ["if t &gt; qt(size(qt,1), 1) then";..
+        "t = qt(size(qt,1), 1);";..
+        "end";..
+        "q_dmd = interp1(qt(:,1), qt(:,2:7), t);";..
+        "e = q_dmd.'' - q;";..
+        "tau = (e.'' * diag(Pgain) + qd.'' * diag(Dgain)).'';"];
+   deff("[tau] = taufunc(t, q, qd, qt, Pgain, Dgain)", taufunc_code);
+
+   // rt_fdyn() execution
+   exec &lt;PATH&gt;/models/rt_puma560.sce;       // load Puma 560 parameters
+   t = [0:.056:5].';                        // time vector
+   q_dmd = rt_jtraj(qz, qready, t);         // create a path
+   qt = [t q_dmd];
+   Pgain = [20 100 20 5 5 5];               // proportional gain
+   Dgain = [-5 -10 -2 0 0 0];               // derivative gain
+   q0 = qz;                                 // initial joint coordinates
+   qd0 = zeros(6, 1);                       // initial joint velocities
+   [q, qd] = rt_fdyn(rt_nofriction(p560), 0, t, "taufunc", q0, qd0, qt, Pgain, Dgain);
+
+   // results plotting: simulated path shown as solid, reference path as
+   // dashed
+   cfh = scf();
+   drawlater();
+   subplot(3,1,1); plot(t, q(1,:)); plot(t, q_dmd(:,1),"--");   // JOINT 1
+   xgrid(); xtitle("", "Time (s)", "Joint 1 (rad)");
+   a1 = cfh.children(1); a1.data_bounds = [0 -0.05; 5 0.05];
+   a1.tight_limits = "on"; a1.auto_ticks = ["off" "off" "off"];
+   a1.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 5],..
+        ["0" "0.5" "1" "1.5" "2" "2.5" "3" "3.5" "4" "4.5" "5"]);
+   a1.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-0.05 0 0.05], ["-0.05" "0" "0.05"]);
+
+   subplot(3,1,2); plot(t, q(2,:)); plot(t, q_dmd(:,2),"--");   // JOINT 2
+   xgrid(); xtitle("", "Time (s)", "Joint 2 (rad)");
+   a2 = cfh.children(1); a2.data_bounds = [0 -1; 5 2];
+   a2.tight_limits = "on"; a2.auto_ticks = ["off" "off" "off"];
+   a2.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 5],..
+        ["0" "0.5" "1" "1.5" "2" "2.5" "3" "3.5" "4" "4.5" "5"]);
+   a2.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-1 0 1 2], ["-1" "0" "1" "2"]);
+
+   subplot(3,1,3); plot(t, q(3,:)); plot(t, q_dmd(:,3),"--");   // JOINT 3
+   xgrid(); xtitle("", "Time (s)", "Joint 3 (rad)");
+   a3 = cfh.children(1); a3.data_bounds = [0 -2; 5 1];
+   a3.tight_limits = "on"; a3.auto_ticks = ["off" "off" "off"];
+   a3.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 0.5 1 1.5 2 2.5 3 3.5 4 4.5 5],..
+        ["0" "0.5" "1" "1.5" "2" "2.5" "3" "3.5" "4" "4.5" "5"]);
+   a3.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-2 -1 0 1], ["-2" "-1" "0" "1"]);
+   drawnow();   
+   
+  </pre>
+<h3><font color="blue">Cautionary</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      The presence of friction in the dynamic model can prevent the integration from converging. The function <tt><b>rt_nofriction</b></tt> can be used to return a friction-free robot object.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+     Simulation execution may take a few minutes.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="../../../../../../../../../usr/src/scilab-4.1.2-debug/man/eng/nonlinear/ode.htm"><tt><b>ode</b></tt></a>,&nbsp;&nbsp;<a href="rt_accel.htm"><tt><b>rt_accel</b></tt></a>,&nbsp;&nbsp;<a href="rt_nofriction-robot.htm"><tt><b>robot/rt_nofriction</b></tt></a>,&nbsp;&nbsp;<a href="rt_frne.htm"><tt><b>rt_frne</b></tt></a>,&nbsp;&nbsp;<a href="rt_rne.htm"><tt><b>rt_rne</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    M.W. Walker and D.E. Orin. Efficient dynamic computer simulation of robotic mechanisms. <em>ASME Journal of Dynamic Systems, Measurement and Control</em>, 104:205-211, 1982
+    </p>
+</body>
+</html>

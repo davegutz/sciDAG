@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>link/rt_nofriction</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>link/rt_nofriction</b> -   remove friction from a link object</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>link2 = rt_nofriction(link [, "all"])</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>link</b></tt>
+       : link object. It describes the link kinematics and dynamics.
+       </li>
+<li>
+<tt><b>link2</b></tt>
+       : link object. A clone of <tt><b>link</b></tt> with modified joint friction properties.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      Return a new link object with modified joint friction properties. If the optional string "all" is not specified, then the function sets the Coulomb friction values to zero. Else, both viscous and Coulomb friction values are set to zero.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      This is important for forward dynamics computation (see <tt><b>rt_fdyn</b></tt>) where the presence of friction can prevent the numerical integration from converging.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_nofriction() can be used to remove
+   // viscous and Coulomb friction from waist joint of a Puma 560 robot
+   exec &lt;PATH&gt;/models/rt_puma560.sce;       // load Puma 560 parameters
+   wjoint = p560.links(1);                  // waist joint
+   rt_showlink(wjoint);
+
+   // A new link which has Coulomb friction values set to zero
+   wj_nocf = rt_nofriction(wjoint);
+   rt_showlink(wj_nocf);
+
+   // A new link which has both viscous and Coulomb friction values set to
+   // zero
+   wj_noall = rt_nofriction(wjoint, "all");
+   rt_showlink(wj_noall);
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_link.htm"><tt><b>rt_link</b></tt></a>,&nbsp;&nbsp;<a href="rt_friction-link.htm"><tt><b>link/rt_friction</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_nofriction-robot.htm"><tt><b>robot/rt_nofriction</b></tt></a>,&nbsp;&nbsp;<a href="rt_friction-robot.htm"><tt><b>robot/rt_friction</b></tt></a>,&nbsp;&nbsp;<a href="rt_fdyn.htm"><tt><b>rt_fdyn</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

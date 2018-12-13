@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_cinertia</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_cinertia</b> -   compute the Cartesian (operational space) manipulator inertia matrix</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>M = rt_cinertia(robot, q)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : n-element vector. The joint state vector.
+       </li>
+<li>
+<tt><b>M</b></tt>
+       : n-by-n matrix. It represents the manipulator operational space inertia matrix.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function computes the Cartesian, or operational space, inertia matrix. <tt><b>robot</b></tt> is a robot object that describes the manipulator dynamics and kinematics, and <tt><b>q</b></tt> is an n-element vector of joint coordinates.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The Cartesian inertia matrix is calculated from the joint-space inertia matrix and relates Cartesian force/torque to Cartesian acceleration.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // Joint-space inertia matrix of a Puma 560 manipulator, at the given
+   // pose
+   exec &lt;PATH&gt;/models/rt_puma560.sce;           // load Puma 560 parameters
+   q = 2*%pi*rand(1,6) - %pi,                   // the given pose
+   M = rt_inertia(p560, q),                     // joint-space inertia matr.
+
+   // compute the corresponding operational-space inertia matrix:
+   // by compounded transforms
+   J = rt_jacob0(p560, q);
+   Ji = inv(J);
+   Ji.' * M * Ji,
+
+   // by using rt_cinertia() (direct approach)
+   rt_cinertia(p560, q),
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_frne.htm"><tt><b>rt_frne</b></tt></a>,&nbsp;&nbsp;<a href="rt_inertia.htm"><tt><b>rt_inertia</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    O. Khatib, "A unified approach for motion and force control of robot manipulators: the operational space formulation", <em>IEEE Trans. Robot. Autom.</em>, vol. 3, pp. 43-53, Feb. 1987.
+    </p>
+</body>
+</html>

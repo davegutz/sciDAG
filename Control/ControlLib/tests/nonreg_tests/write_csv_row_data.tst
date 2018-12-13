@@ -22,7 +22,7 @@
 clear
 funcprot(0);
 getd('../ControlLib')
-mclose('all');
+//mclose('all');
 
 // Load some sample data, assuming data columnar
 // Read data

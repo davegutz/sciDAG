@@ -21,9 +21,9 @@
 // 
 clear
 funcprot(0);
-mclose('all');
+//mclose('all');
 getd('../ControlLib')
-A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'e',int8(4), 'f', int16(5), 'g', int32(6), 'h', %inf, 'i', -%inf, 'v', [1 2 3], 'vt', [1; 2; 3]);
+A = struct('d',%t, 'b',1, 'e',%nan, 'a',2, 'f', 'myF', 'c',3, 'e2',int8(4), 'f2', int16(5), 'g', int32(6), 'h', %inf, 'i', -%inf, 'v', [1 2 3], 'vt', [1; 2; 3]);
 B = struct('second', A, 'third', A, 'first', A, 'fourth', %f);
 D = struct('primary', A, 'secondary', B);
 [fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
@@ -31,242 +31,70 @@ print_struct(D, 'D', fdo, ',');
 mclose(fdo);
 mgetl('tests/nonreg_tests/print_struct_tst.csv')
  ans  =
+ 
 !D.primary.d,D.primary.b,D.primary.e,D.primary.a,D.primary.f,D.primary.!
-!c,D.primary.g,D.primary.h,D.primary.i,D.primary.v,D.primary.vt,D.secon!
-!dary.second.d,D.secondary.second.b,D.secondary.second.e,D.secondary.se!
-!cond.a,D.secondary.second.f,D.secondary.second.c,D.secondary.second.g,!
-!D.secondary.second.h,D.secondary.second.i,D.secondary.second.v,D.secon!
-!dary.second.vt,D.secondary.third.d,D.secondary.third.b,D.secondary.thi!
-!rd.e,D.secondary.third.a,D.secondary.third.f,D.secondary.third.c,D.sec!
-!ondary.third.g,D.secondary.third.h,D.secondary.third.i,D.secondary.thi!
-!rd.v,D.secondary.third.vt,D.secondary.first.d,D.secondary.first.b,D.se!
-!condary.first.e,D.secondary.first.a,D.secondary.first.f,D.secondary.fi!
-!rst.c,D.secondary.first.g,D.secondary.first.h,D.secondary.first.i,D.se!
-!condary.first.v,D.secondary.first.vt,D.secondary.fourth,              !
+!     c,D.primary.e2,D.primary.f2,D.primary.g,D.primary.h,D.primary.i,D!
+!     .primary.v,D.primary.vt,D.secondary.second.d,D.secondary.second.b!
+!     ,D.secondary.second.e,D.secondary.second.a,D.secondary.second.f,D!
+!     .secondary.second.c,D.secondary.second.e2,D.secondary.second.f2,D!
+!     .secondary.second.g,D.secondary.second.h,D.secondary.second.i,D.s!
+!     econdary.second.v,D.secondary.second.vt,D.secondary.third.d,D.sec!
+!     ondary.third.b,D.secondary.third.e,D.secondary.third.a,D.secondar!
+!     y.third.f,D.secondary.third.c,D.secondary.third.e2,D.secondary.th!
+!     ird.f2,D.secondary.third.g,D.secondary.third.h,D.secondary.third.!
+!     i,D.secondary.third.v,D.secondary.third.vt,D.secondary.first.d,D.!
+!     secondary.first.b,D.secondary.first.e,D.secondary.first.a,D.secon!
+!     dary.first.f,D.secondary.first.c,D.secondary.first.e2,D.secondary!
+!     .first.f2,D.secondary.first.g,D.secondary.first.h,D.secondary.fir!
+!     st.i,D.secondary.first.v,D.secondary.first.vt,D.secondary.fourth,!
 !                                                                      !
-!%t,1.0000000000000000,4,2.0000000000000000,5,3.0000000000000000,6,%inf!
-!,-%inf,[1.0000000000000000 2.0000000000000000 3.0000000000000000],[1.0!
-!000000000000000;2.0000000000000000;3.0000000000000000],%t,1.0000000000!
-!000000,4,2.0000000000000000,5,3.0000000000000000,6,%inf,-%inf,[1.00000!
-!00000000000 2.0000000000000000 3.0000000000000000],[1.0000000000000000!
-!;2.0000000000000000;3.0000000000000000],%t,1.0000000000000000,4,2.0000!
-!000000000000,5,3.0000000000000000,6,%inf,-%inf,[1.0000000000000000 2.0!
-!000000000000000 3.0000000000000000],[1.0000000000000000;2.000000000000!
-!0000;3.0000000000000000],%t,1.0000000000000000,4,2.0000000000000000,5,!
-!3.0000000000000000,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000!
-! 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.00000000!
-!00000000],%f,                                                         !
+!%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.0000000000000000!
+!     ,4,5,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000 3.000000!
+!     0000000000],[1.0000000000000000;2.0000000000000000;3.000000000000!
+!     0000],%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.00000!
+!     00000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.00000000000000!
+!     00 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.0!
+!     000000000000000],%t,1.0000000000000000,%nan,2.0000000000000000,'m!
+!     yF',3.0000000000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.000!
+!     0000000000000 3.0000000000000000],[1.0000000000000000;2.000000000!
+!     0000000;3.0000000000000000],%t,1.0000000000000000,%nan,2.00000000!
+!     00000000,'myF',3.0000000000000000,4,5,6,%inf,-%inf,[1.00000000000!
+!     00000 2.0000000000000000 3.0000000000000000],[1.0000000000000000;!
+!     2.0000000000000000;3.0000000000000000],%f,                       !
 print_struct(D, 'D', 6, ',');
-D.primary.d,
-D.primary.b,
-D.primary.e,
-D.primary.a,
-D.primary.f,
-D.primary.c,
-D.primary.g,
-D.primary.h,
-D.primary.i,
-D.primary.v,
-D.primary.vt,
-D.secondary.second.d,
-D.secondary.second.b,
-D.secondary.second.e,
-D.secondary.second.a,
-D.secondary.second.f,
-D.secondary.second.c,
-D.secondary.second.g,
-D.secondary.second.h,
-D.secondary.second.i,
-D.secondary.second.v,
-D.secondary.second.vt,
-D.secondary.third.d,
-D.secondary.third.b,
-D.secondary.third.e,
-D.secondary.third.a,
-D.secondary.third.f,
-D.secondary.third.c,
-D.secondary.third.g,
-D.secondary.third.h,
-D.secondary.third.i,
-D.secondary.third.v,
-D.secondary.third.vt,
-D.secondary.first.d,
-D.secondary.first.b,
-D.secondary.first.e,
-D.secondary.first.a,
-D.secondary.first.f,
-D.secondary.first.c,
-D.secondary.first.g,
-D.secondary.first.h,
-D.secondary.first.i,
-D.secondary.first.v,
-D.secondary.first.vt,
-D.secondary.fourth,
-%t
-,
-1.0000000000000000
-,
-4
-,
-2.0000000000000000
-,
-5
-,
-3.0000000000000000
-,
-6
-,
-%inf
-,
--%inf
-,
-[
-1.0000000000000000
- 
-2.0000000000000000
- 
-3.0000000000000000
-]
-,
-[
-1.0000000000000000
-;
-2.0000000000000000
-;
-3.0000000000000000
-]
-,
-%t
-,
-1.0000000000000000
-,
-4
-,
-2.0000000000000000
-,
-5
-,
-3.0000000000000000
-,
-6
-,
-%inf
-,
--%inf
-,
-[
-1.0000000000000000
- 
-2.0000000000000000
- 
-3.0000000000000000
-]
-,
-[
-1.0000000000000000
-;
-2.0000000000000000
-;
-3.0000000000000000
-]
-,
-%t
-,
-1.0000000000000000
-,
-4
-,
-2.0000000000000000
-,
-5
-,
-3.0000000000000000
-,
-6
-,
-%inf
-,
--%inf
-,
-[
-1.0000000000000000
- 
-2.0000000000000000
- 
-3.0000000000000000
-]
-,
-[
-1.0000000000000000
-;
-2.0000000000000000
-;
-3.0000000000000000
-]
-,
-%t
-,
-1.0000000000000000
-,
-4
-,
-2.0000000000000000
-,
-5
-,
-3.0000000000000000
-,
-6
-,
-%inf
-,
--%inf
-,
-[
-1.0000000000000000
- 
-2.0000000000000000
- 
-3.0000000000000000
-]
-,
-[
-1.0000000000000000
-;
-2.0000000000000000
-;
-3.0000000000000000
-]
-,
-%f
-,
-[fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
+D.primary.d,D.primary.b,D.primary.e,D.primary.a,D.primary.f,D.primary.c,D.primary.e2,D.primary.f2,D.primary.g,D.primary.h,D.primary.i,D.primary.v,D.primary.vt,D.secondary.second.d,D.secondary.second.b,D.secondary.second.e,D.secondary.second.a,D.secondary.second.f,D.secondary.second.c,D.secondary.second.e2,D.secondary.second.f2,D.secondary.second.g,D.secondary.second.h,D.secondary.second.i,D.secondary.second.v,D.secondary.second.vt,D.secondary.third.d,D.secondary.third.b,D.secondary.third.e,D.secondary.third.a,D.secondary.third.f,D.secondary.third.c,D.secondary.third.e2,D.secondary.third.f2,D.secondary.third.g,D.secondary.third.h,D.secondary.third.i,D.secondary.third.v,D.secondary.third.vt,D.secondary.first.d,D.secondary.first.b,D.secondary.first.e,D.secondary.first.a,D.secondary.first.f,D.secondary.first.c,D.secondary.first.e2,D.secondary.first.f2,D.secondary.first.g,D.secondary.first.h,D.secondary.first.i,D.secondary.first.v,D.secondary.first.vt,D.secondary.fourth,
+%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.0000000000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.0000000000000000],%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.0000000000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.0000000000000000],%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.0000000000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.0000000000000000],%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.0000000000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.0000000000000000],%f,[fdo, err] = mopen('tests/nonreg_tests/print_struct_tst.csv', 'wt');
 print_struct(D, 'D', fdo, ',');
 mclose(fdo);
 mgetl('tests/nonreg_tests/print_struct_tst.csv')
  ans  =
+ 
 !D.primary.d,D.primary.b,D.primary.e,D.primary.a,D.primary.f,D.primary.!
-!c,D.primary.g,D.primary.h,D.primary.i,D.primary.v,D.primary.vt,D.secon!
-!dary.second.d,D.secondary.second.b,D.secondary.second.e,D.secondary.se!
-!cond.a,D.secondary.second.f,D.secondary.second.c,D.secondary.second.g,!
-!D.secondary.second.h,D.secondary.second.i,D.secondary.second.v,D.secon!
-!dary.second.vt,D.secondary.third.d,D.secondary.third.b,D.secondary.thi!
-!rd.e,D.secondary.third.a,D.secondary.third.f,D.secondary.third.c,D.sec!
-!ondary.third.g,D.secondary.third.h,D.secondary.third.i,D.secondary.thi!
-!rd.v,D.secondary.third.vt,D.secondary.first.d,D.secondary.first.b,D.se!
-!condary.first.e,D.secondary.first.a,D.secondary.first.f,D.secondary.fi!
-!rst.c,D.secondary.first.g,D.secondary.first.h,D.secondary.first.i,D.se!
-!condary.first.v,D.secondary.first.vt,D.secondary.fourth,              !
+!     c,D.primary.e2,D.primary.f2,D.primary.g,D.primary.h,D.primary.i,D!
+!     .primary.v,D.primary.vt,D.secondary.second.d,D.secondary.second.b!
+!     ,D.secondary.second.e,D.secondary.second.a,D.secondary.second.f,D!
+!     .secondary.second.c,D.secondary.second.e2,D.secondary.second.f2,D!
+!     .secondary.second.g,D.secondary.second.h,D.secondary.second.i,D.s!
+!     econdary.second.v,D.secondary.second.vt,D.secondary.third.d,D.sec!
+!     ondary.third.b,D.secondary.third.e,D.secondary.third.a,D.secondar!
+!     y.third.f,D.secondary.third.c,D.secondary.third.e2,D.secondary.th!
+!     ird.f2,D.secondary.third.g,D.secondary.third.h,D.secondary.third.!
+!     i,D.secondary.third.v,D.secondary.third.vt,D.secondary.first.d,D.!
+!     secondary.first.b,D.secondary.first.e,D.secondary.first.a,D.secon!
+!     dary.first.f,D.secondary.first.c,D.secondary.first.e2,D.secondary!
+!     .first.f2,D.secondary.first.g,D.secondary.first.h,D.secondary.fir!
+!     st.i,D.secondary.first.v,D.secondary.first.vt,D.secondary.fourth,!
 !                                                                      !
-!%t,1.0000000000000000,4,2.0000000000000000,5,3.0000000000000000,6,%inf!
-!,-%inf,[1.0000000000000000 2.0000000000000000 3.0000000000000000],[1.0!
-!000000000000000;2.0000000000000000;3.0000000000000000],%t,1.0000000000!
-!000000,4,2.0000000000000000,5,3.0000000000000000,6,%inf,-%inf,[1.00000!
-!00000000000 2.0000000000000000 3.0000000000000000],[1.0000000000000000!
-!;2.0000000000000000;3.0000000000000000],%t,1.0000000000000000,4,2.0000!
-!000000000000,5,3.0000000000000000,6,%inf,-%inf,[1.0000000000000000 2.0!
-!000000000000000 3.0000000000000000],[1.0000000000000000;2.000000000000!
-!0000;3.0000000000000000],%t,1.0000000000000000,4,2.0000000000000000,5,!
-!3.0000000000000000,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000!
-! 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.00000000!
-!00000000],%f,                                                         !
+!%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.0000000000000000!
+!     ,4,5,6,%inf,-%inf,[1.0000000000000000 2.0000000000000000 3.000000!
+!     0000000000],[1.0000000000000000;2.0000000000000000;3.000000000000!
+!     0000],%t,1.0000000000000000,%nan,2.0000000000000000,'myF',3.00000!
+!     00000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.00000000000000!
+!     00 3.0000000000000000],[1.0000000000000000;2.0000000000000000;3.0!
+!     000000000000000],%t,1.0000000000000000,%nan,2.0000000000000000,'m!
+!     yF',3.0000000000000000,4,5,6,%inf,-%inf,[1.0000000000000000 2.000!
+!     0000000000000 3.0000000000000000],[1.0000000000000000;2.000000000!
+!     0000000;3.0000000000000000],%t,1.0000000000000000,%nan,2.00000000!
+!     00000000,'myF',3.0000000000000000,4,5,6,%inf,-%inf,[1.00000000000!
+!     00000 2.0000000000000000 3.0000000000000000],[1.0000000000000000;!
+!     2.0000000000000000;3.0000000000000000],%f,                       !

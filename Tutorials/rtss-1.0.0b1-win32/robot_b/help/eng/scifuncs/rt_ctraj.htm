@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_ctraj</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_ctraj</b> -   compute a Cartesian trajectory between two points</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>TC = rt_ctraj(T0, T1, n)</tt></dd>
+<dd><tt>TC = rt_ctraj(T0, T1, R)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>T0</b></tt>
+       : 4-by-4 matrix. A homogeneous transform representing a first point in the operational space.
+       </li>
+<li>
+<tt><b>T1</b></tt>
+       : 4-by-4 matrix. A homogeneous transform representing a second point in the operational space.
+       </li>
+<li>
+<tt><b>n</b></tt>
+       : scalar. The number of points along the path.
+       </li>
+<li>
+<tt><b>R</b></tt>
+       : n-element vector (n is arbitrary). Vector of distances for each point along the path. Each element in <tt><b>R</b></tt> can vary between 0 and 1 inclusively.
+       </li>
+<li>
+<tt><b>TC</b></tt>
+       : 4-by-4-by-n hypermatrix. The resulting Cartesian trajectory.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      This function returns a Cartesian trajectory (straight line motion) <tt><b>TC</b></tt> from the point represented by homogeneous transform <tt><b>T0</b></tt> to <tt><b>T1</b></tt>. The number of the point along the path is <tt><b>n</b></tt> or the length of the given vector <tt><b>R</b></tt>. For the second case <tt><b>R</b></tt> is a vector of distances along the path (in the range 0 to 1) for each point. The first case has the points equally spaced, but different spacing may be specified to achieve acceptable acceleration profile.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // To create a Cartesian path with smooth acceleration we can use the
+   // rt_jtraj() function to create the path vector r with continuous
+   // derivatives.
+
+   T0 = rt_transl([0, 0, 0]);     // starting point
+   T1 = rt_transl([-1, 2, 1]);    // arrival point
+   t = [0:0.056:10];              // time vector
+   r = rt_jtraj(0, 1, t);         // path vector with continuous derivatives
+   TC = rt_ctraj(T0, T1, r);      // Cartesian trajectory
+
+   // plot results
+   cfh = scf();
+   drawlater();
+   xgrid(); xtitle("", "Time (s)", ""); plot(t, rt_transl(TC));
+   a1 = cfh.children; a1.data_bounds = [0 -1; 10 2];
+   a1.tight_limits = "on"; a1.auto_ticks = ["off" "off" "off"];
+   a1.x_ticks = tlist(["ticks", "locations", "labels"],..
+        [0 1 2 3 4 5 6 7 8 9 10],..
+        ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10"]);
+   a1.y_ticks = tlist(["ticks", "locations", "labels"],..
+        [-1 -0.5 0 0.5 1 1.5 2], ["-1" "-0.5" "0" "0.5" "1" "1.5" "2"]);
+   drawnow();
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_qinterp.htm"><tt><b>rt_qinterp</b></tt></a>,&nbsp;&nbsp;<a href="rt_transl.htm"><tt><b>rt_transl</b></tt></a>,&nbsp;&nbsp;<a href="rt_trinterp.htm"><tt><b>rt_trinterp</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+</body>
+</html>

@@ -27,6 +27,7 @@ xdel(winsid())
 global plant A B C D
 global loaded_scratch
 A=0;B=1;C=1;D=0;
+loaded_scratch = %f;
 plant.a = A;
 plant.b = B;
 plant.c = C;

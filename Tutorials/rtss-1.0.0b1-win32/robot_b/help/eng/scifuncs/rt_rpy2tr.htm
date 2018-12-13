@@ -1,0 +1,84 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_rpy2tr</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_rpy2tr</b> -   Roll/pitch/yaw angles to homogeneous transform</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>T = rt_rpy2tr(r, p, y)</tt></dd>
+<dd><tt>T = rt_rpy2tr(RPY)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>r</b></tt>
+       : scalar. The roll angle in radians.
+       </li>
+<li>
+<tt><b>p</b></tt>
+       : scalar. The pitch angle in radians.
+       </li>
+<li>
+<tt><b>y</b></tt>
+       : scalar. The yaw angle in radians.
+       </li>
+<li>
+<tt><b>RPY</b></tt>
+       : 3-element row vector. This vector is formed by stacking the angles roll, pitch and yaw as follows <tt><b>RPY = [roll, pitch, yaw]</b></tt>.
+       </li>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. It represents the resulting homogeneous transform for the specified roll/pitch/yaw angles.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return a homogeneous transformation for the specified roll/pitch/yaw angles in radians. These correspond to rotations about the Z, Y, X axes respectively.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_rpy2tr() can be used to generate
+   // a homogeneous transform for specified roll/pitch/yaw angles in a
+   // direct approach.
+
+   // roll/pitch/yaw angles
+   roll = %pi/6;
+   pitch = %pi/4;
+   yaw = -2/5*%pi;
+
+   // corresponding homogeneous matrix obtained
+   // by compounded transforms
+   T1 = rt_rotz(roll) * rt_roty(pitch) * rt_rotx(yaw),
+
+   // by using rt_rpy2tr() (direct approach)
+   T2 = rt_rpy2tr(roll, pitch, yaw),
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_tr2rpy.htm"><tt><b>rt_tr2rpy</b></tt></a>,&nbsp;&nbsp;<a href="rt_eul2tr.htm"><tt><b>rt_eul2tr</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+</body>
+</html>

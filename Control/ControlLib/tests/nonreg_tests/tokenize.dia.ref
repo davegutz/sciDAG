@@ -32,22 +32,24 @@ for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end
 for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
 <>|<every>|<,>|<good>|<,>|<boy>|<,>|<does>|<,,,>|<fine>|<>
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', ',')
- ctokens  = 
+ ctokens  =
+ 
 !  !
 !  !
 !  !
 !  !
 !  !
- %tokens  = 
- every good boy does fine
- n_tokens  = 
-   1.
+ %tokens  =
+ 
+ every good boy does fine   
+ n_tokens  =
+ 
+    1.  
 for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
 <>|<every good boy does fine>|<>
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', [',', ' ']);
 for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
 <>|<every>|< >|<good>|< >|<boy>|< >|<does>|< >|<fine>|<>
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', '');
-operation +: Warning adding a matrix with the empty matrix will give an empty matrix result.
 for k=1:n_tokens,  mprintf('<%s>|', ctokens(k));mprintf('<%s>|', %tokens(k));end; mprintf('<%s>\n', ctokens(n_tokens+1));
 <>

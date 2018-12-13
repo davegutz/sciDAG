@@ -26,7 +26,8 @@ clear
 funcprot(0);
 getd('../ControlLib')
 [n_tokens, %tokens, ctokens]=tokenize(',,,,,every,good,boy,does,,,fine,,,', ',')
- ctokens  = 
+ ctokens  =
+ 
 !,,,,,  !
 !       !
 !,      !
@@ -38,7 +39,8 @@ getd('../ControlLib')
 !,,,    !
 !       !
 !,,,    !
- %tokens  = 
+ %tokens  =
+ 
 !every  !
 !       !
 !good   !
@@ -48,15 +50,19 @@ getd('../ControlLib')
 !does   !
 !       !
 !fine   !
- n_tokens  = 
-   5.
+ n_tokens  =
+ 
+    5.  
 [target, delims] = untokenize(n_tokens, %tokens, ctokens)
- delims  = 
- ,
- target  = 
- ,,,,,every,good,boy,does,,,fine,,,
+ delims  =
+ 
+ ,   
+ target  =
+ 
+ ,,,,,every,good,boy,does,,,fine,,,   
 [n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
- ctokens1  = 
+ ctokens1  =
+ 
 !,,,,,  !
 !       !
 !,      !
@@ -68,7 +74,8 @@ getd('../ControlLib')
 !,,,    !
 !       !
 !,,,    !
- %tokens1  = 
+ %tokens1  =
+ 
 !every  !
 !       !
 !good   !
@@ -78,13 +85,15 @@ getd('../ControlLib')
 !does   !
 !       !
 !fine   !
- n_tokens1  = 
-   5.
+ n_tokens1  =
+ 
+    5.  
 assert_checktrue(n_tokens1==n_tokens);
 assert_checktrue(%tokens1==%tokens);
 assert_checktrue(ctokens1==ctokens);
 [n_tokens, %tokens, ctokens]=tokenize('every,good,boy,does,,,fine', ',')
- ctokens  = 
+ ctokens  =
+ 
 !     !
 !     !
 !,    !
@@ -96,7 +105,8 @@ assert_checktrue(ctokens1==ctokens);
 !,,,  !
 !     !
 !     !
- %tokens  = 
+ %tokens  =
+ 
 !every  !
 !       !
 !good   !
@@ -106,15 +116,19 @@ assert_checktrue(ctokens1==ctokens);
 !does   !
 !       !
 !fine   !
- n_tokens  = 
-   5.
+ n_tokens  =
+ 
+    5.  
 [target, delims] = untokenize(n_tokens, %tokens, ctokens)
- delims  = 
- ,
- target  = 
- every,good,boy,does,,,fine
+ delims  =
+ 
+ ,   
+ target  =
+ 
+ every,good,boy,does,,,fine   
 [n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
- ctokens1  = 
+ ctokens1  =
+ 
 !     !
 !     !
 !,    !
@@ -126,7 +140,8 @@ assert_checktrue(ctokens1==ctokens);
 !,,,  !
 !     !
 !     !
- %tokens1  = 
+ %tokens1  =
+ 
 !every  !
 !       !
 !good   !
@@ -136,44 +151,53 @@ assert_checktrue(ctokens1==ctokens);
 !does   !
 !       !
 !fine   !
- n_tokens1  = 
-   5.
+ n_tokens1  =
+ 
+    5.  
 assert_checktrue(n_tokens1==n_tokens);
 assert_checktrue(%tokens1==%tokens);
 assert_checktrue(ctokens1==ctokens);
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', ',')
- ctokens  = 
-!  !
-!  !
-!  !
-!  !
-!  !
- %tokens  = 
- every good boy does fine
- n_tokens  = 
-   1.
-[target, delims] = untokenize(n_tokens, %tokens, ctokens)
- delims  = 
+ ctokens  =
  
- target  = 
- every good boy does fine
+!  !
+!  !
+!  !
+!  !
+!  !
+ %tokens  =
+ 
+ every good boy does fine   
+ n_tokens  =
+ 
+    1.  
+[target, delims] = untokenize(n_tokens, %tokens, ctokens)
+ delims  =
+ 
+    
+ target  =
+ 
+ every good boy does fine   
 [n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
-operation +: Warning adding a matrix with the empty matrix will give an empty matrix result.
- ctokens1  = 
+ ctokens1  =
+ 
 !  !
 !  !
 !  !
 !  !
 !  !
- %tokens1  = 
- every good boy does fine
- n_tokens1  = 
-   0.
+ %tokens1  =
+ 
+ every good boy does fine   
+ n_tokens1  =
+ 
+    0.  
 assert_checktrue(n_tokens1~=n_tokens);
 assert_checktrue(%tokens1==%tokens);
 assert_checktrue(ctokens1==ctokens);
 [n_tokens, %tokens, ctokens]=tokenize('every good boy does fine', [',', ' '])
- ctokens  = 
+ ctokens  =
+ 
 !   !
 !   !
 !   !
@@ -185,7 +209,8 @@ assert_checktrue(ctokens1==ctokens);
 !   !
 !   !
 !   !
- %tokens  = 
+ %tokens  =
+ 
 !every  !
 !       !
 !good   !
@@ -195,15 +220,19 @@ assert_checktrue(ctokens1==ctokens);
 !does   !
 !       !
 !fine   !
- n_tokens  = 
-   5.
+ n_tokens  =
+ 
+    5.  
 [target, delims] = untokenize(n_tokens, %tokens, ctokens)
- delims  = 
-  
- target  = 
- every good boy does fine
+ delims  =
+ 
+     
+ target  =
+ 
+ every good boy does fine   
 [n_tokens1, %tokens1, ctokens1]=tokenize(target, delims)
- ctokens1  = 
+ ctokens1  =
+ 
 !   !
 !   !
 !   !
@@ -215,7 +244,8 @@ assert_checktrue(ctokens1==ctokens);
 !   !
 !   !
 !   !
- %tokens1  = 
+ %tokens1  =
+ 
 !every  !
 !       !
 !good   !
@@ -225,8 +255,9 @@ assert_checktrue(ctokens1==ctokens);
 !does   !
 !       !
 !fine   !
- n_tokens1  = 
-   5.
+ n_tokens1  =
+ 
+    5.  
 assert_checktrue(n_tokens1==n_tokens);
 assert_checktrue(%tokens1==%tokens);
 assert_checktrue(ctokens1==ctokens);

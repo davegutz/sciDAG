@@ -1,0 +1,83 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>link/rt_friction</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>link/rt_friction</b> -   compute joint friction torque</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>tau_f = rt_friction(link, qd)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>link</b></tt>
+       : link object. It describes the link kinematics and dynamics.
+       </li>
+<li>
+<tt><b>qd</b></tt>
+       : p-element vector (p is arbitrary). A set of joint velocities.
+       </li>
+<li>
+<tt><b>tau_f</b></tt>
+       : p-element vector. The resulting set of joint friction torque.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+     This function computes the joint friction torque based on friction parameter data, if any, in the link object <tt><b>link</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Friction is a function only of joint velocity <tt><b>qd</b></tt>. If <tt><b>qd</b></tt> is a vector (p &gt; 1) then <tt><b>tau_f</b></tt> is a vector in which each element is the friction torque for the corresponding element in <tt><b>qd</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The friction model is a fairly standard one comprising viscous friction and direction dependent Coulomb friction.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_friction() can be used to compute
+   // the joint friction torque for the waist joint of a Puma 560 robot
+   exec &lt;PATH&gt;/models/rt_puma560.sce;       // load Puma 560 parameters
+   wjoint = p560.links(1);                  // waist joint
+   rt_showlink(wjoint);                     // display link data
+   qd = [-1.2088, 2.7204],                  // joint velocity vector
+   wjfrict = rt_friction(wjoint, qd),
+
+   // qd(1)&lt;0 =&gt; qd(1)*wjoint.B + wjoint.Tc(2)
+   qd(1)*wjoint.B + wjoint.Tc(2),
+
+   // qd(2)&gt;0 =&gt; qd(2)*wjoint.B + wjoint.Tc(1)
+   qd(2)*wjoint.B + wjoint.Tc(1),
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_link.htm"><tt><b>rt_link</b></tt></a>,&nbsp;&nbsp;<a href="rt_nofriction-link.htm"><tt><b>link/rt_nofriction</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_nofriction-robot.htm"><tt><b>robot/rt_nofriction</b></tt></a>,&nbsp;&nbsp;<a href="rt_friction-robot.htm"><tt><b>robot/rt_friction</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    M.W. Walker and D.E. Orin. Efficient dynamic computer simulation of robotic mechanisms. <em>ASME Journal of Dynamic Systems, Measurement and Control</em>, 104:205-211, 1982
+    </p>
+</body>
+</html>

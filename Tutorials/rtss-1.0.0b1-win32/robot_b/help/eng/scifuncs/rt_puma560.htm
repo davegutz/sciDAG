@@ -1,0 +1,75 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_puma560</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Script  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_puma560</b> -   create a Puma 560 robot object</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>exec &lt;PATH&gt;/models/rt_puma560.sce;</tt></dd></dl>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+     This Scilab script creates the robot object <tt>p560</tt> which describes the kinematic and dynamic characteristics of a Unimation Puma 560 manipulator. The kinematic conventions used are as per Paul and Zhang, and all quantities are in standard SI units.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+     Also defines the joint coordinate vectors <tt>qz</tt>, <tt>qready</tt> and <tt>qstretch</tt> corresponding to the zero-angle, ready and fully extended (in X-direction) poses respectively.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // load Puma 560 parameters
+   exec &lt;PATH&gt;/models/rt_puma560.sce;
+   disp(p560);                                  // display the robot
+
+   // show it at qz, qready and qstretch poses
+   h0 = scf(0); a0 = h0.children;
+   a0.tight_limits = "on"; a0.rotation_angles = [73, -50];
+
+   disp(qz);                                    // QZ
+   disp(rt_fkine(p560, qz));
+   rt_plot(p560, qz);
+
+   disp(qready);                                // QREADY
+   disp(rt_fkine(p560, qready));
+   rt_plot(p560, qready);
+
+   disp(qstretch);                              // QSTRETCH
+   disp(rt_fkine(p560, qstretch));
+   rt_plot(p560, qstretch);
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_puma560akb.htm"><tt><b>rt_puma560akb</b></tt></a>,&nbsp;&nbsp;<a href="rt_stanford.htm"><tt><b>rt_stanford</b></tt></a>,&nbsp;&nbsp;<a href="rt_twolink.htm"><tt><b>rt_twolink</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R.P. Paul and H. Zhang. "Computationally efficient kinematics for manipulators with spherical wrists." <em>Int. J. Robot. Res.</em>, vol. 5, no. 2, pp. 32-44, 1986.
+    </p>
+<p>
+    P.I. Corke and B. Armstrong-Helouvry. "A search for consensus among model parameters reported for the PUMA 560 robot." in <em>Proc. IEEE Int. Conf. Robotics and Automation</em>, (San Diego), pp. 1608-1613, May 1994.
+    </p>
+<p>
+    P.I. Corke and B. Armstrong-Helouvry. "A meta-study of PUMA 560 dynamics: A critical appraisal of literature data." <em>Robotica</em>, vol. 13, no. 3, pp. 253-258, 1995.
+    </p>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_oa2tr</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_oa2tr</b> -   orientation and approach vector to homogeneous transform</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>T = rt_oa2tr(o, a)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>o</b></tt>
+       : 3-element vector. It represents the Cartesian orientation vector, expressed with respect to a basic reference frame.
+       </li>
+<li>
+<tt><b>a</b></tt>
+       : 3-element vector. It represents the Cartesian approach vector, expressed with respect to a basic reference frame.
+       </li>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The resulting homogeneous transform.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return a homogeneous transformation specified in terms of the Cartesian orientation and approach vectors <tt><b>o</b></tt> and <tt><b>a</b></tt> respectively.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // Orientation and approach vector expressed with respect to the
+   // World frame x = [1 0 0], y = [0 1 0] and z = [0 0 1]:
+   o = [-1, 0, 0];
+   a = [0, 1, 0];
+
+   // corresponding homogeneous transform
+   T = rt_oa2tr(o, a),
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_rpy2tr.htm"><tt><b>rt_rpy2tr</b></tt></a>,&nbsp;&nbsp;<a href="rt_eul2tr.htm"><tt><b>rt_eul2tr</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

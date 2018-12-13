@@ -22,10 +22,10 @@
 clear
 clearglobal
 funcprot(0);
-mclose('all');
+//mclose('all');
 getd('../ControlLib')
 n_fig = -1;
-xdel(winsid())
+//xdel(winsid())
 
 myBodePlot();
 xs2pdf(0, 'tests\nonreg_tests\myBodePlotTest')

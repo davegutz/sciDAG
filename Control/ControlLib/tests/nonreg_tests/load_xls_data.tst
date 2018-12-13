@@ -43,8 +43,7 @@
 clear
 funcprot(0);
 getd('../ControlLib')
-mclose('all');
-
+//mclose('all');
 // Load some sample data, assuming data columnar
 // Read data
 [V_col, C_col, Mnames_col, Mvals_col] = load_xls_data('tests/nonreg_tests/load_xls_data.xls', 'col', 'col sheet')

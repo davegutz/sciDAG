@@ -1,0 +1,101 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_qinterp</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_qinterp</b> -   interpolate unit-quaternions</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>qi = rt_qinterp(q1, q2, r)</tt></dd>
+<dd><tt>QI = rt_qinterp(q1, q2, R)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>q1</b></tt>
+       : quaternion object. It represents a first rotation.
+       </li>
+<li>
+<tt><b>q2</b></tt>
+       : quaternion object. It represents a second rotation.
+       </li>
+<li>
+<tt><b>r</b></tt>
+       : scalar. It represents a "step" between the two rotations described by <tt><b>q1</b></tt> and <tt><b>q2</b></tt>. It can vary between 0 and 1 inclusively.
+       </li>
+<li>
+<tt><b>R</b></tt>
+       : p-element vector (p is arbitrary). Each element in <tt><b>R</b></tt> represents a "step" between the two rotations described by <tt><b>q1</b></tt> and <tt><b>q2</b></tt>. Each element in <tt><b>R</b></tt> can vary between 0 and 1 inclusively.
+       </li>
+<li>
+<tt><b>qi</b></tt>
+       : quaternion object. The interpolated unit quaternion.
+       </li>
+<li>
+<tt><b>QI</b></tt>
+       : p-element list. Each element in <tt><b>QI</b></tt> is the interpolated unit quaternion between <tt><b>q1</b></tt> and <tt><b>q2</b></tt>, for the corresponding element in <tt><b>R</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      The first form returns a unit quaternion that interpolates between <tt><b>q1</b></tt> and <tt><b>q2</b></tt> as <tt><b>r</b></tt> varies between 0 and 1 inclusively. This is a spherical linear interpolation (slerp) that can be interpreted as interpolation along a great circle arc on a sphere.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The second form returns a list of quaternions corresponding to successive values of <tt><b>R</b></tt>.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // To show how two rotations described by two unit quaternions can be
+   // interpolated at different fractions between them, the following code
+   // could be used.
+
+   q1 = rt_quaternion(rt_rotx(0.3)),        // first rotation
+   q2 = rt_quaternion(rt_roty(-0.5)),       // second rotation
+
+   // slerp at r = 0 should return q1
+   qi1 = rt_qinterp(q1, q2, 0),             // qi1 == q1
+
+   // slerp at r = 1 should return q2
+   qi2 = rt_qinterp(q1, q2, 1),             // qi2 == q2
+
+   // slerp at r = 0.3
+   qi3 = rt_qinterp(q1, q2, 0.3),
+
+   // A more direct approach...
+   QI = rt_qinterp(q1, q2, [0, 1, 0.3]),    // QI == list(qi1, qi2, qi3)
+
+   // error handling
+   QI = rt_qinterp(q1, q2, [0, 1.1, 0.3]),  // R(2) &gt; 1
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_quaternion.htm"><tt><b>rt_quaternion</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    K. Shoemake, "Animating rotation with quaternion curves", in <em>Proceedings of ACM SIGGRAPH</em>, (San Francisco), pp. 245-254, The Singer Company, Link Flight Simulator Division, 1985.
+    </p>
+</body>
+</html>

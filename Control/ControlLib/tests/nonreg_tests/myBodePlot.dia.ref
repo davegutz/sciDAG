@@ -22,23 +22,26 @@
 clear
 clearglobal
 funcprot(0);
-mclose('all');
+//mclose('all');
 getd('../ControlLib')
 n_fig = -1;
-xdel(winsid())
+//xdel(winsid())
 myBodePlot();
 xs2pdf(0, 'tests\nonreg_tests\myBodePlotTest')
 winopen('tests\nonreg_tests\myBodePlotTestRef.pdf')
 copyfile('tests\nonreg_tests\myBodePlotTest.pdf', 'tests\nonreg_tests\myBodePlotTestNow.pdf')
  ans  =
-   1.
+ 
+    1.  
 winopen('tests\nonreg_tests\myBodePlotTestNow.pdf')
 xs2png(0, 'tests\nonreg_tests\myBodePlotTest')
 winopen('tests\nonreg_tests\myBodePlotTestRef.png')
 copyfile('tests\nonreg_tests\myBodePlotTest.png', 'tests\nonreg_tests\myBodePlotTestNow.png')
  ans  =
-   1.
+ 
+    1.  
 winopen('tests\nonreg_tests\myBodePlotTestNow.png')
 assert_checkfilesequal ('tests\nonreg_tests\myBodePlotTest.png' , 'tests\nonreg_tests\myBodePlotTestRef.png')
  ans  =
-  T
+ 
+  T  

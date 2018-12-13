@@ -1,0 +1,115 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_tr2eul</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_tr2eul</b> -   homogeneous transform to Euler angles</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>[a b c] = rt_tr2eul(T)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The homogeneous transform.
+       </li>
+<li>
+<tt><b>a</b></tt>
+       : scalar. The phi angle in radians, i.e. a rotation about the Z-axis of current reference frame.
+       </li>
+<li>
+<tt><b>b</b></tt>
+       : scalar. The theta angle in radians, i.e. a rotation about the Y-axis of current reference frame.
+       </li>
+<li>
+<tt><b>c</b></tt>
+       : scalar. The psi angle in radians, i.e. a rotation about the Z-axis of current reference frame.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return a vector of Euler angles, in radians, corresponding to the rotational part of the homogeneous transform <tt><b>T</b></tt>.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_tr2eul() can be used to get the
+   // orientation of a coordinate frame, described by a given homogeneous
+   // transform, expressed in terms of Euler angles.
+
+   // generate a homogeneous transform
+   e = [%pi/6, %pi/4, -2/5*%pi],    // Euler angles set
+   T = rt_eul2tr(e);
+
+   // corresponding Euler angles set
+   e_comp = rt_tr2eul(T),
+
+   // Remember that the solution to the problem of computing a set of
+   // Euler angles corresponding to the rotational part of a homogeneous
+   // transform is not univoque.
+   // rt_tr2eul() computes the solution reducing the range to whom theta
+   // belongs to (0, %pi) radians.
+   // Therefore, if you generate a coordinate frame from a set of Euler
+   // angles with theta belonging to (-%pi, 0) and then you try to get
+   // its orientation by using rt_tr2eul() function, be aware that you
+   // won't obtain the starting set of angles.
+
+   e1 = [0.6, -1.2, -1.75],         // Euler angles set
+   T = rt_eul2tr(e1);
+   e2 = rt_tr2eul(T),               // e2 is different from e1, but they
+                                    // are equivalent in their effects
+
+   // Lastly, note that rt_tr2eul() provides a single solution when the
+   // computed set of Euler angles has theta = 0 or theta = %pi. But you
+   // should remember that in these cases infinitely many solutions are
+   // corresponding to the rotational part of the homogeneous transform.
+
+   e1 = [0.6, 0, -1.75];            // Euler angles set with theta = 0
+   T = rt_eul2tr(e1),
+   // all solutions for which phi + psi = 0.6 + (-1.75) are equivalent in
+   // their effects
+   e1_a = rt_tr2eul(T);             Ta = rt_eul2tr(e1_a), 
+   e1_b = [0.25, 0, -1.15-0.25];    Tb = rt_eul2tr(e1_b),
+   e1_c = [2.6, 0, -1.15-2.6];      Tc = rt_eul2tr(e1_c),
+   e1_d = [-1.35, 0, -1.15+1.35];   Td = rt_eul2tr(e1_d),
+   e1_e = [-0.9, 0, -1.15+0.9];     Te = rt_eul2tr(e1_e),
+
+   e2 = [-2.2, %pi, 0.95];          // Euler angles set with theta = %pi
+   T = rt_eul2tr(e2),
+   // all solutions for which psi - phi = 0.95 - (-2.2) are equivalent in
+   // their effects
+   e2_a = rt_tr2eul(T);             Ta = rt_eul2tr(e2_a), 
+   e2_b = [0, %pi, 3.15];           Tb = rt_eul2tr(e2_b),
+   e2_c = [-2.1, %pi, 3.15-2.1];    Tc = rt_eul2tr(e2_c),
+   e2_d = [1.25, %pi, 3.15+1.25];   Td = rt_eul2tr(e2_d),
+   e2_e = [0.5, %pi, 3.15+0.5];     Te = rt_eul2tr(e2_e),
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_eul2tr.htm"><tt><b>rt_eul2tr</b></tt></a>,&nbsp;&nbsp;<a href="rt_tr2rpy.htm"><tt><b>rt_tr2rpy</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+<p>
+        L. Sciavicco, B. Siciliano, <em>Modelling and Control of Robot Manipulators.</em>   2nd Edition,  Springer-Verlag Advanced Textbooks in Control and Signal Processing Series, London, UK, 2000.
+      </p>
+</body>
+</html>

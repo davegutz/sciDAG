@@ -1,0 +1,127 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>rt_square_if</TITLE>
+</head>
+<body>
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A><UL>
+<li>
+<A HREF="#link1">Library</A><li>
+<A HREF="#link2">Description</A><li>
+<A HREF="#link3">Dialog Box</A><li>
+<A HREF="#link4">Default Properties</A><li>
+<A HREF="#link5">Interfacing Function</A><li>
+<A HREF="#link6">Computational Function (type 4)</A><li>
+<A HREF="#link7">See Also</A><li>
+<A HREF="#link8">Bibliography</A>
+</UL>
+<hr>
+<H2>
+<A NAME="link0"></A>rt_square_if<br><DIV ALIGN="CENTER"><A><IMG src="../../../scicos/gif_icons/rt_square_if.gif"></A></DIV>
+</H2>
+<H3><font color="blue"><A NAME="link1">Library</A></font></H3>
+<p>Robotics</p>
+<br><H3><font color="blue"><A NAME="link2">Description</A></font></H3>
+<P>
+This block is a event-driven square wave generator. It lets you adjust amplitude (<tt>A</tt>), period (<tt>P</tt>), impulse width (<tt>W</tt>), bias (<tt>B</tt>) and delay (<tt>D</tt>).
+    </P>
+<P>
+This block has one regular output. First pulse evaluation is done according to the following law: if <tt>t</tt> &gt;= <tt>D</tt> pulse is ON, i.e.
+    <dl>
+<dd>
+<b></b><tt>y</tt>(<tt>t</tt>) = <tt>A</tt> + <tt>B</tt>, when <tt>t</tt> &lt;= <tt>W</tt>
+</dd>
+<dd>
+<b></b><tt>y</tt>(<tt>t</tt>) = <tt>B</tt>, otherwise
+     </dd>
+</dl>
+</P>
+<P>
+if <tt>t</tt> &lt; <tt>D</tt> pulse is OFF, i.e. <tt>y</tt>(<tt>t</tt>) = <tt>0</tt>.
+    </P>
+<P>
+Pulse repeats itself every <tt>P</tt> seconds.
+    </P>
+<br><H3><font color="blue"><A NAME="link3">Dialog Box</A></font></H3>
+<DIV ALIGN="CENTER"><TABLE BORDER="1" BGCOLOR="#FFFFFF" CELLPADDING="8">
+<TR>
+<TD ALIGN="CENTER">Set RT square wave generator block parameters</TD>
+<TD ALIGN="CENTER"></TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Amplitude</TD>
+<TD ALIGN="CENTER">1</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Period</TD>
+<TD ALIGN="CENTER">4</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Impulse width</TD>
+<TD ALIGN="CENTER">2</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Bias</TD>
+<TD ALIGN="CENTER">0</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Delay</TD>
+<TD ALIGN="CENTER">0</TD>
+</TR>
+</TABLE></DIV>
+<UL>
+<LI>Amplitude : 
+                scalar. The pulse amplitude <tt>A</tt>.
+                </LI>
+<LI>Period : 
+                scalar. The pulse period <tt>P</tt>, in seconds.
+                </LI>
+<LI>Impulse width : 
+                scalar. The amount of time <tt>W</tt> in the period that the pulse is on, in seconds.
+                </LI>
+<LI>Bias : 
+                scalar. The pulse bias <tt>B</tt>.
+                </LI>
+<LI>Delay : 
+                scalar. The delay <tt>D</tt> before the pulse is generated, in seconds.
+                </LI>
+</UL>
+<br><H3><font color="blue"><A NAME="link4">Default Properties</A></font></H3>
+<UL>
+<LI>always active:<b>no</b>
+</LI>
+<LI>direct-feedthrough:<b>no</b>
+</LI>
+<LI>zero-crossing:<b>no</b>
+</LI>
+<LI>mode:<b>no</b>
+</LI>
+<LI>number/sizes of inputs:<b>0 / </b>
+</LI>
+<LI>number/sizes of activation inputs:<b>1 / [1,1]</b>
+</LI>
+<LI>number/sizes of outputs:<b>1 / [1,1]</b>
+</LI>
+<LI>number/sizes of activation outputs:<b>0 / </b>
+</LI>
+<LI>continuous-time state:<b>no</b>
+</LI>
+<LI>discrete-time state:<b>no</b>
+</LI>
+<LI>name of computational function:<b>rtss_scs_square_cf4</b>
+</LI>
+</UL>
+<br><H3><font color="blue"><A NAME="link5">Interfacing Function</A></font></H3>
+<PRE>&lt;RTSSDIR&gt;/macros/rt_square_if.sci</PRE>
+<br><H3><font color="blue"><A NAME="link6">Computational Function (type 4)</A></font></H3>
+<PRE>&lt;RTSSDIR&gt;/src/rtss_scs_square.c</PRE>
+<br><H3><font color="blue"><A NAME="link7">See Also</A></font></H3>
+<p><a href=".htm"><a href="rt_singen.htm"><tt><b>rt_singen_if</b></tt></a></a>,&nbsp;&nbsp;</p>
+<br><H3><font color="blue"><A NAME="link8">Bibliography</A></font></H3>
+<p>
+        R. Bucher, The RTAI-Lab project, file "rtai-3.5/rtai-lab/scilab/devices/rtai_square.c".
+    </p>
+<br><HR>
+<author><i>Matteo Morelli - Interdepartmental Research Center "E. Piaggio", University of Pisa,    </i><i>September 2009</i></author>
+</body>
+</html>

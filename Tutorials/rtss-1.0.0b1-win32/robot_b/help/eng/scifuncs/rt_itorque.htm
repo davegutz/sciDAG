@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_itorque</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_itorque</b> -   compute the manipulator inertia torque component</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>tau_i = rt_itorque(robot, q, qdd)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : p-by-n matrix (p is arbitrary). Each row of this matrix is interpreted as a joint state vector.
+       </li>
+<li>
+<tt><b>qdd</b></tt>
+       : p-by-n matrix. Each row of this matrix is interpreted as a joint acceleration vector.
+       </li>
+<li>
+<tt><b>tau_i</b></tt>
+       : p-by-n matrix. Each row is the inertia torque for the corresponding row in <tt><b>q</b></tt> and <tt><b>qdd</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function returns the joint torque due to inertia at the specified pose <tt><b>q</b></tt> and acceleration <tt><b>qdd</b></tt> which is given by the relation <tt><b>tau_i</b></tt> = M(<tt><b>q</b></tt>) * <tt><b>qdd</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      If <tt><b>q</b></tt> and <tt><b>qdd</b></tt> are row vectors (p = 1), <tt><b>tau_i</b></tt> is a row vector of joint torques. Else (p &gt; 1), <tt><b>tau_i</b></tt> is a matrix in which each row is the inertia torque for the corresponding rows of <tt><b>q</b></tt> and <tt><b>qdd</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      If <tt><b>robot</b></tt> contains motor inertia parameters then motor inertia, referred to the link reference frame, will be added to the diagonal of inertia matrix (M) and influence the inertia torque result.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how to compute the inertial torque
+   // contributions for a simple two link RR planar, when joint trajectories
+   // in terms of position, velocity and acceleration are given.
+   // Trajectories have the same duration and a triangular-velocity profile.
+   // Initially the manipulator has a down-elbow configuration such that its
+   // end-effector is at point (0.2, 0) metres in the operating space.
+   // Both its joints move through an excursion of %pi/2 radians in 0.5 sec.
+
+   // load the joint trajectories
+   load("&lt;PATH&gt;/demos/rne/config-tlexamp.dat",..
+        "t_tlexamp", "q_tlexamp", "qd_tlexamp", "qdd_tlexamp");
+
+   // load RR parameters
+   exec &lt;PATH&gt;/demos/rne/manip-tlexamp.sce;
+
+   // compute inertial torque contribution:
+   // B(q) * D^2(q)
+   tic();..
+   I = rt_inertia(manip_tlexamp, q_tlexamp);..
+   I11 = I(1, 1, :); i11 = matrix(I11, length(t_tlexamp), 1);..
+   I12 = I(1, 2, :); i12 = matrix(I12, length(t_tlexamp), 1);..
+   I21 = I(2, 1, :); i21 = matrix(I21, length(t_tlexamp), 1);..
+   I22 = I(2, 2, :); i22 = matrix(I22, length(t_tlexamp), 1);..
+   taui_1 = i11 .* qdd_tlexamp(:, 1) + i12 .* qdd_tlexamp(:, 2);..
+   taui_2 = i21 .* qdd_tlexamp(:, 1) + i22 .* qdd_tlexamp(:, 2);..
+   toc(),
+
+   // rt_itorque(), direct approach!
+   tic(); taui = rt_itorque(manip_tlexamp, q_tlexamp, qdd_tlexamp); toc(),
+
+   // worst case error
+   max(max(abs(taui - [taui_1, taui_2]), "r")),
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_frne.htm"><tt><b>rt_frne</b></tt></a>,&nbsp;&nbsp;<a href="rt_rne.htm"><tt><b>rt_rne</b></tt></a>,&nbsp;&nbsp;<a href="rt_coriolis.htm"><tt><b>rt_coriolis</b></tt></a>,&nbsp;&nbsp;<a href="rt_inertia.htm"><tt><b>rt_inertia</b></tt></a>,&nbsp;&nbsp;<a href="rt_gravload.htm"><tt><b>rt_gravload</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_accel</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_accel</b> -   compute manipulator forward dynamics</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>qdd = rt_accel(robot, q, qd, torque)</tt></dd>
+<dd><tt>qdd = rt_accel(robot, Q)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. The n-link manipulator for which forward dynamics will be computed.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : n-element vector. It represents the vector of joint positions, that is the manipulator's current configuration.
+       </li>
+<li>
+<tt><b>qd</b></tt>
+       : n-element vector. It represents the vector of joint velocities.
+       </li>
+<li>
+<tt><b>torque</b></tt>
+       : n-element vector. Vector of generalized torques applied to manipulator's end-effector.
+       </li>
+<li>
+<tt><b>Q</b></tt>
+       : 3n-element vector. This vector is formed by appropriately stacking the joint positions, joint velocities and generalized torques applied to manipulator's end-effector; in particular, <tt><b>q = Q(1:n)</b></tt>, <tt><b>qd = Q(n+1:2*n)</b></tt> and <tt><b>torque = Q(2*n+1:3*n)</b></tt>.
+       </li>
+<li>
+<tt><b>qdd</b></tt>
+       : n-element vector. The resulting joint accelerations vector for the given configuration, joint velocities and applied torques.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      Return a vector of joint accelerations that result from applying the actuator <tt><b>torque</b></tt> to the manipulator <tt><b>robot</b></tt> with joint coordinates <tt><b>q</b></tt> and velocities <tt><b>qd</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The function uses the method 1 of Walker and Orin to compute the forward dynamics. This form is useful for simulation of manipulator dynamics, in conjunction with a numerical integration function.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_accel() can be used to compute the
+   // joint acceleration vector for a Puma 560 at rest in the zero angle
+   // pose, with zero applied joint torques.
+   exec &lt;PATH&gt;/models/rt_puma560.sce;       // load Puma 560 parameters
+   a = rt_accel(p560, qz, zeros(1,6), zeros(1,6));
+   disp(a.');
+
+   // However, to be useful for simulation this function must be integrated
+   // and this is achieved by the toolbox function rt_fdyn() which uses the
+   // Scilab function ode().
+   
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="../../../../../../../../../usr/src/scilab-4.1.2-debug/man/eng/nonlinear/ode.htm"><tt><b>ode</b></tt></a>,&nbsp;&nbsp;<a href="rt_frne.htm"><tt><b>rt_frne</b></tt></a>,&nbsp;&nbsp;<a href="rt_rne.htm"><tt><b>rt_rne</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="rt_fdyn.htm"><tt><b>rt_fdyn</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+    Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    M.W. Walker and D.E. Orin. Efficient dynamic computer simulation of robotic mechanisms. <em>ASME Journal of Dynamic Systems, Measurement and Control</em>, 104:205-211, 1982
+    </p>
+</body>
+</html>

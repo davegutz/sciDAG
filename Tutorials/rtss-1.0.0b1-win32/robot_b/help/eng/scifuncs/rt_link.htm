@@ -1,0 +1,356 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_link</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 16/09/2009</div>
+<p><b>rt_link</b> -   construct/clone a link object</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>l = rt_link()</tt></dd>
+<dd><tt>l = rt_link(dh_row [, convention])</tt></dd>
+<dd><tt>l = rt_link(dyn_row [, convention])</tt></dd>
+<dd><tt>l2 = rt_link(l)</tt></dd>
+<dd><tt>A = rt_link(q)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>dh_row</b></tt>
+       : 5-element row vector. It is one row of the legacy DH matrix (see <tt><b>rt_robot</b></tt>). This vector is formed by stacking the Denavit and Hartenberg parameters as follows <tt><b>dh_row = [alpha, a, theta, d [, sigma]]</b></tt>, where
+        <ul>
+<li>
+<tt><b>alpha</b></tt>
+                : scalar. The Denavit and Hartenberg parameter which represents the link twist angle.
+                </li>
+<li>
+<tt><b>a</b></tt>
+                : scalar. The Denavit and Hartenberg parameter which represents the link length.
+                </li>
+<li>
+<tt><b>theta</b></tt>
+                : scalar. The Denavit and Hartenberg parameter which represents the link rotation angle.
+                </li>
+<li>
+<tt><b>d</b></tt>
+                : scalar. The Denavit and Hartenberg parameter which represents the link offset distance.
+                </li>
+<li>
+<tt><b>sigma</b></tt>
+                : scalar. The joint type: 0 to specify a revolute link, non-zero for prismatic link.
+                </li>
+</ul>
+</li>
+<li>
+<tt><b>convention</b></tt>
+       : string. This argument permits to specify the Denavit and Hartenberg convention assumed. Valid strings are "standard" and "modified", but also any abbreviation of them, which holds the first three characters, can be used, that is "stand", "modif", "sta" and "mod" are valid strings, whereas "std", "s" and "m" are not.
+       </li>
+<li>
+<tt><b>dyn_row</b></tt>
+       : 20-element row vector. It is one row of the legacy DYN matrix (see <tt><b>rt_robot</b></tt>).
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : scalar. This single argument is taken as the link variable and substituted for <em>theta</em> or <em>D</em> for a revolute or prismatic link respectively.
+       </li>
+<li>
+<tt><b>l</b></tt>
+       : link object. The link object created.
+       </li>
+<li>
+<tt><b>l2</b></tt>
+       : link object. A copy of the link <tt><b>l</b></tt>. Note that <tt><b>l</b></tt> and <tt><b>l2</b></tt> are distinct variables, therefore a change in one won't affect the other.
+       </li>
+<li>
+<tt><b>A</b></tt>
+       : 4-by-4 matrix. The homogeneous transform which represents each link's coordinate frame with respect to the previous link'coordinate system.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      The <tt><b>rt_link</b></tt> function constructs a link object. The object contains kinematic and dynamic parameters as well as actuator and transmission parameters. The link object has type <tt><b>link</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The first form returns a default object.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The second form initializes the kinematic model based on Denavit and Hartenberg parameters. By default the standard Denavit and Hartenberg conventions are assumed but this can be overridden by the optional <tt><b>convention</b></tt> argument.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The dynamic model can be initialized using the third form of the constructor.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The fourth form is the copy constructor for the link object and returns a new link object with the same value as its argument.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The last form given above is not a constructor but a link method that returns the link transformation matrix for the given joint coordinate. The argument has to be given to the link object using parenthesis.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Since Scilab does not support the concept of public class, variables methods have been written to allow link object parameters to be referenced (r) or assigned (a) as given by the following table:
+      <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>Method</td>
+<td>Operation</td>
+<td>Returns</td>
+<td>Type</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.alpha</td>
+<td>r + a</td>
+<td>link twist angle</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.A</td>
+<td>r + a</td>
+<td>link length</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.theta</td>
+<td>r + a</td>
+<td>link rotation angle</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.D</td>
+<td>r + a</td>
+<td>link offset distance</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.sigma</td>
+<td>r + a</td>
+<td>joint type; 0 for revolute, non-zero for prismatic</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.RP</td>
+<td>r</td>
+<td>joint type; "R" or "P"</td>
+<td>char</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.mdh</td>
+<td>r + a</td>
+<td>DH convention: 0 if standard, 1 if modified</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.I</td>
+<td>r</td>
+<td>symmetric inertia matrix</td>
+<td>3-by-3 matrix</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.I</td>
+<td>a</td>
+<td>symmetric inertia matrix from a matrix or a vector whose elements are <em>Ixx</em>, <em>Iyy</em>, <em>Izz</em>, <em>Ixy</em>, <em>Iyz</em> and <em>Ixz</em>
+</td>
+<td>3-by-3 matrix or 6-element row vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.m</td>
+<td>r + a</td>
+<td>link mass</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.r</td>
+<td>r + a</td>
+<td>link COG vector</td>
+<td>3-element column vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.G</td>
+<td>r + a</td>
+<td>gear ratio</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.Jm</td>
+<td>r + a</td>
+<td>motor inertia</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.B</td>
+<td>r + a</td>
+<td>viscous friction</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.Tc</td>
+<td>r</td>
+<td>Coulomb friction</td>
+<td>2-element row vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.Tc</td>
+<td>a</td>
+<td>Coulomb friction: symmetric or asymmetric friction</td>
+<td>scalar (symm.) or 2-element row vector (asymm.)</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.dh</td>
+<td>r + a</td>
+<td>row of legacy DH matrix</td>
+<td>5-element row vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.dyn</td>
+<td>r + a</td>
+<td>row of legacy DYN matrix</td>
+<td>20 elements row vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.qlim</td>
+<td>r + a</td>
+<td>joint coordinate limits</td>
+<td>2-element row vector</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.offset</td>
+<td>r + a</td>
+<td>joint coordinate offset</td>
+<td>scalar</td>
+</tr>
+<tr align="center">
+<td>
+<tt><b>link</b></tt>.islimit(q)</td>
+<td>r</td>
+<td>0 when value of q is inside the joint limit bounds, -1 and 1 when it exceeds the lower and the upper bound, respectively</td>
+<td>scalar</td>
+</tr>
+</table></center></p>
+</dd>
+</dl>
+<h3><font color="blue">Overloaded Operators and Functions</font></h3>
+<dl><dd>
+<b></b><p>
+    In Scilab variable display and operators may be defined for new objects using Scilab-coded functions. For this new Scilab object, the link, only the display has been overloaded:
+     <dl><dd><li>
+<tt>disp(l)</tt>: gives a one-line summary of the link's kinematic parameters</li></dd></dl></p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // create a default link model
+   ldef = rt_link(),
+
+   // create a link model based on standard Denavit-Hartenberg convention
+   l1s = rt_link([-%pi/2, 0.02, 0, 0.15]),
+   l2s = rt_link([-%pi/2, 0.8, 0, 0], "standard"),
+   l3s = rt_link([0, 0, -%pi/2, 0, 1], "stand"),
+   l4s = rt_link([0, 0.5, 0, 0, 0], "sta"),
+   l5s = rt_link([0, 0.5, 0, 0, 0], "std"),         // error
+   l5s = rt_link([0, 0.5, 0, 0, 0], "s"),           // error
+
+   // create a link model based on modified Denavit-Hartenberg convention
+   l1m = rt_link([%pi/2, -0.0203, 0, 0.4331], "modified"),
+   l2m = rt_link([-%pi/2, 0, 0, 0], "mod"),
+   l3m = rt_link([0, 0.5, 0, 0, 0], "m"),           // error
+
+   // clone a link
+   l1s_copy = rt_link(l1s);             // l1s and l1s_copy are distinct
+   disp(l1s);
+   disp(l1s_copy);
+   l1s_copy2 = l1s;                     // As of version 1.0.0, there is no more
+                                        // any difference in copying objects by
+                                        // using their copy constructor compared
+                                        // to using the variable assignment
+                                        // operator (=)
+   disp(l1s_copy2);                     // l1s and l1s_copy2 are distinct
+
+   // create a dynamic model of a link
+   ll_dyn_row = [-%pi/2, 0, 0, 0.412, 0, 9.29, 0, 0.0175, -0.1105, 0.276,..
+        0.255, 0.071, 0, 0, 0, 0.953, 1];
+   ll = rt_link(ll_dyn_row, "stand");
+
+   // some other reference or assignment operations
+   ll.mdh,                              // refer mdh
+   ll.mdh = 1,                          // assign mdh
+   ll.Tc = 5;                           // assign symmetric Coulomb friction
+   ll.I,                                // refer inertia matrix (IM)
+   ll.I = [0.1, 0.05, 0.1, 0, 0, 0];    // assign IM (6-element vector)
+   ll.I,
+   ll.I = [0.2, 0,      0;..            // assign IM (3-by-3 matrix)
+           0,   0.1,    0;..
+           0,   0,      0.2];
+   rt_showlink(ll);                     // show all link's data in detail
+   ll.RP,                               // refer joint type
+   ll.RP = 1,                           // assign joint type, error!
+   ll.sigma = 1,                        // assign joint type, ok
+
+   // link coordinate frame with respect to the previous link's coordinate
+   // system
+   alphai = -%pi/2; ai = 0.0203; thetai = 0.85; di = 0.15005;
+   ll = rt_link([alphai, ai, 0, di], "standard"),
+   Ai = rt_transl(0, 0, di)*rt_rotz(thetai)*..
+        rt_transl(ai, 0, 0) * rt_rotx(alphai),  // by compounded transforms
+   Ai2 = ll(thetai),                            // by direct approach
+
+   // Get the type of a link object
+   typeof(l1s) == "link",               // returns %T (true)
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_showlink.htm"><tt><b>rt_showlink</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    R. P. Paul, <em>Robot Manipulators: Mathematics, Programming and Control.</em>   Cambridge, Massachusetts: MIT Press, 1981.
+    </p>
+<p>
+    J. J. Craig, <em>Introduction to Robotics.</em>   Addison Wesley, second ed., 1989.
+    </p>
+</body>
+</html>

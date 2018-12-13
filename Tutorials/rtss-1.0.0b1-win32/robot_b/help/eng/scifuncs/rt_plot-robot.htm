@@ -1,0 +1,241 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>robot/rt_plot</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>robot/rt_plot</b> -   create a graphical animation for a robot object</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl>
+<dd><tt>rt_plot(robot, q [, &lt;args&gt;])</tt></dd>
+<dd><tt>Q = rt_plot(robot)</tt></dd>
+</dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : p-by-n matrix (p is arbitrary). Each row of this matrix is interpreted as a joint state vector.
+       </li>
+<li>
+<tt><b>&lt;args&gt;</b></tt>
+       : a comma separated sequence of strings and numeric values. These are interpreted as options for plotting.
+       </li>
+<li>
+<tt><b>Q</b></tt>
+       : n-element column vector. The <tt><b>robot</b></tt>'s current joint angle state.
+       </li>
+</ul>
+<h3><font color="blue">Options</font></h3>
+<dl>
+<dd>
+<b></b><p>
+     Options are specified by a variable length argument list comprising strings and numeric values. The allowed values are:
+        <center><table border="1" cellpadding="8">
+<tr align="center">
+<td>string</td>
+<td>required numeric value</td>
+<td>meaning</td>
+</tr>
+<tr align="center">
+<td>"workspace"</td>
+<td>[xmin, xmax, ymin, ymax, zmin, zmax] (6-element row vector)</td>
+<td>set the 3D plot bounds or workspace</td>
+</tr>
+<tr align="center">
+<td>"mag"</td>
+<td>scale (scalar)</td>
+<td>annotation scale factor</td>
+</tr>
+<tr align="center">
+<td>"loop"</td>
+<td>n (scalar)</td>
+<td>animation is repeated n times</td>
+</tr>
+<tr align="center">
+<td>"perspective"</td>
+<td></td>
+<td>show a perspective view</td>
+</tr>
+<tr align="center">
+<td>"ortho"</td>
+<td></td>
+<td>show a orthogonal view</td>
+</tr>
+<tr align="center">
+<td>"base" or "nobase"</td>
+<td></td>
+<td>control display of base, a line from the floor upto joint 0</td>
+</tr>
+<tr align="center">
+<td>"wrist" or "nowrist"</td>
+<td></td>
+<td>control display of wrist axes</td>
+</tr>
+<tr align="center">
+<td>"name" or "noname"</td>
+<td></td>
+<td>control display of robot name near joint 0</td>
+</tr>
+<tr align="center">
+<td>"shadow" or "noshadow"</td>
+<td></td>
+<td>control display of a 'shadow' on the floor</td>
+</tr>
+<tr align="center">
+<td>"joints" or "nojoints"</td>
+<td></td>
+<td>control display of joints, these are cylinders for revolute joints and boxes for prismatic joints</td>
+</tr>
+<tr align="center">
+<td>"erase" or "noerase"</td>
+<td></td>
+<td>control erasure of robot after each change</td>
+</tr>
+</table></center></p>
+</dd>
+<dd>
+<b></b><p>
+     The options came from 3 sources and are processed in the order:
+     <dl>
+<dd>
+<b>1</b>. Scilab <tt><b>list</b></tt> of options returned by the function <tt><b>rt_plotbotopt</b></tt> if found on the user's current directory;</dd>
+<dd>
+<b>2</b>. Scilab <tt><b>list</b></tt> of options returned by the <tt><b>.plotopt</b></tt> method of the <tt><b>robot</b></tt> object. These are set by the <tt><b>.plotopt</b></tt> method;</dd>
+<dd>
+<b>3</b>. comma separated sequence of arguments (<tt><b>&lt;args&gt;</b></tt>) in the command line.</dd>
+</dl></p>
+</dd>
+</dl>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p><tt><b>rt_plot</b></tt> is overloaded for robot objects.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The first form displays a graphical representation of the robot given the kinematic information in <tt><b>robot</b></tt>. The robot is represented by a simple stick figure polyline where line segments join the origins of the link coordinate frames. If <tt><b>q</b></tt> is a matrix (p &gt; 1) representing a joint-space trajectory then an animation of the robot motion is shown. The basic stick figure robot can be graphically annotated with
+      <dl><dd>
+<li>
+<tt></tt>shadow on the 'floor';</li>
+<li>
+<tt></tt>XYZ wrist axes and labels, shown by 3 orthogonal line segments which are colored: red (X or Normal), green (Y or Orientation) and blue (Z or Approach). They can be optionally labelled XYZ or NOA;</li>
+<li>
+<tt></tt>joints, these are 3D cylinders for revolute joints and boxes for prismatic joints;</li>
+<li>
+<tt></tt>the <tt><b>robot</b></tt>'s name.</li>
+</dd></dl>
+      All of these graphical annotations require some kind of dimension and this is determined using a simple heuristic from the workspace dimensions. This dimension can be changed by setting the multiplicative scale factor using the "mag" option. These various annotations do slow the rate at which animations will be rendered.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Each graphical robot has a unique tag set equal to the <tt><b>robot</b></tt>'s name. When <tt><b>rt_plot</b></tt> is called it looks for all graphical objects with that name and moves them. The graphical robot holds a copy of the <tt><b>robot</b></tt> object as <tt><b>user_data</b></tt> (see <tt><b>polyline_properties</b></tt>). That copy contains the graphical handles of all the graphical sub-elements of the robot and also the current joint angle state. This state is used and adjusted by the <tt><b>rt_drivebot</b></tt> function.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      The second form returns the <tt><b>robot</b></tt>'s current joint angle state.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // To animate a Puma robot the following code could be used.
+   exec &lt;PATH&gt;/models/rt_puma560.sce;           // load Puma 560 parameters
+   h0 = scf(0); a0 = h0.children;               // create a new graphic win.
+   a0.tight_limits = "on";
+   a0.rotation_angles = [80, -46];              // adjust observation point
+   rt_plot(p560, qready);                       // display it at ready pos.
+
+   t = [0:0.056:10];
+   jt = rt_jtraj(qready, qstretch, t);          // traject. to stretch pose
+   rt_plot(p560, jt);                           // animate the robot!
+
+   // To show multiple views of the same robot the following code could be
+   // used.
+   clf(0, "clear");
+   h0 = scf(0); a0 = h0.children; a0.tight_limits = "on";
+   a0.rotation_angles = [73, 33];               // MULT.VIEWS #1
+   rt_plot(p560, qz);                           // add a graphical robot
+   h1 = scf(1); a1 = h1.children; a1.tight_limits = "on";
+   a1.rotation_angles = [73, -61];              // MULT.VIEWS #1
+   rt_plot(p560, qz);                           // add a graphical robot
+   rt_plot(p560, qready);                       // both robots should move
+
+   // now the two figures can be adjusted to give different viewpoints
+   a0.rotation_angles = [73, 33];               // MULT.VIEWS #2
+   a1.rotation_angles = [73, 128];
+
+   a0.rotation_angles = [90, 0];                // MULT.VIEWS #3 (front)
+   a1.rotation_angles = [0, 0];                 //               (top)
+
+   // Play with options
+   xdel(h1.figure_id);
+   clf(0, "clear");
+   h0 = scf(0); a0 = h0.children; a0.tight_limits = "on";
+   a0.rotation_angles = [74, -30];
+   rt_plot(p560, qstretch, "base");             // display robot base
+
+   clf(0, "clear");
+   h0 = scf(0); a0 = h0.children; a0.tight_limits = "on";
+   a0.rotation_angles = [74, -30];
+   rt_plot(p560, jt, "base", "loop", 3);        // display robot base
+                                                // and
+                                                // repeat animation 3 times
+
+   clf(0, "clear");
+   h0 = scf(0); a0 = h0.children; a0.tight_limits = "on";
+   a0.rotation_angles = [74, -30];
+   tic();..
+   rt_plot(p560, qready, "base");..
+   elaps_time0 = toc(),
+   h1 = scf(1); a1 = h1.children; a1.tight_limits = "on";
+   a1.rotation_angles = [74, -30];
+   tic();..
+   rt_plot(p560, qready, "noname", "nobase", "noshadow", "nojoints", "nowrist");..
+   elaps_time1 = toc(),     // time requested to plot: the most detailed
+                            // vs
+                            // the simplest stick robot figure
+
+   p560.lineopt = list("orange", 4);
+   p560.shadowopt = list("red", 1);
+   xdel(h1.figure_id);
+   clf(0, "clear");
+   h0 = scf(0); a0 = h0.children; a0.tight_limits = "on";
+   a0.rotation_angles = [74, -30];
+   rt_plot(p560, jt);       // animate a robot with orange links,
+                            // blue joints and red shadow!
+
+  </pre>
+<h3><font color="blue">Cautionary</font></h3>
+<dl><dd>
+<b></b><p>
+     Options for plotting are only processed on the first call when the graphical object is established, they are skipped on subsequent calls. Thus if you wish to change options, clear the figure before replotting.
+     </p>
+</dd></dl>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_drivebot.htm"><tt><b>rt_drivebot</b></tt></a>,&nbsp;&nbsp;<a href="rt_fkine.htm"><tt><b>rt_fkine</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;<a href="../../../../../../../../../usr/src/scilab-4.1.2-debug/man/eng/graphics/polyline_properties.htm"><tt><b>polyline_properties</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

@@ -22,7 +22,7 @@
 clear
 funcprot(0);
 getd('../ControlLib')
-mclose('all');
+//mclose('all');
 // Load some sample data, assuming data columnar
 // Read data
 [V, comments, Mnames, Mvals] = load_xls_data('tests/nonreg_tests/order_all_fields_tst.xls', 'row');
@@ -30,21 +30,22 @@ mclose('all');
 write_csv_row_data('tests/nonreg_tests/tempOut.csv', Mnames, Mvals, comments);
 mgetl('tests/nonreg_tests/tempOut.csv')
  ans  =
+ 
 !"// Sample comment, total 2 lines"                                    !
 !                                                                      !
 !"// End of sample comment"                                            !
 !                                                                      !
 !D.a,D.b,D.c,D.d,D.e,D.f,D.g,E.a,E.b,myVariable,myStrVariable,myBoolVar!
-!iable,                                                                !
+!     iable,                                                           !
 !                                                                      !
 !2.0000000000000000,1.0000000000000000,3.0000000000000000,%t,%nan,'myF'!
-!,-%inf,6.0000000000000000,8.0000000000000000,10.000000000000000,'my1',!
-!%t,                                                                   !
+!     ,-%inf,6.0000000000000000,8.0000000000000000,10.000000000000000,'!
+!     my1',%t,                                                         !
 !                                                                      !
 !2.0000000000000000,1.0000000000000000,3.0000000000000000,%f,%nan,'myF'!
-!,%inf,7.0000000000000000,9.0000000000000000,11.000000000000000,'my2',%!
-!f,                                                                    !
+!     ,%inf,7.0000000000000000,9.0000000000000000,11.000000000000000,'m!
+!     y2',%f,                                                          !
 !                                                                      !
 !2.0000000000000000,1.0000000000000000,3.0000000000000000,%f,%nan,'myF'!
-!,%inf,7.0000000000000000,9.0000000000000000,11.000000000000000,'my2',%!
-!f,                                                                    !
+!     ,%inf,7.0000000000000000,9.0000000000000000,11.000000000000000,'m!
+!     y2',%f,                                                          !

@@ -1,0 +1,94 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_inertia</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_inertia</b> -   compute the manipulator joint-space inertia matrix</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>M = rt_inertia(robot, q)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>robot</b></tt>
+       : robot object. It describes the n-link manipulator kinematics and dynamics.
+       </li>
+<li>
+<tt><b>q</b></tt>
+       : p-by-n matrix (p is arbitrary). Each row of this matrix is interpreted as a joint state vector.
+       </li>
+<li>
+<tt><b>M</b></tt>
+       : n-by-n-by-p hypermatrix. Each entry in this hypermatrix is the manipulator inertia matrix for the corresponding row in <tt><b>q</b></tt>.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl>
+<dd>
+<b></b><p>
+      This function computes the joint-space inertia matrix which relates joint torques to joint accelerations.
+      If <tt><b>q</b></tt> is a vector (p = 1), then <tt><b>M</b></tt> is an n-by-n symmetric matrix. Else (p &gt; 1) <tt><b>M</b></tt> is a p-dimensional array in which each entry is the manipulator joint-space inertia matrix for the corresponding row in <tt><b>q</b></tt>.
+     </p>
+</dd>
+<dd>
+<b></b><p>
+      Note that if <tt><b>robot</b></tt> contains motor inertia parameters, then motor inertia, referred to the link reference frame, will be added to the diagonal of each matrix in <tt><b>M</b></tt>.
+     </p>
+</dd>
+</dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // To show how the inertia "seen" by the waist joint of a Puma 560
+   // varies as a function of joint angles q2 and q3, the following
+   // code could be used.
+
+   // manipulator's pose definition
+   [q2, q3] = meshgrid(-%pi:0.2:%pi);
+   [r, c] = size(q2);
+   q = [zeros(r*c,1) q2(:) q3(:) zeros(r*c,3)];
+
+   // rt_inertia() execution
+   exec &lt;PATH&gt;/models/rt_puma560.sce;           // load Puma 560 parameters
+   M = rt_inertia(p560, q);                     // compute inertia matrix
+
+   // results plotting
+   M11 = M(1, 1, :); m11 = matrix(M11, r, c);   // reshape M11
+   cfh = scf();
+   drawlater();
+   surf(q2, q3, m11);
+   xgrid();
+   xtitle("", "q2 (rad)", "q3 (rad)", "m11 (Kg*m^2)");
+   xset("colormap", jetcolormap(64));
+   drawnow();   
+   
+  </pre>
+<h3><font color="blue">Cautionary</font></h3>
+<dl><dd>
+<b></b><p>
+     Simulation execution may take a few minutes.
+     </p>
+</dd></dl>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_accel.htm"><tt><b>rt_accel</b></tt></a>,&nbsp;&nbsp;<a href="rt_frne.htm"><tt><b>rt_frne</b></tt></a>,&nbsp;&nbsp;<a href="rt_rne.htm"><tt><b>rt_rne</b></tt></a>,&nbsp;&nbsp;<a href="rt_robot.htm"><tt><b>rt_robot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+<p>
+    M.W. Walker and D.E. Orin. Efficient dynamic computer simulation of robotic mechanisms. <em>ASME Journal of Dynamic Systems, Measurement and Control</em>, 104:205-211, 1982
+    </p>
+</body>
+</html>

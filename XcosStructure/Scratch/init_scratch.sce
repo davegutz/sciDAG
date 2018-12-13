@@ -27,6 +27,7 @@ mclose('all');
 
 global plant A B C D
 global loaded_scratch
+loaded_scratch = %f;
 
 exec('Callbacks\pre_xcos_simulate.sci');
 exec('Callbacks\post_xcos_simulate.sci');

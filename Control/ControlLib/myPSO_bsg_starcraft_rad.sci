@@ -5,7 +5,7 @@
 // This file must be used under the terms of the CC-BY-NC-SA
 // http://creativecommons.org/licenses/by-nc-sa/2.0/
 
-function [fopt,xopt, itopt]=myPSO_bsg_starcraft_radius(varargin)
+function [fopt,xopt, itopt]=myPSO_bsg_starcraft_rad(varargin)
 
     function argin = argindefault ( rhs , vararglist , ivar , default )
         // Returns the value of the input argument #ivar.

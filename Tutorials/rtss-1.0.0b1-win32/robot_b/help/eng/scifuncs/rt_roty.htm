@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>rt_roty</title>
+</head>
+<body bgcolor="#FFFFFF">
+<center>Scilab Function  </center>
+<div align="right">Last update : 13/09/2009</div>
+<p><b>rt_roty</b> -   homogeneous transform for rotation about Y-axis</p>
+<h3><font color="blue">Calling Sequence</font></h3>
+<dl><dd><tt>T = rt_roty(theta)</tt></dd></dl>
+<h3><font color="blue">Parameters</font></h3>
+<ul>
+<li>
+<tt><b>theta</b></tt>
+       : scalar. The angular displacement for rotation, in radians.
+       </li>
+<li>
+<tt><b>T</b></tt>
+       : 4-by-4 matrix. The homogeneous transform resulting from the rotation transformation.
+       </li>
+</ul>
+<h3><font color="blue">Description</font></h3>
+<dl><dd>
+<b></b><p>
+      Return a homogeneous transformation representing a rotation of <tt><b>theta</b></tt> radians about the Y-axis.
+     </p>
+</dd></dl>
+<h3><font color="blue">Examples</font></h3>
+<pre>
+   // The following example shows how rt_roty() can be used to generate a
+   // homogeneous transform representing a rotation of 30degrees about the
+   // Y-axis. Here, function rt_plot() is used to display result in a
+   // graphical way. You can found further details on use of rt_plot()
+   // reading its help page (quaternion/rt_plot).
+
+   // A rotation of 30degrees about the Y-axis
+   T = rt_roty(%pi/6),
+
+   // Plot the World frame orientation
+   h0 = scf(0); a0 = h0.children;
+   a0.tight_limits = "on"; a0.rotation_angles = [59, -5];
+   rt_plot(rt_quaternion(eye(3,3)));
+
+   // Plot orientation for the new frame.
+   // The Y-axis is in red whereas the X and the Z axes are in blue.
+   // Note how the Y-axis direction and verse are unchanged, whereas the X
+   // and the Z axes have been effectively rotated by 30degrees.
+
+   rt_plot(rt_quaternion(T), "X", "blue", "Y", "red", "Z", "blue");
+
+  </pre>
+<h3><font color="blue">See Also</font></h3>
+<p><a href="rt_rotx.htm"><tt><b>rt_rotx</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotz.htm"><tt><b>rt_rotz</b></tt></a>,&nbsp;&nbsp;<a href="rt_rotvec.htm"><tt><b>rt_rotvec</b></tt></a>,&nbsp;&nbsp;<a href="rt_plot-quaternion.htm"><tt><b>quaternion/rt_plot</b></tt></a>,&nbsp;&nbsp;</p>
+<h3><font color="blue">Authors</font></h3>
+<h4><font color="maroon">original Matlab version by</font></h4>
+<dl><dd>
+<b>Peter I. Corke</b>
+    CSIRO Manufacturing Science and Technology
+    </dd></dl>
+<h4><font color="maroon">Scilab implementation by</font></h4>
+<dl><dd>
+<b>Matteo Morelli</b>
+      Interdepartmental Research Center "E. Piaggio", University of Pisa
+    </dd></dl>
+<h3><font color="blue">Bibliography</font></h3>
+<p>
+    Corke, P.I. "A Robotics Toolbox for MATLAB", <em>IEEE Robotics and Automation Magazine</em>, Volume 3(1), March 1996, pp. 24-32
+    </p>
+</body>
+</html>

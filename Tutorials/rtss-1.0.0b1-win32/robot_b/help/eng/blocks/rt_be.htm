@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>rt_be_if</TITLE>
+</head>
+<body>
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A><UL>
+<li>
+<A HREF="#link1">Library</A><li>
+<A HREF="#link2">Description</A><li>
+<A HREF="#link3">Dialog Box</A><li>
+<A HREF="#link4">Default Properties</A><li>
+<A HREF="#link5">Interfacing Function</A><li>
+<A HREF="#link6">Computational Function (type 4)</A><li>
+<A HREF="#link7">See Also</A><li>
+<A HREF="#link8">Bibliography</A>
+</UL>
+<hr>
+<H2>
+<A NAME="link0"></A>rt_be_if<br><DIV ALIGN="CENTER"><A><IMG src="../../../scicos/gif_icons/rt_be_if.gif"></A></DIV>
+</H2>
+<H3><font color="blue"><A NAME="link1">Library</A></font></H3>
+<p>Robotics</p>
+<br><H3><font color="blue"><A NAME="link2">Description</A></font></H3>
+<P>
+This block is a single step discrete integrator. The output vector is the integral of the input vector computed with the first order backward Euler method define by the following formula: <tt>y</tt>(<tt>k</tt>) = <tt>h</tt> * <tt>u</tt>(<tt>k</tt>) + <tt>y</tt>(<tt>k</tt> - 1), where <tt>h</tt> is the time step, <tt>y</tt>(<tt>k</tt>) the output vector and <tt>u</tt>(<tt>k</tt>) the input vector at the same sample instant.
+    </P>
+<br><H3><font color="blue"><A NAME="link3">Dialog Box</A></font></H3>
+<DIV ALIGN="CENTER"><TABLE BORDER="1" BGCOLOR="#FFFFFF" CELLPADDING="8">
+<TR>
+<TD ALIGN="CENTER">Set discrete integral parameters (Backward Euler method)</TD>
+<TD ALIGN="CENTER"></TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Step</TD>
+<TD ALIGN="CENTER">1</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">Initial state</TD>
+<TD ALIGN="CENTER">0</TD>
+</TR>
+</TABLE></DIV>
+<UL>
+<LI>Step : 
+                scalar. The integration time step.
+                </LI>
+<LI>Initial state : 
+                a real vector. The initial value of output state.
+                </LI>
+</UL>
+<br><H3><font color="blue"><A NAME="link4">Default Properties</A></font></H3>
+<UL>
+<LI>always active:<b>no</b>
+</LI>
+<LI>direct-feedthrough:<b>no</b>
+</LI>
+<LI>zero-crossing:<b>no</b>
+</LI>
+<LI>mode:<b>no</b>
+</LI>
+<LI>number/sizes of inputs:<b>1 / [-1,1]</b>
+</LI>
+<LI>number/sizes of activation inputs:<b>1 / [1,1]</b>
+</LI>
+<LI>number/sizes of outputs:<b>1 / [-1,1]</b>
+</LI>
+<LI>number/sizes of activation outputs:<b>0 / </b>
+</LI>
+<LI>continuous-time state:<b>no</b>
+</LI>
+<LI>discrete-time state:<b>yes</b>
+</LI>
+<LI>name of computational function:<b>rtss_scs_be_cf4</b>
+</LI>
+</UL>
+<br><H3><font color="blue"><A NAME="link5">Interfacing Function</A></font></H3>
+<PRE>&lt;RTSSDIR&gt;/macros/rt_be_if.sci</PRE>
+<br><H3><font color="blue"><A NAME="link6">Computational Function (type 4)</A></font></H3>
+<PRE>&lt;RTSSDIR&gt;/src/rtss_scs_beulerint.c</PRE>
+<br><H3><font color="blue"><A NAME="link7">See Also</A></font></H3>
+<p><a href=".htm"><a href="rt_fe.htm"><tt><b>rt_fe_if</b></tt></a></a>,&nbsp;&nbsp;</p>
+<br><H3><font color="blue"><A NAME="link8">Bibliography</A></font></H3>
+<p>
+    A. Layec, "Modnum": Scilab toolbox for the communication systems - Reference Guide, Draft Version, February 2006, pp. 158-159
+    </p>
+<br><HR>
+<author><i>Matteo Morelli - Interdepartmental Research Center "E. Piaggio", University of Pisa,    </i><i>September 2009</i></author>
+</body>
+</html>
