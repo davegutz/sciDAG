@@ -1,0 +1,3 @@
+LIBRARY    libext1c.dll
+EXPORTS
+	ext1c

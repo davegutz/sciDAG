@@ -1,0 +1,3 @@
+LIBRARY    liblim_int.dll
+EXPORTS
+	lim_int
