@@ -6,8 +6,8 @@ curdir = pwd();
 cleaner_path = get_file_path('cleaner.sce');
 chdir(cleaner_path);
 // ------------------------------------------------------
-if fileinfo('loader.sce') <> [] then
-  mdelete('loader.sce');
+if fileinfo('LibScratchLoader.sce') <> [] then
+  mdelete('LibScratchLoader.sce');
 end
 // ------------------------------------------------------
 if fileinfo('Makelib.mak') <> [] then
@@ -27,8 +27,8 @@ if isdir('Release') then
   rmdir('Release','s');
 end
 // ------------------------------------------------------
-if fileinfo('liblim_int.dll') <> [] then
-  mdelete('liblim_int.dll');
+if fileinfo('libScratch.dll') <> [] then
+  mdelete('libScratch.dll');
 end
 // ------------------------------------------------------
 chdir(curdir);

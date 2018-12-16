@@ -7,7 +7,7 @@ if ~win64() then
   return
 end
 //
-lim_int_path = get_absolute_file_path('loader.sce');
+Scratch_path = get_absolute_file_path('LibScratchLoader.sce');
 //
 // ulink previous function with same name
 [bOK, ilib] = c_link('lim_int');
@@ -16,9 +16,9 @@ if bOK then
 end
 //
 link('C:\PROGRA~1\SCILAB~1.2\bin\scicos' + getdynlibext());
-link(lim_int_path + 'liblim_int' + getdynlibext(), ['lim_int'],'c');
+link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int'],'c');
 // remove temp. variables on stack
-clear lim_int_path;
+clear Scratch_path;
 clear bOK;
 clear ilib;
 // ----------------------------------------------------------------------------

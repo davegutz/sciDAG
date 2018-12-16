@@ -26,14 +26,17 @@
 // -->haveacompiler() ==> T
 //// libs = 'C:\Program"" ""Files\scilab-5.5.2\bin\scicos'
 // libs = 'C:\PROGRA~1\SCILAB~1.2\bin\scicos'
-// ilib_for_link('lim_int','lim_int_comp.c',libs,'c');
-//// ilib_for_link('lim_int','lim_int_comp.c','','c');
+// incs = 'C:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
+//// ilib_for_link('lim_int','lim_int_comp.c',libs,'c');
+// ilib_for_link('lim_int','lim_int_comp.c',libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
 // This is the computational function for a Scicos model block.
 // The model is of a variable-gain integrator with hard high and low limits.
 //#include "sciocos\scicos_block4.h"
 //#include "scicos_blocks\include\scicos_block4.h"
-//#include "scicos_block4.h"
-#include "C:\Program Files\scilab-5.5.2\modules\scicos_blocks\includes\scicos_block4.h"
+//#include <scicos_blocks/includes/scicos_block4.h>
+//#include <scicos_blocks/scicos_block.h>
+//#include "C:\Program Files\scilab-5.5.2\modules\scicos_blocks\includes\scicos_block4.h"
+#include <scicos_block4.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

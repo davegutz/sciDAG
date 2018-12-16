@@ -43,7 +43,7 @@ SCILAB_LIBS = "$(SCIDIR)/bin/blasplus.lib" \
 "$(SCIDIR)/bin/scilab_windows.lib"
 # ------------------------------------------------------
 # name of the dll to be built
-LIBRARY = liblim_int
+LIBRARY = libScratch
 # ------------------------------------------------------
 # list of files
 FILES_SRC = lim_int_comp.c
@@ -60,7 +60,7 @@ OTHERLIBS = C:\PROGRA~1\SCILAB~1.2\bin\scicos.lib
 # ------------------------------------------------------
 #CC = 
 # ------------------------------------------------------
-CFLAGS = $(CC_OPTIONS) -D__SCILAB_TOOLBOX__ -DFORDLL   
+CFLAGS = $(CC_OPTIONS) -D__SCILAB_TOOLBOX__ -DFORDLL -IC:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes  
 # ------------------------------------------------------
 FFLAGS = $(FC_OPTIONS) -DFORDLL  
 # ------------------------------------------------------
