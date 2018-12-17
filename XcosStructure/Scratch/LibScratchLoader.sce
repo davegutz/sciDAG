@@ -22,3 +22,4 @@ clear Scratch_path;
 clear bOK;
 clear ilib;
 // ----------------------------------------------------------------------------
+exec('lim_int_intf.sci', -1);
