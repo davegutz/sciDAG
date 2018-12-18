@@ -35,8 +35,33 @@ plant.d = D;
 exec('Callbacks\pre_xcos_simulate.sci');
 exec('Callbacks\post_xcos_simulate.sci');
 loadXcosLibs(); loadScicos();
-importXcosDiagram("./scratch552.xcos");
-xcos('./scratch552.xcos');
+
+
+if ~win64() then
+  warning(_("This module requires a Windows x64 platform."));
+  return
+end
+//
+Scratch_path = get_absolute_file_path('init_scratch552_UseLib.sce')+'..\Lib\';
+//
+// ulink previous function with same name
+[bOK, ilib] = c_link('lim_int');
+if bOK then
+  ulink(ilib);
+end
+//
+link('C:\PROGRA~1\SCILAB~1.2\bin\scicos' + getdynlibext());
+link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int'],'c');
+// remove temp. variables on stack
+//clear Scratch_path;
+clear bOK;
+clear ilib;
+// ----------------------------------------------------------------------------
+mprintf('Executed init_scratch552_UseLib.sce up to importXcosDiagram*********\n');
+
+
+importXcosDiagram("./scratch552_UseLib.xcos");
+xcos('./scratch552_UseLib.xcos');
 scicos_simulate(scs_m);
 scs_m.props.context
 
