@@ -23,3 +23,4 @@ clear bOK;
 clear ilib;
 // ----------------------------------------------------------------------------
 exec('lim_int_intf.sci', -1);
+mprintf('Executed LibScratchLoader.sce*********\n');

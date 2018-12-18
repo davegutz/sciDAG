@@ -20,7 +20,7 @@
 // Dec 3, 2018 	DA Gutz		Created
 // 
 funcprot(0);
-//getd('../../Control/ControlLib')
+getd('../Lib')
 n_fig = -1;
 xdel(winsid())
 //mclose('all');
