@@ -20,6 +20,6 @@
 // Dec 17, 2018     DA Gutz         Created
 // 
 
-// Load and run scratch552_UseLib.xcos
-exec init_scratch552_UseLib.sce
-// TODO:   scicos_simulate(scs_m) generates warnings CMSCOPE('set').   Also does not run callbacks
+// Load scratch552_UseLib.xcos
+exec(init_scratch552_UseLib.sce, -1);
+

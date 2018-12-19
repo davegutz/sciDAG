@@ -7,21 +7,16 @@ if ~win64() then
   return
 end
 //
-Scratch_path = get_absolute_file_path('LibScratchLoader.sce');
+Scratch_path = get_absolute_file_path('frictionLoader.sce');
 //
 // ulink previous function with same name
-[bOK, ilib] = c_link('lim_int');
-if bOK then
-  ulink(ilib);
-end
-//
 [bOK, ilib] = c_link('friction');
 if bOK then
   ulink(ilib);
 end
 //
 link('C:\PROGRA~1\SCILAB~1.2\bin\scicos' + getdynlibext());
-link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int','friction'],'c');
+link(Scratch_path + 'libScratch' + getdynlibext(), ['friction'],'c');
 // remove temp. variables on stack
 clear Scratch_path;
 clear bOK;

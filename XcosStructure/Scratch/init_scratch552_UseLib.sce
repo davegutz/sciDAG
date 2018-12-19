@@ -23,7 +23,7 @@ funcprot(0);
 getd('../Lib')
 n_fig = -1;
 xdel(winsid())
-//mclose('all');
+//mclose('all');   This cannot be scripted, has to be called at command line
 global plant A B C D
 global loaded_scratch
 A=0;B=1;C=1;D=0;
@@ -51,7 +51,8 @@ if bOK then
 end
 //
 link('C:\PROGRA~1\SCILAB~1.2\bin\scicos' + getdynlibext());
-link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int'],'c');
+link(Scratch_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
+link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int'], 'c');
 // remove temp. variables on stack
 //clear Scratch_path;
 clear bOK;
@@ -62,7 +63,7 @@ mprintf('Executed init_scratch552_UseLib.sce up to importXcosDiagram*********\n'
 
 importXcosDiagram("./scratch552_UseLib.xcos");
 xcos('./scratch552_UseLib.xcos');
-scicos_simulate(scs_m);
-scs_m.props.context
+//scicos_simulate(scs_m);
+//scs_m.props.context
 
 

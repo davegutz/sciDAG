@@ -33,30 +33,46 @@ haveacompiler()
 //// libs = 'C:\Program"" ""Files\scilab-5.5.2\bin\scicos'
 libs = 'C:\PROGRA~1\SCILAB~1.2\bin\scicos'
 incs = 'C:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
-ilib_for_link('lim_int','lim_int_comp.c',libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
+entries = ['lim_int', 'friction'];
+sources = ['lim_int_comp.c', 'friction_comp.c'];
+ilib_for_link(entries,sources,libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
+//ilib_for_link('lim_int','lim_int_comp.c',libs,'c','','Lib_lim_int_Loader.sce', 'Scratch', '','-I'+incs, '', '');
 // ******************************************************************************
 
 // ******************  Palette for C-blocks
 // Need:  
+//      friction_intf.sci  (initializer)
+//      friction_comp.c  (run it through the compilation process above)
 //      lim_int_intf.sci  (initializer)
 //      lim_int_comp.c  (run it through the compilation process above)
 
-
-// LHY block custom and library add
-// Create superblock by selecting elements on Xcos diagram and right-click
-// Customeize name and color by Format-->Edit
-// Populate availabe parameters by adding to Context or defining at cli
-// Add mask.  Right-click-->Superblock mask-->Create
-// Insert what you want
-// Save superblock to new, empty Xcos file, e.eg.  LYY_Xcos_Lib.xcos
-// Right-click on Palettes of Palettes brower -->Create
-// Rename  --> "LHY"
-// Palettes menu --> Open folder at tope of Palettes menu--> LHY_Xcos_Lib.xcos
-// Move file to folder "LHY"   Select file and drag to folder "LHY"
-// Rename.   Palettes-->LHY  modify on the right the name as "LHY_Xcos"
-
 // ****************** Create pallette with LIMINT
 loadXcosLibs;
+
+exec('friction_intf.sci', -1);
+style = struct();
+style.fillColor="blue";
+
+block_img = SCI + "/modules/xcos/images/blocks/RAMP.svg";
+// protect drive letter
+if getos() == "Windows" then
+    block_img = "/" + block_img;
+end
+//style.image="file://" + block_img;
+o = FRICTION("define");
+pal = xcosPal("My palette");
+//add block to this palette using e.g. RAMP icon
+//pal = xcosPalAddBlock(pal, o, SCI + "/modules/xcos/images/palettes/RAMP.png", style);
+pal = xcosPalAddBlock(pal, o, '', style);
+xcosPalAdd(pal);
+// Open "My palette" of Palettes brower 
+// Open libXcosStructure.xcos
+// copy block from My palette to libXcosStructure and save
+// delete "My palette"
+// confirm presence of new block in Palette browser --> XcosStructure --> LibXcosStructure.xcos
+
+
+
 exec('lim_int_intf.sci', -1);
 style = struct();
 style.fillColor="red";
@@ -73,6 +89,31 @@ pal = xcosPal("My palette");
 //pal = xcosPalAddBlock(pal, o, SCI + "/modules/xcos/images/palettes/RAMP.png", style);
 pal = xcosPalAddBlock(pal, o, '', style);
 xcosPalAdd(pal);
+// Open "My palette" of Palettes brower 
+// Open libXcosStructure.xcos
+// copy block from My palette to libXcosStructure and save
+// delete "My palette"
+// confirm presence of new block in Palette browser --> XcosStructure --> LibXcosStructure.xcos
+
+
+
+// Old reference stuff:
+
+// LHY block custom and library add
+// Create superblock by selecting elements on Xcos diagram and right-click
+// Customeize name and color by Format-->Edit
+// Populate availabe parameters by adding to Context or defining at cli
+// Add mask.  Right-click-->Superblock mask-->Create
+// Insert what you want
+// Save superblock to new, empty Xcos file, e.eg.  LYY_Xcos_Lib.xcos
+// Right-click on Palettes of Palettes brower -->Create
+// Rename  --> "LHY"
+// Palettes menu --> Open folder at tope of Palettes menu--> LHY_Xcos_Lib.xcos
+// Move file to folder "LHY"   Select file and drag to folder "LHY"
+// Rename.   Palettes-->LHY  modify on the right the name as "LHY_Xcos"
+
+
+
 // Right-click on Palettes of Palettes brower -->Create
 // Rename  --> "LIMINT"
 // New xcos diagram and add block.  Edit properties name LIMINT.  Save as LIMINT.xcos
