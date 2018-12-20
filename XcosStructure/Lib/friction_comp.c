@@ -27,7 +27,7 @@
 //// libs = 'C:\Program"" ""Files\scilab-5.5.2\bin\scicos'
 // libs = 'C:\PROGRA~1\SCILAB~1.2\bin\scicos'
 // incs = 'C:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
-// ilib_for_link('lim_int','friction_comp.c',libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
+// ilib_for_link('friction','friction_comp.c',libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
 // This is the computational function for a Scicos model block.
 // The model is of a dynamic/static friction model
 #include <scicos_block4.h>
@@ -38,23 +38,23 @@
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
 // parameters
-#define Lhi (GetRparPtrs(blk)[0]) // integrator high limit
-#define Llo (GetRparPtrs(blk)[1]) // integrator low limit
+#define FSTF (GetRparPtrs(blk)[0]) // static friction, lbf
+#define FDYF (GetRparPtrs(blk)[1]) // dynamic friction, lbf
+#define C (GetRparPtrs(blk)[2]) // damping coefficient, lbf/in/s
+#define EPS (GetRparPtrs(blk)[3]) // boundary layer, in/s
+#define G (GetRparPtrs(blk)[4])     // 386/lbm
 
 // inputs
-#define STOPS (r_IN(0,0)) // on stops indicator -1,0,1
-#define VN (r_IN(1,0)) // present velocity
-#define VP (r_IN(2,0)) // past velocity
-#define DF (r_IN(3,0)) // force imbalance
+#define DF (r_IN(0,0)) // force imbalance
+#define STOPS (r_IN(1,0)) // on stops indicator -1,0,1
 
 // states
-#define X (GetState(blk)[0]) // integrator state
-#define Xdot (GetDerState(blk)[0]) // derivative of the integrator output
+#define V (GetState(blk)[0]) // integrator state
+#define Vdot (GetDerState(blk)[0]) // derivative of the integrator output
 
 // outputs
-#define force (r_OUT(0, 0)) // integrator output
-#define motion (r_OUT(1, 0)) // integrator gain
-#define DFmod (r_OUT(2, 0)) // modified force imbalance
+#define velo (r_OUT(0, 0)) // velocity, in/s
+#define DFmod (r_OUT(1, 0)) // integrator output
 
 // other constants
 #define surf0 (GetGPtrs(blk)[0])
@@ -63,42 +63,71 @@
 #define mode0 (GetModePtrs(blk)[0])
 
 
-// if X is greater than Lhi, then mode is 1
-// if X is between Lhi and zero, then mode is 2
-// if X is between zero and Llo, then mode is 3
-// if X is less than Llo, then mode is 4
-#define mode_xhzl 1
-#define mode_hxzl 2
-#define mode_hzxl 3
-#define mode_hzlx 4
+// if V >= EPS, then mode is 1
+// if V <= -EPS, then mode is 2
+// if 0<=V<EPS and u>=FSTF, then mode is 3
+// if -EPS<V<=0 and u<=-FSTF, then mode is 4
+// if 0<=V<EPS and u<FSTF, then mode is 5
+// if -EPS<V<=0 and u>-FSTF, then mode is 6
+#define mode_move_plus 1
+#define mode_move_neg 2
+#define mode_tran_plus 3
+#define mode_tran_neg 4
+#define mode_stuck_plus 5
+#define mode_stuck_neg 6
+
 
 void friction(scicos_block *blk, int flag)
 {
-    double gain = 0;
-
     switch (flag)
     {
         case 0:
             // compute the derivative of the continuous time state
-            Xdot = 0;
+            if(mode0==mode_move_plus)
+                DFmod = DF-FDYF - V*C;
+            else if(mode0==mode_move_neg)
+                DFmod = DF+FDYF - V*C;
+            else if(mode0==mode_tran_plus)
+                DFmod = DF-FSTF - V*C;
+            else if(mode0==mode_tran_neg)
+                DFmod = DF+FSTF - V*C;
+            else if(mode0==mode_stuck_plus)
+                DFmod = 0;
+            else if(mode0==mode_stuck_neg)
+                DFmod = 0;
+            else
+                DFmod = 0;
+            Vdot = DFmod*G;
             break;
 
         case 1:
             // compute the outputs of the block
-            force = DF;
-            motion = 1;
-            DFmod = DF;
+            DFmod = Vdot/G;
+            velo = V;
             break;
 
         case 9:
             // compute zero crossing surfaces and set modes
-            surf0 = X;
-            surf1 = X;
-            surf2 = X;
+            surf0 = V-EPS;
+            surf1 = V+EPS;
+            surf2 = V;
 
             if (get_phase_simulation() == 1)
             {
-                mode0 = 1;
+                if(surf0>=0)
+                    mode0 = mode_move_plus;
+                else if(surf1<=0)
+                    mode0 = mode_move_neg;
+                else if(surf2>=0 && DF>=FSTF)
+                    mode0 = mode_tran_plus;
+                else if(surf2<0 && DF<=-FSTF)
+                    mode0 = mode_tran_neg;
+                else if(surf0<0 && DF<FSTF)
+                    mode0 = mode_stuck_plus;
+                else if(surf1>0 && DF>-FSTF)
+                    mode0 = mode_stuck_neg;
+                else
+                    mode0 = mode_stuck_plus;
             }
             break;
     }

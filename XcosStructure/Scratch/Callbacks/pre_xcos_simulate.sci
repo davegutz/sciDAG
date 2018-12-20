@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 3, 2018 	DA Gutz		Created
+// Dec 3, 2018  DA Gutz     Created
 // 
 function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
     global loaded_scratch

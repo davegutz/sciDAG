@@ -52,13 +52,13 @@ function [x,y,typ] = FRICTION(job, arg1, arg2)
         exprs = graphics.exprs
         model = arg1.model
         while %t do
-            [ok,FSTF,FDYF,C,EPS,exprs] = getvalue('Set prototype friction parameters',..
-            ['FSTF';'FDYF';'C';'EPS'],..
-            list('vec',1,'vec',1,'vec',1,'vec',1),..
+            [ok,FSTF,FDYF,C,EPS,G,exprs] = getvalue('Set prototype friction parameters',..
+            ['FSTF';'FDYF';'C';'EPS';'G'],..
+            list('vec',1,'vec',1,'vec',1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
 //            model.state = [Xinitial]
-            model.rpar = [FSTF;FDYF;C;EPS;]
+            model.rpar = [FSTF;FDYF;C;EPS;G]
             graphics.exprs = exprs
             x.graphics = graphics
             x.model = model
@@ -71,25 +71,26 @@ function [x,y,typ] = FRICTION(job, arg1, arg2)
         FDYF = 0
         C = 0
         EPS = 1e-6
+        G = 0
         model = scicos_model()
         model.sim = list('friction',4)
-        model.in = [1;1;1;1]
-        model.out = [1;1;1]
-//        model.state = [Xinitial]
+        model.in = [1;1]
+        model.out = [1;1]
+        model.state = [0]
         model.dstate = [0]
-        model.rpar = [FSTF;FDYF;C;EPS]
+        model.rpar = [FSTF; FDYF; C; EPS; G]
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 3
         model.dep_ut = [%t %t]
 
-        exprs = [string([FSTF;FDYF;C;EPS])]
+        exprs = [string([FSTF;FDYF;C;EPS;G])]
         gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
         'txt=[''Prototype'';''Stiction'']';
         'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';
-        'txt=[''STOPS'';'''';''VN'';'''';''VP'';'''';''DF'']';
+        'txt=[''DF'';'''';''STOPS'';]';
         'xstringb(x+0.02*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-        'txt=['''';''force'';'''';''motion'';'''';''DFmod'';'''']';
+        'txt=['''';''V'';'''';''DFmod'';'''']';
         'xstringb(x+0.73*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
         ]
         x = standard_define([4 2],model,exprs,gr_i)

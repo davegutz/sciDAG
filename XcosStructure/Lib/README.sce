@@ -40,43 +40,38 @@ ilib_for_link(entries,sources,libs,'c','','LibScratchLoader.sce', 'Scratch', '',
 // ******************************************************************************
 
 // ******************  Palette for C-blocks
+
+// ****************** Create pallette with FRICTION
 // Need:  
 //      friction_intf.sci  (initializer)
-//      friction_comp.c  (run it through the compilation process above)
-//      lim_int_intf.sci  (initializer)
-//      lim_int_comp.c  (run it through the compilation process above)
-
-// ****************** Create pallette with LIMINT
+// the intf function is used to setup the ocntents of the palette.
+// if intf changes, you must regenerate the palette and repopulate the xcos file.
 loadXcosLibs;
-
 exec('friction_intf.sci', -1);
 style = struct();
 style.fillColor="blue";
-
 block_img = SCI + "/modules/xcos/images/blocks/RAMP.svg";
 // protect drive letter
 if getos() == "Windows" then
     block_img = "/" + block_img;
 end
-//style.image="file://" + block_img;
+style.image="file://" + block_img;
 o = FRICTION("define");
-pal = xcosPal("My palette");
-//add block to this palette using e.g. RAMP icon
-//pal = xcosPalAddBlock(pal, o, SCI + "/modules/xcos/images/palettes/RAMP.png", style);
+pal = xcosPal("My friction");
 pal = xcosPalAddBlock(pal, o, '', style);
 xcosPalAdd(pal);
-// Open "My palette" of Palettes brower 
+// Open "My friction" of Palettes brower 
 // Open libXcosStructure.xcos
-// copy block from My palette to libXcosStructure and save
-// delete "My palette"
+// copy block from "My friction" to libXcosStructure and save
+// delete "My friction"
 // confirm presence of new block in Palette browser --> XcosStructure --> LibXcosStructure.xcos
 
 
 
+// ****************** Create pallette with LIMINT
 exec('lim_int_intf.sci', -1);
 style = struct();
 style.fillColor="red";
-
 block_img = SCI + "/modules/xcos/images/blocks/RAMP.svg";
 // protect drive letter
 if getos() == "Windows" then
@@ -84,15 +79,15 @@ if getos() == "Windows" then
 end
 //style.image="file://" + block_img;
 o = LIMINT("define");
-pal = xcosPal("My palette");
+pal = xcosPal("My limint");
 //add block to this palette using e.g. RAMP icon
 //pal = xcosPalAddBlock(pal, o, SCI + "/modules/xcos/images/palettes/RAMP.png", style);
 pal = xcosPalAddBlock(pal, o, '', style);
 xcosPalAdd(pal);
-// Open "My palette" of Palettes brower 
+// Open "My limint" of Palettes brower 
 // Open libXcosStructure.xcos
-// copy block from My palette to libXcosStructure and save
-// delete "My palette"
+// copy block from "My limint" to libXcosStructure and save
+// delete "My limint"
 // confirm presence of new block in Palette browser --> XcosStructure --> LibXcosStructure.xcos
 
 
