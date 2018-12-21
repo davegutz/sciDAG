@@ -75,14 +75,14 @@ function [x,y,typ] = FRICTION(job, arg1, arg2)
         model = scicos_model()
         model.sim = list('friction',4)
         model.in = [1;1]
-        model.out = [1;1]
+        model.out = [1;1;1]
         model.state = [0]
         model.dstate = [0]
         model.rpar = [FSTF; FDYF; C; EPS; G]
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 3
-        model.dep_ut = [%t %t]
+        model.dep_ut = [%t %t] // [direct feedthrough,   time dependence]
 
         exprs = [string([FSTF;FDYF;C;EPS;G])]
         gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';

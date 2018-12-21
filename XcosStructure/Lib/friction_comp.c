@@ -54,7 +54,8 @@
 
 // outputs
 #define velo (r_OUT(0, 0)) // velocity, in/s
-#define DFmod (r_OUT(1, 0)) // integrator output
+#define DFmodo (r_OUT(1, 0)) // integrator output
+#define mode0o (r_OUT(2, 0)) // mode0
 
 // other constants
 #define surf0 (GetGPtrs(blk)[0])
@@ -63,22 +64,19 @@
 #define mode0 (GetModePtrs(blk)[0])
 
 
-// if V >= EPS, then mode is 1
-// if V <= -EPS, then mode is 2
-// if 0<=V<EPS and u>=FSTF, then mode is 3
-// if -EPS<V<=0 and u<=-FSTF, then mode is 4
-// if 0<=V<EPS and u<FSTF, then mode is 5
-// if -EPS<V<=0 and u>-FSTF, then mode is 6
-#define mode_move_plus 1
-#define mode_move_neg 2
-#define mode_tran_plus 3
-#define mode_tran_neg 4
-#define mode_stuck_plus 5
-#define mode_stuck_neg 6
-
+// if V >= EPS, then mode is 2
+// if V <= -EPS, then mode is -2
+// if 0<=V<EPS and u<FSTF, then mode is 1
+// if -EPS<V<=0 and u>-FSTF, then mode is -1
+#define mode_move_plus 2
+#define mode_move_neg -2
+#define mode_stuck_plus 1
+#define mode_stuck_neg -1
+#define mode_unknown 0
 
 void friction(scicos_block *blk, int flag)
 {
+    static double DFmod;
     switch (flag)
     {
         case 0:
@@ -87,47 +85,40 @@ void friction(scicos_block *blk, int flag)
                 DFmod = DF-FDYF - V*C;
             else if(mode0==mode_move_neg)
                 DFmod = DF+FDYF - V*C;
-            else if(mode0==mode_tran_plus)
-                DFmod = DF-FSTF - V*C;
-            else if(mode0==mode_tran_neg)
-                DFmod = DF+FSTF - V*C;
             else if(mode0==mode_stuck_plus)
-                DFmod = 0;
+                DFmod = max(DF-FSTF, 0);
             else if(mode0==mode_stuck_neg)
-                DFmod = 0;
-            else
+                DFmod = min(DF+FSTF, 0);
+            else if(mode0==mode_unknown)
                 DFmod = 0;
             Vdot = DFmod*G;
             break;
 
         case 1:
             // compute the outputs of the block
-            DFmod = Vdot/G;
             velo = V;
+            DFmodo = DFmod;
+            mode0o = mode0;
             break;
 
         case 9:
             // compute zero crossing surfaces and set modes
-            surf0 = V-EPS;
-            surf1 = V+EPS;
-            surf2 = V;
+            surf0 = V;
+			surf1 = DF-FSTF;
+			surf2 = DF+FSTF;
 
             if (get_phase_simulation() == 1)
             {
-                if(surf0>=0)
+                if(surf0>EPS)
                     mode0 = mode_move_plus;
-                else if(surf1<=0)
+                else if(surf0<-EPS)
                     mode0 = mode_move_neg;
-                else if(surf2>=0 && DF>=FSTF)
-                    mode0 = mode_tran_plus;
-                else if(surf2<0 && DF<=-FSTF)
-                    mode0 = mode_tran_neg;
-                else if(surf0<0 && DF<FSTF)
+                else if(surf1>0)
                     mode0 = mode_stuck_plus;
-                else if(surf1>0 && DF>-FSTF)
+                else if(surf2<0)
                     mode0 = mode_stuck_neg;
-                else
-                    mode0 = mode_stuck_plus;
+				else	
+					mode0 = mode_unknown;
             }
             break;
     }

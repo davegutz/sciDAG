@@ -36,8 +36,9 @@ incs = 'C:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
 entries = ['lim_int', 'friction'];
 sources = ['lim_int_comp.c', 'friction_comp.c'];
 ilib_for_link(entries,sources,libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
-//ilib_for_link('lim_int','lim_int_comp.c',libs,'c','','Lib_lim_int_Loader.sce', 'Scratch', '','-I'+incs, '', '');
 // ******************************************************************************
+
+
 
 // ******************  Palette for C-blocks
 
@@ -50,7 +51,7 @@ loadXcosLibs;
 exec('friction_intf.sci', -1);
 style = struct();
 style.fillColor="blue";
-block_img = SCI + "/modules/xcos/images/blocks/RAMP.svg";
+block_img = pwd() + "/images/blocks/FRICTION.png";
 // protect drive letter
 if getos() == "Windows" then
     block_img = "/" + block_img;

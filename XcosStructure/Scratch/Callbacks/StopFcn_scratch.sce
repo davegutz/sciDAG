@@ -32,6 +32,6 @@ sys = lincos(scs_m_lin);
 mprintf('In StopFcn_scratch after lincos\n')  
 figure()
 bode(sys, 'rad');
-disp(B)
-disp(plant.b)
+//disp(B)
+//disp(plant.b)
 mprintf('Completed StopFcn_scratch.sce\n')  

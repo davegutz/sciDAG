@@ -23,6 +23,6 @@ global A B C D plant
 mprintf('In InitFcn_scratch\n')  
 S1=syslin('c',A,B,C);   //Linear system definition
 [plant.a, plant.b, plant.c, plant.d] = abcd(S1);
-disp(B)
-disp(plant.b)
+//disp(B)
+//disp(plant.b)
 mprintf('Completed InitFcn_scratch.sce\n')  
