@@ -21,6 +21,7 @@
 // 
 funcprot(0);
 getd('../Lib')
+exec('../Lib/init_libScratch.sce', -1);
 n_fig = -1;
 xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line

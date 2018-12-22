@@ -52,6 +52,7 @@ exec('friction_intf.sci', -1);
 style = struct();
 style.fillColor="blue";
 block_img = pwd() + "/images/blocks/FRICTION.png";
+loc_img = pwd() + "\images\blocks\FRICTION.gif";
 // protect drive letter
 if getos() == "Windows" then
     block_img = "/" + block_img;
@@ -59,7 +60,9 @@ end
 style.image="file://" + block_img;
 o = FRICTION("define");
 pal = xcosPal("My friction");
-pal = xcosPalAddBlock(pal, o, '', style);
+//pal = xcosPalAddBlock(pal, o, '', style);
+pal = xcosPalAddBlock(pal, o, loc_img, style);
+//xcosPalAddBlock('User-Defined Functions', o, loc_img, style);
 xcosPalAdd(pal);
 // Open "My friction" of Palettes brower 
 // Open libXcosStructure.xcos
