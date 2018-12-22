@@ -23,10 +23,16 @@
 // 
 
 // ******************  Palette for C-blocks
+funcprot(0);
 loadXcosLibs;
+try
+    xcosPalDelete("libScratch");
+end
 pal = xcosPal("libScratch");
+xcosPalAdd(pal);
 getd('../Lib');
 xcos('../Lib/LibXcosStructure.xcos');
+lib_path = get_absolute_file_path('init_libScratch.sce');
 if getos() == 'Windows' then
     unix('del '+TMPDIR+'\*.gif');
 else
@@ -36,7 +42,7 @@ end
 // ****************** Create pallette with FRICTION
 style = struct();
 style.fillColor="blue";
-block_img = pwd() + "/images/blocks/FRICTION.png";
+block_img = lib_path + "/images/blocks/FRICTION.png";
 // protect drive letter
 if getos() == "Windows" then
     block_img = "/" + block_img;
