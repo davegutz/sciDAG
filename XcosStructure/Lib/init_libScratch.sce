@@ -38,7 +38,7 @@ if getos() == 'Windows' then
 else
     unix('rm -f '+TMPDIR+'/*.gif');
 end        
-    
+
 // ****************** Create pallette with FRICTION
 style = struct();
 style.fillColor="blue";
