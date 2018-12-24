@@ -20,7 +20,7 @@
 // Dec 17, 2018    DA Gutz      Created for Scilab 5.5.2
 // 
 
-// work to handle auto builds in init_libScratch.sce
+// work in progress to develop procedure to handle auto builds in init_libScratch.sce
 blk_def = tlist(['block'; 'intf'; 'source.code', 'code_type'; 'icon_rel_path'],'myintf.sci', 'mysrc.c', 'c','./blocks');
 blocks = list(blk_def, blk_def);
 

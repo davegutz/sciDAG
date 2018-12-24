@@ -23,5 +23,9 @@ clear
 clearglobal
 xdel(winsid())
 mclose('all');
+listf = listfunctions();
+for i = 1:size(listf,2)
+    evstr('clear ' + listf(i))
+end
 
 

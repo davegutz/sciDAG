@@ -22,7 +22,7 @@
 // Dec 17, 2018    DA Gutz      Created for Scilab 5.5.2
 // 
 
-// ******************  Palette for C-blocks
+// ******************  Temporary palette for C-blocks
 funcprot(0);
 loadXcosLibs;
 try
@@ -33,6 +33,8 @@ xcosPalAdd(pal);
 getd('../Lib');
 xcos('../Lib/LibXcosStructure.xcos');
 lib_path = get_absolute_file_path('init_libScratch.sce');
+
+// Remove any old gif because they cause bomb in xcosPalAddBlock calls
 if getos() == 'Windows' then
     unix('del '+TMPDIR+'\*.gif');
 else

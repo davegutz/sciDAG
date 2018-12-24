@@ -23,6 +23,7 @@
 // Dec 14, 2018 	DA Gutz		Created
 // 
 function [force, motion, DFmod] = friction_actuator_a_b(stops, vn, vp, df, fstf, fdyf, c, eps)
+    // head comment
     force = df;
     motion = 1;
     DFmod = df;

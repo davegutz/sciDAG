@@ -48,10 +48,16 @@ for i=1:length(scs_m.objs)
 end
 mprintf('In StopFcn_scratch before lincos f\n')  
 sys_f = lincos(scs_m_lin_f);
-mprintf('In StopFcn_scratch after lincos f\n')  
-figure()
-bode(sys_f, 'rad');
-
+mprintf('In StopFcn_scratch after lincos f\n')
+try
+    figure()
+    bode(sys_f, 'rad');
+catch
+    if lasterror() == 'Singularity of log or tan function.' then
+        warning('Linear response of ""FRICTION_SUPER"" is undefined...showing small DC response')
+        bode(syslin('c',0,0,0,1e-12), [1,10], 'rad')
+    end
+end
 
 //disp(B)
 //disp(plant.b)

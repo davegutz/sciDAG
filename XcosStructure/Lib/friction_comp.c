@@ -41,8 +41,10 @@
 #define FSTF (GetRparPtrs(blk)[0]) // static friction, lbf
 #define FDYF (GetRparPtrs(blk)[1]) // dynamic friction, lbf
 #define C (GetRparPtrs(blk)[2]) // damping coefficient, lbf/in/s
-#define EPS (GetRparPtrs(blk)[3]) // boundary layer, in/s
+#define EPS (GetRparPtrs(blk)[3]) // boundary layer, in/s.***do't think this has
+// any effect in xcos with zcd - holdover from Simulink modeling of friction
 #define G (GetRparPtrs(blk)[4])     // 386/lbm
+#define LINCOS_OVERRIDE (GetRparPtrs(blk)[5]) // flag to disable friction
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
@@ -72,7 +74,7 @@
 #define mode_move_neg -2
 #define mode_stuck_plus 1
 #define mode_stuck_neg -1
-#define mode_unknown 0
+#define mode_lincos_override 0
 
 void friction(scicos_block *blk, int flag)
 {
@@ -81,7 +83,9 @@ void friction(scicos_block *blk, int flag)
     {
         case 0:
             // compute the derivative of the continuous time state
-            if(mode0==mode_move_plus)
+            if(mode0==mode_lincos_override)
+                DFmod = -V*C;
+            else if(mode0==mode_move_plus)
                 DFmod = DF-FDYF - V*C;
             else if(mode0==mode_move_neg)
                 DFmod = DF+FDYF - V*C;
@@ -89,7 +93,7 @@ void friction(scicos_block *blk, int flag)
                 DFmod = max(DF-FSTF, 0);
             else if(mode0==mode_stuck_neg)
                 DFmod = min(DF+FSTF, 0);
-            else if(mode0==mode_unknown)
+            else
                 DFmod = 0;
             Vdot = DFmod*G;
             break;
@@ -109,7 +113,9 @@ void friction(scicos_block *blk, int flag)
 
             if (get_phase_simulation() == 1)
             {
-                if(surf0>EPS)
+                if(LINCOS_OVERRIDE && STOPS==0)
+                    mode0 = mode_lincos_override;
+                else if(surf0>EPS)
                     mode0 = mode_move_plus;
                 else if(surf0<-EPS)
                     mode0 = mode_move_neg;
@@ -117,8 +123,6 @@ void friction(scicos_block *blk, int flag)
                     mode0 = mode_stuck_plus;
                 else if(surf2<0)
                     mode0 = mode_stuck_neg;
-				else	
-					mode0 = mode_unknown;
             }
             break;
     }
