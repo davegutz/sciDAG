@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Dec 3, 2018 	DA Gutz		Created
 // 
-global plant A B C D
+global plant A B C D LINCOS_OVERRIDE
 mprintf('In StopFcn_scratch\n')  
 
 // bode of ABCD_With_FB
@@ -38,6 +38,7 @@ figure()
 bode(sys, 'rad');
 
 // bode of FRICTION
+LINCOS_OVERRIDE = 1;
 for i=1:length(scs_m.objs)
     if (typeof(scs_m.objs(i))=="Block"..
          & (scs_m.objs(i).gui=="DSUPER" | scs_m.objs(i).gui=="SUPER_f")..
@@ -58,6 +59,7 @@ catch
         bode(syslin('c',0,0,0,1e-12), [1,10], 'rad')
     end
 end
+LINCOS_OVERRIDE = 0;
 
 //disp(B)
 //disp(plant.b)

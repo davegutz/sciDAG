@@ -20,10 +20,10 @@
 // Dec 3, 2018  DA Gutz     Created
 // 
 
-global A B C D plant
+global A B C D plant LINCOS_OVERRIDE
 global loaded_scratch
 mprintf('In PreLoadFcn_scratch\n')  
-A=0;B=1;C=1;D=0;
+A=0;B=1;C=1;D=0;LINCOS_OVERRIDE = 0;
 plant.a = A;
 plant.b = B;
 plant.c = C;

@@ -84,7 +84,7 @@ void friction(scicos_block *blk, int flag)
         case 0:
             // compute the derivative of the continuous time state
             if(mode0==mode_lincos_override)
-                DFmod = -V*C;
+                DFmod = DF - V*C;
             else if(mode0==mode_move_plus)
                 DFmod = DF-FDYF - V*C;
             else if(mode0==mode_move_neg)
