@@ -72,37 +72,69 @@
 #define mode0 (GetModePtrs(blk)[0])
 
 
-// if V >= EPS, then mode is 2
-// if V <= -EPS, then mode is -2
-// if 0<=V<EPS and u<FSTF, then mode is 1
-// if -EPS<V<=0 and u>-FSTF, then mode is -1
+// if X>=Xmax, then mode is 3
+// if X<=Xmin, then mode is -3
+// if Xdot >= EPS, then mode is 2
+// if Xdot <= -EPS, then mode is -2
+// if 0<=Xdot<EPS and u<FSTF, then mode is 1
+// if -EPS<Xdot<=0 and u>-FSTF, then mode is -1
+#define mode_stop_max 3
+#define mode_stop_min -3
 #define mode_move_plus 2
 #define mode_move_neg -2
 #define mode_stuck_plus 1
 #define mode_stuck_neg -1
 #define mode_lincos_override 0
 
+
 void friction(scicos_block *blk, int flag)
 {
     static double DFmod;
-    static int STOPS=0;
+    static int stops=0;
     switch (flag)
     {
         case 0:
-            // compute the derivative of the continuous time state
+           // compute the derivative of the continuous time states
             if(mode0==mode_lincos_override)
+            {
                 DFmod = DF - Xdot*C;
+                stops = 0;
+            }
             else if(mode0==mode_move_plus)
-                DFmod = DF-FDYF - Xdot*C;
+            {
+                DFmod = DF - FDYF - Xdot*C;
+                stops = 0;
+            }
             else if(mode0==mode_move_neg)
-                DFmod = DF+FDYF - Xdot*C;
+            {
+                DFmod = DF + FDYF - Xdot*C;
+                stops = 0;
+            }
+            else if(mode0==mode_stop_min)
+            {
+                DFmod = max(DF - FSTF, 0);
+                stops = -1;
+            }
             else if(mode0==mode_stuck_plus)
-                DFmod = max(DF-FSTF, 0);
+            {
+                DFmod = max(DF - FSTF, 0);
+                stops = 0;
+            }
+            else if(mode0==mode_stop_max)
+            {
+                DFmod = min(DF + FSTF, 0);
+                stops = 1;
+            }
             else if(mode0==mode_stuck_neg)
-                DFmod = min(DF+FSTF, 0);
+            {
+                DFmod = min(DF + FSTF, 0);
+                stops = 0;
+            }
             else
+            {
                 DFmod = 0;
-//            Vdot = DFmod*386.4/M;
+                stops = 0;
+            }
             V = Xdot;
             A = DFmod/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             break;
@@ -125,7 +157,7 @@ void friction(scicos_block *blk, int flag)
 
             if (get_phase_simulation() == 1)
             {
-                if(LINCOS_OVERRIDE && STOPS==0)
+                if(LINCOS_OVERRIDE && stops==0)
                     mode0 = mode_lincos_override;
                 else if(surf0>EPS)
                     mode0 = mode_move_plus;
