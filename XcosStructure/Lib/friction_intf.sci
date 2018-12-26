@@ -85,7 +85,7 @@ function [x,y,typ] = FRICTION(job, arg1, arg2)
         model.rpar = [FSTF; FDYF; C; EPS; M; Xmin; Xmax; LINCOS_OVERRIDE]
         model.blocktype = 'c'
         model.nmode = 1
-        model.nzcross = 3
+        model.nzcross = 5
         model.dep_ut = [%t %t] // [direct feedthrough,   time dependence]
 
         exprs = [string([FSTF; FDYF; C; EPS; M; Xmin; Xmax; LINCOS_OVERRIDE; Xinit])]

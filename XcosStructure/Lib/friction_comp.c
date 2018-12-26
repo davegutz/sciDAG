@@ -67,6 +67,8 @@
 #define surf0 (GetGPtrs(blk)[0])
 #define surf1 (GetGPtrs(blk)[1])
 #define surf2 (GetGPtrs(blk)[2])
+#define surf3 (GetGPtrs(blk)[3])
+#define surf4 (GetGPtrs(blk)[4])
 #define mode0 (GetModePtrs(blk)[0])
 
 
@@ -118,6 +120,8 @@ void friction(scicos_block *blk, int flag)
             surf0 = Xdot;
 			surf1 = DF-FSTF;
 			surf2 = DF+FSTF;
+            surf3 = X-Xmin;
+            surf4 = X-Xmax;
 
             if (get_phase_simulation() == 1)
             {
