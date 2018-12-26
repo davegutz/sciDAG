@@ -34,33 +34,31 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define r_IN(n, i) ((GetRealInPortPtrs(blk, n+1))[(i)])
+#define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
 // parameters
 #define FSTF (GetRparPtrs(blk)[0]) // static friction, lbf
 #define FDYF (GetRparPtrs(blk)[1]) // dynamic friction, lbf
-#define C (GetRparPtrs(blk)[2]) // damping coefficient, lbf/in/s
-#define EPS (GetRparPtrs(blk)[3]) // boundary layer, in/s.***do't think this has
-// any effect in xcos with zcd - holdover from Simulink modeling of friction
-#define M (GetRparPtrs(blk)[4])     // 386/lbm
-#define Xmin (GetRparPtrs(blk)[5])     // 386/lbm
-#define Xmax (GetRparPtrs(blk)[6])     // 386/lbm
-#define LINCOS_OVERRIDE (GetRparPtrs(blk)[7]) // flag to disable friction
+#define C    (GetRparPtrs(blk)[2]) // damping coefficient, lbf/in/s
+#define EPS  (GetRparPtrs(blk)[3]) // boundary layer, in/s.***do't think this has any effect in xcos with zcd - holdover from Simulink modeling of friction
+#define M    (GetRparPtrs(blk)[4]) // lbm
+#define Xmin (GetRparPtrs(blk)[5]) // in
+#define Xmax (GetRparPtrs(blk)[6]) // in
+#define LINCOS_OVERRIDE (GetRparPtrs(blk)[7]) // flag to disable friction for linearization
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
-#define STOPS (r_IN(1,0)) // on stops indicator -1,0,1
 
-// states
-#define X (GetState(blk)[0]) // position state
-#define V (GetDerState(blk)[0]) // derivative of position
+// states and derivatives
+#define X    (GetState(blk)[0]) // position state
 #define Xdot (GetState(blk)[1]) // velocity state
-#define A (GetDerState(blk)[1]) // derivative of velocity
+#define V    (GetDerState(blk)[0]) // derivative of the position
+#define A    (GetDerState(blk)[1]) // derivative of the velocity
 
 // outputs
-#define Xo (r_OUT(0, 0)) // position, in
-#define Vo (r_OUT(1, 0)) // velocity, in/s
+#define Xo     (r_OUT(0, 0)) // position, in
+#define Xdoto  (r_OUT(1, 0)) // velocity, in/s
 #define DFmodo (r_OUT(2, 0)) // integrator output
 #define mode0o (r_OUT(3, 0)) // mode0
 
@@ -68,13 +66,18 @@
 #define surf0 (GetGPtrs(blk)[0])
 #define surf1 (GetGPtrs(blk)[1])
 #define surf2 (GetGPtrs(blk)[2])
+#define surf3 (GetGPtrs(blk)[3])
+#define surf4 (GetGPtrs(blk)[4])
 #define mode0 (GetModePtrs(blk)[0])
 
-
-// if V >= EPS, then mode is 2
-// if V <= -EPS, then mode is -2
-// if 0<=V<EPS and u<FSTF, then mode is 1
-// if -EPS<V<=0 and u>-FSTF, then mode is -1
+// if X>=Xmax, then mode is 3
+// if X<=Xmin, then mode is -3
+// if Xdot >= EPS, then mode is 2
+// if Xdot <= -EPS, then mode is -2
+// if 0<=Xdot<EPS and u<FSTF, then mode is 1
+// if -EPS<Xdot<=0 and u>-FSTF, then mode is -1
+#define mode_stop_max 3
+#define mode_stop_min -3
 #define mode_move_plus 2
 #define mode_move_neg -2
 #define mode_stuck_plus 1
@@ -83,32 +86,60 @@
 
 void friction(scicos_block *blk, int flag)
 {
-    static double DFmod;
+    static double DFmod = 0;
+    static int stops = 0;
     switch (flag)
     {
         case 0:
-            // compute the derivative of the continuous time state
+            // compute the derivative of the continuous time states
             if(mode0==mode_lincos_override)
+            {
                 DFmod = DF - Xdot*C;
+                stops = 0;
+            }
             else if(mode0==mode_move_plus)
-                DFmod = DF-FDYF - Xdot*C;
+            {
+                DFmod = DF - FDYF - Xdot*C;
+                stops = 0;
+            }
             else if(mode0==mode_move_neg)
-                DFmod = DF+FDYF - Xdot*C;
+            {
+                DFmod = DF + FDYF - Xdot*C;
+                stops = 0;
+            }
+            else if(mode0==mode_stop_min)
+            {
+                DFmod = max(DF - FSTF, 0);
+                stops = -1;
+            }
             else if(mode0==mode_stuck_plus)
-                DFmod = max(DF-FSTF, 0);
+            {
+                DFmod = max(DF - FSTF, 0);
+                stops = 0;
+            }
+            else if(mode0==mode_stop_max)
+            {
+                DFmod = min(DF + FSTF, 0);
+                stops = 1;
+            }
             else if(mode0==mode_stuck_neg)
-                DFmod = min(DF+FSTF, 0);
+            {
+                DFmod = min(DF + FSTF, 0);
+                stops = 0;
+            }
             else
+            {
                 DFmod = 0;
-//            Vdot = DFmod*386.4/M;
+                stops = 0;
+            }
             V = Xdot;
-            A = DFmod/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+            A = DFmod*M/386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             break;
 
         case 1:
             // compute the outputs of the block
             Xo = X;
-            Vo = Xdot;
+            Xdoto = Xdot;
             DFmodo = DFmod;
             mode0o = mode0;
             break;
@@ -116,13 +147,19 @@ void friction(scicos_block *blk, int flag)
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-			surf1 = DF-FSTF;
-			surf2 = DF+FSTF;
+			surf1 = DF - FSTF;
+			surf2 = DF + FSTF;
+            surf3 = X - Xmin;
+            surf4 = X - Xmax;
 
             if (get_phase_simulation() == 1)
             {
-                if(LINCOS_OVERRIDE && STOPS==0)
+                if(LINCOS_OVERRIDE && stops==0)
                     mode0 = mode_lincos_override;
+                else if(surf3<=0 && surf1<=0)
+                    mode0 = mode_stop_min;
+                else if(surf4>=0 && surf2>=0)
+                    mode0 = mode_stop_max;
                 else if(surf0>EPS)
                     mode0 = mode_move_plus;
                 else if(surf0<-EPS)
