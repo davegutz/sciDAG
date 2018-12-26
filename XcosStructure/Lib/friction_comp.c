@@ -50,7 +50,6 @@
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
-#define STOPS (r_IN(1,0)) // on stops indicator -1,0,1
 
 // states
 #define X (GetState(blk)[0]) // position state
@@ -84,6 +83,7 @@
 void friction(scicos_block *blk, int flag)
 {
     static double DFmod;
+    static int STOPS=0;
     switch (flag)
     {
         case 0:
