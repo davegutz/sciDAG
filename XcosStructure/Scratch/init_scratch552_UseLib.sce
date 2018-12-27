@@ -38,6 +38,7 @@ plant.a = A;
 plant.b = B;
 plant.c = C;
 plant.d = D;
+m = 4.4; k = .0126; c = .0057;
 exec('Callbacks\pre_xcos_simulate.sci');
 exec('Callbacks\post_xcos_simulate.sci');
 loadXcosLibs(); loadScicos();
