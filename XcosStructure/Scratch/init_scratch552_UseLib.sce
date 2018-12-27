@@ -21,7 +21,12 @@
 // 
 funcprot(0);
 getd('../Lib')
+this = 'init_scratch552_UseLib.sce';
+this_xcos_file = 'scratch552_UseLib.xcos';
+this_path = get_absolute_file_path(this);
+chdir(this_path);
 exec('../Lib/init_libScratch.sce', -1);
+chdir(this_path);
 n_fig = -1;
 xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
@@ -43,7 +48,7 @@ if ~win64() then
   return
 end
 //
-Scratch_path = get_absolute_file_path('init_scratch552_UseLib.sce')+'..\Lib\';
+lib_path = get_absolute_file_path(this)+'..\Lib\';
 //
 // ulink previous function with same name
 [bOK, ilib] = c_link('lim_int');
@@ -52,18 +57,18 @@ if bOK then
 end
 //
 link('C:\PROGRA~1\SCILAB~1.2\bin\scicos' + getdynlibext());
-link(Scratch_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
-link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int'], 'c');
+link(lib_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
+link(lib_path + 'libScratch' + getdynlibext(), ['lim_int'], 'c');
 // remove temp. variables on stack
-//clear Scratch_path;
+//clear lib_path;
 clear bOK;
 clear ilib;
 // ----------------------------------------------------------------------------
-mprintf('Executed init_scratch552_UseLib.sce up to importXcosDiagram*********\n');
+mprintf('Executed ' + this + ' up to importXcosDiagram*********\n');
 
 
-importXcosDiagram("./scratch552_UseLib.xcos");
-xcos('./scratch552_UseLib.xcos');
+importXcosDiagram("./"+this_xcos_file);
+xcos('./'+this_xcos_file);
 //scicos_simulate(scs_m);
 //scs_m.props.context
 

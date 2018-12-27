@@ -88,67 +88,84 @@
 
 void friction(scicos_block *blk, int flag)
 {
-    static double DFnet;
-    static int stops=0;
+    double DFnet = 0;
+    int stops = 0;
+
+    // compute info needed for all passes
+    if(mode0==mode_lincos_override)
+    {
+        DFnet = DF - Xdot*C;
+    }
+    else if(mode0==mode_move_plus)
+    {
+        DFnet = DF - FDYF - Xdot*C;
+    }
+    else if(mode0==mode_move_neg)
+    {
+        DFnet = DF + FDYF - Xdot*C;
+    }
+    else if(mode0==mode_stop_min)
+    {
+        DFnet = max(DF - FSTF, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_plus)
+    {
+        DFnet = max(DF - FSTF, 0);
+    }
+    else if(mode0==mode_stop_max)
+    {
+        DFnet = min(DF + FSTF, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_neg)
+    {
+        DFnet = min(DF + FSTF, 0);
+    }
+
     switch (flag)
     {
         case 0:
            // compute the derivative of the continuous time states
             if(mode0==mode_lincos_override)
             {
-                DFnet = DF - Xdot*C;
-                stops = 0;
                 V = Xdot;
                 A = DFnet/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_plus)
             {
-                DFnet = DF - FDYF - Xdot*C;
-                stops = 0;
                 V = Xdot;
                 A = DFnet/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_neg)
             {
-                DFnet = DF + FDYF - Xdot*C;
-                stops = 0;
                 V = Xdot;
                 A = DFnet/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_stop_min)
             {
-                DFnet = max(DF - FSTF, 0);
-                stops = -1;
                 V = 0;
                 A = 0;
                 Xdot = 0;
             }
             else if(mode0==mode_stuck_plus)
             {
-                DFnet = max(DF - FSTF, 0);
-                stops = 0;
                 V = Xdot;
                 A = DFnet/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_stop_max)
             {
-                DFnet = min(DF + FSTF, 0);
-                stops = 1;
                 V = 0;
                 A = 0;
                 Xdot = 0;
             }
             else if(mode0==mode_stuck_neg)
             {
-                DFnet = min(DF + FSTF, 0);
-                stops = 0;
                 V = Xdot;
                 A = DFnet/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
-                DFnet = 0;
-                stops = 0;
                 V = Xdot;
                 A = DFnet/M*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
