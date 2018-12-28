@@ -21,8 +21,13 @@
 // 
 funcprot(0);
 getd('../Lib')
-this = 'init_scratch552_UseLib.sce';
-this_xcos_file = 'scratch552_UseLib.xcos';
+this = sfilename();
+base = strsplit(this, '.');
+base = base(1);
+root = strsplit(base, 'init_');
+root = root(2);
+this_xcos_file = root + '.xcos';
+this_zcos_file = root + '.zcos';
 this_path = get_absolute_file_path(this);
 chdir(this_path);
 exec('../Lib/init_libScratch.sce', -1);
@@ -39,8 +44,8 @@ plant.b = B;
 plant.c = C;
 plant.d = D;
 m = 4.4; k = .0126; c = .0057;
-exec('Callbacks\pre_xcos_simulate.sci');
-exec('Callbacks\post_xcos_simulate.sci');
+exec('Callbacks\pre_xcos_simulate_' + root + '.sci');
+exec('Callbacks\post_xcos_simulate_' + root + '.sci');
 loadXcosLibs(); loadScicos();
 
 
@@ -57,7 +62,7 @@ if bOK then
   ulink(ilib);
 end
 //
-link('C:\PROGRA~1\SCILAB~1.2\bin\scicos' + getdynlibext());
+link(SCI + '\bin\scicos' + getdynlibext());
 link(lib_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['lim_int'], 'c');
 // remove temp. variables on stack
@@ -67,9 +72,13 @@ clear ilib;
 // ----------------------------------------------------------------------------
 mprintf('Executed ' + this + ' up to importXcosDiagram*********\n');
 
-
-importXcosDiagram("./"+this_xcos_file);
-xcos('./'+this_xcos_file);
+try
+    importXcosDiagram("./"+this_xcos_file);
+    xcos('./'+this_xcos_file);
+catch
+    importXcosDiagram("./"+this_zcos_file);
+    xcos('./'+this_zcos_file);
+end
 //scicos_simulate(scs_m);
 //scs_m.props.context
 

@@ -32,11 +32,7 @@ pal = xcosPal("libScratch");
 xcosPalAdd(pal);
 getd('../Lib');
 xcos('../Lib/LibXcosStructure.xcos');
-try
-    this_saved = this;
-end
-this = 'init_libScratch.sce';
-lib_path = get_absolute_file_path(this);
+lib_path = get_absolute_file_path(sfilename());
 chdir(lib_path)
 
 // Remove any old gif because they cause bomb in xcosPalAddBlock calls
@@ -73,7 +69,3 @@ pal = xcosPalAddBlock(pal, o, '', style);
 // Finalize the palette
 xcosPalAdd(pal);
 disp('init done')
-
-try
-    this = this_saved;
-end
