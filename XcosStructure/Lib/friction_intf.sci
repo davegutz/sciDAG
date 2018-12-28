@@ -86,7 +86,7 @@ function [x,y,typ] = FRICTION(job, arg1, arg2)
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 5
-        model.dep_ut = [%t %t] // [direct feedthrough,   time dependence]
+        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
 
         exprs = [string([FSTF; FDYF; C; EPS; M; Xmin; Xmax; LINCOS_OVERRIDE; Xinit])]
         gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
