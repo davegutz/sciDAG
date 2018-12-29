@@ -21,5 +21,5 @@
 // 
 function post_xcos_simulate(%cpr, scs_m, needcompile)
     exec('Callbacks\StopFcn_scratch.sce', -1);
-    mprintf('Completed post_xcos_simulate\n')  
+    mprintf('Completed %s\n', sfilename())  
 endfunction

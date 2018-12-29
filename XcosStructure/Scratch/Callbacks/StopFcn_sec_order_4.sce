@@ -17,19 +17,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 17, 2018     DA Gutz         Created
+// Dec 3, 2018 	DA Gutz		Created
 // 
+global m c k LINCOS_OVERRIDE
+mprintf('In %s\n', sfilename())  
 
-// Library is ../Lib.   execute make_libScratch.sce and init_libScratch.sce to
-// rebuild.   May have to re-drag libScratch blocks out of Pallette browser for
-// some rebuild configurations.
+// bode of top level
+LINCOS_OVERRIDE = 1;
+mprintf('In %s before lincos top level\n', sfilename())
+sys_f = lincos(scs_m);
+mprintf('In %s after lincos top_level\n', sfilename())
+try
+    figure()
+    bode(sys_f, 'rad');
+catch
+    if lasterror() == 'Singularity of log or tan function.' then
+        warning('Linear response of ""scs_m"" is undefined...showing small DC response')
+        bode(syslin('c',0,0,0,1e-12), [1,10], 'rad')
+    end
+end
+LINCOS_OVERRIDE = 0;
 
-// Load sec_order_x
-exec(init_sec_order_1.sce, -1);
-exec(init_sec_order_2.sce, -1);
-exec(init_sec_order_3.sce, -1);
 
-// Load scratch552_UseLib.xcos
-// TODO:  the following has build errors different compilers while sec_order_x does not
-exec(init_scratch552_UseLib.sce, -1);
-
+mprintf('Completed %s\n', sfilename())  

@@ -17,19 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 17, 2018     DA Gutz         Created
+// Dec 3, 2018 	DA Gutz		Created
 // 
-
-// Library is ../Lib.   execute make_libScratch.sce and init_libScratch.sce to
-// rebuild.   May have to re-drag libScratch blocks out of Pallette browser for
-// some rebuild configurations.
-
-// Load sec_order_x
-exec(init_sec_order_1.sce, -1);
-exec(init_sec_order_2.sce, -1);
-exec(init_sec_order_3.sce, -1);
-
-// Load scratch552_UseLib.xcos
-// TODO:  the following has build errors different compilers while sec_order_x does not
-exec(init_scratch552_UseLib.sce, -1);
-
+function post_xcos_simulate(%cpr, scs_m, needcompile)
+    exec('Callbacks\StopFcn_sec_order_4.sce', -1);
+    mprintf('Completed %s\n', sfilename())  
+endfunction

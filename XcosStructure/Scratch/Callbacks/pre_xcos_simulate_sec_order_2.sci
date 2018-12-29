@@ -21,13 +21,12 @@
 // 
 function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
     global loaded_scratch
-    mprintf('\nIn pre_xcos_simulate\n')  
+    mprintf('\nIn %s\n', sfilename())  
     if ~loaded_scratch then
         exec('Callbacks\PreLoadFcn_sec_order.sce', -1); 
-        mprintf('Ran PreLoadFcn_sec_order\n')  
         loaded_scratch = %t;
     end
     exec('Callbacks\InitFcn_sec_order.sce', -1);
-    mprintf('Completed pre_xcos_simulate\n')  
+    mprintf('Completed %s\n', sfilename())  
     continueSimulation = %t;
 endfunction

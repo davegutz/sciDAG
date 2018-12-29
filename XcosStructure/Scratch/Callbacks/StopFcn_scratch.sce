@@ -20,7 +20,7 @@
 // Dec 3, 2018 	DA Gutz		Created
 // 
 global plant A B C D LINCOS_OVERRIDE
-mprintf('In StopFcn_scratch\n')  
+mprintf('In %s\n', sfilename())  
 
 // bode of ABCD_With_FB
 for i=1:length(scs_m.objs)
@@ -31,9 +31,9 @@ for i=1:length(scs_m.objs)
         break;
     end
 end
-mprintf('In StopFcn_scratch before lincos\n')  
+mprintf('In %s before lincos\n', sfilename())  
 sys = lincos(scs_m_lin);
-mprintf('In StopFcn_scratch after lincos\n')  
+mprintf('In %s after lincos\n', sfilename())  
 figure()
 bode(sys, 'rad');
 
@@ -47,9 +47,9 @@ for i=1:length(scs_m.objs)
         break;
     end
 end
-mprintf('In StopFcn_scratch before lincos f\n')  
+mprintf('In %s before lincos f\n', sfilename())  
 sys_f = lincos(scs_m_lin_f);
-mprintf('In StopFcn_scratch after lincos f\n')
+mprintf('In %s after lincos f\n', sfilename())  
 try
     figure()
     bode(sys_f, 'rad');
@@ -63,4 +63,4 @@ LINCOS_OVERRIDE = 0;
 
 //disp(B)
 //disp(plant.b)
-mprintf('Completed StopFcn_scratch.sce\n')  
+mprintf('Completed %s\n', sfilename())  

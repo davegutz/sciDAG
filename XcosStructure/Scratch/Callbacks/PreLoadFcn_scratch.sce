@@ -22,7 +22,7 @@
 
 global A B C D plant LINCOS_OVERRIDE
 global loaded_scratch
-mprintf('In PreLoadFcn_scratch\n')  
+mprintf('In %s\n', sfilename())  
 A=0;B=1;C=1;D=0;LINCOS_OVERRIDE = 0;
 plant.a = A;
 plant.b = B;
@@ -30,4 +30,4 @@ plant.c = C;
 plant.d = D;
 //S1=syslin('c',A,B,C);   //Linear system definition
 //[plant.a, plant.b, plant.c, plant.d] = abcd(S1);
-mprintf('Completed PreLoadFcn_scratch\n')  
+mprintf('Completed %s\n', sfilename())  

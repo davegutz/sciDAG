@@ -20,11 +20,11 @@
 // Dec 3, 2018      DA Gutz     Created
 // 
 global A B C D plant LINCOS_OVERRIDE
-mprintf('In InitFcn_scratch\n')  
+mprintf('In %s\n', sfilename())  
 S1=syslin('c',A,B,C);   //Linear system definition
 [plant.a, plant.b, plant.c, plant.d] = abcd(S1);
 LINCOS_OVERRIDE = 0;
 //disp(B)
 
 //disp(plant.b)
-mprintf('Completed InitFcn_scratch.sce\n')  
+mprintf('Completed %s\n', sfilename())  

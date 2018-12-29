@@ -22,9 +22,9 @@
 
 global m c k LINCOS_OVERRIDE
 global loaded_scratch
-mprintf('In PreLoadFcn_sec_order\n')  
+mprintf('In %s\n', sfilename())  
 m = 4.4; // lbm
 k = 0.0126; // lbf/in
 c = 0.0057; // lbf-s/in
 LINCOS_OVERRIDE = 0;
-mprintf('Completed PreLoadFcn_scratch\n')  
+mprintf('Completed %s\n', sfilename())  

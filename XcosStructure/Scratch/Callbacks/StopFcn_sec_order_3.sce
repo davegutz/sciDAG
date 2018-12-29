@@ -22,6 +22,19 @@
 global m c k LINCOS_OVERRIDE
 mprintf('In %s\n', sfilename())  
 
+// bode of top level
+mprintf('In %s before lincos top level\n', sfilename())
+sys_f = lincos(scs_m);
+mprintf('In %s after lincos top_level\n', sfilename())
+try
+    figure()
+    bode(sys_f, 'rad');
+catch
+    if lasterror() == 'Singularity of log or tan function.' then
+        warning('Linear response of ""scs_m"" is undefined...showing small DC response')
+        bode(syslin('c',0,0,0,1e-12), [1,10], 'rad')
+    end
+end
 
 // bode of SEC_ORDER
 LINCOS_OVERRIDE = 1;
@@ -33,9 +46,9 @@ for i=1:length(scs_m.objs)
         break;
     end
 end
-mprintf('In %s before lincos f\n', sfilename())  
+mprintf('In %s before lincos f\n', sfilename())
 sys_f = lincos(scs_m_lin_f);
-mprintf('In %s after lincos f\n', sfilename())  
+mprintf('In %s after lincos f\n', sfilename())
 try
     figure()
     bode(sys_f, 'rad');

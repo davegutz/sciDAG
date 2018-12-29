@@ -20,6 +20,6 @@
 // Dec 3, 2018      DA Gutz     Created
 // 
 global m k c LINCOS_OVERRIDE
-mprintf('In InitFcn_sec_order\n')  
+mprintf('In %s\n', sfilename())  
 LINCOS_OVERRIDE = 0;
-mprintf('Completed InitFcn_sec_order.sce\n')  
+mprintf('Completed %s\n', sfilename())  
