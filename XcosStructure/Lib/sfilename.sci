@@ -30,7 +30,8 @@ function file_name = sfilename()
     else  // from an sci file
         [a, b] = where();
         [n, m] = size(b);
-//        disp(b)
+        // disp(b)
+        // whereami()
         if n>=4 then
             file_name = b($-4);
         else
