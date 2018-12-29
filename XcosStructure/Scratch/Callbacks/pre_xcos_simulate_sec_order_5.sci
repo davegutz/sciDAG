@@ -1,5 +1,3 @@
-// function path = sfilename()
-// return path of currently exec file
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,22 +17,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 28, 2018    DA Gutz        Created
+// Dec 3, 2018  DA Gutz     Created
 // 
-function file_name = sfilename()
-    [units, types, names]=file();
-    if ~isempty(names)
-        [%fullpath, bOK]=getlongpathname(names($-2))
-        pathsplit = strsplit(%fullpath($), [filesep();'\']);
-        file_name = pathsplit($);
-    else  // from an sci file
-        [a, b] = where();
-        [n, m] = size(b);
-//        disp(b)
-        if n>=4 then
-            file_name = b($-4);
-        else
-            file_name = b($);
-        end
+function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
+    global loaded_scratch
+    mprintf('\nIn %s\n', sfilename())  
+    if ~loaded_scratch then
+        exec('Callbacks\PreLoadFcn_sec_order.sce', -1); 
+        loaded_scratch = %t;
     end
+    exec('Callbacks\InitFcn_sec_order.sce', -1);
+    mprintf('Completed %s\n', sfilename())  
+    continueSimulation = %t;
 endfunction

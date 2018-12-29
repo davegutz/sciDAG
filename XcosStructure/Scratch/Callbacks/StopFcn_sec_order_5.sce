@@ -1,5 +1,3 @@
-// function path = sfilename()
-// return path of currently exec file
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,22 +17,43 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 28, 2018    DA Gutz        Created
+// Dec 3, 2018 	DA Gutz		Created
 // 
-function file_name = sfilename()
-    [units, types, names]=file();
-    if ~isempty(names)
-        [%fullpath, bOK]=getlongpathname(names($-2))
-        pathsplit = strsplit(%fullpath($), [filesep();'\']);
-        file_name = pathsplit($);
-    else  // from an sci file
-        [a, b] = where();
-        [n, m] = size(b);
-//        disp(b)
-        if n>=4 then
-            file_name = b($-4);
-        else
-            file_name = b($);
-        end
+global m c k LINCOS_OVERRIDE
+mprintf('In %s\n', sfilename())  
+
+// bode of top level
+LINCOS_OVERRIDE = 1;
+mprintf('In %s before lincos top level\n', sfilename())
+sys_f = lincos(scs_m);
+mprintf('In %s after lincos top_level\n', sfilename())
+try
+    figure()
+    bode(sys_f, 'rad');
+catch
+    if lasterror() == 'Singularity of log or tan function.' then
+        warning('Linear response of ""scs_m"" is undefined...showing small DC response')
+        bode(syslin('c',0,0,0,1e-12), [1,10], 'rad')
     end
-endfunction
+end
+LINCOS_OVERRIDE = 0;
+
+// bode of top level using open loop
+LINCOS_OVERRIDE = 1;
+LINCOS_OPEN_LOOP = 1;
+mprintf('In %s before lincos top level\n', sfilename())
+sys_f = lincos(scs_m);
+mprintf('In %s after lincos top_level\n', sfilename())
+try
+    figure()
+    bode(sys_f, 'rad');
+catch
+    if lasterror() == 'Singularity of log or tan function.' then
+        warning('Linear response of ""scs_m"" is undefined...showing small DC response')
+        bode(syslin('c',0,0,0,1e-12), [1,10], 'rad')
+    end
+end
+LINCOS_OPEN_LOOP = 0;
+LINCOS_OVERRIDE = 0;
+
+mprintf('Completed %s\n', sfilename())  
