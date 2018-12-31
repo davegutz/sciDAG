@@ -22,7 +22,7 @@
 // Dec 17, 2018    DA Gutz      Created for Scilab 5.5.2
 // 
 
-// ******************  Temporary palette for C-blocks
+// ******************  Make temporary palette for local C-blocks
 funcprot(0);
 loadXcosLibs;
 try
@@ -42,30 +42,33 @@ else
     unix('rm -f '+TMPDIR+'/*.gif');
 end        
 
-// ****************** Create pallette with FRICTION
-style = struct();
-style.fillColor="blue";
-block_img = lib_path + "/images/blocks/FRICTION.png";
-// protect drive letter
-if getos() == "Windows" then
-    block_img = "/" + block_img;
-end
-style.image="file://" + block_img;
-o = FRICTION("define");
-pal = xcosPalAddBlock(pal, o, '', style);
-
-// ****************** Create pallette with LIMINT
-style = struct();
-style.fillColor="red";
-block_img = SCI + "/modules/xcos/images/blocks/RAMP.svg";
-// protect drive letter
-if getos() == "Windows" then
-    block_img = "/" + block_img;
-end
-style.image="file://" + block_img;
-o = LIMINT("define");
-pal = xcosPalAddBlock(pal, o, '', style);
+// ****************** Create pallette
+pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);
+pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.svg', pal);
 
 // Finalize the palette
 xcosPalAdd(pal);
-disp('init done')
+mprintf('%s done\n', sfilename())
+
+// Old stuff
+//style = struct();
+//style.fillColor="blue";
+//block_img = lib_path + "/images/blocks/FRICTION.png";
+//// protect drive letter
+//if getos() == "Windows" then
+//    block_img = "/" + block_img;
+//end
+//style.image="file://" + block_img;
+//o = FRICTION("define");
+//pal = xcosPalAddBlock(pal, o, '', style);
+//style = struct();
+//style.fillColor="red";
+//block_img = SCI + "/modules/xcos/images/blocks/RAMP.svg";
+//// protect drive letter
+//if getos() == "Windows" then
+//    block_img = "/" + block_img;
+//end
+//style.image="file://" + block_img;
+//o = LIMINT("define");
+//pal = xcosPalAddBlock(pal, o, '', style);
+//
