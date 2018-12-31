@@ -1,3 +1,4 @@
+// function [pal] = init_add_struct(name, fill_color, image_path, pal);
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,22 +21,21 @@
 // Dec 31, 2018    DA Gutz        Created
 // 
 function [pal] = init_add_struct(name, fill_color, image_path, pal);
-
+    // Add temporary library palette item made from local c-file
     style = struct();
-    //    style.fillColor="blue";
     if  ~isempty(fill_color) then
         style.fillColor = fill_color;
     end
-    // block_img = lib_path + "/images/blocks/FRICTION.png";
     if ~isempty(image_path) then
         block_img = image_path;
     end
+
     // protect drive letter
     if getos() == "Windows" then
         block_img = "/" + block_img;
     end
     style.image="file://" + block_img;
-//    o = FRICTION("define");
+
     o = evstr(name+"(''define'')");
     pal = xcosPalAddBlock(pal, o, '', style);
 

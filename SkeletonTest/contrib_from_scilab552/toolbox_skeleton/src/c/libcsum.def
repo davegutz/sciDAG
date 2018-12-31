@@ -1,0 +1,5 @@
+LIBRARY    libcsum.dll
+EXPORTS
+	csub
+	csum
+	multiplybypi

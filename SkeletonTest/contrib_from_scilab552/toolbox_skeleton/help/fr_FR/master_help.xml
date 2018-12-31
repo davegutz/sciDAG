@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book [
+<!--Begin Entities-->
+<!ENTITY a19db532cb5dca853d5cd6d43a891981b SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/toolbox_skeleton/help/fr_FR/c_multiplybypi.xml">
+<!ENTITY a6b96426a82de543d4fc01bac05c140ef SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/toolbox_skeleton/help/fr_FR/c_sub.xml">
+<!ENTITY ad7c2a46aa2b11eddc1a7691007498c0e SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/toolbox_skeleton/help/fr_FR/c_sum.xml">
+<!ENTITY a13d1f877b1803f71a2d834e34d1cf179 SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/toolbox_skeleton/help/fr_FR/fortran_sum.xml">
+<!ENTITY a77cb9d146186690e6b9dec999f02eaf4 SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/toolbox_skeleton/help/fr_FR/scilab_sum.xml">
+<!--End Entities-->
+]>
+<book version="5.0-subset Scilab" xml:lang="fr_FR"
+      xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:mml="http://www.w3.org/1998/Math/MathML"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:db="http://docbook.org/ns/docbook">
+  <info xml:id='toolbox_skeleton_manual'>
+    <title>Toolbox Skeleton</title>
+  </info>
+
+<part xml:id='section_834383eed3a5cf5315e43048f732af3c'>
+<title>Toolbox Skeleton</title>
+&a19db532cb5dca853d5cd6d43a891981b;
+&a6b96426a82de543d4fc01bac05c140ef;
+&ad7c2a46aa2b11eddc1a7691007498c0e;
+&a13d1f877b1803f71a2d834e34d1cf179;
+&a77cb9d146186690e6b9dec999f02eaf4;
+</part>
+</book>

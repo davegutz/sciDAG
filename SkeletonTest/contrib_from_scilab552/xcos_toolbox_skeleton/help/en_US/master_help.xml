@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book [
+<!--Begin Entities-->
+<!ENTITY a651f20930075e7f5ec3403d91d99f618 SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/xcos_toolbox_skeleton/help/en_US/TBX_SUM_c.xml">
+<!ENTITY a1eaf94806a5bd7d451509e3436465e3c SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/xcos_toolbox_skeleton/help/en_US/available_blocks.xml">
+<!ENTITY af7ad14396b05944c63510c05e19b18a3 SYSTEM "file:///C:/Users/Dave/Documents/GitHub/sciDAG/SkeletonTest/contrib_from_scilab552/xcos_toolbox_skeleton/help/en_US/tbx_sum.xml">
+<!--End Entities-->
+]>
+<book version="5.0-subset Scilab" xml:lang="en_US"
+      xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:mml="http://www.w3.org/1998/Math/MathML"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:db="http://docbook.org/ns/docbook">
+  <info xml:id='xcos_toolbox_skeleton_manual'>
+    <title>Xcos toolbox skeleton</title>
+  </info>
+
+<part xml:id='section_a4c450674e8830078a987ba06f1d9da8'>
+<title>Xcos toolbox skeleton</title>
+&a651f20930075e7f5ec3403d91d99f618;
+&a1eaf94806a5bd7d451509e3436465e3c;
+&af7ad14396b05944c63510c05e19b18a3;
+</part>
+</book>

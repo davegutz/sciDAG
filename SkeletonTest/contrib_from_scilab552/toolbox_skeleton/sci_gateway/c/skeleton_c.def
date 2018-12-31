@@ -1,0 +1,8 @@
+LIBRARY    skeleton_c.dll
+EXPORTS
+	sci_cerror
+	sci_csub
+	sci_csum
+	sci_foo
+	sci_multiplybypi
+	skeleton_c_

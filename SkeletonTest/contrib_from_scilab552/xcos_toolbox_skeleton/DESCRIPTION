@@ -1,0 +1,33 @@
+Toolbox: xcos_toolbox_skeleton
+
+Title: Xcos toolbox skeleton
+
+Summary: Add some blocks to a palette
+
+Version: 1.1
+
+Author: Clément DAVID <clement.david@scilab-enterprises.com>
+
+Maintainer: Clément DAVID <clement.david@scilab-enterprises.com>
+
+Category: Xcos
+
+Entity: Scilab Enterprises
+
+WebSite: http://www.scilab.org
+
+License: CeCILL
+
+ScilabVersion: >= 5.5
+
+Depends: 
+
+Date: 2014-01-15
+
+Description: Example for an Xcos toolbox
+ 
+ exec builder.sce
+ exec loader.sce
+ 
+ help xcos_toolbox_skeleton 
+

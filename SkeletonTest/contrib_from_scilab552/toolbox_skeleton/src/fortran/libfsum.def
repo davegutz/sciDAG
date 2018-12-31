@@ -1,0 +1,3 @@
+LIBRARY    libfsum.dll
+EXPORTS
+	fsum_

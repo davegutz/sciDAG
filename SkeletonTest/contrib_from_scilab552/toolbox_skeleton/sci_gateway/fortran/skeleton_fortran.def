@@ -1,0 +1,4 @@
+LIBRARY    skeleton_fortran.dll
+EXPORTS
+	sci_fsum
+	skeleton_fortran_

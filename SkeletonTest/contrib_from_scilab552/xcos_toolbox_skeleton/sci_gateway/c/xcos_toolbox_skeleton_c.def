@@ -1,0 +1,4 @@
+LIBRARY    xcos_toolbox_skeleton_c.dll
+EXPORTS
+	sci_tbx_sum
+	xcos_toolbox_skeleton_c_

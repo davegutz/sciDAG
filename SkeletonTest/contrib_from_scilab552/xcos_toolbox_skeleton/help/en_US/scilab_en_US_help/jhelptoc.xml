@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN" "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc version="1.0">
+<tocitem target="index" text="Xcos toolbox skeleton">
+<tocitem target="section_a4c450674e8830078a987ba06f1d9da8" text="Xcos toolbox skeleton">
+<tocitem target="TBX_SUM_c" text="TBX_SUM_c"/>
+<tocitem target="xcos_toolbox_skeleton_available_blocks" text="Available blocks"/>
+<tocitem target="tbx_sum" text="tbx_sum"/>
+</tocitem>
+</tocitem>
+</toc>

@@ -1,0 +1,5 @@
+LIBRARY    skeleton_cpp.dll
+EXPORTS
+	hypot
+	sci_cpp_find
+	skeleton_cpp_
