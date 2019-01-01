@@ -1,4 +1,4 @@
-// Copyright (C) 2018 - Dave Gutz
+// Copyright (C) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,19 +17,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 27, 2018    DA Gutz        Created
+// Jan 1, 2019  DA Gutz     Created
 // 
-try
-    this_saved = this;
-end
-this = 'make_libScratch.sce';
-lib_path = get_absolute_file_path(this);
-chdir(lib_path);
-libs = SCI + '\bin\scicos'
-incs = SCI + '\modules\scicos_blocks\includes'
-entries = ['lim_int', 'friction', 'valve'];
-sources = ['lim_int_comp.c', 'friction_comp.c'];
-ilib_for_link(entries, sources, libs, 'c', '', 'LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
-try
-    this = this_saved;
-end
+
+global LINCOS_OVERRIDE
+global loaded_scratch
+global GEO
+mprintf('In %s\n', sfilename())  
+
+GEO.valve_scratch.m = 5000;
+
+mprintf('Completed %s\n', sfilename())  

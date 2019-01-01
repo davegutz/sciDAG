@@ -54,13 +54,13 @@ OBJS_WITH_PATH = Release/friction_comp.obj Release/lim_int_comp.obj
 # ------------------------------------------------------
 # added libraries
 FORTRAN_RUNTIME_LIBRARIES = 
-OTHERLIBS = C:\PROGRA~1\SCILAB~1.2\bin\scicos.lib
+OTHERLIBS = C:/PROGRA~1/SCILAB~1.2\bin\scicos.lib
 # ------------------------------------------------------
 !include $(SCIDIR)\modules\dynamic_link\src\scripts\Makefile.incl.mak
 # ------------------------------------------------------
 #CC = 
 # ------------------------------------------------------
-CFLAGS = $(CC_OPTIONS) -D__SCILAB_TOOLBOX__ -DFORDLL -IC:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes  
+CFLAGS = $(CC_OPTIONS) -D__SCILAB_TOOLBOX__ -DFORDLL -IC:/PROGRA~1/SCILAB~1.2\modules\scicos_blocks\includes  
 # ------------------------------------------------------
 FFLAGS = $(FC_OPTIONS) -DFORDLL  
 # ------------------------------------------------------

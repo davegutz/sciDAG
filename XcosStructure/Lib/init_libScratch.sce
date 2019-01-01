@@ -19,7 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 17, 2018    DA Gutz      Created for Scilab 5.5.2
+// Dec 17, 2018     DA Gutz     Created for Scilab 5.5.2
+// Jan 1, 2019      DA Gutz     Added valve
 // 
 
 // ******************  Make temporary palette for local C-blocks
@@ -43,6 +44,7 @@ else
 end        
 
 // ****************** Create pallette
+pal = init_add_struct('VALVE', 'green', lib_path+'/images/blocks/VALVE.png', pal);
 pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);
 pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.svg', pal);
 
