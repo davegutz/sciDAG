@@ -45,6 +45,7 @@
 #define M       (GetRparPtrs(blk)[4]) // lbm
 #define Xmin    (GetRparPtrs(blk)[5]) // in
 #define Xmax    (GetRparPtrs(blk)[6]) // in
+#define GEO     (GetOparPtrs(blk)[0]) // Geometry tlist
 #define LINCOS_OVERRIDE (GetRparPtrs(blk)[7]) // flag to disable friction for linearization
 
 // inputs
@@ -86,7 +87,7 @@
 #define mode_lincos_override 0
 
 
-void friction(scicos_block *blk, int flag)
+void valve(scicos_block *blk, int flag)
 {
     double DFnet = 0;
     int stops = 0;

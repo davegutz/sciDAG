@@ -28,7 +28,7 @@ chdir(lib_path);
 libs = SCI + '\bin\scicos'
 incs = SCI + '\modules\scicos_blocks\includes'
 entries = ['lim_int', 'friction', 'valve'];
-sources = ['lim_int_comp.c', 'friction_comp.c'];
+sources = ['lim_int_comp.c', 'friction_comp.c', 'valve_comp.c'];
 ilib_for_link(entries, sources, libs, 'c', '', 'LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
 try
     this = this_saved;
