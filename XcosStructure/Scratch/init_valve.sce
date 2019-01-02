@@ -42,10 +42,15 @@ global loaded_scratch
 global GEO
 
 valve_scratch = tlist(["valve_a", "m", "c"], 0, 0);
-GEO = tlist(["GEO_type", "valve_scratch"], valve_scratch);
+GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
+function %sys_geo_p(g)
+    // Display v
+    mprintf('sys_geo:  \n');
+    disp(g.valve_scratch)
+endfunction
 function %valve_a_p(v)
     // Display valve type
-    mprintf('valve_a:\nm=%f,\nc=%f\n', v.m, v.c);
+    mprintf('valve_a:  m=%f,\c=%f\n', v.m, v.c);
 endfunction
 
 loaded_scratch = %f;
