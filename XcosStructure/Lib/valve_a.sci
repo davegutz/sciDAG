@@ -42,7 +42,7 @@
 //
 // interfacing function for friction block
 
-function [x,y,typ] = VALVE(job, arg1, arg2)
+function [x,y,typ] = VALVE_A(job, arg1, arg2)
 
     x = [];
     y = [];
@@ -82,10 +82,14 @@ function [x,y,typ] = VALVE(job, arg1, arg2)
             ['FSTF';'FDYF';'C';'EPS';'M';'Xmin';'Xmax';'GEO';'LINCOS_OVERRIDE';'Xinit'],..
             list('vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'lis',-1,'vec',1,'vec',1),..
             exprs)
+//            [ok,FSTF,FDYF,C,EPS,M,Xmin,Xmax,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
+//            ['FSTF';'FDYF';'C';'EPS';'M';'Xmin';'Xmax';'LINCOS_OVERRIDE';'Xinit'],..
+//            list('vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1),..
+//            exprs)
             if ~ok then break,end 
             model.state = [Xinit; 0]
             model.rpar = [FSTF; FDYF; C; EPS; M; Xmin; Xmax; LINCOS_OVERRIDE]
-            model.opar = [GEO]
+            model.opar = GEO
             graphics.exprs = exprs
             x.graphics = graphics
             x.model = model
@@ -93,7 +97,7 @@ function [x,y,typ] = VALVE(job, arg1, arg2)
         end
 
     case 'define' then
-        //message('in define')
+//        message('in define')
         FSTF = 0
         FDYF = 0
         C = 0
@@ -101,14 +105,13 @@ function [x,y,typ] = VALVE(job, arg1, arg2)
         M = 5000
         Xmin = -1
         Xmax = 1
-        GEO = tlist(["valve_a", "m", "c"], 0, 0)
-        //GEO = 0
+        GEO = list(0, 5000)
         LINCOS_OVERRIDE = 0
         Xinit = 0
         model = scicos_model()
-        model.sim = list('friction',4)
+        model.sim = list('valve_a',4)
         model.in = [1]
-        model.out = [1;1;1;1]
+        model.out = [1;1;1;1;1]
         model.state = [Xinit; 0]
         model.dstate = [0]
         model.rpar = [FSTF; FDYF; C; EPS; M; Xmin; Xmax; LINCOS_OVERRIDE]
@@ -116,17 +119,19 @@ function [x,y,typ] = VALVE(job, arg1, arg2)
 //        model.opar = [tlist(["valve_a", "m", "c"], 0, 0)]
         //model.opar = [0,0]
 //        model.opar = tlist(["valve_a", "m", "c"], 0, 0);
-//        model.opar = list([0; 0]);
-        model.opar=list(int32([1,2;3,4]),[1+%i %i 0.5]);
+        model.opar=list(int32([1,2;3,4]),[1+%i %i -5000]);
+//        model.opar = list(0, 5000);
+//        model.opar=GEO;
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-//        exprs = [string([FSTF; FDYF; C; EPS; M; Xmin; Xmax; GEO; LINCOS_OVERRIDE; Xinit])]
         exprs = [string(FSTF); string(FDYF); string(C); string(EPS);..
                  string(M); string(Xmin); string(Xmax);..
 //                 string(GEO);..
-                 "list(int32([1,2;3,4]),[1+%i %i 0.5])";..
+                 "list(int32([1,2;3,4]),[1+%i %i -5000])";..
+//                 "[0; 5000]";..
+//                "list(0, 5000)";..
                  string(LINCOS_OVERRIDE);..
                  string(Xinit)]
         gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';

@@ -20,13 +20,13 @@ if bOK then
   ulink(ilib);
 end
 //
-[bOK, ilib] = c_link('valve');
+[bOK, ilib] = c_link('valve_a');
 if bOK then
   ulink(ilib);
 end
 //
 link('C:/PROGRA~1/SCILAB~1.2\bin\scicos' + getdynlibext());
-link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int','friction','valve'],'c');
+link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int','friction','valve_a'],'c');
 // remove temp. variables on stack
 clear Scratch_path;
 clear bOK;

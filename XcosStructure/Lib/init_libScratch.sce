@@ -44,7 +44,7 @@ else
 end        
 
 // ****************** Create pallette
-pal = init_add_struct('VALVE', 'green', lib_path+'/images/blocks/VALVE.png', pal);
+pal = init_add_struct('VALVE_A', 'green', lib_path+'/images/blocks/VALVE_A.png', pal);
 pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);
 pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.svg', pal);
 

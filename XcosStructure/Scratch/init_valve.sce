@@ -78,6 +78,7 @@ if bOK then
 end
 //
 link(SCI + '\bin\scicos' + getdynlibext());
+link(lib_path + 'libScratch' + getdynlibext(), ['valve_a'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['lim_int'], 'c');
 // remove temp. variables on stack
