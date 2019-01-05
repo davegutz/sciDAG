@@ -47,7 +47,8 @@
 #define Xmax    (GetRparPtrs(blk)[6]) // in
 #define LINCOS_OVERRIDE (GetRparPtrs(blk)[7]) // flag to disable friction for linearization
 
-#define MM      ((GetRealOparPtrs(blk,2))[2]);
+// Object parameters.  1st index is 1-based, 2nd index is 0-based.
+#define MM      ((GetRealOparPtrs(blk,1))[0]); // lbm
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
