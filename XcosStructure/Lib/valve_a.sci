@@ -43,17 +43,23 @@
 // interfacing function for friction block
 
 vlv_a = tlist(["vlv_a", "m", "c", "ad"], 5000, 0, [-1, 0, 3;0, 0, 5]);
-function %vlv_a_p(v)
+//function %vlv_a_p(v)
+//    // Display valve type
+//    mprintf('vlv_a:  m=%f,\c=%f\n', v.m, v.c);
+//    mprintf('ad=');
+//    disp(v.ad);
+//endfunction
+function str = %vlv_a_p(v)
     // Display valve type
-    mprintf('vlv_a:  m=%f,\c=%f\n', v.m, v.c);
-    mprintf('ad=');
-    disp(v.ad);
+    str = msprintf('list(%f, %f)\n', v.m, v.c);
+    disp(str)
+//    str = str + msprintf('[%f]', v.ad);
 endfunction
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
     //    vs = '';
-    //    vs = "list(5000, 0, [-2,0,4;0,0,6])";
-    vs = "list(vlv_a)";
+        vs = "list(5000, 0, [-2,0,4;0,0,6])";
+//    vs = "list(vlv_a)";
 endfunction
 
 function [x,y,typ] = VALVE_A(job, arg1, arg2)
@@ -126,6 +132,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
         exprs = [string(vlv_a);..
+//        exprs = ["list(5000, 0, [-2,0,4;0,0,6])";..
                 string(FSTF); string(FDYF); string(C); string(EPS);..
                  string(M); string(Xmin); string(Xmax);..
                  string(LINCOS_OVERRIDE);..
