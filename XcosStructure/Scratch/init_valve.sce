@@ -44,6 +44,7 @@ global GEO
 valve_scratch = tlist(["valve_a", "m", "c"], 0, 0);
 GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
 valve_scratchx = tlist(["vlv_a", "m", "c", "ad"], 4000, 0, [-1.5, 0, 3.5;0.1, 0.1, 5.5]);
+valve_scratchy = tlist(["vlv_a", "m", "c", "ad"], 7000, 0, [-1.5, 0, 3.5;0.1, 0.1, 5.5]);
 GEOx = tlist(["sys_geox", "valve_scratchx"], valve_scratchx);
 function %sys_geo_p(g)
     // Display v

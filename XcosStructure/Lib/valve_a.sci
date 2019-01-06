@@ -42,26 +42,44 @@
 //
 // interfacing function for friction block
 
-vlv_a = tlist(["vlv_a", "m", "c", "ad"], 5000, 0, [-1, 0, 3;0, 0, 5]);
-//function %vlv_a_p(v)
-//    // Display valve type
-//    mprintf('vlv_a:  m=%f,\c=%f\n', v.m, v.c);
-//    mprintf('ad=');
-//    disp(v.ad);
-//endfunction
-function str = %vlv_a_p(v)
-    // Display valve type
-    str = msprintf('list(%f, %f)\n', v.m, v.c);
-    disp(str)
-//    str = str + msprintf('[%f]', v.ad);
-endfunction
+
+// Default valve_a prototype **************************************
+vlv_a_default = tlist(["vlv_a", "m", "c", "ad"], 5000, 0, [-1, 0, 3;0, 0, 5]);
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
     //    vs = '';
         vs = "list(5000, 0, [-2,0,4;0,0,6])";
 //    vs = "list(vlv_a)";
+    // Scalars
+    vs = msprintf('list(%f,%f,', v.m, v.c);
+    // Tables
+    vs = vs + msprintf('[');
+    [nad, %mad] = size(v.ad);
+    for i = 1:nad,
+        for j = 1:%mad,
+            vs = vs + msprintf('%f', v.ad(i,j));
+            if j<%mad,
+                vs = vs + msprintf(',');
+            elseif i<nad,
+                vs = vs + msprintf(';');
+            end
+        end
+    end
+    vs = vs + msprintf(']');
+    // Wrap up
+    vs = vs + msprintf(')');
+endfunction
+function lis = lsx(v)
+    lis = list(v.m, v.c, v.ad);
+endfunction
+function str = %vlv_a_p(v)
+    // Display valve type
+    str = msprintf('list(%f, %f)\n', v.m, v.c);
+    str = string(v);
+    disp(str)
 endfunction
 
+// Callback ******************************************** 
 function [x,y,typ] = VALVE_A(job, arg1, arg2)
 
     x = [];
@@ -95,7 +113,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         model = arg1.model
         while %t do
             [ok,GEO,FSTF,FDYF,C,EPS,M,Xmin,Xmax,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
-            ['GEO';'FSTF';'FDYF';'C';'EPS';'M';'Xmin';'Xmax';'LINCOS_OVERRIDE';'Xinit'],..
+            ['lsx(vlv_a)';'FSTF';'FDYF';'C';'EPS';'M';'Xmin';'Xmax';'LINCOS_OVERRIDE';'Xinit'],..
             list('lis',-1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
@@ -131,8 +149,9 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = [string(vlv_a);..
 //        exprs = ["list(5000, 0, [-2,0,4;0,0,6])";..
+//        exprs = [string(vlv_a);..
+        exprs = ["lsx(vlv_a_default)";..
                 string(FSTF); string(FDYF); string(C); string(EPS);..
                  string(M); string(Xmin); string(Xmax);..
                  string(LINCOS_OVERRIDE);..
