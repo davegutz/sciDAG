@@ -42,9 +42,28 @@
 //
 // interfacing function for friction block
 
+// Default table prototype ****************************************
+tbl_a_default = tlist(["tbl_a", "xy"], [-1, 0, 10; 0, 0, 10]);
+function [ts] = %tbl_a_string(t)
+        ts = msprintf('[');
+    [nad, %mad] = size(t.xy);
+    for i = 1:nad,
+        for j = 1:%mad,
+            ts = ts + msprintf('%f', t.xy(i,j));
+            if j<%mad,
+                ts = ts + msprintf(',');
+            elseif i<nad,
+                ts = ts + msprintf(';');
+            end
+        end
+    end
+    ts = ts + msprintf(']');
+endfunction
 
 // Default valve_a prototype **************************************
-vlv_a_default = tlist(["vlv_a", "m", "c", "ad"], 5000, 0, [-1, 0, 3;0, 0, 5]);
+//vlv_a_default = tlist(["vlv_a", "m", "c", "ad"], 5000, 0, [-1, 0, 3;0, 0, 5]);
+vlv_a_default = tlist(["vlv_a", "m", "c", "ad", "aw"],..
+                     5000, 0, tbl_a_default, tbl_a_default);
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
     //    vs = '';
@@ -53,28 +72,16 @@ function [vs] = %vlv_a_string(v)
     // Scalars
     vs = msprintf('list(%f,%f,', v.m, v.c);
     // Tables
-    vs = vs + msprintf('[');
-    [nad, %mad] = size(v.ad);
-    for i = 1:nad,
-        for j = 1:%mad,
-            vs = vs + msprintf('%f', v.ad(i,j));
-            if j<%mad,
-                vs = vs + msprintf(',');
-            elseif i<nad,
-                vs = vs + msprintf(';');
-            end
-        end
-    end
-    vs = vs + msprintf(']');
-    // Wrap up
+    vs = vs + string(v.ad) + ',';
+    vs = vs + string(v.aw);
     vs = vs + msprintf(')');
 endfunction
 function lis = lsx(v)
-    lis = list(v.m, v.c, v.ad);
+    lis = list(v.m, v.c, v.ad, v.aw);
 endfunction
 function str = %vlv_a_p(v)
     // Display valve type
-    str = msprintf('list(%f, %f)\n', v.m, v.c);
+//    str = msprintf('list(%f, %f)\n', v.m, v.c);
     str = string(v);
     disp(str)
 endfunction
