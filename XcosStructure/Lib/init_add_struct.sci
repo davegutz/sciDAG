@@ -28,13 +28,13 @@ function [pal] = init_add_struct(name, fill_color, image_path, pal);
     end
     if ~isempty(image_path) then
         block_img = image_path;
+        // protect drive letter
+        if getos() == "Windows" then
+            block_img = "/" + block_img;
+        end
+        style.image="file://" + block_img;
     end
 
-    // protect drive letter
-    if getos() == "Windows" then
-        block_img = "/" + block_img;
-    end
-    style.image="file://" + block_img;
 
     o = evstr(name+"(''define'')");
     pal = xcosPalAddBlock(pal, o, '', style);

@@ -1,4 +1,4 @@
-// Copyright (C) 2018 - Dave Gutz
+// Copyright (SZ) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,15 +17,48 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 27, 2018     DA Gutz     Created
-// Jan 7, 2019      DA Gutz     Add table1_a
-// 
-funcprot(0);
-getd('../Lib')
-lib_path = get_absolute_file_path(sfilename());
-chdir(lib_path);
-libs = SCI + '\bin\scicos'
-incs = SCI + '\modules\scicos_blocks\includes'
-entries = ['lim_int', 'friction', 'valve_a' 'table1_a'];
-sources = ['lim_int_comp.c', 'friction_comp.c', 'valve_a.c', 'table1_a.c'];
-ilib_for_link(entries, sources, libs, 'c', '', 'LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
+// Jan 7, 2019     DA Gutz     Created 
+#include <scicos_block4.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
+#define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
+
+// parameters
+
+// Object parameters.  1st index is 1-based, 2nd index is 0-based.
+#define TB      ((GetRealOparPtrs(blk,1))[0]); // lbm
+
+// inputs
+#define X (r_IN(0,0)) // Input
+
+// states
+
+// outputs
+#define Z       (r_OUT(0, 0))       // Output
+
+// other constants
+
+void table1_a(scicos_block *blk, int flag)
+{
+//    double mass = 0;
+
+    // compute info needed for all passes
+
+    // Different cases
+    switch (flag)
+    {
+        case 0:
+            break;
+
+        case 1:
+            // compute the outputs of the block
+            Z = X;
+           break;
+
+        case 9:
+            // compute zero crossing surfaces and set modes
+            break;
+    }
+}

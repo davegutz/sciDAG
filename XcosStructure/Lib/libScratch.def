@@ -2,4 +2,5 @@ LIBRARY    libScratch.dll
 EXPORTS
 	friction
 	lim_int
+	table1_a
 	valve_a
