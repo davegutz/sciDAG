@@ -43,25 +43,26 @@
 // interfacing function for 1-D linear interpolation block with clipping
 
 // Default table prototype ****************************************
-xz_a_default = tlist(["xz_a", "xz"], [-1, 0, 10; 0, 0, 10]);
-function [ts] = %xz_a_string(t)
-    ts = msprintf('[');
-    [nad, %mad] = size(t.xz);
-    for i = 1:nad,
-        for j = 1:%mad,
-            ts = ts + msprintf('%f', t.xz(i,j));
-            if j<%mad,
-                ts = ts + msprintf(',');
-            elseif i<nad,
-                ts = ts + msprintf(';');
-            end
-        end
-    end
-    ts = ts + msprintf(']');
-endfunction
-function lis = lsx_xz(t)
-    lis = list(t.xz);
-endfunction
+//xz_a_default = tlist(["xz_a", "xz"], [-1, 0, 10; 0, 0, 10]);
+//function [ts] = %xz_a_string(t)
+//    ts = msprintf('[');
+//    [nad, %mad] = size(t.xz);
+//    for i = 1:nad,
+//        for j = 1:%mad,
+//            ts = ts + msprintf('%f', t.xz(i,j));
+//            if j<%mad,
+//                ts = ts + msprintf(',');
+//            elseif i<nad,
+//                ts = ts + msprintf(';');
+//            end
+//        end
+//    end
+//    ts = ts + msprintf(']');
+//endfunction
+//function lis = lsx_xz(t)
+//    lis = list(t.xz);
+//endfunction
+
 function [ts] = xz_string(t)
     ts = msprintf('[');
     [nad, %mad] = size(t);
@@ -78,18 +79,16 @@ function [ts] = xz_string(t)
     ts = ts + msprintf(']');
 endfunction
 
-//tbl1_a_default = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], xz_a_default, 1, 0, 1, 0);
 tbl1_a_default = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, 0, 10; 0, 0, 10], 1, 0, 1, 0);
 function [ts] = %tbl1_a_string(t)
     // Start
     ts = msprintf('list(');
 
     // Table
-//    ts = ts + string(t.tb);
     ts = ts + xz_string(t.tb);
 
     // Scalars
-    ts = msprintf(',%f,%f,%f,%f,', t.sx, t.dx, t.sz, t.dz);
+    ts = ts + msprintf(',%f,%f,%f,%f,', t.sx, t.dx, t.sz, t.dz);
     
     // End
     ts = ts + msprintf(')');
