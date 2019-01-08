@@ -42,11 +42,11 @@
 //
 // interfacing function for friction block
 
-exec('../Lib/table_a.sci');
+exec('../Lib/table1_a.sci');
 
 //// Default valve_a prototype **************************************
 vlv_a_default = tlist(["vlv_a", "m", "c", "ad", "aw"],..
-                     5000, 0, tbl_a_default, tbl_a_default);
+                     5000, 0, tbl1_a_default, tbl1_a_default);
 
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
@@ -60,8 +60,11 @@ function [vs] = %vlv_a_string(v)
     vs = vs + msprintf(')');
 endfunction
 
+// Arguments of C_Code cannot have nested lists.
 function lis = lsx(v)
-    lis = list(v.m, v.c, v.ad, v.aw);
+    lis = list(v.m, v.c,..
+     v.ad.tb, v.ad.sx, v.ad.dx, v.ad.sz, v.ad.dz,..
+     v.aw.tb, v.aw.sx, v.aw.dx, v.aw.sz, v.aw.dz);
 endfunction
 
 function str = %vlv_a_p(v)

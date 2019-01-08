@@ -31,7 +31,6 @@
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define TB      (GetRealOparPtrs(blk,1))  // Table
 #define N_TB    (blk->oparsz[0])
-#define M_TB    (blk->oparsz[5])
 #define NOPAR   (blk->nopar)
 #define SX      ((GetRealOparPtrs(blk,2))[0])  // Scalar input
 #define DX      ((GetRealOparPtrs(blk,3))[0])  // Scalar input

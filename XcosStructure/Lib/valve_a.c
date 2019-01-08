@@ -34,6 +34,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "tables.h"
 #define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
@@ -48,7 +49,21 @@
 #define LINCOS_OVERRIDE (GetRparPtrs(blk)[7]) // flag to disable friction for linearization
 
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
+#define NOPAR   (blk->nopar)
 #define MM      ((GetRealOparPtrs(blk,1))[0]); // lbm
+#define CC      ((GetRealOparPtrs(blk,2))[0]); // lbm
+#define N_AD    (blk->oparsz[2])
+#define AD      (GetRealOparPtrs(blk,3))  // Table
+#define SX_AD   ((GetRealOparPtrs(blk,4))[0])  // Scalar input
+#define DX_AD   ((GetRealOparPtrs(blk,5))[0])  // Scalar input
+#define SZ_AD   ((GetRealOparPtrs(blk,6))[0])  // Scalar input
+#define DZ_AD   ((GetRealOparPtrs(blk,7))[0])  // Scalar input
+#define N_AW    (blk->oparsz[7])
+#define AW      (GetRealOparPtrs(blk,8))  // Table
+#define SX_AW   ((GetRealOparPtrs(blk,9))[0])  // Scalar input
+#define DX_AW   ((GetRealOparPtrs(blk,10))[0])  // Scalar input
+#define SZ_AW   ((GetRealOparPtrs(blk,11))[0])  // Scalar input
+#define DZ_AW   ((GetRealOparPtrs(blk,12))[0])  // Scalar input
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
@@ -95,11 +110,15 @@ void valve_a(scicos_block *blk, int flag)
     double DFnet = 0;
     int stops = 0;
     double GEO_M = 0;
+    double ad = 0;
+    double aw = 0;
 //    double mass = 0;
 //    struct GEO
     
 
     // compute info needed for all passes
+    ad = tab1(X*SX_AD+DX_AD, AD, AD+N_AD, N_AD)*SZ_AD+DZ_AD;
+    aw = tab1(X*SX_AW+DX_AW, AW, AW+N_AW, N_AW)*SZ_AW+DZ_AW;
     if(mode0==mode_lincos_override)
     {
         DFnet = DF - Xdot*C;
@@ -185,11 +204,7 @@ void valve_a(scicos_block *blk, int flag)
             Vo = Xdot;
             DFneto = DFnet;
             mode0o = mode0;
-//            ptr_d = (SCSCOMPLEX_COP *)blk->oparptr[1];
-//            ptr_dr = GetRealOparPtrs(blk,2);
-////            double MM = ptr_dr[2];
-//            double MM = (GetRealOparPtrs(blk,2))[2];
-            Mo = MM;
+            Mo = aw;
            break;
 
         case 9:
