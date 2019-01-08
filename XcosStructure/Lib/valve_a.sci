@@ -45,24 +45,27 @@
 exec('../Lib/table1_a.sci');
 
 //// Default valve_a prototype **************************************
-vlv_a_default = tlist(["vlv_a", "m", "c", "ad", "aw"],..
-                     5000, 0, tbl1_a_default, tbl1_a_default);
+vlv_a_default = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "aw"],..
+                     5000, 0, 0, 0, -1, 1, tbl1_a_default, tbl1_a_default);
 
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
+    vs = msprintf('list(');
 
     // Scalars
-    vs = msprintf('list(%f,%f,', v.m, v.c);
+    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,', v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax);
 
     // Tables
     vs = vs + string(v.ad) + ',';
     vs = vs + string(v.aw);
+    
+    // end
     vs = vs + msprintf(')');
 endfunction
 
 // Arguments of C_Code cannot have nested lists.
 function lis = lsx(v)
-    lis = list(v.m, v.c,..
+    lis = list(v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax,..
      v.ad.tb, v.ad.sx, v.ad.dx, v.ad.sz, v.ad.dz,..
      v.aw.tb, v.aw.sx, v.aw.dx, v.aw.sz, v.aw.dz);
 endfunction
@@ -106,13 +109,13 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         exprs = graphics.exprs
         model = arg1.model
         while %t do
-            [ok,GEO,FSTF,FDYF,C,EPS,M,Xmin,Xmax,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
-            ['lsx(vlv_a)';'FSTF';'FDYF';'C';'EPS';'M';'Xmin';'Xmax';'LINCOS_OVERRIDE';'Xinit'],..
-            list('lis',-1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1,'vec',1),..
+            [ok,GEO,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
+            ['lsx(vlv_a)';'LINCOS_OVERRIDE';'Xinit'],..
+            list('lis',-1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
             model.state = [Xinit; 0]
-            model.rpar = [FSTF; FDYF; C; EPS; M; Xmin; Xmax; LINCOS_OVERRIDE]
+            model.rpar = [LINCOS_OVERRIDE]
             model.opar = GEO
             graphics.exprs = exprs
             x.graphics = graphics
@@ -123,13 +126,6 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
     case 'define' then
 //        message('in define')
         model.opar=list(vlv_a_default);
-        FSTF = 0
-        FDYF = 0
-        C = 0
-        EPS = 0
-        M = 5000
-        Xmin = -1
-        Xmax = 1
         LINCOS_OVERRIDE = 0
         Xinit = 0
         model = scicos_model()
@@ -138,18 +134,14 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         model.out = [1;1;1;1;1]
         model.state = [Xinit; 0]
         model.dstate = [0]
-        model.rpar = [FSTF; FDYF; C; EPS; M; Xmin; Xmax; LINCOS_OVERRIDE]
+        model.rpar = [LINCOS_OVERRIDE]
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
 //        exprs = ["list(5000, 0, [-2,0,4;0,0,6])";..
 //        exprs = [string(vlv_a);..
-        exprs = ["lsx(vlv_a_default)";..
-                string(FSTF); string(FDYF); string(C); string(EPS);..
-                 string(M); string(Xmin); string(Xmax);..
-                 string(LINCOS_OVERRIDE);..
-                 string(Xinit)]
+        exprs = ["lsx(vlv_a_default)"; string(LINCOS_OVERRIDE); string(Xinit)]
         gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
         'txt=[''Prototype'';''Valve'']';
         'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';

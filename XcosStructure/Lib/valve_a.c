@@ -39,31 +39,28 @@
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
 // parameters
-#define FSTF    (GetRparPtrs(blk)[0]) // static friction, lbf
-#define FDYF    (GetRparPtrs(blk)[1]) // dynamic friction, lbf
-#define C       (GetRparPtrs(blk)[2]) // damping coefficient, lbf/in/s
-#define EPS     (GetRparPtrs(blk)[3]) // boundary layer, in/s.***do't think this has any effect in xcos with zcd - holdover from Simulink modeling of friction
-#define M       (GetRparPtrs(blk)[4]) // lbm
-#define Xmin    (GetRparPtrs(blk)[5]) // in
-#define Xmax    (GetRparPtrs(blk)[6]) // in
-#define LINCOS_OVERRIDE (GetRparPtrs(blk)[7]) // flag to disable friction for linearization
+#define LINCOS_OVERRIDE (GetRparPtrs(blk)[0]) // flag to disable friction for linearization
 
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define MM      ((GetRealOparPtrs(blk,1))[0]); // lbm
-#define CC      ((GetRealOparPtrs(blk,2))[0]); // lbm
-#define N_AD    (blk->oparsz[2])
-#define AD      (GetRealOparPtrs(blk,3))  // Table
-#define SX_AD   ((GetRealOparPtrs(blk,4))[0])  // Scalar input
-#define DX_AD   ((GetRealOparPtrs(blk,5))[0])  // Scalar input
-#define SZ_AD   ((GetRealOparPtrs(blk,6))[0])  // Scalar input
-#define DZ_AD   ((GetRealOparPtrs(blk,7))[0])  // Scalar input
-#define N_AW    (blk->oparsz[7])
-#define AW      (GetRealOparPtrs(blk,8))  // Table
-#define SX_AW   ((GetRealOparPtrs(blk,9))[0])  // Scalar input
-#define DX_AW   ((GetRealOparPtrs(blk,10))[0])  // Scalar input
-#define SZ_AW   ((GetRealOparPtrs(blk,11))[0])  // Scalar input
-#define DZ_AW   ((GetRealOparPtrs(blk,12))[0])  // Scalar input
+#define M       ((GetRealOparPtrs(blk,1))[0]); // lbm
+#define C       ((GetRealOparPtrs(blk,2))[0]); // lbf-s/in
+#define FSTF    ((GetRealOparPtrs(blk,3))[0]); // lbf
+#define FDYF    ((GetRealOparPtrs(blk,4))[0]); // lbf
+#define XMIN    ((GetRealOparPtrs(blk,5))[0]); // lbf
+#define XMAX    ((GetRealOparPtrs(blk,6))[0]); // lbf
+#define N_AD    (blk->oparsz[6])
+#define AD      (GetRealOparPtrs(blk,7))  // Table
+#define SX_AD   ((GetRealOparPtrs(blk,8))[0])  // Scalar input
+#define DX_AD   ((GetRealOparPtrs(blk,9))[0])  // Scalar input
+#define SZ_AD   ((GetRealOparPtrs(blk,10))[0])  // Scalar input
+#define DZ_AD   ((GetRealOparPtrs(blk,11))[0])  // Scalar input
+#define N_AW    (blk->oparsz[11])
+#define AW      (GetRealOparPtrs(blk,12))  // Table
+#define SX_AW   ((GetRealOparPtrs(blk,13))[0])  // Scalar input
+#define DX_AW   ((GetRealOparPtrs(blk,14))[0])  // Scalar input
+#define SZ_AW   ((GetRealOparPtrs(blk,15))[0])  // Scalar input
+#define DZ_AW   ((GetRealOparPtrs(blk,16))[0])  // Scalar input
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
@@ -91,7 +88,7 @@
 
 
 // if X>=Xmax, then mode is 3
-// if X<=Xmin, then mode is -3
+// if X<=xmin, then mode is -3
 // if Xdot >= EPS, then mode is 2
 // if Xdot <= -EPS, then mode is -2
 // if 0<=Xdot<EPS and u<FSTF, then mode is 1
@@ -109,9 +106,15 @@ void valve_a(scicos_block *blk, int flag)
 {
     double DFnet = 0;
     int stops = 0;
-    double GEO_M = 0;
     double ad = 0;
     double aw = 0;
+    double mass = M;
+    double c = C;
+    double fstf = FSTF;
+    double fdyf = FDYF;
+    double xmin = XMIN;
+    double xmax = XMAX;
+    double EPS = 0;  // TODO:  delete this.  Holdover from non-zero-crossing implementation
 //    double mass = 0;
 //    struct GEO
     
@@ -121,33 +124,33 @@ void valve_a(scicos_block *blk, int flag)
     aw = tab1(X*SX_AW+DX_AW, AW, AW+N_AW, N_AW)*SZ_AW+DZ_AW;
     if(mode0==mode_lincos_override)
     {
-        DFnet = DF - Xdot*C;
+        DFnet = DF - Xdot*c;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = DF - FDYF - Xdot*C;
+        DFnet = DF - fdyf - Xdot*c;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = DF + FDYF - Xdot*C;
+        DFnet = DF + fdyf - Xdot*c;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(DF - FSTF, 0);
+        DFnet = max(DF - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(DF - FSTF, 0);
+        DFnet = max(DF - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(DF + FSTF, 0);
+        DFnet = min(DF + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(DF + FSTF, 0);
+        DFnet = min(DF + fstf, 0);
     }
 
     switch (flag)
@@ -157,17 +160,17 @@ void valve_a(scicos_block *blk, int flag)
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
-                A = DFnet/(M+GEO_M)*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_plus)
             {
                 V = Xdot;
-                A = DFnet/(M+GEO_M)*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_neg)
             {
                 V = Xdot;
-                A = DFnet/(M+GEO_M)*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_stop_min)
             {
@@ -178,7 +181,7 @@ void valve_a(scicos_block *blk, int flag)
             else if(mode0==mode_stuck_plus)
             {
                 V = Xdot;
-                A = DFnet/(M+GEO_M)*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_stop_max)
             {
@@ -189,12 +192,12 @@ void valve_a(scicos_block *blk, int flag)
             else if(mode0==mode_stuck_neg)
             {
                 V = Xdot;
-                A = DFnet/(M+GEO_M)*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
                 V = Xdot;
-                A = DFnet/(M+GEO_M)*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             break;
 
@@ -204,16 +207,16 @@ void valve_a(scicos_block *blk, int flag)
             Vo = Xdot;
             DFneto = DFnet;
             mode0o = mode0;
-            Mo = aw;
+            Mo = mass;
            break;
 
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-			surf1 = DF-FSTF;
-			surf2 = DF+FSTF;
-            surf3 = X-Xmin;
-            surf4 = X-Xmax;
+			surf1 = DF-fstf;
+			surf2 = DF+fstf;
+            surf3 = X-xmin;
+            surf4 = X-xmax;
 
             if (get_phase_simulation() == 1)
             {

@@ -41,27 +41,26 @@ global m k c
 global loaded_scratch
 global GEO
 
-valve_scratch = tlist(["valve_a", "m", "c"], 0, 0);
+valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
 GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
 ady = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0);
 awy = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, 0; 0, 0; 2, 2;], 1, 0, 1, 0);
-valve_scratchy = tlist(["vlv_a", "m", "c", "ad", "aw"], 7000, 0, ady, awy);
-valve_scratchx = list(4000, 0, [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0, [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0);
+valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "aw"],..
+    7000, 0, 0, 0, -%inf, %inf, ady, awy);
+valve_scratchx = list(4000, 0, 0, 0, -%inf, %inf, [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0, [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0);
 GEOx = tlist(["sys_geox", "valve_scratchx"], valve_scratchx);
 function %sys_geo_p(g)
-    // Display v
+    // Display geo overload
     mprintf('sys_geo:  \n');
     disp(g.valve_scratch)
 endfunction
 function %valve_a_p(v)
-    // Display valve type
-    mprintf('valve_a:  m=%f,\c=%f\n', v.m, v.c);
+    // Display valve overload
+    mprintf('valve_a:  m=%f, c=%f, fstf=%f, fdyf=%f, xmin=%f, xmax=%f\n',..
+         v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax);
 endfunction
 
 loaded_scratch = %f;
-m = 4.4; // lbm
-k = 0.0126; // lbf/in
-c = 0.0057; // lbf-s/in
 LINCOS_OVERRIDE = 0;
 LINCOS_OPEN_LOOP = 0;
 exec('Callbacks\pre_xcos_simulate_' + root + '.sci');
