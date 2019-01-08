@@ -85,12 +85,11 @@ function [ts] = %tbl1_b_string(t)
     ts = ts + msprintf(')');
 endfunction
 
-//function lis = lsx_tbl1_a(t)
-//    tbx = (t.tb(:,1)-t.dx)/t.sx;
-//    tbz = t.tb(:,2)*t.sz+t.dz;
-//    //lis = list(t.tb, t.sx, t.dx, t.sz, t.dz);
-//    lis = [tbx tbz];
-//endfunction
+function lis = lsx_tbl1_a(t)
+    tbx = (t.tb(:,1)-t.dx)/t.sx;
+    tbz = t.tb(:,2)*t.sz+t.dz;
+    lis = list(t.tb, t.sx, t.dx, t.sz, t.dz);
+endfunction
 
 function vec = vec_tbl1_a(t)
     tbx = (t.tb(:,1)-t.dx)/t.sx;
@@ -173,15 +172,16 @@ function [x,y,typ] = TABLE1_A(job, arg1, arg2)
         model.nzcross = 0
         model.dep_ut = [%t %f] // [direct feedthrough,   time dependence]
         exprs = ["lsx_tbl1_a(tbl1_a_default)"]
-        gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
-        'txt=[''Prototype'';''Table1'']';
-        'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';
-        'txt=[''DF'';'''';''STOPS'';]';
-        'xstringb(x+0.02*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-        'txt=['''';''V'';'''';''DFmod'';'''']';
-        'xstringb(x+0.73*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-        ]
-        x = standard_define([4 2],model,exprs,gr_i)
+//        gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
+//        'txt=[''Prototype'';''Table1'']';
+//        'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';
+//        'txt=[''DF'';'''';''STOPS'';]';
+//        'xstringb(x+0.02*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
+//        'txt=['''';''V'';'''';''DFmod'';'''']';
+//        'xstringb(x+0.73*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
+//        ]
+//        x = standard_define([4 2],model,exprs,gr_i)
+        x = standard_define([4 2],model,exprs)
 
     end
 endfunction

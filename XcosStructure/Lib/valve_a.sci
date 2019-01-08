@@ -141,14 +141,15 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
 //        exprs = ["list(5000, 0, [-2,0,4;0,0,6])";..
 //        exprs = [string(vlv_a);..
         exprs = ["lsx(vlv_a_default)"; string(LINCOS_OVERRIDE); string(Xinit)]
-        gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
-        'txt=[''Prototype'';''Valve'']';
-        'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';
-        'txt=[''DF'';'''';''STOPS'';]';
-        'xstringb(x+0.02*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-        'txt=['''';''V'';'''';''DFmod'';'''']';
-        'xstringb(x+0.73*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-        ]
+//        gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
+//        'txt=[''Prototype'';''Valve'']';
+//        'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';
+//        'txt=[''DF'';'''';''STOPS'';]';
+//        'xstringb(x+0.02*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
+//        'txt=['''';''V'';'''';''DFmod'';'''']';
+//        'xstringb(x+0.73*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
+//        ]
+        gr_i = [];
         x = standard_define([4 2],model,exprs,gr_i)
 
     end
