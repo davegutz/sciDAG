@@ -43,11 +43,11 @@ global GEO
 
 valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
 GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
-ady = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0);
-awy = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, 0; 0, 0; 2, 2;], 1, 0, 1, 0);
+ady = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 20;]);
+awy = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 2;]);
 valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "aw"],..
     7000, 0, 0, 0, -%inf, %inf, ady, awy);
-valve_scratchx = list(4000, 0, 0, 0, -%inf, %inf, [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0, [-1, 0; 0, 0; 2, 20;], 1, 0, 1, 0);
+valve_scratchx = list(4000, 0, 0, 0, -%inf, %inf, [-1, 0; 0, 0; 2, 20;], [-1, 0; 0, 0; 2, 20;]);
 GEOx = tlist(["sys_geox", "valve_scratchx"], valve_scratchx);
 function %sys_geo_p(g)
     // Display geo overload

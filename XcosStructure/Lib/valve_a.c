@@ -51,16 +51,8 @@
 #define XMAX    ((GetRealOparPtrs(blk,6))[0]); // lbf
 #define N_AD    (blk->oparsz[6])
 #define AD      (GetRealOparPtrs(blk,7))  // Table
-#define SX_AD   ((GetRealOparPtrs(blk,8))[0])  // Scalar input
-#define DX_AD   ((GetRealOparPtrs(blk,9))[0])  // Scalar input
-#define SZ_AD   ((GetRealOparPtrs(blk,10))[0])  // Scalar input
-#define DZ_AD   ((GetRealOparPtrs(blk,11))[0])  // Scalar input
-#define N_AW    (blk->oparsz[11])
-#define AW      (GetRealOparPtrs(blk,12))  // Table
-#define SX_AW   ((GetRealOparPtrs(blk,13))[0])  // Scalar input
-#define DX_AW   ((GetRealOparPtrs(blk,14))[0])  // Scalar input
-#define SZ_AW   ((GetRealOparPtrs(blk,15))[0])  // Scalar input
-#define DZ_AW   ((GetRealOparPtrs(blk,16))[0])  // Scalar input
+#define N_AW    (blk->oparsz[7])
+#define AW      (GetRealOparPtrs(blk,8))  // Table
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
@@ -120,8 +112,8 @@ void valve_a(scicos_block *blk, int flag)
     
 
     // compute info needed for all passes
-    ad = tab1(X*SX_AD+DX_AD, AD, AD+N_AD, N_AD)*SZ_AD+DZ_AD;
-    aw = tab1(X*SX_AW+DX_AW, AW, AW+N_AW, N_AW)*SZ_AW+DZ_AW;
+    ad = tab1(X, AD, AD+N_AD, N_AD);
+    aw = tab1(X, AW, AW+N_AW, N_AW);
     if(mode0==mode_lincos_override)
     {
         DFnet = DF - Xdot*c;
@@ -207,7 +199,7 @@ void valve_a(scicos_block *blk, int flag)
             Vo = Xdot;
             DFneto = DFnet;
             mode0o = mode0;
-            Mo = mass;
+            Mo = ad;
            break;
 
         case 9:

@@ -66,8 +66,7 @@ endfunction
 // Arguments of C_Code cannot have nested lists.
 function lis = lsx(v)
     lis = list(v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax,..
-     v.ad.tb, v.ad.sx, v.ad.dx, v.ad.sz, v.ad.dz,..
-     v.aw.tb, v.aw.sx, v.aw.dx, v.aw.sz, v.aw.dz);
+     v.ad.tb,  v.aw.tb);
 endfunction
 
 function str = %vlv_a_p(v)

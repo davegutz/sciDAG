@@ -56,6 +56,7 @@ function [ts] = xz_string(t)
 endfunction
 
 tbl1_a_default = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, -10; 1, 10; 2, 20;], 1, 0, 1, 0);
+tbl1_b_default = tlist(["tbl1_b", "tb"], [-1, -10; 1, 10; 2, 20;]);
 
 function [ts] = %tbl1_a_string(t)
     // Start
@@ -71,12 +72,34 @@ function [ts] = %tbl1_a_string(t)
     ts = ts + msprintf(')');
 endfunction
 
+function [ts] = %tbl1_b_string(t)
+    // Start
+    ts = msprintf('list(');
+
+    // Table
+    ts = ts + xz_string(t.tb);
+
+    // Scalars
+    
+    // End
+    ts = ts + msprintf(')');
+endfunction
 
 function lis = lsx_tbl1_a(t)
     lis = list(t.tb, t.sx, t.dx, t.sz, t.dz);
 endfunction
 
+function lis = lsx_tbl1_b(t)
+    lis = list(t.tb);
+endfunction
+
 function str = %tbl1_a_p(t)
+    // Display table1 type
+    str = string(t);
+    disp(str)
+endfunction
+
+function str = %tbl1_b_p(t)
     // Display table1 type
     str = string(t);
     disp(str)
