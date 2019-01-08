@@ -21,6 +21,7 @@
 // SOFTWARE.
 // Dec 17, 2018     DA Gutz     Created for Scilab 5.5.2
 // Jan 1, 2019      DA Gutz     Added valve
+// Jan 7, 2019      DA Gutz     Added tables
 // 
 
 // ******************  Make temporary palette for local C-blocks
@@ -52,26 +53,3 @@ pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.s
 // Finalize the palette
 xcosPalAdd(pal);
 mprintf('%s done\n', sfilename())
-
-// Old stuff
-//style = struct();
-//style.fillColor="blue";
-//block_img = lib_path + "/images/blocks/FRICTION.png";
-//// protect drive letter
-//if getos() == "Windows" then
-//    block_img = "/" + block_img;
-//end
-//style.image="file://" + block_img;
-//o = FRICTION("define");
-//pal = xcosPalAddBlock(pal, o, '', style);
-//style = struct();
-//style.fillColor="red";
-//block_img = SCI + "/modules/xcos/images/blocks/RAMP.svg";
-//// protect drive letter
-//if getos() == "Windows" then
-//    block_img = "/" + block_img;
-//end
-//style.image="file://" + block_img;
-//o = LIMINT("define");
-//pal = xcosPalAddBlock(pal, o, '', style);
-//

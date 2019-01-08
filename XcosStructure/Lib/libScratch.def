@@ -3,4 +3,7 @@ EXPORTS
 	friction
 	lim_int
 	table1_a
+	binsearch
+	tab1
+	tab2
 	valve_a

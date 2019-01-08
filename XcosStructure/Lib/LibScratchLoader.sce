@@ -30,8 +30,23 @@ if bOK then
   ulink(ilib);
 end
 //
+[bOK, ilib] = c_link('binsearch');
+if bOK then
+  ulink(ilib);
+end
+//
+[bOK, ilib] = c_link('tab1');
+if bOK then
+  ulink(ilib);
+end
+//
+[bOK, ilib] = c_link('tab2');
+if bOK then
+  ulink(ilib);
+end
+//
 link('C:/PROGRA~1/SCILAB~1.2\bin\scicos' + getdynlibext());
-link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int','friction','valve_a','table1_a'],'c');
+link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int','friction','valve_a','table1_a','binsearch','tab1','tab2'],'c');
 // remove temp. variables on stack
 clear Scratch_path;
 clear bOK;

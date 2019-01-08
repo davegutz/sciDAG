@@ -22,6 +22,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "tables.h"
 #define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
@@ -50,14 +51,10 @@
 void table1_a(scicos_block *blk, int flag)
 {   
     double *tb = TB; 
-    double x0 = tb[0];
-    double x1 = tb[1];
-    double x2 = tb[2];
-    double z0 = tb[3];
-    double z1 = tb[4];
-    double z2 = tb[5];
+    double z;
 
     // compute info needed for all passes
+    z = tab1(X, tb, tb+N_TB, N_TB);
     
     // Different cases
     switch (flag)
@@ -67,7 +64,7 @@ void table1_a(scicos_block *blk, int flag)
 
         case 1:
             // compute the outputs of the block
-            Z = (x2*SX + DX)*SZ + DZ;
+            Z = (z*SX + DX)*SZ + DZ;
            break;
 
         case 9:
