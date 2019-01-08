@@ -43,43 +43,20 @@
 // interfacing function for 1-D linear interpolation block with clipping
 
 // Default table prototype ****************************************
-//xz_a_default = tlist(["xz_a", "xz"], [-1, 0, 10; 0, 0, 10]);
-//function [ts] = %xz_a_string(t)
-//    ts = msprintf('[');
-//    [nad, %mad] = size(t.xz);
-//    for i = 1:nad,
-//        for j = 1:%mad,
-//            ts = ts + msprintf('%f', t.xz(i,j));
-//            if j<%mad,
-//                ts = ts + msprintf(',');
-//            elseif i<nad,
-//                ts = ts + msprintf(';');
-//            end
-//        end
-//    end
-//    ts = ts + msprintf(']');
-//endfunction
-//function lis = lsx_xz(t)
-//    lis = list(t.xz);
-//endfunction
-
 function [ts] = xz_string(t)
     ts = msprintf('[');
     [nad, %mad] = size(t);
     for i = 1:nad,
-        for j = 1:%mad,
-            ts = ts + msprintf('%f', t(i,j));
-            if j<%mad,
-                ts = ts + msprintf(',');
-            elseif i<nad,
-                ts = ts + msprintf(';');
-            end
+        ts = ts + msprintf('%f, %f', t(i,1:2));
+        if i<nad,
+            ts = ts + msprintf(';');
         end
     end
     ts = ts + msprintf(']');
 endfunction
 
-tbl1_a_default = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, 0, 10; 0, 0, 10], 1, 0, 1, 0);
+tbl1_a_default = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, -10; 1, 10; 2, 20;], 1, 0, 1, 0);
+
 function [ts] = %tbl1_a_string(t)
     // Start
     ts = msprintf('list(');
