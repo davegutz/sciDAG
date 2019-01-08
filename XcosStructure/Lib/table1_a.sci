@@ -85,13 +85,22 @@ function [ts] = %tbl1_b_string(t)
     ts = ts + msprintf(')');
 endfunction
 
-function lis = lsx_tbl1_a(t)
-    lis = list(t.tb, t.sx, t.dx, t.sz, t.dz);
+//function lis = lsx_tbl1_a(t)
+//    tbx = (t.tb(:,1)-t.dx)/t.sx;
+//    tbz = t.tb(:,2)*t.sz+t.dz;
+//    //lis = list(t.tb, t.sx, t.dx, t.sz, t.dz);
+//    lis = [tbx tbz];
+//endfunction
+
+function vec = vec_tbl1_a(t)
+    tbx = (t.tb(:,1)-t.dx)/t.sx;
+    tbz = t.tb(:,2)*t.sz+t.dz;
+    vec = [tbx tbz];
 endfunction
 
-function lis = lsx_tbl1_b(t)
-    lis = list(t.tb);
-endfunction
+//function lis = lsx_tbl1_b(t)
+//    lis = list(t.tb);
+//endfunction
 
 function str = %tbl1_a_p(t)
     // Display table1 type

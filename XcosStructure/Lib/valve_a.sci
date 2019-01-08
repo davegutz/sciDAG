@@ -63,10 +63,10 @@ function [vs] = %vlv_a_string(v)
     vs = vs + msprintf(')');
 endfunction
 
-// Arguments of C_Code cannot have nested lists.
+// Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
 function lis = lsx(v)
     lis = list(v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax,..
-     v.ad.tb,  v.aw.tb);
+     vec_tbl1_a(v.ad),  vec_tbl1_a(v.aw));
 endfunction
 
 function str = %vlv_a_p(v)
