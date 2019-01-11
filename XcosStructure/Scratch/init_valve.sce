@@ -39,24 +39,25 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch
-global GEO
+global GEO INI
 global start02_x start02_v
 global start02_ph start02_prs start02_pxr start02_ps
 global start02_wfs start02_wfh start02_wfvr start02_wfvx
 Tf = 0.01;
 
-valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
-GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
+//valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
+//GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
+GEO = tlist(["sys_geo", "vsv"], vlv_a_default);
 ady = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 20;]);
-awy = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 2;]);
-valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "aw"],..
-    7000, 0, 0, 0, -%inf, %inf, ady, awy);
+ahy = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 2;]);
+valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "ah"],..
+    7000, 0, 0, 0, -%inf, %inf, ady, ahy);
 valve_scratchx = list(4000, 0, 0, 0, -%inf, %inf, [-1, 0; 0, 0; 2, 20;], [-1, 0; 0, 0; 2, 20;]);
 GEOx = tlist(["sys_geox", "valve_scratchx"], valve_scratchx);
 function %sys_geo_p(g)
     // Display geo overload
     mprintf('sys_geo:  \n');
-    disp(g.valve_scratch)
+    disp(g.vsv)
 endfunction
 function %valve_a_p(v)
     // Display valve overload

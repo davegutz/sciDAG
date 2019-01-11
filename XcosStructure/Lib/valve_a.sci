@@ -42,22 +42,31 @@
 //
 // interfacing function for friction block
 
+// Default table1_a 
 exec('../Lib/table1_a.sci');
 
 //// Default valve_a prototype **************************************
-vlv_a_default = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "aw"],..
-                     5000, 0, 0, 0, -1, 1, tbl1_a_default, tbl1_a_default);
+vlv_a_default = tlist(["vlv_a", "ao", "ax1", "ax2", "ax3", "ax4",..
+        "c", "clin", "cd", "cdo", "cp", "fdyf", "fs", "fstf", "ks",..
+        "ld", "lh", "m", "xmax", "xmin",..
+         "ad", "ah"],..
+         1, 0, 0, 0, 0,..
+         0, 0, 0.61, 0.61, 0.69, 0, 15.8, 0, 24.4,..
+         0, 0, 5, 1, -1, tbl1_a_default, tbl1_a_default);
 
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
     vs = msprintf('list(');
 
     // Scalars
-    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,', v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax);
+    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
+             v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
+             v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+             v.ld, v.lh, v.m, v.xmax, v.xmin);
 
     // Tables
     vs = vs + string(v.ad) + ',';
-    vs = vs + string(v.aw);
+    vs = vs + string(v.ah);
     
     // end
     vs = vs + msprintf(')');
@@ -65,8 +74,10 @@ endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
 function lis = lsx(v)
-    lis = list(v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax,..
-     vec_tbl1_a(v.ad),  vec_tbl1_a(v.aw));
+    lis = list(v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
+             v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+             v.ld, v.lh, v.m, v.xmax, v.xmin,..
+             vec_tbl1_a(v.ad),  vec_tbl1_a(v.ah));
 endfunction
 
 function str = %vlv_a_p(v)

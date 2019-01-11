@@ -22,13 +22,12 @@
 
 global LINCOS_OVERRIDE
 global loaded_scratch
-global GEO
+global GEO INI
 global start02_x start02_v
 global start02_ph start02_prs start02_pxr start02_ps
 global start02_wfs start02_wfh start02_wfvr start02_wfvx
 mprintf('In %s\n', sfilename())  
 
-GEO.valve_scratch.m = 5000;
 
 // Load c-model reference data
 stacksize('max');
@@ -44,5 +43,40 @@ start02_wfh = struct("time", M(:,1), "values", M(:,9));
 start02_wfvr = struct("time", M(:,1), "values", M(:,10));
 start02_wfvx = struct("time", M(:,1), "values", M(:,11));
 clear M comments
+
+INI.vsv.x = start02_x.values(1,:);
+
+// Define valve geometry
+d = 0.2657;
+GEO.vsv.ax1 = d^2*%pi/4;
+clear d
+GEO.vsv.ax2 = GEO.vsv.ax1;
+GEO.vsv.ax3 = 0;
+GEO.vsv.ax4 = GEO.vsv.ax1;
+GEO.vsv.c = 0;
+GEO.vsv.clin = 0.24;
+GEO.vsv.cd = 0.7;
+GEO.vsv.cdo = 0.61;
+GEO.vsv.cp = 0.43;
+d = 0.016;
+GEO.vsv.ao = d^2*%pi/4;
+clear d
+GEO.vsv.fdyf = 0;
+GEO.vsv.fstf = 0;
+GEO.vsv.fs = 15.8;
+GEO.vsv.ks = 24.4;
+GEO.vsv.ld = 0;
+GEO.vsv.lh = 0;
+mv = 8e-5*386;
+ms = 0;
+GEO.vsv.m = mv + ms/2;
+clear mv ms
+GEO.vsv.xmax = 0.125;
+GEO.vsv.xmin = 0;
+exec('./Callbacks/vsvwin_a.sci', -1);
+GEO.vsv.ad.tb = [-1 0; 1 0];
+[xh, ah, wvh] = vsvwin_a(40);
+GEO.vsv.ah.tb = [xh ah];
+clear xh ah wvh
 
 mprintf('Completed %s\n', sfilename())  

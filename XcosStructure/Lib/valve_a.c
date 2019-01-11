@@ -43,16 +43,29 @@
 
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define M       ((GetRealOparPtrs(blk,1))[0]); // lbm
-#define C       ((GetRealOparPtrs(blk,2))[0]); // lbf-s/in
-#define FSTF    ((GetRealOparPtrs(blk,3))[0]); // lbf
-#define FDYF    ((GetRealOparPtrs(blk,4))[0]); // lbf
-#define XMIN    ((GetRealOparPtrs(blk,5))[0]); // lbf
-#define XMAX    ((GetRealOparPtrs(blk,6))[0]); // lbf
-#define N_AD    (blk->oparsz[6])
-#define AD      (GetRealOparPtrs(blk,7))  // Table
-#define N_AW    (blk->oparsz[7])
-#define AW      (GetRealOparPtrs(blk,8))  // Table
+#define AO      ((GetRealOparPtrs(blk,1))[0]);  // Valve damp orifice area, sqin
+#define AX1     ((GetRealOparPtrs(blk,2))[0]);  // Supply to reference cross section, sqin
+#define AX2     ((GetRealOparPtrs(blk,3))[0]);  // Damping cross section, sqin
+#define AX3     ((GetRealOparPtrs(blk,4))[0]);  // Supply cross section, sqin
+#define AX4     ((GetRealOparPtrs(blk,5))[0]);  // Supply to opposite spring end cross section, sqin
+#define C       ((GetRealOparPtrs(blk,6))[0]);  // Damping coefficient, lbf/in/s
+#define CLIN    ((GetRealOparPtrs(blk,7))[0]);  // Damping coefficient when linearizing (LINCOS_OVERRIDE), lbf/in/s
+#define CD      ((GetRealOparPtrs(blk,8))[0]);  // Coefficient of discharge
+#define CDO     ((GetRealOparPtrs(blk,9))[0]);  // Damping orifice coefficient of discharge
+#define CP      ((GetRealOparPtrs(blk,10))[0]); // Pressure force coefficient, usu .69
+#define FDYF    ((GetRealOparPtrs(blk,11))[0]); // Dynamic friction, lbf
+#define FS      ((GetRealOparPtrs(blk,12))[0]); // Spring preload, lbf
+#define FSTF    ((GetRealOparPtrs(blk,13))[0]); // Static friction, lbf
+#define KS      ((GetRealOparPtrs(blk,14))[0]); // Spring rate, lbf/in
+#define LD      ((GetRealOparPtrs(blk,15))[0]); // Damping length supply to discharge (effective), in
+#define LH      ((GetRealOparPtrs(blk,16))[0]); // Damping length supply to high discharge (effective), in
+#define M       ((GetRealOparPtrs(blk,17))[0]); // Total mass (valve + spring contribution), lbm
+#define XMAX    ((GetRealOparPtrs(blk,18))[0]); // Max stroke, in
+#define XMIN    ((GetRealOparPtrs(blk,19))[0]); // Min stroke, in
+#define N_AD    (blk->oparsz[19])
+#define AD      (GetRealOparPtrs(blk,20))  // Table
+#define N_AH    (blk->oparsz[20])
+#define AH      (GetRealOparPtrs(blk,21))  // Table
 
 // inputs
 #define DF (r_IN(0,0)) // force imbalance
@@ -99,7 +112,7 @@ void valve_a(scicos_block *blk, int flag)
     double DFnet = 0;
     int stops = 0;
     double ad = 0;
-    double aw = 0;
+    double ah = 0;
     double mass = M;
     double c = C;
     double fstf = FSTF;
@@ -107,13 +120,10 @@ void valve_a(scicos_block *blk, int flag)
     double xmin = XMIN;
     double xmax = XMAX;
     double EPS = 0;  // TODO:  delete this.  Holdover from non-zero-crossing implementation
-//    double mass = 0;
-//    struct GEO
-    
 
     // compute info needed for all passes
     ad = tab1(X, AD, AD+N_AD, N_AD);
-    aw = tab1(X, AW, AW+N_AW, N_AW);
+    ah = tab1(X, AH, AH+N_AH, N_AH);
     if(mode0==mode_lincos_override)
     {
         DFnet = DF - Xdot*c;
