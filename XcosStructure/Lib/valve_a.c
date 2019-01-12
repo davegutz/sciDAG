@@ -72,23 +72,26 @@
 #define PS  (r_IN(0,0)) // Supply pressure, psia
 #define PD  (r_IN(1,0)) // Discharge pressure, psia
 #define PH  (r_IN(2,0)) // High discharge pressure, psia
-#define PRS (r_IN(3,0)) // Reference opposite spring eng pressure, psia
+#define PRS (r_IN(3,0)) // Reference opposite spring end pressure, psia
 #define PR  (r_IN(4,0)) // Regulated pressure, psia
 #define PXR (r_IN(5,0)) // Reference pressure, psia
 #define XOL (r_IN(6,0)) // Spool displacement toward drain, in (open loop)
 
 // states
-#define X       (GetState(blk)[0])      // position state
-#define V       (GetDerState(blk)[0])   // derivative of position
-#define Xdot    (GetState(blk)[1])      // velocity state
-#define A       (GetDerState(blk)[1])   // derivative of velocity
+#define X       (GetState(blk)[0])      // Position state
+#define V       (GetDerState(blk)[0])   // Derivative of position
+#define Xdot    (GetState(blk)[1])      // Velocity state
+#define A       (GetDerState(blk)[1])   // Derivative of velocity
 
 // outputs
-#define Xo      (r_OUT(0, 0))       // position, in
-#define Vo      (r_OUT(1, 0))       // velocity, in/s
-#define DFneto  (r_OUT(2, 0))       // unbalanced force, lbf
-#define mode0o  (r_OUT(3, 0))       // mode
-#define Mo      (r_OUT(4, 0))       // mass
+#define WFS     (r_OUT(0,0))    // Supply flow in, pph
+#define WFD     (r_OUT(1,0))    // Discharge flow out, pph
+#define WFH     (r_OUT(2,0))    // High discharge flow in, pph
+#define WFVRS   (r_OUT(3,0))    // Reference opposite spring end flow in, pph
+#define WFVR    (r_OUT(4,0))    // Reference flow out, pph
+#define WFVX    (r_OUT(5,0))    // Damping flow out, pph
+#define Vo      (r_OUT(6,0))    // Spool velocity toward drain, in/sec
+#define Xo      (r_OUT(7,0))    // Spool displacement toward drain, in
 
 // other constants
 #define surf0   (GetGPtrs(blk)[0])
@@ -146,14 +149,6 @@ void valve_a(scicos_block *blk, int flag)
     double xmax = XMAX;
     double EPS = 0;  // TODO:  delete this.  Holdover from non-zero-crossing implementation
 
-// wfs   O # 1, supply flow in, pph.
-// wfd   O # 2, discharge flow out, pph.
-// wfh   O # 3, high discharge flow in, pph.
-// wfvrs O # 4, reference opposite spring end flow in, pph.
-// wfvr  O # 5, reference flow out, pph.
-// wfvx  O # 6, damping flow out, pph.
-// dxdt  O # 7, spool velocity toward drain, in/sec.
-// x     O # 8, spool displacement toward drain, in.
 
     // inputs and outputs
     double ps = PS;
@@ -187,7 +182,7 @@ void valve_a(scicos_block *blk, int flag)
 
     // compute info needed for all passes
     wfvx   = Xdot*dwdc*ax2;
-    px = OR_APTOW(ao, wfvx, pxr, cdo, sg);
+    px = OR_AWTOP(ao, wfvx, pxr, cdo, sg);
     ad = tab1(X, AD, AD+N_AD, N_AD);
     ah = tab1(X, AH, AH+N_AH, N_AH);
     fjd = cp * fabs(ps - pd)*ad;
@@ -196,11 +191,7 @@ void valve_a(scicos_block *blk, int flag)
     fth = -lh * 0.01365 * cd * Xdot * SSQRT(sg*(ps - ph));
     df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
              - fs - X*ks - fjd - fjh - ftd - fth;
-    wfd = OR_APTOW(ad, ps, pd, cd, sg);
-    wfh = OR_APTOW(ah, ph, ps, cd, sg);
-    wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
-    wfvrs  = Xdot*dwdc*ax4;
-    wfvr   = Xdot*dwdc*(ax1-ax2);
+    
 
     if(mode0==mode_lincos_override)
     {
@@ -283,12 +274,20 @@ void valve_a(scicos_block *blk, int flag)
 
         case 1:
             // compute the outputs of the block
-            Xo = X;
+            wfd = OR_APTOW(ad, ps, pd, cd, sg);
+            wfh = OR_APTOW(ah, ph, ps, cd, sg);
+            wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
+            wfvrs  = Xdot*dwdc*ax4;
+            wfvr   = Xdot*dwdc*(ax1-ax2);
+            WFS = wfs;
+            WFD = wfd;
+            WFH = wfh;
+            WFVRS = wfvrs;
+            WFVR = wfvr;
+            WFVX = wfvx;
             Vo = Xdot;
-            DFneto = DFnet;
-            mode0o = mode0;
-            Mo = ah;
-           break;
+            Xo = X;
+            break;
 
         case 9:
             // compute zero crossing surfaces and set modes

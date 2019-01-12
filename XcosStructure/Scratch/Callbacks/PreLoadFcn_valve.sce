@@ -25,7 +25,8 @@ global loaded_scratch
 global GEO INI
 global start02_x start02_v
 global start02_ph start02_prs start02_pxr start02_ps
-global start02_wfs start02_wfh start02_wfvr start02_wfvx
+global start02_wfs start02_wfh start02_wfvrs start02_wfvx
+global start02_uf start02_uf_net start02_px
 mprintf('In %s\n', sfilename())  
 
 
@@ -40,8 +41,11 @@ start02_pxr = struct("time", M(:,1), "values", M(:,6));
 start02_ps = struct("time", M(:,1), "values", M(:,7));
 start02_wfs = struct("time", M(:,1), "values", M(:,8));
 start02_wfh = struct("time", M(:,1), "values", M(:,9));
-start02_wfvr = struct("time", M(:,1), "values", M(:,10));
+start02_wfvrs = struct("time", M(:,1), "values", M(:,10));
 start02_wfvx = struct("time", M(:,1), "values", M(:,11));
+start02_uf_net = struct("time", M(:,1), "values", M(:,12));
+start02_uf = struct("time", M(:,1), "values", M(:,13));
+start02_px = struct("time", M(:,1), "values", M(:,14));
 clear M comments
 
 INI.vsv.x = start02_x.values(1,:);
@@ -64,7 +68,7 @@ clear d
 GEO.vsv.fdyf = 0;
 GEO.vsv.fstf = 0;
 GEO.vsv.fs = 15.8;
-GEO.vsv.ks = 24.4;
+GEO.vsv.ks = 50;
 GEO.vsv.ld = 0;
 GEO.vsv.lh = 0;
 mv = 8e-5*386;
