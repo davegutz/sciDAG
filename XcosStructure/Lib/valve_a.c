@@ -39,7 +39,8 @@
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
 // parameters
-#define LINCOS_OVERRIDE (GetRparPtrs(blk)[0]) // flag to disable friction for linearization
+#define SG              (GetRparPtrs(blk)[0]) // Fluid specific gravity
+#define LINCOS_OVERRIDE (GetRparPtrs(blk)[1]) // flag to disable friction for linearization
 
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
@@ -164,7 +165,7 @@ void valve_a(scicos_block *blk, int flag)
     double ftd, fth;
     double cp = CP;
     double cd = CD;
-    double sg = 0.8;
+    double sg = SG;
     double ld = LD;
     double lh = LH;
     double df = 0;

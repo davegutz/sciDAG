@@ -119,13 +119,13 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         exprs = graphics.exprs
         model = arg1.model
         while %t do
-            [ok,GEO,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
-            ['lsx(vlv_a)';'LINCOS_OVERRIDE';'Xinit'],..
-            list('lis',-1,'vec',1,'vec',1),..
+            [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
+            ['lsx(vlv_a)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            list('lis',-1,'vec',1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
             model.state = [Xinit; 0]
-            model.rpar = [LINCOS_OVERRIDE]
+            model.rpar = [SG;LINCOS_OVERRIDE]
             model.opar = GEO
             graphics.exprs = exprs
             x.graphics = graphics
@@ -136,6 +136,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
     case 'define' then
 //        message('in define')
         model.opar=list(vlv_a_default);
+        SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0
         model = scicos_model()
@@ -144,22 +145,12 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         model.out = [1;1;1;1;1]
         model.state = [Xinit; 0]
         model.dstate = [0]
-        model.rpar = [LINCOS_OVERRIDE]
+        model.rpar = [SG;LINCOS_OVERRIDE]
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-//        exprs = ["list(5000, 0, [-2,0,4;0,0,6])";..
-//        exprs = [string(vlv_a);..
-        exprs = ["lsx(vlv_a_default)"; string(LINCOS_OVERRIDE); string(Xinit)]
-//        gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
-//        'txt=[''Prototype'';''Valve'']';
-//        'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';
-//        'txt=[''DF'';'''';''STOPS'';]';
-//        'xstringb(x+0.02*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-//        'txt=['''';''V'';'''';''DFmod'';'''']';
-//        'xstringb(x+0.73*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-//        ]
+        exprs = ["lsx(GEO.vsv)"; string(SG); string(LINCOS_OVERRIDE); "INI.vsv.x"]
         gr_i = [];
         x = standard_define([4 2],model,exprs,gr_i)
 
