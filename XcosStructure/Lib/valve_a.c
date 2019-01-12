@@ -52,7 +52,7 @@
 #define CLIN    ((GetRealOparPtrs(blk,7))[0]);  // Damping coefficient when linearizing (LINCOS_OVERRIDE), lbf/in/s
 #define CD      ((GetRealOparPtrs(blk,8))[0]);  // Coefficient of discharge
 #define CDO     ((GetRealOparPtrs(blk,9))[0]);  // Damping orifice coefficient of discharge
-#define CP      ((GetRealOparPtrs(blk,10))[0]); // Pressure force coefficient, usu .69
+#define CP      ((GetRealOparPtrs(blk,10))[0]); // Pressure force coefficient, usually .69
 #define FDYF    ((GetRealOparPtrs(blk,11))[0]); // Dynamic friction, lbf
 #define FS      ((GetRealOparPtrs(blk,12))[0]); // Spring preload, lbf
 #define FSTF    ((GetRealOparPtrs(blk,13))[0]); // Static friction, lbf
@@ -105,7 +105,25 @@
 #define mode_stuck_plus 1
 #define mode_stuck_neg -1
 #define mode_lincos_override 0
-
+#define SQR(A)      ((A)*(A))
+#define SGN(A)      ((A) < 0. ? -1 : 1)
+#define SSQRT(A)    (SGN(A)*sqrt(fabs(A)))
+#define SSQR(A)     (SGN(A)*SQR(A))
+#define OR_APTOW(A, PS, PD, CD, SG)\
+                 ((A) * 19020. * (CD) * SSQRT((SG) * ((PS) - (PD))))
+#define OR_AWTOP(A, W, PD, CD, SG)\
+                 ((PD) + SSQR((W) / 19020. / max((A), 1e-12) / (CD)) / (SG))
+#define LA_KPTOW(K, PS, PD, KVIS)\
+                 (K) / (KVIS) * ((PS) - (PD))
+#define LA_WPTOK(WF, PS, PD, KVIS)\
+                 (KVIS) * (WF) / ((PS) - (PD))
+#define LA_LRECPTOW(L, R, E, C, PS, PD, KVIS)\
+                    (4.698e8 * (R) *((C)*(C)*(C)) / (KVIS) /\
+		     (L) * (1. + 1.5 * SQR((E)/(C))) * ((PS) - (PD)))
+#define OR_WPTOA(W, PS, PD, CD, SG)\
+                 ((W) / SGN((PS) - (PD)) /\
+            max(sqrt(fabs((SG) * ((PS) - (PD)))), 1e-16) / (CD) / 19020.)
+#define DWDC(SG)    (129.93948 * (SG))
 
 void valve_a(scicos_block *blk, int flag)
 {
@@ -121,9 +139,63 @@ void valve_a(scicos_block *blk, int flag)
     double xmax = XMAX;
     double EPS = 0;  // TODO:  delete this.  Holdover from non-zero-crossing implementation
 
+// ps    I # 1, supply pressure, psia.
+// pd    I # 2, discharge pressure, psia.
+// ph    I # 3, high discharge pressure, psia.
+// prs   I # 4, Reference opposite spring eng pressure, psia.
+// pr    I # 5, Regulated pressure, psia.
+// pxr   I # 6, Reference pressure, psia.
+// x     I # 7, spool displacement toward drain, in(open loop)
+// wfs   O # 1, supply flow in, pph.
+// wfd   O # 2, discharge flow out, pph.
+// wfh   O # 3, high discharge flow in, pph.
+// wfvrs O # 4, reference opposite spring end flow in, pph.
+// wfvr  O # 5, reference flow out, pph.
+// wfvx  O # 6, damping flow out, pph.
+// dxdt  O # 7, spool velocity toward drain, in/sec.
+// x     O # 8, spool displacement toward drain, in.
+
+    // inputs and outputs
+    double ps, pd, ph, prs, pr, pxr;
+    double wfs, wfd, wfh, wfvrs, wfvr;
+
+    double fjd = 0;
+    double fjh = 0;
+    double ftd, fth;
+    double cp = CP;
+    double cd = CD;
+    double sg = 0.8;
+    double ld = LD;
+    double lh = LH;
+    double df = 0;
+    double ax1 = AX1;
+    double ax2 = AX2;
+    double ax3 = AX3;
+    double ax4 = AX4;
+    double fs = FS;
+    double ks = KS;
+    double dwdc = DWDC(sg);
+    double wfvx, px;
+    double ao = AO;
+    double cdo = CDO;
+
     // compute info needed for all passes
+    wfvx   = Xdot*dwdc*ax2;
+    px = OR_APTOW(ao, wfvx, pxr, cdo, sg);
     ad = tab1(X, AD, AD+N_AD, N_AD);
     ah = tab1(X, AH, AH+N_AH, N_AH);
+    fjd = cp * fabs(ps - pd)*ad;
+    fjh = -cp * fabs(ps - ph)*ah;
+    ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(ps - pd));
+    fth = -lh * 0.01365 * cd * Xdot * SSQRT(sg*(ps - ph));
+    df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
+             - fs - X*ks - fjd - fjh - ftd - fth;
+    wfd = OR_APTOW(ad, ps, pd, cd, sg);
+    wfh = OR_APTOW(ah, ph, ps, cd, sg);
+    wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
+    wfvrs  = Xdot*dwdc*ax4;
+    wfvr   = Xdot*dwdc*(ax1-ax2);
+
     if(mode0==mode_lincos_override)
     {
         DFnet = DF - Xdot*c;
@@ -209,7 +281,7 @@ void valve_a(scicos_block *blk, int flag)
             Vo = Xdot;
             DFneto = DFnet;
             mode0o = mode0;
-            Mo = ad;
+            Mo = ah;
            break;
 
         case 9:
