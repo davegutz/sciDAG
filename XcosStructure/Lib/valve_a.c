@@ -69,7 +69,13 @@
 #define AH      (GetRealOparPtrs(blk,21))  // Table
 
 // inputs
-#define DF (r_IN(0,0)) // force imbalance
+#define PS  (r_IN(0,0)) // Supply pressure, psia
+#define PD  (r_IN(1,0)) // Discharge pressure, psia
+#define PH  (r_IN(2,0)) // High discharge pressure, psia
+#define PRS (r_IN(3,0)) // Reference opposite spring eng pressure, psia
+#define PR  (r_IN(4,0)) // Regulated pressure, psia
+#define PXR (r_IN(5,0)) // Reference pressure, psia
+#define XOL (r_IN(6,0)) // Spool displacement toward drain, in (open loop)
 
 // states
 #define X       (GetState(blk)[0])      // position state
@@ -140,13 +146,6 @@ void valve_a(scicos_block *blk, int flag)
     double xmax = XMAX;
     double EPS = 0;  // TODO:  delete this.  Holdover from non-zero-crossing implementation
 
-// ps    I # 1, supply pressure, psia.
-// pd    I # 2, discharge pressure, psia.
-// ph    I # 3, high discharge pressure, psia.
-// prs   I # 4, Reference opposite spring eng pressure, psia.
-// pr    I # 5, Regulated pressure, psia.
-// pxr   I # 6, Reference pressure, psia.
-// x     I # 7, spool displacement toward drain, in(open loop)
 // wfs   O # 1, supply flow in, pph.
 // wfd   O # 2, discharge flow out, pph.
 // wfh   O # 3, high discharge flow in, pph.
@@ -157,7 +156,13 @@ void valve_a(scicos_block *blk, int flag)
 // x     O # 8, spool displacement toward drain, in.
 
     // inputs and outputs
-    double ps, pd, ph, prs, pr, pxr;
+    double ps = PS;
+    double pd = PD;
+    double ph = PH;
+    double prs = PRS;
+    double pr = PR;
+    double pxr = PXR;
+    double xol = XOL;
     double wfs, wfd, wfh, wfvrs, wfvr;
 
     double fjd = 0;
@@ -199,33 +204,33 @@ void valve_a(scicos_block *blk, int flag)
 
     if(mode0==mode_lincos_override)
     {
-        DFnet = DF - Xdot*c;
+        DFnet = df - Xdot*c;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = DF - fdyf - Xdot*c;
+        DFnet = df - fdyf - Xdot*c;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = DF + fdyf - Xdot*c;
+        DFnet = df + fdyf - Xdot*c;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(DF - fstf, 0);
+        DFnet = max(df - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(DF - fstf, 0);
+        DFnet = max(df - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(DF + fstf, 0);
+        DFnet = min(df + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(DF + fstf, 0);
+        DFnet = min(df + fstf, 0);
     }
 
     switch (flag)
@@ -288,8 +293,8 @@ void valve_a(scicos_block *blk, int flag)
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-			surf1 = DF-fstf;
-			surf2 = DF+fstf;
+			surf1 = df-fstf;
+			surf2 = df+fstf;
             surf3 = X-xmin;
             surf4 = X-xmax;
 
