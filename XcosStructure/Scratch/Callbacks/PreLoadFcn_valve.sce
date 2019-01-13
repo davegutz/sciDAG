@@ -26,7 +26,7 @@ global GEO INI
 global start02_x start02_v
 global start02_ph start02_prs start02_pxr start02_ps
 global start02_wfs start02_wfh start02_wfvrs start02_wfvx
-global start02_uf start02_uf_net start02_px
+global start02_uf start02_uf_net start02_px start02_a
 mprintf('In %s\n', sfilename())  
 
 
@@ -46,6 +46,7 @@ start02_wfvx = struct("time", M(:,1), "values", M(:,11));
 start02_uf_net = struct("time", M(:,1), "values", M(:,12));
 start02_uf = struct("time", M(:,1), "values", M(:,13));
 start02_px = struct("time", M(:,1), "values", M(:,14));
+start02_a = struct("time", M(:,1), "values", M(:,15));
 clear M comments
 
 INI.vsv.x = start02_x.values(1,:);
@@ -72,7 +73,7 @@ GEO.vsv.ks = 50;
 GEO.vsv.ld = 0;
 GEO.vsv.lh = 0;
 mv = 8e-5*386;
-ms = 0;
+ms = 0.15;
 GEO.vsv.m = mv + ms/2;
 clear mv ms
 GEO.vsv.xmax = 0.125;

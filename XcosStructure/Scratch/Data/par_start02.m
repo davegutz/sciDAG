@@ -1,5 +1,5 @@
-time_run= 'Output from $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Sat Jan 12 18:09:30 2019.';
-time_stamp= 'Last compilation of $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Jan 12 2019 18:09:23'; 
+time_run= 'Output from $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Sun Jan 13 07:02:41 2019.';
+time_stamp= 'Last compilation of $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Jan 13 2019 07:02:17'; 
 titl = '23.7 in start tube, 135 JP5 135k/.75/0.46 100pph';
 pars = [];labels
 
