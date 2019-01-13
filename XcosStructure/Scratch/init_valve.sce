@@ -44,7 +44,7 @@ global start02_x start02_v
 global start02_ph start02_prs start02_pxr start02_ps
 global start02_wfs start02_wfh start02_wfvrs start02_wfvx
 global start02_uf start02_uf_net start02_px
-Tf = 0.01;
+Tf = 0.001;
 
 //valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
 //GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);

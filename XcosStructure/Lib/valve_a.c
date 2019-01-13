@@ -92,6 +92,8 @@
 #define WFVX    (r_OUT(5,0))    // Damping flow out, pph
 #define Vo      (r_OUT(6,0))    // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(7,0))    // Spool displacement toward drain, in
+#define UF_NET  (r_OUT(8,0))    // Unbalanced force toward drain net friction and damping, lbf
+#define MODE    (r_OUT(9,0))    // Spool displacement toward drain, in
 
 // other constants
 #define surf0   (GetGPtrs(blk)[0])
@@ -287,6 +289,9 @@ void valve_a(scicos_block *blk, int flag)
             WFVX = wfvx;
             Vo = Xdot;
             Xo = X;
+            UF_NET = DFnet;
+            MODE = DFnet/mass*386;
+            
             break;
 
         case 9:
