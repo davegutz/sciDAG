@@ -40,54 +40,10 @@
 // SOFTWARE.
 // Jan 1, 2019     DA Gutz     Created
 //
-// interfacing function for friction block
-
-// Default table1_a 
-exec('../Lib/table1_a.sci');
-
-//// Default valve_a prototype **************************************
-vlv_a_default = tlist(["vlv_a", "ao", "ax1", "ax2", "ax3", "ax4",..
-        "c", "clin", "cd", "cdo", "cp", "fdyf", "fs", "fstf", "ks",..
-        "ld", "lh", "m", "xmax", "xmin",..
-         "ad", "ah"],..
-         1, 0, 0, 0, 0,..
-         0, 0, 0.61, 0.61, 0.69, 0, 15.8, 0, 24.4,..
-         0, 0, 5, 1, -1, tbl1_a_default, tbl1_a_default);
-
-function [vs] = %vlv_a_string(v)
-    // Cast valve type to string
-    vs = msprintf('list(');
-
-    // Scalars
-    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
-             v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
-             v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
-             v.ld, v.lh, v.m, v.xmax, v.xmin);
-
-    // Tables
-    vs = vs + string(v.ad) + ',';
-    vs = vs + string(v.ah);
-    
-    // end
-    vs = vs + msprintf(')');
-endfunction
-
-// Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
-function lis = lsx(v)
-    lis = list(v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
-             v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
-             v.ld, v.lh, v.m, v.xmax, v.xmin,..
-             vec_tbl1_a(v.ad),  vec_tbl1_a(v.ah));
-endfunction
-
-function str = %vlv_a_p(v)
-    // Display valve type
-    str = string(v);
-    disp(str)
-endfunction
+// interfacing function for sharp-edged orifice
 
 // Callback ******************************************** 
-function [x,y,typ] = VALVE_A(job, arg1, arg2)
+function [x,y,typ] = COR_APTOW(job, arg1, arg2)
 
     x = [];
     y = [];
@@ -119,14 +75,13 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         exprs = graphics.exprs
         model = arg1.model
         while %t do
-            [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
-            ['lsx(vlv_a)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
-            list('lis',-1,'vec',1,'vec',1,'vec',1),..
+            [ok,CD,SG,exprs] = getvalue('Set prototype valve parameters',..
+            ['CD';'SG'],..
+            list('vec',-1,'vec',1),..
             exprs)
             if ~ok then break,end 
-            model.state = [Xinit; 0]
-            model.rpar = [SG;LINCOS_OVERRIDE]
-            model.opar = GEO
+            model.state = [0]
+            model.rpar = [CD;SG]
             graphics.exprs = exprs
             x.graphics = graphics
             x.model = model
@@ -135,24 +90,22 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
 
     case 'define' then
 //        message('in define')
-        model.opar=list(vlv_a_default);
+        CD = 0.61
         SG = 0.8
-        LINCOS_OVERRIDE = 0
-        Xinit = 0
         model = scicos_model()
-        model.sim = list('valve_a', 4)
-        model.in = [1;1;1;1;1;1;1]
-        model.out = [1;1;1;1;1;1;1;1;1;1]
-        model.state = [Xinit; 0]
+        model.sim = list('cor_aptow', 4)
+        model.in = [1;1;1]
+        model.out = [1]
+        model.state = [0]
         model.dstate = [0]
-        model.rpar = [SG;LINCOS_OVERRIDE]
+        model.rpar = [CD;SG]
         model.blocktype = 'c'
-        model.nmode = 1
-        model.nzcross = 5
-        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx(GEO.vsv)"; string(SG); string(LINCOS_OVERRIDE); "INI.vsv.x"]
+        model.nmode = 0
+        model.nzcross = 0
+        model.dep_ut = [%t %f] // [direct feedthrough,   time dependence]
+        exprs = [string(CD); string(SG)]
         gr_i = [];
-        x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
+        x = standard_define([4 6],model,exprs,gr_i) // size icon, etc..
 
     end
 endfunction

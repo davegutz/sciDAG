@@ -22,6 +22,7 @@
 // Dec 17, 2018     DA Gutz     Created for Scilab 5.5.2
 // Jan 1, 2019      DA Gutz     Added valve
 // Jan 7, 2019      DA Gutz     Added tables
+// Jan 14, 2019     DA Gutz     Add or_aptow series
 // 
 
 // ******************  Make temporary palette for local C-blocks
@@ -45,6 +46,7 @@ else
 end        
 
 // ****************** Create pallette
+pal = init_add_struct('COR_APTOW', 'black', lib_path+'/images/blocks/COR_APTOW.png', pal);
 pal = init_add_struct('TABLE1_A', 'orange', lib_path+'/images/blocks/TABLE1_A.png', pal);
 pal = init_add_struct('VALVE_A', 'green', lib_path+'/images/blocks/VALVE_A.png', pal);
 pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);

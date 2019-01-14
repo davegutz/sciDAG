@@ -1,5 +1,6 @@
 LIBRARY    libScratch.dll
 EXPORTS
+	cor_aptow
 	friction
 	lim_int
 	table1_a

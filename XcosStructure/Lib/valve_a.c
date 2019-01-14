@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tables.h"
+#include "hyd_mod.h"
 #define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
@@ -117,25 +118,6 @@
 #define mode_stuck_plus 1
 #define mode_stuck_neg -1
 #define mode_lincos_override 0
-#define SQR(A)      ((A)*(A))
-#define SGN(A)      ((A) < 0. ? -1 : 1)
-#define SSQRT(A)    (SGN(A)*sqrt(fabs(A)))
-#define SSQR(A)     (SGN(A)*SQR(A))
-#define OR_APTOW(A, PS, PD, CD, SG)\
-                 ((A) * 19020. * (CD) * SSQRT((SG) * ((PS) - (PD))))
-#define OR_AWTOP(A, W, PD, CD, SG)\
-                 ((PD) + SSQR((W) / 19020. / max((A), 1e-12) / (CD)) / (SG))
-#define LA_KPTOW(K, PS, PD, KVIS)\
-                 (K) / (KVIS) * ((PS) - (PD))
-#define LA_WPTOK(WF, PS, PD, KVIS)\
-                 (KVIS) * (WF) / ((PS) - (PD))
-#define LA_LRECPTOW(L, R, E, C, PS, PD, KVIS)\
-                    (4.698e8 * (R) *((C)*(C)*(C)) / (KVIS) /\
-		     (L) * (1. + 1.5 * SQR((E)/(C))) * ((PS) - (PD)))
-#define OR_WPTOA(W, PS, PD, CD, SG)\
-                 ((W) / SGN((PS) - (PD)) /\
-            max(sqrt(fabs((SG) * ((PS) - (PD)))), 1e-16) / (CD) / 19020.)
-#define DWDC(SG)    (129.93948 * (SG))
 
 void valve_a(scicos_block *blk, int flag)
 {
