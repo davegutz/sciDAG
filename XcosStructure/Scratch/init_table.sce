@@ -62,7 +62,7 @@ if bOK then
 end
 //
 link(SCI + '\bin\scicos' + getdynlibext());
-link(lib_path + 'libScratch' + getdynlibext(), ['table1_a'], 'c');
+link(lib_path + 'libScratch' + getdynlibext(), ['ctab1'], 'c');
 // remove temp. variables on stack
 //clear lib_path;
 clear bOK;

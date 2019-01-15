@@ -46,8 +46,10 @@ else
 end        
 
 // ****************** Create pallette
+pal = init_add_struct('COR_AWPDTOPS', 'black', lib_path+'/images/blocks/COR_AWPDTOPS.png', pal);
+pal = init_add_struct('COR_AWPSTOPD', 'black', lib_path+'/images/blocks/COR_AWPSTOPD.png', pal);
 pal = init_add_struct('COR_APTOW', 'black', lib_path+'/images/blocks/COR_APTOW.png', pal);
-pal = init_add_struct('TABLE1_A', 'orange', lib_path+'/images/blocks/TABLE1_A.png', pal);
+pal = init_add_struct('CTAB1', 'orange', lib_path+'/images/blocks/CTAB1.png', pal);
 pal = init_add_struct('VALVE_A', 'green', lib_path+'/images/blocks/VALVE_A.png', pal);
 pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);
 pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.svg', pal);

@@ -19,8 +19,8 @@
 // SOFTWARE.
 // Jan 8, 2019    DA Gutz        Created
 // 
-#ifndef tables_h
-#define tables_h
+#ifndef table_h
+#define table_h
 void    binsearch(double x, double *v, int n, int *high, int *low, 
             double *dx);
 double   tab1(double x, double *v, double *y, int n);

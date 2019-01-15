@@ -1,10 +1,13 @@
 LIBRARY    libScratch.dll
 EXPORTS
-	cor_aptow
 	friction
 	lim_int
-	table1_a
+	cor_aptow
+	cor_awpstopd
+	cor_awpdtops
 	binsearch
 	tab1
 	tab2
+	table1_a
+	ctab1
 	valve_a

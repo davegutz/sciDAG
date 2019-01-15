@@ -61,6 +61,8 @@ if bOK then
 end
 //
 link(SCI + '\bin\scicos' + getdynlibext());
+link(lib_path + 'libScratch' + getdynlibext(), ['cor_awpdtops'], 'c');
+link(lib_path + 'libScratch' + getdynlibext(), ['cor_awpstopd'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['cor_aptow'], 'c');
 // remove temp. variables on stack
 //clear lib_path;

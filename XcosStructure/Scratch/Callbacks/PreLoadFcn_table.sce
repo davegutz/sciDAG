@@ -1,4 +1,4 @@
-// Copyright (C) 2018 - Dave Gutz
+// Copyright (C) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,24 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 6, 2019    DA Gutz        Created
+// Jan 1, 2019  DA Gutz     Created
 // 
 
-// Default table prototype ****************************************
-tbl_a_default = tlist(["tbl_a", "xy"], [-1, 0, 10; 0, 0, 10]);
-function [ts] = %tbl_a_string(t)
-        ts = msprintf('[');
-    [nad, %mad] = size(t.xy);
-    for i = 1:nad,
-        for j = 1:%mad,
-            ts = ts + msprintf('%f', t.xy(i,j));
-            if j<%mad,
-                ts = ts + msprintf(',');
-            elseif i<nad,
-                ts = ts + msprintf(';');
-            end
-        end
-    end
-    ts = ts + msprintf(']');
-endfunction
+global loaded_scratch
+mprintf('In %s\n', sfilename())  
 
+ctab1_scratch = ctab1_default;
+
+mprintf('Completed %s\n', sfilename())  

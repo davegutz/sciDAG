@@ -38,107 +38,72 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 7, 2019     DA Gutz     Created
+// Jan 1, 2019     DA Gutz     Created
 //
-// interfacing function for 1-D linear interpolation block with clipping
+// interfacing function for friction block
 
-// Default table prototype ****************************************
-function [ts] = xz_string(t)
-    ts = msprintf('[');
-    [nad, %mad] = size(t);
-    for i = 1:nad,
-        ts = ts + msprintf('%f, %f', t(i,1:2));
-        if i<nad,
-            ts = ts + msprintf(';');
-        end
-    end
-    ts = ts + msprintf(']');
-endfunction
+// Default table1_a 
+exec('../Lib/table.sci');
 
-tbl1_a_default = tlist(["tbl1_a", "tb", "sx", "dx", "sz", "dz"], [-1, -10; 1, 10; 2, 20;], 1, 0, 1, 0);
-tbl1_b_default = tlist(["tbl1_b", "tb"], [-1, -10; 1, 10; 2, 20;]);
+//// Default valve_a prototype **************************************
+vlv_a_default = tlist(["vlv_a", "ao", "ax1", "ax2", "ax3", "ax4",..
+        "c", "clin", "cd", "cdo", "cp", "fdyf", "fs", "fstf", "ks",..
+        "ld", "lh", "m", "xmax", "xmin",..
+         "ad", "ah"],..
+         1, 0, 0, 0, 0,..
+         0, 0, 0.61, 0.61, 0.69, 0, 15.8, 0, 24.4,..
+         0, 0, 5, 1, -1, ctab1_default, ctab1_default);
 
-function [ts] = %tbl1_a_string(t)
-    // Start
-    ts = msprintf('list(');
-
-    // Table
-    ts = ts + xz_string(t.tb);
+function [vs] = %vlv_a_string(v)
+    // Cast valve type to string
+    vs = msprintf('list(');
 
     // Scalars
-    ts = ts + msprintf(',%f,%f,%f,%f,', t.sx, t.dx, t.sz, t.dz);
+    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
+             v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
+             v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+             v.ld, v.lh, v.m, v.xmax, v.xmin);
+
+    // Tables
+    vs = vs + string(v.ad) + ',';
+    vs = vs + string(v.ah);
     
-    // End
-    ts = ts + msprintf(')');
+    // end
+    vs = vs + msprintf(')');
 endfunction
 
-function [ts] = %tbl1_b_string(t)
-    // Start
-    ts = msprintf('list(');
-
-    // Table
-    ts = ts + xz_string(t.tb);
-
-    // Scalars
-    
-    // End
-    ts = ts + msprintf(')');
+// Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
+function lis = lsx(v)
+    lis = list(v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
+             v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+             v.ld, v.lh, v.m, v.xmax, v.xmin,..
+             vec_ctab1(v.ad),  vec_ctab1(v.ah));
 endfunction
 
-function lis = lsx_tbl1_a(t)
-    tbx = (t.tb(:,1)-t.dx)/t.sx;
-    tbz = t.tb(:,2)*t.sz+t.dz;
-    lis = list(t.tb, t.sx, t.dx, t.sz, t.dz);
-endfunction
-
-function vec = vec_tbl1_a(t)
-    tbx = (t.tb(:,1)-t.dx)/t.sx;
-    tbz = t.tb(:,2)*t.sz+t.dz;
-    vec = [tbx tbz];
-endfunction
-
-//function lis = lsx_tbl1_b(t)
-//    lis = list(t.tb);
-//endfunction
-
-function str = %tbl1_a_p(t)
-    // Display table1 type
-    str = string(t);
-    disp(str)
-endfunction
-
-function str = %tbl1_b_p(t)
-    // Display table1 type
-    str = string(t);
+function str = %vlv_a_p(v)
+    // Display valve type
+    str = string(v);
     disp(str)
 endfunction
 
 // Callback ******************************************** 
-function [x,y,typ] = TABLE1_A(job, arg1, arg2)
-
+function [x,y,typ] = VALVE_A(job, arg1, arg2)
     x = [];
     y = [];
     typ = [];
-
-
     //disp(job)
-
     select job
     case 'plot' then
         standard_draw(arg1)
-
     case 'getinputs' then
         [x,y,typ] = standard_inputs(arg1)
         //disp(sci2exp(x))
-
     case 'getoutputs' then
         [x,y,typ] = standard_outputs(arg1)
         //disp(sci2exp(x))
-
     case 'getorigin' then
         [x,y] = standard_origin(arg1)
         //disp(sci2exp(x))
-
     case 'set' then
         //message(sci2exp(arg1))
         x = arg1
@@ -146,43 +111,39 @@ function [x,y,typ] = TABLE1_A(job, arg1, arg2)
         exprs = graphics.exprs
         model = arg1.model
         while %t do
-            [ok,TB,exprs] = getvalue('Set prototype table1 parameters',..
-            ['lsx_tbl1_a(tbl1_a_default)'],..
-            list('lis',-1),..
+            [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
+            ['lsx(vlv_a)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            list('lis',-1,'vec',1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
-            model.opar = TB
+            model.state = [Xinit; 0]
+            model.rpar = [SG;LINCOS_OVERRIDE]
+            model.opar = GEO
             graphics.exprs = exprs
             x.graphics = graphics
             x.model = model
             break
         end
-
     case 'define' then
 //        message('in define')
-        model.opar=list(tbl1_a_default);
+        model.opar=list(vlv_a_default);
+        SG = 0.8
+        LINCOS_OVERRIDE = 0
+        Xinit = 0
         model = scicos_model()
-        model.sim = list('table1_a', 4)
-        model.in = [1]
-        model.out = [1]
-        model.state = [0]
+        model.sim = list('valve_a', 4)
+        model.in = [1;1;1;1;1;1;1]
+        model.out = [1;1;1;1;1;1;1;1;1;1]
+        model.state = [Xinit; 0]
         model.dstate = [0]
+        model.rpar = [SG;LINCOS_OVERRIDE]
         model.blocktype = 'c'
-        model.nmode = 0
-        model.nzcross = 0
-        model.dep_ut = [%t %f] // [direct feedthrough,   time dependence]
-        exprs = ["lsx_tbl1_a(tbl1_a_default)"]
-//        gr_i = ['x=orig(1),y=orig(2),w=sz(1),h=sz(2)';
-//        'txt=[''Prototype'';''Table1'']';
-//        'xstringb(x+0.25*w, y+0.20*h, txt, 0.50*w, 0.60*h, ''fill'')';
-//        'txt=[''DF'';'''';''STOPS'';]';
-//        'xstringb(x+0.02*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-//        'txt=['''';''V'';'''';''DFmod'';'''']';
-//        'xstringb(x+0.73*w, y+0.08*h, txt, 0.25*w, 0.80*h, ''fill'')';
-//        ]
-//        x = standard_define([4 2],model,exprs,gr_i)
-        x = standard_define([4 2],model,exprs)
-
+        model.nmode = 1
+        model.nzcross = 5
+        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
+        exprs = ["lsx(GEO.vsv)"; string(SG); string(LINCOS_OVERRIDE); "INI.vsv.x"]
+        gr_i = [];
+        x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
     end
 endfunction
 

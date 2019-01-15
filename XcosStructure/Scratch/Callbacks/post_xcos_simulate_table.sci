@@ -20,6 +20,6 @@
 // Jan 7, 2019 	DA Gutz		Created
 // 
 function post_xcos_simulate(%cpr, scs_m, needcompile)
-    exec('Callbacks\StopFcn_table1.sce', -1);
+    exec('Callbacks\StopFcn_table.sce', -1);
     mprintf('Completed %s\n', sfilename())  
 endfunction

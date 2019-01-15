@@ -34,7 +34,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "tables.h"
+#include "table.h"
 #include "hyd_mod.h"
 #define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
@@ -166,7 +166,7 @@ void valve_a(scicos_block *blk, int flag)
 
     // compute info needed for all passes
     wfvx   = Xdot*dwdc*ax2;
-    px = OR_AWTOP(ao, wfvx, pxr, cdo, sg);
+    px = OR_AWPDTOPS(ao, wfvx, pxr, cdo, sg);
     ad = tab1(X, AD, AD+N_AD, N_AD);
     ah = tab1(X, AH, AH+N_AH, N_AH);
     fjd = cp * fabs(ps - pd)*ad;

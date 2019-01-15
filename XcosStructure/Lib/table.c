@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - Dave Gutz
+// Copyright (SZ) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,11 +17,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 8, 2019    DA Gutz        Created
-// 
+// Jan 7, 2019     DA Gutz     Created 
+#include <scicos_block4.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "table.h"
 
-#include "tables.h"
-
+// parameters
 /* B I N S E A R C H
 *
 *   Purpose:    Find x in { v[0] <= v[1] <= ... ,= v[n-1] } and calculate
@@ -149,3 +152,40 @@ double tab2(double x1, double x2, double *v1, double *v2, double *y, int n1,
     return  r0 + dx2 * (r1 - r0);
 }   /* End tab2 */
 
+
+// Object parameters.  1st index is 1-based, 2nd index is 0-based.
+#define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
+#define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
+#define TB      (GetRealOparPtrs(blk,1))  // Table
+#define N_TB    (blk->oparsz[0])
+#define NOPAR   (blk->nopar)
+#define SX      ((GetRealOparPtrs(blk,2))[0])  // Scalar input
+#define DX      ((GetRealOparPtrs(blk,3))[0])  // Scalar input
+#define SZ      ((GetRealOparPtrs(blk,4))[0])  // Scalar input
+#define DZ      ((GetRealOparPtrs(blk,5))[0])  // Scalar input
+// inputs
+#define X   (r_IN(0,0))     // Input
+// states - none
+// outputs
+#define Z   (r_OUT(0, 0))  // Output
+// other constants - none
+
+//********table1_a
+void table1_a(scicos_block *blk, int flag)
+{   
+    double *tb = TB; 
+    double z;
+    // compute info needed for all passes
+    z = tab1(X, tb, tb+N_TB, N_TB);
+    Z = (z*SX + DX)*SZ + DZ;
+}
+
+//********tabl
+void ctab1(scicos_block *blk, int flag)
+{   
+    double *tb = TB; 
+    double z;
+    // compute info needed for all passes
+    z = tab1(X, tb, tb+N_TB, N_TB);
+    Z = (z*SX + DX)*SZ + DZ;
+}

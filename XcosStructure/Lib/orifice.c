@@ -41,22 +41,18 @@
 // parameters
 #define CD (GetRparPtrs(blk)[0]) // Coeffient of discharge
 #define SG (GetRparPtrs(blk)[1]) // Fluid specific gravity
-
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
+// See below with each block
 
+// ************COR_APTOW
 // inputs
-#define A   (r_IN(0,0)) // Orifice area, sqin
-#define PS  (r_IN(1,0)) // Supply pressure, psia
-#define PD  (r_IN(2,0)) // Supply pressure, psia
-
-// states
-
+#define A   (r_IN(0,0))     // Orifice area, sqin
+#define PS  (r_IN(1,0))     // Supply pressure, psia
+#define PD  (r_IN(2,0))     // Discharge pressure, psia
+// states - none
 // outputs
-#define WF      (r_OUT(0,0))    // Supply flow in, pph
-
-// other constants
-
-
+#define WF  (r_OUT(0,0))    // Supply flow in, pph
+// other constants - none
 void cor_aptow(scicos_block *blk, int flag)
 {
     // inputs and outputs
@@ -66,9 +62,55 @@ void cor_aptow(scicos_block *blk, int flag)
     double cd = CD;
     double sg = SG;
     double wf;
-
     // compute info needed for all passes
     wf = OR_APTOW(ao, ps, pd, cd, sg);
     WF = wf;
+}
 
+// ************COR_AWPSTOPD
+// inputs
+#define A   (r_IN(0,0))     // Orifice area, sqin
+#define WF  (r_IN(1,0))     // Supply flow in, pph
+#define PS  (r_IN(2,0))     // Supply pressure, psia
+// states - none
+// outputs
+#define PD  (r_OUT(0,0))    // Discharge pressure, psia
+// other constants - none
+void cor_awpstopd(scicos_block *blk, int flag)
+{
+    // inputs and outputs
+    double ao = A;
+    double wf = WF;
+    double ps = PS;
+    double pd = PD;
+    double cd = CD;
+    double sg = SG;
+    // compute info needed for all passes
+    pd = OR_AWPSTOPD(ao, wf, ps, cd, sg);
+    PD = pd;
+}
+
+
+// ************COR_AWPDTOPS
+// inputs
+#define A   (r_IN(0,0))     // Orifice area, sqin
+#define WF  (r_IN(1,0))     // Supply flow in, pph
+#define PD  (r_IN(2,0))     // Discharge pressure, psia
+// states - none
+// outputs
+#define PS  (r_OUT(0,0))    // Supply pressure, psia
+// other constants - none
+void cor_awpdtops(scicos_block *blk, int flag)
+{
+    // inputs and outputs
+    double ao = A;
+    double wf = WF;
+    double pd = PD;
+    double ps = PS;
+    double cd = CD;
+    double sg = SG;
+
+    // compute info needed for all passes
+    ps = OR_AWPDTOPS(ao, wf, pd, cd, sg);
+    PS = ps;
 }
