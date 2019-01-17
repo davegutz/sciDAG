@@ -66,7 +66,6 @@ function [sys] = lti_man_n_vv(l,a,vol,n,spgr,%beta,c)
     if mtlb_logic(n,"<",1) then
         error("Number of nodes < 1 in man_n.")
     end;
-
     // Single manifold slice.
     if %nargin==7 then
         man = lti_man_1_vm(l/n, a, vol/(n+1), spgr, %beta, c);

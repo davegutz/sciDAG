@@ -19,7 +19,10 @@
 // SOFTWARE.
 // Jsn 16, 2019      DA Gutz     Created
 // 
+global INI
 mprintf('In %s\n', sfilename())  
 LINCOS_OVERRIDE = 0;
+
+INI.start_line = zeros(7,1);
 
 mprintf('Completed %s\n', sfilename())  

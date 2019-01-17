@@ -59,7 +59,6 @@ function [sys] = lti_man_1_mv(l, a, vol, spgr, %beta, c)
     // Display warning for floating point exception
     ieee(1);
 
-
     // Momentum slice.
     if %nargin==6 then
         m_1 = lti_mom_1(l, a, c);

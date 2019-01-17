@@ -38,7 +38,25 @@ xdel(winsid())
 
 
 global loaded_scratch
-global A B C D start_line lti_start_line
+global A B C D start_line lti_start_line INI
+start_line = tlist(["pipe", "l", "a", "vol", "n", "spgr", "beta", "c"],18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0.8, 135000, 0);
+
+function [ps] = %pipe_string(p)
+    // Start
+    ps = msprintf('list(');
+    // Scalars
+    ps = ps + msprintf('%f,%f,%f,%d,%f,%f,%f', p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
+    // End
+    ps = ps + msprintf(')');
+endfunction
+function lis = lsx_pipe(p)
+    lis = list(p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
+endfunction
+function str = %pipe_p(p)
+    // Display pipe type
+    str = string(p);
+    disp(str)
+endfunction
 
 loaded_scratch = %f;
 
@@ -55,6 +73,9 @@ end
 lib_path = get_absolute_file_path(this)+'..\Lib\';
 //
 link(SCI + '\bin\scicos' + getdynlibext());
+link(lib_path + 'libScratch' + getdynlibext(), ['cor_awpdtops'], 'c');
+link(lib_path + 'libScratch' + getdynlibext(), ['cor_awpstopd'], 'c');
+link(lib_path + 'libScratch' + getdynlibext(), ['cor_aptow'], 'c');
 // remove temp. variables on stack
 //clear lib_path;
 // ----------------------------------------------------------------------------
