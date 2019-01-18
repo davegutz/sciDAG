@@ -95,3 +95,14 @@ function [sys] = lti_man_n_mm(l, a, vol, n, spgr, %beta, c)
     sys = connect_ss(temp, q, u, y);
 
 endfunction
+function vec = ini_man_n_mm(obj, pi, wfi)
+    len = 2*obj.n + 1;
+    vec = zeros(1, len);
+    for i=1:2:len
+        vec(i) = wfi;
+    end
+    for i=2:2:len
+        vec(i) = pi;
+    end
+endfunction
+

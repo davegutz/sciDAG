@@ -19,16 +19,22 @@
 // SOFTWARE.
 // Jsn 16, 2019      DA Gutz     Created
 // 
-global INI start_line A B C D lti_start_line FP ori
-mprintf('In %s\n', sfilename())  
+global INI start_line A B C D lti_start_line FP ori root Press
+
+mprintf('In %s\n', sfilename())
+
+if scs_m.props.title ~= root then
+    mprintf("Re-init %s first\n", root);
+    error('Re-init correct file first')
+end
+
 LINCOS_OVERRIDE = 0;
 
-lti_start_line = lti_man_n_vv(start_line.l, start_line.a, start_line.vol, start_line.n, start_line.spgr, start_line.beta, start_line.c);
-[A, B, C, D] = unpack_ss(lti_start_line);
+start_line.lti = lti_man_n_vv(start_line.l, start_line.a, start_line.vol, start_line.n, start_line.spgr, start_line.beta, start_line.c);
+[start_line.A, start_line.B, start_line.C, start_line.D] = unpack_ss(start_line.lti);
 
-INI.start_line = zeros(7,1);
-pi=0.5;
+pi=Press/2;
 wfi = or_aptow(ori.a, pi, 0, ori.cd, FP.sg);
-INI.start_line=[pi wfi pi wfi pi wfi pi];
+INI.start_line = ini_man_n_vv(start_line, pi, wfi);
 
 mprintf('Completed %s\n', sfilename())  

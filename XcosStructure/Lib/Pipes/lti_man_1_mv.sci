@@ -85,3 +85,13 @@ function [sys] = lti_man_1_mv(l, a, vol, spgr, %beta, c)
     sys = connect_ss(temp,q,u,y);
 
 endfunction
+function vec = ini_man_1_mv(obj, pi, wfi)
+    len = 2*obj.n;
+    vec = zeros(1, len);
+    for i=1:2:len
+        vec(i) = wfi;
+    end
+    for i=2:2:len
+        vec(i) = pi;
+    end
+endfunction

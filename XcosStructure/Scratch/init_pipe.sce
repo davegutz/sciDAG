@@ -37,9 +37,11 @@ xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
 
 
-global loaded_scratch
-global A B C D start_line lti_start_line INI FP ori
-start_line = tlist(["pipe", "l", "a", "vol", "n", "spgr", "beta", "c"],18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0.8, 135000, 0);
+global loaded_scratch root
+global A B C D start_line lti_start_line INI FP ori Press
+start_line = tlist(["pipeVV", "l", "a", "vol", "n", "spgr", "beta", "c", "lti", "A", "B", "C", "D"],..
+        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0.8, 135000, 0, [], [], [], [], []);
+Press = 1;
 Tf = 0.02;
 ori = tlist(["orifice", "a", "cd"], 0.001, 0.61);
 FP = tlist(["fuel", "sg", "beta"], 0.8, 135000);

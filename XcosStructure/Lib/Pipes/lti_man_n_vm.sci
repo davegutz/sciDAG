@@ -91,3 +91,13 @@ function [sys] = lti_man_n_vm(l, a, vol, n, spgr, %beta, c)
     sys = connect_ss(temp, q, u, y);
 
 endfunction
+function vec =ini_man_n_vm(obj, pi, wfi)
+    len = 2*obj.n;
+    vec = zeros(1, len);
+    for i=1:2:len
+        vec(i) = pi;
+    end
+    for i=2:2:len
+        vec(i) = wfi;
+    end
+endfunction
