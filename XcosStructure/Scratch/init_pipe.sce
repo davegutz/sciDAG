@@ -38,13 +38,15 @@ xdel(winsid())
 
 
 global loaded_scratch root
-global A B C D start_line lti_start_line INI FP ori Press
-start_line = tlist(["pipeVV", "l", "a", "vol", "n", "spgr", "beta", "c", "lti", "A", "B", "C", "D"],..
-        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0.8, 135000, 0, [], [], [], [], []);
+global pipe_vv pipe_mv INI FP ori Press 
+FP = tlist(["fuel", "sg", "beta"], 0.8, 135000);
+pipe_vv = tlist(["pipeVV", "l", "a", "vol", "n", "spgr", "beta", "c", "lti", "A", "B", "C", "D"],..
+        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, FP.sg, FP.beta, 0, [], [], [], [], []);
+pipe_mv = tlist(["pipeMV", "l", "a", "vol", "n", "spgr", "beta", "c", "lti", "A", "B", "C", "D"],..
+        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, FP.sg, FP.beta, 0, [], [], [], [], []);
 Press = 1;
 Tf = 0.02;
 ori = tlist(["orifice", "a", "cd"], 0.001, 0.61);
-FP = tlist(["fuel", "sg", "beta"], 0.8, 135000);
 function [ps] = %pipe_string(p)
     // Start
     ps = msprintf('list(');

@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Jsn 16, 2019      DA Gutz     Created
 // 
-global INI start_line A B C D lti_start_line FP ori root Press
+global pipe_vv pipe_mv FP ori root Press INI
 
 mprintf('In %s\n', sfilename())
 
@@ -30,11 +30,15 @@ end
 
 LINCOS_OVERRIDE = 0;
 
-start_line.lti = lti_man_n_vv(start_line.l, start_line.a, start_line.vol, start_line.n, start_line.spgr, start_line.beta, start_line.c);
-[start_line.A, start_line.B, start_line.C, start_line.D] = unpack_ss(start_line.lti);
+pipe_vv.lti = lti_man_n_vv(pipe_vv.l, pipe_vv.a, pipe_vv.vol, pipe_vv.n, pipe_vv.spgr, pipe_vv.beta, pipe_vv.c);
+[pipe_vv.A, pipe_vv.B, pipe_vv.C, pipe_vv.D] = unpack_ss(pipe_vv.lti);
+
+pipe_mv.lti = lti_man_n_mv(pipe_mv.l, pipe_mv.a, pipe_mv.vol, pipe_mv.n, pipe_mv.spgr, pipe_mv.beta, pipe_mv.c);
+[pipe_mv.A, pipe_mv.B, pipe_mv.C, pipe_mv.D] = unpack_ss(pipe_mv.lti);
 
 pi=Press/2;
 wfi = or_aptow(ori.a, pi, 0, ori.cd, FP.sg);
-INI.start_line = ini_man_n_vv(start_line, pi, wfi);
+INI.pipe_vv = ini_man_n_vv(pipe_vv, pi, wfi);
+INI.pipe_mv = ini_man_n_mv(pipe_mv, pi, wfi);
 
 mprintf('Completed %s\n', sfilename())  

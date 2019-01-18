@@ -21,8 +21,6 @@
 // 
 
 global loaded_scratch
-global A B C D start_line lti_start_line
-global INI
 mprintf('In %s\n', sfilename())
 
 mprintf('Completed %s\n', sfilename())  
