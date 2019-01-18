@@ -24,8 +24,5 @@ global loaded_scratch
 global A B C D start_line lti_start_line
 global INI
 mprintf('In %s\n', sfilename())
-//lti_start_line = lti_man_n_vv(l,a,vol,n,spgr,%beta,c)
-lti_start_line = lti_man_n_vv(start_line.l, start_line.a, start_line.vol, start_line.n, start_line.spgr, start_line.beta, start_line.c);
-[A, B, C, D] = unpack_ss(lti_start_line);
 
 mprintf('Completed %s\n', sfilename())  

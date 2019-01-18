@@ -41,6 +41,39 @@
 // Jan 1, 2019     DA Gutz     Created
 //
 // interfacing function for sharp-edged orifice
+function d = dwdc(sg)
+    d = 129.93948*sg;
+endfunction
+function y = sqr(x)
+    y = x*x;
+endfunction
+function y = ssqr(x)
+    y = sign(x)*x*x;
+endfunction
+function y = ssqrt(x)
+    y = sign(x)*sqrt(abs(x));
+endfunction
+function wf = or_aptow(a, ps, pd, %cd, sg)
+    wf = a * 19020. * %cd * ssqrt(sg * (ps - pd))
+endfunction
+function a = or_wptoa(wf, ps, pd, %cd, sg)
+    a = (wf / sign(ps-pd) / max(sqrt(abs(sg*(ps-pd))), 1e-16) / %cd / 19020.);
+endfunction
+function ps = or_awpdtops(a, wf, pd, %cd, sg)
+    ps = (pd + ssqr(wf / 19020. / max(a, 1e-12) / %cd) / sg);
+endfunction
+function pd = or_awpstopd(a, wf, ps, %cd, sg)
+    pd = (ps - ssqr(wf / 19020. / max(a, 1e-12) / %cd) / sg);
+endfunction
+function wf = la_kptow(k, ps, pd, kvis)
+    wf = k / kvis * (ps - pd);
+endfunction
+function k = la_wptok(wf, ps, pd, kvis)
+    k = kvis * wf / (ps - pd);
+endfunction
+function wf = la_lrecptow(l, r, e, c, ps, pd, kvis)
+    wf = (4.698e8 * r *(c*c*c) / kvis / l * (1. + 1.5 * sqr(e/c)) * (ps-pd));
+endfunction
 
 // Callback ******************************************** 
 function [x,y,typ] = COR_APTOW(job, arg1, arg2)
