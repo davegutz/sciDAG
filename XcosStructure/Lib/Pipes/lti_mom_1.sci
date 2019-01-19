@@ -35,7 +35,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Oct 10, 2018 	DA Gutz		Created
+// Oct 10, 2018     DA Gutz     Created
+// Jan 19, 2019     DA Gutz     Damping added so no effect on dc gain
 // ******************************************************************************
 function [sys] = lti_mom_1(l,a,c)
 
@@ -51,16 +52,17 @@ function [sys] = lti_mom_1(l,a,c)
     // Display warning for floating point exception
     ieee(1);
 
-    // Derivatives
+    // Derivatives.   Damping must not be passed through to dc gain
     dw = ((3600*386)*a)/l;// Derivative, pph/sec.
     if %nargin==3 then
         dp = (c*l)*sqrt((a*4)/%pi);  // Damping, pph/sec/pph
+        b = [dw*dp,-dw*dp];
     else
         dp = 0;
+        b = [dw,-dw];
     end;
     a = -dp;
-    b = [dw,-dw];
-    c = 1;  // TODO:  modify this so A still has damping but not passed to output
+    c = 1;
     e = [0,0];
 
     // Form the system.
