@@ -38,31 +38,15 @@ xdel(winsid())
 
 
 global loaded_scratch root
-global pipe_vv pipe_mv INI FP ori Press 
+global pipe_vv pipe_mv pipe_mm pipe_vm INI FP ori Press 
 FP = tlist(["fuel", "sg", "beta"], 0.8, 135000);
-pipe_vv = tlist(["pipeVV", "l", "a", "vol", "n", "spgr", "beta", "c", "lti", "A", "B", "C", "D"],..
-        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, FP.sg, FP.beta, 0, [], [], [], [], []);
-pipe_mv = tlist(["pipeMV", "l", "a", "vol", "n", "spgr", "beta", "c", "lti", "A", "B", "C", "D"],..
-        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, FP.sg, FP.beta, 0, [], [], [], [], []);
+pipe_vv = pipeVV_default;
+pipe_mv = pipeMV_default;
+pipe_mm = pipeMM_default;
+pipe_vm = pipeVM_default;
 Press = 1;
 Tf = 0.02;
 ori = tlist(["orifice", "a", "cd"], 0.001, 0.61);
-function [ps] = %pipe_string(p)
-    // Start
-    ps = msprintf('list(');
-    // Scalars
-    ps = ps + msprintf('%f,%f,%f,%d,%f,%f,%f', p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
-    // End
-    ps = ps + msprintf(')');
-endfunction
-function lis = lsx_pipe(p)
-    lis = list(p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
-endfunction
-function str = %pipe_p(p)
-    // Display pipe type
-    str = string(p);
-    disp(str)
-endfunction
 
 loaded_scratch = %f;
 

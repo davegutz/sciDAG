@@ -20,3 +20,34 @@
 // Jan 17, 2019    DA Gutz        Created
 // 
 getd('../Lib/Pipes')
+
+
+pipeVV_default = tlist(["pipeVV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D"],..
+        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0, [], [], [], [], []);
+pipeMV_default = tlist(["pipeMV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D"],..
+        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0, [], [], [], [], []);
+pipeMM_default = tlist(["pipeMM", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D"],..
+        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0, [], [], [], [], []);
+pipeVM_default = tlist(["pipeVM", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D"],..
+        18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0, [], [], [], [], []);
+
+
+// TODO:  make the following functions work and do useful things.
+function [ps] = %pipe_string(p)
+    // Start
+    ps = msprintf('list(');
+    // Scalars
+    ps = ps + msprintf('%f,%f,%f,%d,%f,%f,%f', p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
+    // End
+    ps = ps + msprintf(')');
+endfunction
+
+function lis = lsx_pipe(p)
+    lis = list(p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
+endfunction
+
+function str = %pipe_p(p)
+    // Display pipe type
+    str = string(p);
+    disp(str)
+endfunction

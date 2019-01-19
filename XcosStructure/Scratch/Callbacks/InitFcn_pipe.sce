@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Jsn 16, 2019      DA Gutz     Created
 // 
-global pipe_vv pipe_mv FP ori root Press INI
+global pipe_vv pipe_mv pipe_mm pipe_vm FP ori root Press INI
 
 mprintf('In %s\n', sfilename())
 
@@ -29,16 +29,16 @@ if scs_m.props.title ~= root then
 end
 
 LINCOS_OVERRIDE = 0;
-
-pipe_vv.lti = lti_man_n_vv(pipe_vv.l, pipe_vv.a, pipe_vv.vol, pipe_vv.n, pipe_vv.spgr, pipe_vv.beta, pipe_vv.c);
-[pipe_vv.A, pipe_vv.B, pipe_vv.C, pipe_vv.D] = unpack_ss(pipe_vv.lti);
-
-pipe_mv.lti = lti_man_n_mv(pipe_mv.l, pipe_mv.a, pipe_mv.vol, pipe_mv.n, pipe_mv.spgr, pipe_mv.beta, pipe_mv.c);
-[pipe_mv.A, pipe_mv.B, pipe_mv.C, pipe_mv.D] = unpack_ss(pipe_mv.lti);
+pipe_vv = lti_man_n_vv(pipe_vv, FP.sg, FP.beta);
+pipe_mv = lti_man_n_mv(pipe_mv, FP.sg, FP.beta);
+pipe_mm = lti_man_n_mm(pipe_mm, FP.sg, FP.beta);
+pipe_vm = lti_man_n_vm(pipe_vm, FP.sg, FP.beta);
 
 pi=Press/2;
 wfi = or_aptow(ori.a, pi, 0, ori.cd, FP.sg);
 INI.pipe_vv = ini_man_n_vv(pipe_vv, pi, wfi);
 INI.pipe_mv = ini_man_n_mv(pipe_mv, pi, wfi);
+INI.pipe_mm = ini_man_n_mm(pipe_mm, pi, wfi);
+INI.pipe_vm = ini_man_n_vm(pipe_vm, pi, wfi);
 
 mprintf('Completed %s\n', sfilename())  

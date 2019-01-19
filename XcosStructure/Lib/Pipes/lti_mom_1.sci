@@ -60,7 +60,7 @@ function [sys] = lti_mom_1(l,a,c)
     end;
     a = -dp;
     b = [dw,-dw];
-    c = 1;
+    c = 1;  // TODO:  modify this so A still has damping but not passed to output
     e = [0,0];
 
     // Form the system.

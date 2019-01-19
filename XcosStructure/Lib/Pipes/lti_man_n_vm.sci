@@ -6,6 +6,7 @@
 // Revisions:    22-Jun-92    Added vm subscripts.
 //               19-Aug-92    Simplify output arguments.
 //               10-Dec-98    Add damping, c.
+//               19-Jan-19    Port to xcos
 // Input:
 // a     Line cross-section, sqin.
 // beta  Fluid bulk modulus, psi.
@@ -16,7 +17,8 @@
 // c     Damping, psi/in/sec, (OPTIONAL).
 // 
 // Output:
-// sys   LTI in packed form
+// lti   LTI in packed form
+// A,B,C,D  LTI in unpacked form
 // 
 // Differential I/O:
 // wfs   Input  # 1, supply flow, pph.
@@ -47,10 +49,17 @@
 // SOFTWARE.
 // Oct 13, 2018 	DA Gutz		Created
 // **************************************************************************
-function [sys] = lti_man_n_vm(l, a, vol, n, spgr, %beta, c)
+function obj = lti_man_n_vm(obj, spgr, %beta)
+    if typeof(obj) ~= 'pipeVM' then
+        mprintf('ERROR:   wrong type %s\n', typeof(obj));
+        error('wrong type')
+    end
+
+    l = obj.l; a = obj.a; vol =  obj.vol; n = obj.n; c = obj.c;
 
     // Output variables initialisation (not found in input variables)
-    sys=[];
+    obj.lti = [];  obj.A = []; obj.B = []; obj.C = []; obj.D = [];
+
 
     // Number of arguments in function call
     [%nargout,%nargin] = argn(0)
@@ -67,7 +76,7 @@ function [sys] = lti_man_n_vm(l, a, vol, n, spgr, %beta, c)
     end;
 
     // Single manifold slice.
-    if %nargin==7 then
+    if c~=0 then
         man = lti_man_1_vm(l/n, a, vol/n, spgr, %beta, c);
     else
         man = lti_man_1_vm(l/n, a, vol/n, spgr, %beta);
@@ -88,10 +97,16 @@ function [sys] = lti_man_n_vm(l, a, vol, n, spgr, %beta, c)
     end;
 
     // Form the system.
-    sys = connect_ss(temp, q, u, y);
-
+    obj.lti = connect_ss(temp, q, u, y);
+   [a, b, c, d] = unpack_ss(obj.lti);
+    obj.A = a; obj.B = b; obj.C = c; obj.D = d;
 endfunction
+
 function vec =ini_man_n_vm(obj, pi, wfi)
+    if typeof(obj) ~= 'pipeVM' then
+        mprintf('ERROR:   wrong type %s\n', typeof(obj));
+        error('wrong type')
+    end
     len = 2*obj.n;
     vec = zeros(1, len);
     for i=1:2:len

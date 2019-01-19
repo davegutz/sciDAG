@@ -24,10 +24,46 @@
 // rebuild.   May have to re-drag libScratch blocks out of Pallette browser for
 // some rebuild configurations.
 
-// Load sec_order_x
-exec(init_sec_order_1.sce, -1);
-exec(init_sec_order_2.sce, -1);
-exec(init_sec_order_3.sce, -1);
+// Test pipes
+exec('init_pipe.sce', -1);
+// press play
+// expected result in Results/expected_pipe.png
+
+// Test orifices
+exec('init_orifice.sce', -1);
+// press play
+// expected result in Results/expected_orifice.png
+
+// Test valve
+exec('init_valve.sce', -1);
+// press play
+// expected result in Results/expected_valve.png
+
+// Test table
+exec('init_table.sce', -1);
+// press play
+// expected result in Results/expected_table.png
+
+// Test sec_order_x
+exec('init_sec_order_1.sce', -1);
+// press play
+// expected result in Results/expected_sec_order_1.png
+exec('init_sec_order_2.sce', -1);
+// press play
+// expected result in Results/expected_sec_order_2.png
+exec('init_sec_order_3.sce', -1);
+// press play
+// expected result in Results/expected_sec_order_3.png
+exec('init_sec_order_4.sce', -1);
+// press play
+// expected result in Results/expected_sec_order_4.png
+exec('init_sec_order_5.sce', -1);
+// press play
+// expected result in Results/expected_sec_order_5.png
+exec('init_sec_order_6.sce', -1);
+// press play
+// expected result in Results/expected_sec_order_6.png
+
 
 // Load scratch552_UseLib.xcos
 // TODO:  the following has build errors different compilers while sec_order_x does not
