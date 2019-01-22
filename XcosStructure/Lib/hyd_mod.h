@@ -46,5 +46,6 @@
             max(sqrt(fabs((SG) * ((PS) - (PD)))), 1e-16) / (CD) / 19020.)
 
 #define DWDC(SG)    (129.93948 * (SG))
-
+#define PI          (3.1415926535897932384626433832795)
+double hole(double x, double d);
 #endif

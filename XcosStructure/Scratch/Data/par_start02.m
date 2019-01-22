@@ -1,5 +1,5 @@
-time_run= 'Output from $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Sun Jan 13 07:02:41 2019.';
-time_stamp= 'Last compilation of $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Jan 13 2019 07:02:17'; 
+time_run= 'Output from $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Sun Jan 20 11:40:39 2019.';
+time_stamp= 'Last compilation of $Id: start02.c,v 1.2 2007/01/25 22:44:22 davegutz Exp davegutz $ on Jan 20 2019 11:39:18'; 
 titl = '23.7 in start tube, 135 JP5 135k/.75/0.46 100pph';
 pars = [];labels
 
@@ -138,10 +138,10 @@ a_boost      =     0.5200; b_boost      =      6.600; c_boost      =     -316.0;
 r1_boost     =      0.000; b1_boost     =      1.000; r2_boost     =      2.550;
 b2_boost     =     0.2000; tau_boost    =   0.001270;
 %VEN pump and pump actuator:
-ks_reg_ven   =      120.0; m_reg_ven    =    0.05500; ahs_reg_ven  =    0.02835;
-ahd_reg_ven  =    0.02835; alr_reg_ven  =      0.000; ald_reg_ven  =      0.000;
-ale_reg_ven  =      0.000;
-cd_reg_ven   =     0.6100; bdamp_reg_ven=     0.7500;
+ks_tri   =      120.0; m_tri    =    0.05500; ahs_tri  =    0.02835;
+ahd_tri  =    0.02835; alr_tri  =      0.000; ald_tri  =      0.000;
+ale_tri  =      0.000; as_tri =  0.0004215; ad_tri =  0.0003906;
+cd_tri   =     0.6100; bdamp_tri=     0.7500;
 cs_pump_ven  =  5.300e-10; ct_pump_ven  =  0.0009600;
 cn_pump_ven  =      0.000; m_pump_ven   =      18.68; bdamp_pump_ven  =      100.0;
 vol_pd_ven   =      3.200;
@@ -160,7 +160,7 @@ dp_s_ehsv_ven=      1000.;ah_act_ven   =      9.247; ar_act_ven    =      7.443;
 mact_act_ven =      0.000; mext_act_ven  =      200.0;
 ax1_start_ven=    0.05545; ax2_start_ven =    0.05545; ax4_start_ven   =    0.05545;
 cd_start_ven    =     0.7000; cp_start_ven=     0.4300; fs_start_ven =       15.8;
-ks_start_ven =      50.00; mv_start_ven  =    0.03281; bdamp_start_ven =      0.000;
+ks_start_ven =      50.00; mv_start_ven  =    0.03281; ms_start_ven  =     0.1500; m_start_ven  =     0.1078; bdamp_start_ven =      0.000;
 ao_start_ven =  0.0002011;
 
 
@@ -191,11 +191,11 @@ ctqpv_ven    =     0.4418; ftpa_ven    =      1.865;
 dwfdv_ven    =      107.4;  ddispdx_ven =      3.086;
 kspump_ven   =      1341.; kvis_ven     =     0.4600;  ps_ven      =      73.60;
 pd_ven       =      1451.; pr_ven       =      73.60;  px_ven      =      725.6;
-wfsx_reg_ven =      114.1; wfxd_reg_ven =      100.2;  wfl_ven     =      530.8;
+wfsx_tri =      114.1; wfxd_tri =      100.2;  wfl_ven     =      530.8;
 wfstart      =      900.9;dpav1_ven    =      0.000; dpav2_ven    =      0.000;  disp_ven    =     0.3190;
 xn_ven       =      3243.; beta_ven     =  1.350e+05; sg_ven      =     0.7500;
-wd_reg_ven   =    0.07288; ws_reg_ven   =    0.07838; stops_bias_ven=        -1;
-stops_reg_ven=          0; stops_pump_ven=         0;  swmodel_ven   =          0;
+wd_tri   =    0.07288; ws_tri   =    0.07838; stops_bias_ven=        -1;
+stops_tri=          0; stops_pump_ven=         0;  swmodel_ven   =          0;
 wh_start_ven =     0.3226; stops_start_ven=         0;phead_ven    =      73.60; prod_ven     =      73.60;
 wfhd_ehsv_ven=      0.000; wfrd_ehsv_ven=      0.000; wfsh_ehsv_ven=      0.000;
 wfsr_ehsv_ven=    0.03729; wfj_ehsv_ven =      148.1; stops_ehsv_ven=         1;
@@ -342,10 +342,10 @@ a_boost      =     0.5200; b_boost      =      6.600; c_boost      =     -316.0;
 r1_boost     =      0.000; b1_boost     =      1.000; r2_boost     =      2.550;
 b2_boost     =     0.2000; tau_boost    =   0.001270;
 %VEN pump and pump actuator:
-ks_reg_ven   =      120.0; m_reg_ven    =    0.05500; ahs_reg_ven  =    0.02835;
-ahd_reg_ven  =    0.02835; alr_reg_ven  =      0.000; ald_reg_ven  =      0.000;
-ale_reg_ven  =      0.000;
-cd_reg_ven   =     0.6100; bdamp_reg_ven=     0.7500;
+ks_tri   =      120.0; m_tri    =    0.05500; ahs_tri  =    0.02835;
+ahd_tri  =    0.02835; alr_tri  =      0.000; ald_tri  =      0.000;
+ale_tri  =      0.000; as_tri =  0.0003923; ad_tri =  0.0004197;
+cd_tri   =     0.6100; bdamp_tri=     0.7500;
 cs_pump_ven  =  5.300e-10; ct_pump_ven  =  0.0009600;
 cn_pump_ven  =      0.000; m_pump_ven   =      18.68; bdamp_pump_ven  =      100.0;
 vol_pd_ven   =      3.200;
@@ -364,7 +364,7 @@ dp_s_ehsv_ven=      1000.;ah_act_ven   =      9.247; ar_act_ven    =      7.443;
 mact_act_ven =      0.000; mext_act_ven  =      200.0;
 ax1_start_ven=    0.05545; ax2_start_ven =    0.05545; ax4_start_ven   =    0.05545;
 cd_start_ven    =     0.7000; cp_start_ven=     0.4300; fs_start_ven =       15.8;
-ks_start_ven =      50.00; mv_start_ven  =    0.03281; bdamp_start_ven =      0.000;
+ks_start_ven =      50.00; mv_start_ven  =    0.03281; ms_start_ven  =     0.1500; m_start_ven  =     0.1078; bdamp_start_ven =      0.000;
 ao_start_ven =  0.0002011;
 
 
@@ -395,11 +395,11 @@ ctqpv_ven    =     0.4418; ftpa_ven    =      1.854;
 dwfdv_ven    =      106.7;  ddispdx_ven =      3.084;
 kspump_ven   =      1341.; kvis_ven     =     0.4600;  ps_ven      =      77.01;
 pd_ven       =      1521.; pr_ven       =      77.39;  px_ven      =      723.0;
-wfsx_reg_ven =      112.5; wfxd_reg_ven =      105.8;  wfl_ven     =      546.1;
+wfsx_tri =      112.5; wfxd_tri =      105.8;  wfl_ven     =      546.1;
 wfstart      =      1121.;dpav1_ven    =      0.000; dpav2_ven    =      0.000;  disp_ven    =     0.3417;
 xn_ven       =      3243.; beta_ven     =  1.350e+05; sg_ven      =     0.7500;
-wd_reg_ven   =    0.07288; ws_reg_ven   =    0.07838; stops_bias_ven=        -1;
-stops_reg_ven=          0; stops_pump_ven=         0;  swmodel_ven   =          0;
+wd_tri   =    0.07288; ws_tri   =    0.07838; stops_bias_ven=        -1;
+stops_tri=          0; stops_pump_ven=         0;  swmodel_ven   =          0;
 wh_start_ven =     0.3402; stops_start_ven=         0;phead_ven    =      77.34; prod_ven     =      77.34;
 wfhd_ehsv_ven= -0.0002147; wfrd_ehsv_ven=     -0.000; wfsh_ehsv_ven=      0.000;
 wfsr_ehsv_ven=    0.03804; wfj_ehsv_ven =      151.0; stops_ehsv_ven=         1;

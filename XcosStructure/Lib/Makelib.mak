@@ -46,11 +46,11 @@ SCILAB_LIBS = "$(SCIDIR)/bin/blasplus.lib" \
 LIBRARY = libScratch
 # ------------------------------------------------------
 # list of files
-FILES_SRC = friction_comp.c lim_int_comp.c orifice.c table.c valve.c
+FILES_SRC = friction_comp.c hyd_mod.c lim_int_comp.c orifice.c table.c valve.c
 # ------------------------------------------------------
 # list of objects file
-OBJS = friction_comp.obj lim_int_comp.obj orifice.obj table.obj valve.obj
-OBJS_WITH_PATH = Release/friction_comp.obj Release/lim_int_comp.obj Release/orifice.obj Release/table.obj Release/valve.obj
+OBJS = friction_comp.obj hyd_mod.obj lim_int_comp.obj orifice.obj table.obj valve.obj
+OBJS_WITH_PATH = Release/friction_comp.obj Release/hyd_mod.obj Release/lim_int_comp.obj Release/orifice.obj Release/table.obj Release/valve.obj
 # ------------------------------------------------------
 # added libraries
 FORTRAN_RUNTIME_LIBRARIES = 

@@ -1,6 +1,7 @@
 LIBRARY    libScratch.dll
 EXPORTS
 	friction
+	hole
 	lim_int
 	cor_aptow
 	cor_awpstopd
@@ -11,3 +12,5 @@ EXPORTS
 	table1_a
 	ctab1
 	valve_a
+	reg_win_a
+	trivalve_a1

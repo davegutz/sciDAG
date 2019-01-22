@@ -40,15 +40,23 @@ xdel(winsid())
 global m k c
 global loaded_scratch
 global GEO INI
-global start02_x start02_v
-global start02_ph start02_prs start02_pxr start02_ps
-global start02_wfs start02_wfh start02_wfvrs start02_wfvx
-global start02_uf start02_uf_net start02_px start02_a
+global start02_x        start02_v
+global start02_ph       start02_prs     start02_pxr
+global start02_ps       start02_wfs     start02_wfh
+global start02_wfvrs    start02_wfvx    start02_uf
+global start02_uf_net   start02_px start02_a
+global start02_t_x      start02_t_v     start02_t_ped
+global start02_t_pes    start02_t_pd    start02_t_pld
+global start02_t_plr    start02_t_ps    start02_t_wfd
+global start02_t_wfde   start02_t_wfld  start02_t_wfle
+global start02_t_wflr   start02_t_wfs   start02_t_wfse
+global start02_t_wfxd   start02_t_wfsx  start02_t_wfx
+global start02_t_uf_net start02_t_uf    start02_fext
 Tf = 0.001;
 
 //valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
 //GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
-GEO = tlist(["sys_geo", "vsv"], vlv_a_default);
+GEO = tlist(["sys_geo", "vsv", "reg"], vlv_a_default, trivlv_a1_default);
 ady = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 20;]);
 ahy = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 2;]);
 valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "ah"],..
@@ -59,10 +67,16 @@ function %sys_geo_p(g)
     // Display geo overload
     mprintf('sys_geo:  \n');
     disp(g.vsv)
+    disp(g.reg)
 endfunction
 function %valve_a_p(v)
     // Display valve overload
     mprintf('valve_a:  m=%f, c=%f, fstf=%f, fdyf=%f, xmin=%f, xmax=%f\n',..
+         v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax);
+endfunction
+function %trivalve_a1_p(v)
+    // Display valve overload
+    mprintf('trivalve_a1:  m=%f, c=%f, fstf=%f, fdyf=%f, xmin=%f, xmax=%f\n',..
          v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax);
 endfunction
 
@@ -88,6 +102,7 @@ if bOK then
 end
 //
 link(SCI + '\bin\scicos' + getdynlibext());
+link(lib_path + 'libScratch' + getdynlibext(), ['trivalve_a1'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['valve_a'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['lim_int'], 'c');

@@ -52,7 +52,8 @@ vlv_a_default = tlist(["vlv_a", "ao", "ax1", "ax2", "ax3", "ax4",..
          "ad", "ah"],..
          1, 0, 0, 0, 0,..
          0, 0, 0.61, 0.61, 0.69, 0, 15.8, 0, 24.4,..
-         0, 0, 5, 1, -1, ctab1_default, ctab1_default);
+         0, 0, 5, 1, -1,..
+         ctab1_default, ctab1_default);
 
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
@@ -144,6 +145,109 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         exprs = ["lsx(GEO.vsv)"; string(SG); string(LINCOS_OVERRIDE); "INI.vsv.x"]
         gr_i = [];
         x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
+    end
+endfunction
+
+//// Default valve_a prototype **************************************
+trivlv_a1_default = tlist(["trivlv_a1", "adl", "ahd", "ahs", "ald", "ale",..
+        "alr", "ar", "asl", "c", "cd", "cp", "fdyf", "fs", "fstf", "ks",..
+        "ld", "ls", "m", "xmax", "xmin",..
+         "ad", "as"],..
+         1, 0, 0, 0, 0,..
+         0, 0, 0, 0, 0.61, 0.69, 0, 15.8, 0, 24.4,..
+         0, 0, 5, 1, -1,..
+         ctab1_default, ctab1_default);
+
+function [vs] = %trivlv_a1_string(v)
+    // Cast trivalve type to string
+    vs = msprintf('list(');
+
+    // Scalars
+    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
+             v.adl, v.ahd, v.ahs, v.ald, v.ale,..
+             v.alr, v.ar, v.asl, v.c, v.cd, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+             v.ld, v.ls, v.m, v.xmax, v.xmin);
+
+    // Tables
+    vs = vs + string(v.ad) + ',';
+    vs = vs + string(v.as);
+    
+    // end
+    vs = vs + msprintf(')');
+endfunction
+
+// Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
+function lis = lsx_tva1(v)
+    lis = list(.adl, v.ahd, v.ahs, v.ald, v.ale,..
+             v.alr, v.ar, v.asl, v.c, v.cd, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+             v.ld, v.ls, v.m, v.xmax, v.xmin,..
+             vec_ctab1(v.ad),  vec_ctab1(v.as));
+endfunction
+
+function str = %trivlv_a1_p(v)
+    // Display valve type
+    str = string(v);
+    disp(str)
+endfunction
+
+// Callback ******************************************** 
+function [x,y,typ] = TRIVALVE_A1(job, arg1, arg2)
+    x = [];
+    y = [];
+    typ = [];
+    //disp(job)
+    select job
+    case 'plot' then
+        standard_draw(arg1)
+    case 'getinputs' then
+        [x,y,typ] = standard_inputs(arg1)
+        //disp(sci2exp(x))
+    case 'getoutputs' then
+        [x,y,typ] = standard_outputs(arg1)
+        //disp(sci2exp(x))
+    case 'getorigin' then
+        [x,y] = standard_origin(arg1)
+        //disp(sci2exp(x))
+    case 'set' then
+        //message(sci2exp(arg1))
+        x = arg1
+        graphics = arg1.graphics
+        exprs = graphics.exprs
+        model = arg1.model
+        while %t do
+            [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype trivalve parameters',..
+            ['lsx_tva1(trivlv_a1)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            list('lis',-1,'vec',1,'vec',1,'vec',1),..
+            exprs)
+            if ~ok then break,end 
+            model.state = [Xinit; 0]
+            model.rpar = [SG;LINCOS_OVERRIDE]
+            model.opar = GEO
+            graphics.exprs = exprs
+            x.graphics = graphics
+            x.model = model
+            break
+        end
+    case 'define' then
+//        message('in define')
+        model.opar=list(trivlv_a1_default);
+        SG = 0.8
+        LINCOS_OVERRIDE = 0
+        Xinit = 0
+        model = scicos_model()
+        model.sim = list('trivalve_a1', 4)
+        model.in  = [1;1;1;1;1;1;1;1;1;1]
+        model.out = [1;1;1;1;1;1;1;1;1;1;1;1;1;1]
+        model.state = [Xinit; 0]
+        model.dstate = [0]
+        model.rpar = [SG;LINCOS_OVERRIDE]
+        model.blocktype = 'c'
+        model.nmode = 1
+        model.nzcross = 5
+        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
+        exprs = ["lsx_tva1(GEO.reg)"; string(SG); string(LINCOS_OVERRIDE); "INI.reg.x"]
+        gr_i = [];
+        x = standard_define([16 22],model,exprs,gr_i)  // size icon [h v], etc..
     end
 endfunction
 
