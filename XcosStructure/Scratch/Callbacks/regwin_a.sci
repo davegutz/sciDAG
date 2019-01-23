@@ -20,55 +20,56 @@
 // Jan 22, 2019    DA Gutz        Created
 // 
 
-function area = hole(x, d)
+function area = hole(xi, d)
     r = d / 2.;
-    x = max( (min(x, d - 1e-16)), 1e-16);
-    frac = 1. - x / r;
+    xi = max( (min(xi, d - 1e-16)), 1e-16);
+    frac = 1. - xi / r;
     if frac > 1e-16 then
         area = atan( sqrt(1. - frac * frac) / frac);
     elseif frac < -1e-16 then
-        area = pi + atan( sqrt(1. - frac * frac) / frac);
+        area = %pi + atan( sqrt(1. - frac * frac) / frac);
     else
-        area = pi / 2.;
+        area = %pi / 2.;
     end
-    area = r * r * area   -   (r - x) * sqrt(x * (2.*r - x));
+    area = r * r * area   -   (r - xi) * sqrt(xi * (2.*r - xi));
     area = max(area, 1e-16);
 endfunction
 
-function [x, as, ad] = regwin_a(n)
-    DBIAS = 
+function [asi, adi] = calc_regwin_a(xi)
+    VEN_REG_UNDERLAP = -.001;   // Dead zone of drain, - is underlap
+    SBIAS = .005;               // dead zone of supply + is underlap
+    DBIAS = .000;               // dead zone of drain + is underlap
+    DORIFS = .125;              // Supply Reg. hole dia, in
+    DORIFD = .125;              // Drain Reg. hole dia, in
+    HOLES = 2;                  // # reg holes
+    CLEAR = .0004;              // Reg. dia clearance, in
+    WS = 0.0;                   // Reg supply linear window width, in
+    WD = 0;                     // Reg drain linear window width, in
     
-    x = zeros(n);
+    xcrl    = max(min(-(xi+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.);
+    xscl    = max(min((xi+SBIAS), DORIFS), 0.);
+    thcrl   = acos(1. - xcrl * 2. / DORIFD);
+    thscl   = acos(1. - xscl * 2. / DORIFS);
+    alk     = CLEAR * (DORIFS + DORIFD)/2. * (%pi - thcrl - thscl);
+    asi     = HOLES * ( max(hole(max(min(xi+SBIAS, DORIFS), 0.), DORIFS),..
+            max(min(xi+SBIAS, DORIFS),0.)*WS) + alk);
+    adi     = HOLES * ( max(hole(max(min(-(xi+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.),..
+            DORIFD), max(min(-(xi+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.)*WD) + alk);
+endfunction
+
+function [xi, as, ad] = regwin_a(n)
+    XVSVMAX = 0.125;  // Max value of table
     as = zeros(n);
     ad = zeros(n);
+    xi = zeros(n);
 
-xcrl    = max(min(-(x+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.);
-xscl    = max(min((x+SBIAS), DORIFS), 0.);
-thcrl   = acos(1. - xcrl * 2. / DORIFD);
-thscl   = acos(1. - xscl * 2. / DORIFS);
-alk     = CLEAR * (DORIFS + DORIFD)/2. * (pi - thcrl - thscl);
-*as     = HOLES * ( max(hole(max(min(x+SBIAS, DORIFS), 0.), DORIFS),
-			max(min(x+SBIAS, DORIFS),0.)*WS)
-			+ alk);
-*ad     = HOLES * ( max(hole(max(min(-(x+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.),
-		       DORIFD),
-			max(min(-(x+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.)*WD)
-		        + alk);
-
-
-
-    // Calculate evenly spaced position interval. */
+    // Calculate evenly spaced position interval
     dx  = XVSVMAX / (n - 1);
 
-    // Calculate position, and area. */
+    // Calculate position, and area
     for i=1:n
-        x(i)    = i*dx;
-        %xend    = XVSVMAX - x(i);
-        a(i)    = AVSVMIN;
-        a(i)   = a(i) + VSVHOLES * hole(max(min(%xend, VSVHMX), 0.), VSVHDIA);
-        if VSVHMX < %xend then
-            a(i) = a(i) + VSVDIA*3.1415926 * (%xend - VSVHMX);
-        end
+        xi(i)    = i*dx;
+        %xend    = XVSVMAX - xi(i);
+        [as(i), ad(i)] = calc_regwin_a(%xend);
     end
-
 endfunction

@@ -178,7 +178,7 @@ endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
 function lis = lsx_tva1(v)
-    lis = list(.adl, v.ahd, v.ahs, v.ald, v.ale,..
+    lis = list(v.adl, v.ahd, v.ahs, v.ald, v.ale,..
              v.alr, v.ar, v.asl, v.c, v.cd, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
              v.ld, v.ls, v.m, v.xmax, v.xmin,..
              vec_ctab1(v.ad),  vec_ctab1(v.as));

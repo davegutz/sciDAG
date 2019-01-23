@@ -410,6 +410,7 @@ void valve_a(scicos_block *blk, int flag)
 #define CLEAR   .0004           /* "  Reg. dia clearance, in. */
 #define WS      0.0               /* Reg supply linear window width, in*/
 #define WD      0               /* Reg drain linear window width, in*/
+
 void    reg_win_a(double x, double *as, double *ad){
 double   xcrl;   /* Aux. leak dim, in. */
 double   xscl;   /* Aux. leak dim, in. */

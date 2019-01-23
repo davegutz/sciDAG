@@ -75,12 +75,14 @@ start02_t_wfsx = struct("time", M(:,1), "values", M(:,33));
 start02_t_wfx = struct("time", M(:,1), "values", M(:,34));
 start02_t_uf_net = struct("time", M(:,1), "values", M(:,35));
 start02_t_uf = struct("time", M(:,1), "values", M(:,36));
-start02_fext = struct("time", M(:,1), "values", M(:,38));
+start02_t_fext = struct("time", M(:,1), "values", M(:,38));
+start02_t_pel = struct("time", M(:,1), "values", M(:,39));
+start02_t_px = struct("time", M(:,1), "values", M(:,40));
 
 clear M comments
 
 INI.vsv.x = start02_x.values(1,:);
-INI.vsv.x = start02_x.values(1,:);
+INI.reg.x = start02_t_x.values(1,:);
 
 // Define valve vsv geometry
 d = 0.2657;
@@ -115,87 +117,34 @@ GEO.vsv.ad.tb = [-1 0; 1 0];
 GEO.vsv.ah.tb = [xh ah];
 clear xh ah wvh
 
-
-INI.reg.x = start02_x.values(1,:);
-INI.reg.x = start02_x.values(1,:);
-
 // Define trivalve reg geometry
-RGEO.asl    = 0.;
-RGEO.adl    = 0.;
-RGEO.c      = .75;
-RGEO.fs     = -15.9-12.;
-RGEO.ks     = 120.;
-RGEO.cd     = .61;
-RGEO.cp     = .0;
-RGEO.dh     = .190; 
-RGEO.dlh    = 0.;
-RGEO.dlr    = 0.; 
-RGEO.dld    = 0.; 
-RGEO.dr     = .125; 
-RGEO.fstf   = 2.; 
-RGEO.fdyf   = 2.;
-RGEO.ls     = .0; 
-RGEO.ld     = .0; 
-RGEO.m      = .055; 
-RGEO.sftd   = 0.;
-RGEO.sfts   = 0.;
-RGEO.xmax   = VEN_REG_XMX;
-RGEO.xmin   = VEN_REG_XMN;
-
-d = 0.2657;
-GEO.reg.ax1 = d^2*%pi/4;
-clear d
-GEO.reg.ax2 = GEO.reg.ax1;
-GEO.reg.ax3 = 0;
-GEO.reg.ax4 = GEO.reg.ax1;
-GEO.reg.c = 0;
-GEO.reg.clin = 0.24;
-GEO.reg.cd = 0.7;
-GEO.reg.cdo = 0.61;
-GEO.reg.cp = 0.43;
-d = 0.016;
-GEO.reg.ao = d^2*%pi/4;
-clear d
-GEO.reg.fdyf = 0;
-GEO.reg.fstf = 0;
-GEO.reg.fs = 15.8;
-GEO.reg.ks = 50;
+dh = .190; dlh = 0.; dlr = 0.; dld = 0.; dr = .125; 
+GEO.reg.adl = 0;
+GEO.reg.ahd = max((sqr(dh)  - sqr(dlr)) * %pi / 4., 0.);
+GEO.reg.ahs = sqr(dh)  * %pi / 4.;
+GEO.reg.ald = max((sqr(dlh) - sqr(dld)) * %pi / 4., 0.);
+GEO.reg.ale = sqr(dld) * %pi / 4.;
+GEO.reg.alr = max((sqr(dlh) - sqr(dlr)) * %pi / 4., 0.);
+GEO.reg.ar = max((sqr(dh)  - sqr(dr))  * %pi / 4., 0.);
+GEO.reg.asl = 0;
+clear dh dlh dlr dld dr
+GEO.reg.c = 0.75;
+GEO.reg.cd = 0.61;
+GEO.reg.cp = 0;
+GEO.reg.fdyf = 2;
+GEO.reg.fs = -15.9-12.;
+GEO.reg.fstf = 2;
+GEO.reg.ks = 120.;
 GEO.reg.ld = 0;
-GEO.reg.lh = 0;
-mv = 8e-5*386;
-ms = 0.15;
-GEO.reg.m = mv + ms/2;
-clear mv ms
+GEO.reg.ls = 0;
+GEO.reg.m = 0.055;
 GEO.reg.xmax = 0.125;
-GEO.reg.xmin = 0;
+GEO.reg.xmin = -0.011;
+
 exec('./Callbacks/regwin_a.sci', -1);
-GEO.reg.ad.tb = [-1 0; 1 0];
-[xh, ah, wvh] = regwin_a(40);
-GEO.reg.ah.tb = [xh ah];
-clear xh ah wvh
-
-void    ven_reg_win_a(float x, float *as, float *ad){
-float   xcrl;   /* Aux. leak dim, in. */
-float   xscl;   /* Aux. leak dim, in. */
-float   thcrl;  /* Aux. leak scaler. */
-float   thscl;  /* Aux. leak scaler. */
-float   alk;    /* Leak area, sqin. */
-
-xcrl    = max(min(-(x+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.);
-xscl    = max(min((x+SBIAS), DORIFS), 0.);
-thcrl   = acos(1. - xcrl * 2. / DORIFD);
-thscl   = acos(1. - xscl * 2. / DORIFS);
-alk     = CLEAR * (DORIFS + DORIFD)/2. * (pi - thcrl - thscl);
-*as     = HOLES * ( max(hole(max(min(x+SBIAS, DORIFS), 0.), DORIFS),
-			max(min(x+SBIAS, DORIFS),0.)*WS)
-			+ alk);
-*ad     = HOLES * ( max(hole(max(min(-(x+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.),
-		       DORIFD),
-			max(min(-(x+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.)*WD)
-		        + alk);
-return;
-}   /* End ven_reg_win_a. */
-
-
+[xh, as, ad] = regwin_a(40);
+GEO.reg.as.tb = [xh as];
+GEO.reg.ad.tb = [xh ad];
+clear xh as ad
 
 mprintf('Completed %s\n', sfilename())  
