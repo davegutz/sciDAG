@@ -34,7 +34,8 @@ global start02_t_plr    start02_t_ps    start02_t_wfd
 global start02_t_wfde   start02_t_wfld  start02_t_wfle
 global start02_t_wflr   start02_t_wfs   start02_t_wfse
 global start02_t_wfxd   start02_t_wfsx  start02_t_wfx
-global start02_t_uf_net start02_t_uf    start02_fext
+global start02_t_uf_net start02_t_uf    start02_t_fext
+global start02_t_pel    start02_t_px
 mprintf('In %s\n', sfilename())  
 
 
@@ -131,9 +132,9 @@ clear dh dlh dlr dld dr
 GEO.reg.c = 0.75;
 GEO.reg.cd = 0.61;
 GEO.reg.cp = 0;
-GEO.reg.fdyf = 2;
 GEO.reg.fs = -15.9-12.;
-GEO.reg.fstf = 2;
+GEO.reg.fdyf = 2*0;
+GEO.reg.fstf = 2*0;
 GEO.reg.ks = 120.;
 GEO.reg.ld = 0;
 GEO.reg.ls = 0;

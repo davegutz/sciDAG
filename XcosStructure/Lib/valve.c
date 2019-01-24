@@ -488,10 +488,9 @@ void trivalve_a1(scicos_block *blk, int flag)
     fjd = cp * fabs(pd - px)*ad;
     fjs = -cp * fabs(px - ps)*as;
     ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(pd - px));
-    fts = -ls * 0.01365 * cd * Xdot * SSQRT(sg*(ps - px));
+    fts = ls * 0.01365 * cd * Xdot * SSQRT(sg*(ps - px));
     df = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
-             + fext - fs - X*ks - fjd - fjs - ftd - fts;
-    
+             + fext + fs - X*ks + fjd + fjs + ftd + fts;
 
     if(mode0==mode_lincos_override)
     {
@@ -599,7 +598,7 @@ void trivalve_a1(scicos_block *blk, int flag)
             Vo = Xdot;
             Xo = X;
             UF_NET = DFnet;
-            MODE = DFnet/mass*386;
+            MODE = mode0;
             break;
 
         case 9:

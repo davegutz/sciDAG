@@ -51,7 +51,8 @@ global start02_t_plr    start02_t_ps    start02_t_wfd
 global start02_t_wfde   start02_t_wfld  start02_t_wfle
 global start02_t_wflr   start02_t_wfs   start02_t_wfse
 global start02_t_wfxd   start02_t_wfsx  start02_t_wfx
-global start02_t_uf_net start02_t_uf    start02_fext
+global start02_t_uf_net start02_t_uf    start02_t_fext
+global start02_t_pel    start02_t_px
 Tf = 0.001;
 
 //valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);

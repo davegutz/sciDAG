@@ -20,6 +20,7 @@
 // Jan 1, 2019 	DA Gutz		Created
 // 
 function post_xcos_simulate(%cpr, scs_m, needcompile)
+    mprintf('Started %s\n', sfilename())  
     exec('Callbacks\StopFcn_valve.sce', -1);
     mprintf('Completed %s\n', sfilename())  
 endfunction
