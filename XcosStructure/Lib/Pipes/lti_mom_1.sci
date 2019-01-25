@@ -53,7 +53,7 @@ function [sys] = lti_mom_1(l,a,c)
     ieee(1);
 
     // Derivatives.   Damping must not be passed through to dc gain
-    dw = ((3600*386)*a)/l;// Derivative, pph/sec.
+    dw = ((3600*386.4)*a)/l;// Derivative, pph/sec.
     if %nargin==3 then
         dp = (c*l)*sqrt((a*4)/%pi);  // Damping, pph/sec/pph
         b = [dw*dp,-dw*dp];

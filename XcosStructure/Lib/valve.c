@@ -294,7 +294,7 @@ void valve_a(scicos_block *blk, int flag)
             Vo = Xdot;
             Xo = X;
             UF_NET = DFnet;
-            MODE = DFnet/mass*386;
+            MODE = DFnet/mass*386.4;
             break;
 
         case 9:
@@ -397,7 +397,7 @@ void valve_a(scicos_block *blk, int flag)
 #define WFXD    (r_OUT(9,0))    // Flow from control to drain, pph
 #define Vo      (r_OUT(10,0))   // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(11,0))   // Spool displacement toward drain, in
-#define UF_NET  (r_OUT(12,0))   // Unbalanced force toward drain net friction and damping, lbf
+#define UF      (r_OUT(12,0))   // Unbalanced force toward drain, lbf
 #define MODE    (r_OUT(13,0))   // Spool displacement toward drain, in
 
 
@@ -444,8 +444,6 @@ void trivalve_a1(scicos_block *blk, int flag)
     double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
-    double EPS = 0;  // TODO:  delete this.  Holdover from non-zero-crossing implementation
-
 
     // inputs and outputs
     double ps = PS;
@@ -482,8 +480,8 @@ void trivalve_a1(scicos_block *blk, int flag)
     double dwdc = DWDC(sg);
 
     // compute info needed for all passes
-//    ad = tab1(X, AD, AD+N_AD, N_AD);
-//    as = tab1(X, AS, AS+N_AS, N_AS);
+    //    ad = tab1(X, AD, AD+N_AD, N_AD);
+    //    as = tab1(X, AS, AS+N_AS, N_AS);
     reg_win_a(X, &as, &ad);
     fjd = cp * fabs(pd - px)*ad;
     fjs = -cp * fabs(px - ps)*as;
@@ -491,7 +489,7 @@ void trivalve_a1(scicos_block *blk, int flag)
     fts = ls * 0.01365 * cd * Xdot * SSQRT(sg*(ps - px));
     df = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
              + fext + fs - X*ks + fjd + fjs + ftd + fts;
-
+    stops = 0;
     if(mode0==mode_lincos_override)
     {
         DFnet = df - Xdot*c;
@@ -526,48 +524,23 @@ void trivalve_a1(scicos_block *blk, int flag)
     switch (flag)
     {
         case 0:
-           // compute the derivative of the continuous time states
+            // compute the derivative of the continuous time states
+            // TODO:  insert xol logic here
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
                 A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
-            else if(mode0==mode_move_plus)
-            {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
-            }
-            else if(mode0==mode_move_neg)
-            {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
-            }
-            else if(mode0==mode_stop_min)
-            {
-                V = 0;
-                A = 0;
-                Xdot = 0;
-            }
-            else if(mode0==mode_stuck_plus)
-            {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
-            }
-            else if(mode0==mode_stop_max)
-            {
-                V = 0;
-                A = 0;
-                Xdot = 0;
-            }
-            else if(mode0==mode_stuck_neg)
+            else if(mode0==mode_move_plus || mode0==mode_move_neg)
             {
                 V = Xdot;
                 A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                V = 0;
+                A = 0;
+                Xdot = 0;
             }
             break;
 
@@ -597,7 +570,7 @@ void trivalve_a1(scicos_block *blk, int flag)
             WFXD = wfxd;
             Vo = Xdot;
             Xo = X;
-            UF_NET = DFnet;
+            UF = df;
             MODE = mode0;
             break;
 
@@ -611,20 +584,22 @@ void trivalve_a1(scicos_block *blk, int flag)
 
             if (get_phase_simulation() == 1)
             {
-               if(LINCOS_OVERRIDE && stops==0)
+                if(LINCOS_OVERRIDE && stops==0)
                     mode0 = mode_lincos_override;
                 else if(surf3<=0 && surf1<=0)
                     mode0 = mode_stop_min;
                 else if(surf4>=0 && surf2>=0)
                     mode0 = mode_stop_max;
-                else if(surf0>EPS)
-                    mode0 = mode_move_plus;
-                else if(surf0<-EPS)
-                    mode0 = mode_move_neg;
-                else if(surf1>0)
-                    mode0 = mode_stuck_plus;
-                else if(surf2<0)
-                    mode0 = mode_stuck_neg;
+                else if(df>0)
+                {
+                    if(surf1<=0) mode0 = mode_stuck_plus;
+                    else mode0 = mode_move_plus; 
+                }
+                else
+                { 
+                    if(surf2>=0) mode0 = mode_stuck_neg;
+                    else mode0 = mode_move_neg; 
+                 }
             }
             break;
     }
