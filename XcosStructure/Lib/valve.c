@@ -80,10 +80,10 @@
 
 // if X>=Xmax, then mode is 3
 // if X<=xmin, then mode is -3
-// if Xdot >= EPS, then mode is 2
-// if Xdot <= -EPS, then mode is -2
-// if 0<=Xdot<EPS and u<FSTF, then mode is 1
-// if -EPS<Xdot<=0 and u>-FSTF, then mode is -1
+// if Xdot >= 0, then mode is 2
+// if Xdot <= 0, then mode is -2
+// if 0<=Xdot<0 and u<FSTF, then mode is 1
+// if 0<Xdot<=0 and u>-FSTF, then mode is -1
 #define mode_stop_max 3
 #define mode_stop_min -3
 #define mode_move_plus 2
@@ -137,7 +137,7 @@
 #define WFVX    (r_OUT(5,0))    // Damping flow out, pph
 #define Vo      (r_OUT(6,0))    // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(7,0))    // Spool displacement toward drain, in
-#define UF_NET  (r_OUT(8,0))    // Unbalanced force toward drain net friction and damping, lbf
+#define UF      (r_OUT(8,0))    // Unbalanced force toward drain, lbf
 #define MODE    (r_OUT(9,0))    // Spool displacement toward drain, in
 
 
@@ -153,8 +153,6 @@ void valve_a(scicos_block *blk, int flag)
     double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
-    double EPS = 0;  // TODO:  delete this.  Holdover from non-zero-crossing implementation
-
 
     // inputs and outputs
     double ps = PS;
@@ -198,7 +196,7 @@ void valve_a(scicos_block *blk, int flag)
     df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
              - fs - X*ks - fjd - fjh - ftd - fth;
     
-
+    stops = 0;
     if(mode0==mode_lincos_override)
     {
         DFnet = df - Xdot*c;
@@ -233,48 +231,23 @@ void valve_a(scicos_block *blk, int flag)
     switch (flag)
     {
         case 0:
-           // compute the derivative of the continuous time states
+            // compute the derivative of the continuous time states
+            // TODO:  insert xol logic here
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
                 A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
-            else if(mode0==mode_move_plus)
-            {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
-            }
-            else if(mode0==mode_move_neg)
-            {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
-            }
-            else if(mode0==mode_stop_min)
-            {
-                V = 0;
-                A = 0;
-                Xdot = 0;
-            }
-            else if(mode0==mode_stuck_plus)
-            {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
-            }
-            else if(mode0==mode_stop_max)
-            {
-                V = 0;
-                A = 0;
-                Xdot = 0;
-            }
-            else if(mode0==mode_stuck_neg)
+            else if(mode0==mode_move_plus || mode0==mode_move_neg)
             {
                 V = Xdot;
                 A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
-                V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                V = 0;
+                A = 0;
+                Xdot = 0;
             }
             break;
 
@@ -293,8 +266,8 @@ void valve_a(scicos_block *blk, int flag)
             WFVX = wfvx;
             Vo = Xdot;
             Xo = X;
-            UF_NET = DFnet;
-            MODE = DFnet/mass*386.4;
+            UF = df;
+            MODE = mode0;
             break;
 
         case 9:
@@ -307,20 +280,22 @@ void valve_a(scicos_block *blk, int flag)
 
             if (get_phase_simulation() == 1)
             {
-               if(LINCOS_OVERRIDE && stops==0)
+                if(LINCOS_OVERRIDE && stops==0)
                     mode0 = mode_lincos_override;
                 else if(surf3<=0 && surf1<=0)
                     mode0 = mode_stop_min;
                 else if(surf4>=0 && surf2>=0)
                     mode0 = mode_stop_max;
-                else if(surf0>EPS)
-                    mode0 = mode_move_plus;
-                else if(surf0<-EPS)
-                    mode0 = mode_move_neg;
-                else if(surf1>0)
-                    mode0 = mode_stuck_plus;
-                else if(surf2<0)
-                    mode0 = mode_stuck_neg;
+                else if(df>0)
+                {
+                    if(surf1<=0) mode0 = mode_stuck_plus;
+                    else mode0 = mode_move_plus; 
+                }
+                else
+                { 
+                    if(surf2>=0) mode0 = mode_stuck_neg;
+                    else mode0 = mode_move_neg; 
+                 }
             }
             break;
     }
