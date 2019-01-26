@@ -17,6 +17,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+// Jan 26, 2019    DA Gutz        Created
+// 
+// Copyright (C) 2019 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 // Jan 22, 2019    DA Gutz        Created
 // 
 // Copyright (C) 2019 - Dave Gutz
@@ -69,6 +90,7 @@
 #define V       (GetDerState(blk)[0])   // Derivative of position
 #define Xdot    (GetState(blk)[1])      // Velocity state
 #define A       (GetDerState(blk)[1])   // Derivative of velocity
+
 // other constants
 #define surf0   (GetGPtrs(blk)[0])
 #define surf1   (GetGPtrs(blk)[1])
@@ -77,13 +99,7 @@
 #define surf4   (GetGPtrs(blk)[4])
 #define mode0   (GetModePtrs(blk)[0])
 
-
-// if X>=Xmax, then mode is 3
-// if X<=xmin, then mode is -3
-// if Xdot >= 0, then mode is 2
-// if Xdot <= 0, then mode is -2
-// if 0<=Xdot<0 and u<FSTF, then mode is 1
-// if 0<Xdot<=0 and u>-FSTF, then mode is -1
+// Zero-crossing modes
 #define mode_stop_max 3
 #define mode_stop_min -3
 #define mode_move_plus 2
@@ -318,6 +334,7 @@ void valve_a(scicos_block *blk, int flag)
 #undef Xo
 #undef UF_NET
 #undef MODE
+#undef UF
 
 // **********trivalve_a1
 // trivalve_a1 Object parameters.  1st index is 1-based, 2nd index is 0-based.
@@ -374,7 +391,6 @@ void valve_a(scicos_block *blk, int flag)
 #define Xo      (r_OUT(11,0))   // Spool displacement toward drain, in
 #define UF      (r_OUT(12,0))   // Unbalanced force toward drain, lbf
 #define MODE    (r_OUT(13,0))   // Spool displacement toward drain, in
-
 
 #define REG_UNDERLAP -.001    /* "  Dead zone of drain, - is underlap. */
 #define SBIAS .005              /* dead zone of supply + is underlap */
@@ -543,6 +559,238 @@ void trivalve_a1(scicos_block *blk, int flag)
             WFLR = wflr;
             WFSX = wfsx;
             WFXD = wfxd;
+            Vo = Xdot;
+            Xo = X;
+            UF = df;
+            MODE = mode0;
+            break;
+
+        case 9:
+            // compute zero crossing surfaces and set modes
+            surf0 = Xdot;
+			surf1 = df-fstf;
+			surf2 = df+fstf;
+            surf3 = X-xmin;
+            surf4 = X-xmax;
+
+            if (get_phase_simulation() == 1)
+            {
+                if(LINCOS_OVERRIDE && stops==0)
+                    mode0 = mode_lincos_override;
+                else if(surf3<=0 && surf1<=0)
+                    mode0 = mode_stop_min;
+                else if(surf4>=0 && surf2>=0)
+                    mode0 = mode_stop_max;
+                else if(df>0)
+                {
+                    if(surf1<=0) mode0 = mode_stuck_plus;
+                    else mode0 = mode_move_plus; 
+                }
+                else
+                { 
+                    if(surf2>=0) mode0 = mode_stuck_neg;
+                    else mode0 = mode_move_neg; 
+                 }
+            }
+            break;
+    }
+}
+#undef UF
+#undef AX1
+#undef AX2
+#undef AX3
+#undef C
+#undef CD
+#undef CP
+#undef FDYF
+#undef FSTF
+#undef M
+#undef XMAX
+#undef XMIN
+#undef PX
+#undef PR
+#undef PD
+#undef XOL
+#undef WFX
+#undef Vo
+#undef Xo
+#undef UF
+#undef MODE
+
+// *******hlfvalve_a
+// hlfvalve_a Object parameters.  1st index is 1-based, 2nd index is 0-based.
+#define NOPAR   (blk->nopar)
+#define ARC     ((GetRealOparPtrs(blk,1))[0]);  // Leakage area r to c, sqin
+#define ARX     ((GetRealOparPtrs(blk,2))[0]);  // Leakage area r to x, sqin
+#define ASR     ((GetRealOparPtrs(blk,3))[0]);  // Leakage area s to r, sqin
+#define AWD     ((GetRealOparPtrs(blk,4))[0]);  // Leakage area w to d, sqin
+#define AWX     ((GetRealOparPtrs(blk,5))[0]);  // Leakage area w to x, sqin
+#define AX1     ((GetRealOparPtrs(blk,6))[0]);  // Supply cross section, sqin
+#define AX2     ((GetRealOparPtrs(blk,7))[0]);  // Damping cross section, sqin
+#define AX3     ((GetRealOparPtrs(blk,8))[0]);  // Cross section at a, sqin
+#define AXA     ((GetRealOparPtrs(blk,9))[0]);  // Leakage area x to a, sqin
+#define C       ((GetRealOparPtrs(blk,10))[0]); // Dynamic damping, lbf/(in/s)
+#define CD      ((GetRealOparPtrs(blk,11))[0]); // Window discharge coefficient
+#define CP      ((GetRealOparPtrs(blk,12))[0]); // Pressure force coeff, usually .69
+#define FDYF    ((GetRealOparPtrs(blk,13))[0]); // Dynamic friction, lbf
+#define FSTF    ((GetRealOparPtrs(blk,14))[0]); // Spool static friction, lbf
+#define M       ((GetRealOparPtrs(blk,15))[0]); // Total mass, spool plus load, lbm.
+#define XMAX    ((GetRealOparPtrs(blk,16))[0]); // Max stroke, in
+#define XMIN    ((GetRealOparPtrs(blk,17))[0]); // Min stroke, in
+#define N_A     (blk->oparsz[17])
+#define AT      (GetRealOparPtrs(blk,18))  // Table
+
+// inputs
+#define PS      (r_IN(0,0)) // Supply pressure, psia
+#define PX      (r_IN(1,0)) // Damping pressure, psia
+#define PR      (r_IN(2,0)) // Regulated pressure, psia
+#define PC      (r_IN(3,0)) // End pressure, psia
+#define PA      (r_IN(4,0)) // End pressure, psia
+#define PW      (r_IN(5,0)) // Wash pressure, psia
+#define PD      (r_IN(6,0)) // Discharge pressure, psia
+#define XOL     (r_IN(7,0)) // Spool displacement toward drain, in (open loop)
+
+// outputs
+#define WFS     (r_OUT(0,0))    // Supply flow in, pph
+#define WFD     (r_OUT(1,0))    // Discharge flow out, pph
+#define WFSR    (r_OUT(2,0))    // Leakage s to r, pph
+#define WFWD    (r_OUT(3,0))    // Leakage w to d, pph
+#define WFW     (r_OUT(4,0))    // Into w, pph
+#define WFWX    (r_OUT(5,0))    // Leakage w to x, pph
+#define WFXA    (r_OUT(6,0))    // Leakage x to a, pph
+#define WFRC    (r_OUT(7,0))    // Leakage r to c, pph
+#define WFX     (r_OUT(8,0))    // Into x, pph
+#define WFA     (r_OUT(9,0))    // Out a, pph
+#define WFC     (r_OUT(10,0))   // Out c, pph
+#define WFR     (r_OUT(11,0))   // Out r, pph
+#define Vo      (r_OUT(12,0))   // Spool velocity toward drain, in/sec
+#define Xo      (r_OUT(13,0))   // Spool displacement toward drain, in
+#define UF      (r_OUT(14,0))   // Unbalanced force toward drain, lbf
+#define MODE    (r_OUT(15,0))   // Spool displacement toward drain, in
+void hlfvalve_a(scicos_block *blk, int flag)
+{
+    double DFnet = 0;
+    int stops = 0;
+    double at = 0;
+    double mass = M;
+    double c = C;
+    double fstf = FSTF;
+    double fdyf = FDYF;
+    double xmin = XMIN;
+    double xmax = XMAX;
+    double fj = 0;
+
+    // inputs and outputs
+    double ps = PS;
+    double px = PX;
+    double pr = PR;
+    double pc = PC;
+    double pa = PA;
+    double pw = PW;
+    double pd = PD;
+    double xol = XOL;
+    double wfs, wfd, wfsr, wfwd, wfw, wfwx, wfxa, wfrc, wfx, wfa, wfc, wfr;
+
+    double cp = CP;
+    double cd = CD;
+    double sg = SG;
+    double df = 0;
+    double arc = ARC;
+    double arx = ARX;
+    double asr = ASR;
+    double awd = AWD;
+    double awx = AWX;
+    double ax1 = AX1;
+    double ax2 = AX2;
+    double ax3 = AX3;
+    double axa = AXA;
+    double dwdc = DWDC(sg);
+
+    // compute info needed for all passes
+    at = tab1(X, AT, AT+N_A, N_A);
+    df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
+             + fj;
+    stops = 0;
+    if(mode0==mode_lincos_override)
+    {
+        DFnet = df - Xdot*c;
+    }
+    else if(mode0==mode_move_plus)
+    {
+        DFnet = df - fdyf - Xdot*c;
+    }
+    else if(mode0==mode_move_neg)
+    {
+        DFnet = df + fdyf - Xdot*c;
+    }
+    else if(mode0==mode_stop_min)
+    {
+        DFnet = max(df - fstf, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_plus)
+    {
+        DFnet = max(df - fstf, 0);
+    }
+    else if(mode0==mode_stop_max)
+    {
+        DFnet = min(df + fstf, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_neg)
+    {
+        DFnet = min(df + fstf, 0);
+    }
+
+    switch (flag)
+    {
+        case 0:
+            // compute the derivative of the continuous time states
+            // TODO:  insert xol logic here
+            if(mode0==mode_lincos_override)
+            {
+                V = Xdot;
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+            }
+            else if(mode0==mode_move_plus || mode0==mode_move_neg)
+            {
+                V = Xdot;
+                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+            }
+            else
+            {
+                V = 0;
+                A = 0;
+                Xdot = 0;
+            }
+            break;
+
+        case 1:
+            // compute the outputs of the block
+            wfs = OR_APTOW(at, ps, pd, cd, sg);
+            wfsr = OR_APTOW(asr, ps, pr, cd, sg);
+            wfwd = OR_APTOW(awd, pw, pd, cd, sg);
+            wfwx = OR_APTOW(awx, pw, px, cd, sg);
+            wfxa = OR_APTOW(axa, px, pa, cd, sg);
+            wfrc = OR_APTOW(arc, pr, pc, cd, sg);
+            wfd = wfs - wfsr + wfwd;
+            wfa = -wfxa + dwdc*Xdot*ax3;
+            wfc = wfrc + dwdc*Xdot*ax2;
+            wfx = wfxa + dwdc*Xdot*(ax1-ax3) - wfwx;
+            wfw = wfwx + wfwd;
+            wfr = wfsr - wfrc + dwdc*Xdot*(ax1-ax2);
+            WFS = wfs;
+            WFD = wfd;
+            WFSR = wfsr;
+            WFWD = wfwd;
+            WFW = wfw;
+            WFWX = wfwx;
+            WFXA = wfxa;
+            WFRC = wfrc;
+            WFX = wfx;
+            WFA = wfa;
+            WFC = wfc;
+            WFR = wfr;
             Vo = Xdot;
             Xo = X;
             UF = df;

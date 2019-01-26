@@ -148,7 +148,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
     end
 endfunction
 
-//// Default valve_a prototype **************************************
+//// Default three-way valve_a prototype **************************************
 trivlv_a1_default = tlist(["trivlv_a1", "adl", "ahd", "ahs", "ald", "ale",..
         "alr", "ar", "asl", "c", "cd", "cp", "fdyf", "fs", "fstf", "ks",..
         "ld", "ls", "m", "xmax", "xmin",..
@@ -248,6 +248,108 @@ function [x,y,typ] = TRIVALVE_A1(job, arg1, arg2)
         exprs = ["lsx_tva1(GEO.reg)"; string(SG); string(LINCOS_OVERRIDE); "INI.reg.x"]
         gr_i = [];
         x = standard_define([16 22],model,exprs,gr_i)  // size icon [h v], etc..
+    end
+endfunction
+
+//// Default half-area valve_a prototype **************************************
+hlfvlv_a_default = tlist(["hlfvlv_a", "arc", "arx", "asr", "awd", "awx",..
+        "ax1", "ax2", "ax3", "axa", "c", "cd", "cp", "fdyf", "fstf",..
+        "m", "xmax", "xmin",..
+         "at"],..
+         0, 0, 0, 0, 0,..
+         0, 0, 0, 0, 0, 0.61, 0, 0, 0,..
+         0, 1, -1,..
+         ctab1_default);
+
+function [vs] = %hlfvlv_a_string(v)
+    // Cast half-area valve type to string
+    vs = msprintf('list(');
+
+    // Scalars
+    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
+             v.arc, v.arx, v.asr, v.awd, v.awx,..
+             v.ax1, v.ax2, v.ax3, v.axa, v.c, v.cd, v.cp, v.fdyf, v.fstf,..
+             v.m, v.xmax, v.xmin);
+
+    // Tables
+    vs = vs + string(v.at);
+    
+    // end
+    vs = vs + msprintf(')');
+endfunction
+
+// Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
+function lis = lsx_hva1(v)
+    lis = list(v.arc, v.arx, v.asr, v.awd, v.awx,..
+             v.ax1, v.ax2, v.ax3, v.axa, v.c, v.cd, v.cp, v.fdyf, v.fstf,..
+             v.m, v.xmax, v.xmin,..
+             vec_ctab1(v.at));
+endfunction
+
+function str = %hlfvlv_a_p(v)
+    // Display half-area valve type
+    str = string(v);
+    disp(str)
+endfunction
+
+// Callback ******************************************** 
+function [x,y,typ] = HLFVALVE_A(job, arg1, arg2)
+    x = [];
+    y = [];
+    typ = [];
+    //disp(job)
+    select job
+    case 'plot' then
+        standard_draw(arg1)
+    case 'getinputs' then
+        [x,y,typ] = standard_inputs(arg1)
+        //disp(sci2exp(x))
+    case 'getoutputs' then
+        [x,y,typ] = standard_outputs(arg1)
+        //disp(sci2exp(x))
+    case 'getorigin' then
+        [x,y] = standard_origin(arg1)
+        //disp(sci2exp(x))
+    case 'set' then
+        //message(sci2exp(arg1))
+        x = arg1
+        graphics = arg1.graphics
+        exprs = graphics.exprs
+        model = arg1.model
+        while %t do
+            [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype hlfvalve parameters',..
+            ['lsx_hva1(hlfvlv_a)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            list('lis',-1,'vec',1,'vec',1,'vec',1),..
+            exprs)
+            if ~ok then break,end 
+            model.state = [Xinit; 0]
+            model.rpar = [SG;LINCOS_OVERRIDE]
+            model.opar = GEO
+            graphics.exprs = exprs
+            x.graphics = graphics
+            x.model = model
+            break
+        end
+    case 'define' then
+//        message('in define')
+        model.opar=list(hlfvlv_a_default);
+        SG = 0.8
+        LINCOS_OVERRIDE = 0
+        Xinit = 0
+        model = scicos_model()
+        model.sim = list('hlfvalve_a', 4)
+        model.in  = [1;1;1;1;1;1;1;1]
+        model.out = [1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1]
+        model.state = [Xinit; 0]
+        model.dstate = [0]
+        model.rpar = [SG;LINCOS_OVERRIDE]
+        model.blocktype = 'c'
+        model.nmode = 1
+        model.nzcross = 5
+        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
+        exprs = ["lsx_hva1(GEO.mv)"; string(SG); string(LINCOS_OVERRIDE); "INI.mv.x"]
+        gr_i = [];
+        x = standard_define([16 26],model,exprs,gr_i)  // size icon [h v], etc..
     end
 endfunction
 

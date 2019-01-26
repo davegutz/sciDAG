@@ -36,6 +36,15 @@ global start02_t_wflr   start02_t_wfs   start02_t_wfse
 global start02_t_wfxd   start02_t_wfsx  start02_t_wfx
 global start02_t_uf_net start02_t_uf    start02_t_fext
 global start02_t_pel    start02_t_px
+global start02_h_x      start02_h_v     start02_h_ps
+global start02_h_x      start02_h_v     start02_h_ps
+global start02_h_px     start02_h_pr    start02_h_pc
+global start02_h_pa     start02_h_pw    start02_h_pd
+global start02_h_wfs    start02_h_wfd   start02_h_wfsr
+global start02_h_wfwd   start02_h_wfx   start02_h_wfwx
+global start02_h_wfxa   start02_h_wfrc  start02_h_wfx
+global start02_h_wfa    start02_h_wfc   start02_h_wfr
+global start02_h_uf_net start02_h_uf    start02_h_wfw
 mprintf('In %s\n', sfilename())  
 
 
@@ -79,11 +88,35 @@ start02_t_uf = struct("time", M(:,1), "values", M(:,36));
 start02_t_fext = struct("time", M(:,1), "values", M(:,38));
 start02_t_pel = struct("time", M(:,1), "values", M(:,39));
 start02_t_px = struct("time", M(:,1), "values", M(:,40));
+start02_h_x = struct("time", M(:,1), "values", M(:,41));
+start02_h_v = struct("time", M(:,1), "values", M(:,42));
+start02_h_ps = struct("time", M(:,1), "values", M(:,43));
+start02_h_px = struct("time", M(:,1), "values", M(:,44));
+start02_h_pr = struct("time", M(:,1), "values", M(:,45));
+start02_h_pc = struct("time", M(:,1), "values", M(:,46));
+start02_h_pa = struct("time", M(:,1), "values", M(:,47));
+start02_h_pw = struct("time", M(:,1), "values", M(:,48));
+start02_h_pd = struct("time", M(:,1), "values", M(:,49));
+start02_h_wfs = struct("time", M(:,1), "values", M(:,50));
+start02_h_wfd = struct("time", M(:,1), "values", M(:,51));
+start02_h_wfsr = struct("time", M(:,1), "values", M(:,52));
+start02_h_wfwd = struct("time", M(:,1), "values", M(:,53));
+start02_h_wfw = struct("time", M(:,1), "values", M(:,54));
+start02_h_wfwx = struct("time", M(:,1), "values", M(:,55));
+start02_h_wfxa = struct("time", M(:,1), "values", M(:,56));
+start02_h_wfrc = struct("time", M(:,1), "values", M(:,57));
+start02_h_wfx = struct("time", M(:,1), "values", M(:,58));
+start02_h_wfa = struct("time", M(:,1), "values", M(:,59));
+start02_h_wfc = struct("time", M(:,1), "values", M(:,60));
+start02_h_wfr = struct("time", M(:,1), "values", M(:,61));
+start02_h_uf_net = struct("time", M(:,1), "values", M(:,62));
+start02_h_uf = struct("time", M(:,1), "values", M(:,63));
 
 clear M comments
 
 INI.vsv.x = start02_x.values(1,:);
 INI.reg.x = start02_t_x.values(1,:);
+INI.mv.x = start02_h_x.values(1,:);
 
 // Define valve vsv geometry
 d = 0.2657;
@@ -141,11 +174,21 @@ GEO.reg.ls = 0;
 GEO.reg.m = 0.055;
 GEO.reg.xmax = 0.125;
 GEO.reg.xmin = -0.011;
-
 exec('./Callbacks/regwin_a.sci', -1);
 [xh, as, ad] = regwin_a(40);
 GEO.reg.as.tb = [xh as];
 GEO.reg.ad.tb = [xh ad];
 clear xh as ad
+
+// Define hlfvalve mv geometry
+GEO.mv.ax1 = 1.227;
+GEO.mv.cd = 0.69;
+GEO.mv.m = 0.497;
+GEO.mv.xmax = 0.536;
+GEO.mv.xmin = 0;
+exec('./Callbacks/mvwin_a.sci', -1);
+[xt, at] = mvwin_a(40);
+GEO.mv.at.tb = [xt at];
+clear xt at
 
 mprintf('Completed %s\n', sfilename())  

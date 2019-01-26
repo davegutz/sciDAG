@@ -53,22 +53,33 @@ global start02_t_wflr   start02_t_wfs   start02_t_wfse
 global start02_t_wfxd   start02_t_wfsx  start02_t_wfx
 global start02_t_uf_net start02_t_uf    start02_t_fext
 global start02_t_pel    start02_t_px
+global start02_h_x      start02_h_v     start02_h_ps
+global start02_h_x      start02_h_v     start02_h_ps
+global start02_h_px     start02_h_pr    start02_h_pc
+global start02_h_pa     start02_h_pw    start02_h_pd
+global start02_h_wfs    start02_h_wfd   start02_h_wfsr
+global start02_h_wfwd   start02_h_wfx   start02_h_wfwx
+global start02_h_wfxa   start02_h_wfrc  start02_h_wfx
+global start02_h_wfa    start02_h_wfc   start02_h_wfr
+global start02_h_uf_net start02_h_uf    start02_h_wfw
+
 Tf = 0.001;
 
 //valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
 //GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
-GEO = tlist(["sys_geo", "vsv", "reg"], vlv_a_default, trivlv_a1_default);
-ady = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 20;]);
-ahy = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 2;]);
-valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "ah"],..
-    7000, 0, 0, 0, -%inf, %inf, ady, ahy);
-valve_scratchx = list(4000, 0, 0, 0, -%inf, %inf, [-1, 0; 0, 0; 2, 20;], [-1, 0; 0, 0; 2, 20;]);
-GEOx = tlist(["sys_geox", "valve_scratchx"], valve_scratchx);
+GEO = tlist(["sys_geo", "vsv", "reg", "mv"], vlv_a_default, trivlv_a1_default, hlfvlv_a_default);
+//ady = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 20;]);
+//ahy = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 2;]);
+//valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "ah"],..
+//    7000, 0, 0, 0, -%inf, %inf, ady, ahy);
+//valve_scratchx = list(4000, 0, 0, 0, -%inf, %inf, [-1, 0; 0, 0; 2, 20;], [-1, 0; 0, 0; 2, 20;]);
+//GEOx = tlist(["sys_geox", "valve_scratchx"], valve_scratchx);
 function %sys_geo_p(g)
     // Display geo overload
     mprintf('sys_geo:  \n');
     disp(g.vsv)
     disp(g.reg)
+    disp(g.mv)
 endfunction
 function %valve_a_p(v)
     // Display valve overload
@@ -103,6 +114,7 @@ if bOK then
 end
 //
 link(SCI + '\bin\scicos' + getdynlibext());
+link(lib_path + 'libScratch' + getdynlibext(), ['hlfvalve_a'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['trivalve_a1'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['valve_a'], 'c');
 link(lib_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
