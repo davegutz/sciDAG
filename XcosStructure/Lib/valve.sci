@@ -149,7 +149,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
 endfunction
 
 //// Default three-way valve_a prototype **************************************
-trivlv_a1_default = tlist(["trivlv_a1", "adl", "ahd", "ahs", "ald", "ale",..
+tv_a1_default = tlist(["tv_a1", "adl", "ahd", "ahs", "ald", "ale",..
         "alr", "ar", "asl", "c", "cd", "cp", "fdyf", "fs", "fstf", "ks",..
         "ld", "ls", "m", "xmax", "xmin",..
          "ad", "as"],..
@@ -158,7 +158,7 @@ trivlv_a1_default = tlist(["trivlv_a1", "adl", "ahd", "ahs", "ald", "ale",..
          0, 0, 5, 1, -1,..
          ctab1_default, ctab1_default);
 
-function [vs] = %trivlv_a1_string(v)
+function [vs] = %tv_a1_string(v)
     // Cast trivalve type to string
     vs = msprintf('list(');
 
@@ -184,7 +184,7 @@ function lis = lsx_tva1(v)
              vec_ctab1(v.ad),  vec_ctab1(v.as));
 endfunction
 
-function str = %trivlv_a1_p(v)
+function str = %tv_a1_p(v)
     // Display valve type
     str = string(v);
     disp(str)
@@ -216,7 +216,7 @@ function [x,y,typ] = TRIVALVE_A1(job, arg1, arg2)
         model = arg1.model
         while %t do
             [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype trivalve parameters',..
-            ['lsx_tva1(trivlv_a1)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            ['lsx_tva1(tv_a1)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
             list('lis',-1,'vec',1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
@@ -230,7 +230,7 @@ function [x,y,typ] = TRIVALVE_A1(job, arg1, arg2)
         end
     case 'define' then
 //        message('in define')
-        model.opar=list(trivlv_a1_default);
+        model.opar=list(tv_a1_default);
         SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0

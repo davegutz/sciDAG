@@ -30,8 +30,6 @@ this_xcos_file = root + '.xcos';
 this_zcos_file = root + '.zcos';
 this_path = get_absolute_file_path(this);
 chdir(this_path);
-exec('../Lib/init_libScratch.sce', -1);
-chdir(this_path);
 n_fig = -1;
 xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
@@ -65,31 +63,14 @@ global start02_h_uf_net start02_h_uf    start02_h_wfw
 
 Tf = 0.001;
 
-//valve_scratch = tlist(["valve_a", "m", "c", "fstf", "fdyf", "xmin", "xmax"], 0,0,0,0,0,0);
-//GEO = tlist(["sys_geo", "valve_scratch"], valve_scratch);
-GEO = tlist(["sys_geo", "vsv", "reg", "mv"], vlv_a_default, trivlv_a1_default, hlfvlv_a_default);
-//ady = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 20;]);
-//ahy = tlist(["tbl1_b", "tb"], [-1, 0; 0, 0; 2, 2;]);
-//valve_scratchy = tlist(["vlv_a", "m", "c", "fstf", "fdyf", "xmin", "xmax", "ad", "ah"],..
-//    7000, 0, 0, 0, -%inf, %inf, ady, ahy);
-//valve_scratchx = list(4000, 0, 0, 0, -%inf, %inf, [-1, 0; 0, 0; 2, 20;], [-1, 0; 0, 0; 2, 20;]);
-//GEOx = tlist(["sys_geox", "valve_scratchx"], valve_scratchx);
+GEO = tlist(["sys_geo", "vsv", "reg", "mv"], vlv_a_default, tv_a1_default, hlfvlv_a_default);
+
 function %sys_geo_p(g)
     // Display geo overload
     mprintf('sys_geo:  \n');
     disp(g.vsv)
     disp(g.reg)
     disp(g.mv)
-endfunction
-function %valve_a_p(v)
-    // Display valve overload
-    mprintf('valve_a:  m=%f, c=%f, fstf=%f, fdyf=%f, xmin=%f, xmax=%f\n',..
-         v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax);
-endfunction
-function %trivalve_a1_p(v)
-    // Display valve overload
-    mprintf('trivalve_a1:  m=%f, c=%f, fstf=%f, fdyf=%f, xmin=%f, xmax=%f\n',..
-         v.m, v.c, v.fstf, v.fdyf, v.xmin, v.xmax);
 endfunction
 
 loaded_scratch = %f;
@@ -104,26 +85,11 @@ if ~win64() then
   warning(_("This module requires a Windows x64 platform."));
   return
 end
-//
-lib_path = get_absolute_file_path(this)+'..\Lib\';
-//
-// ulink previous function with same name
-[bOK, ilib] = c_link('lim_int');
-if bOK then
-  ulink(ilib);
-end
-//
-link(SCI + '\bin\scicos' + getdynlibext());
-link(lib_path + 'libScratch' + getdynlibext(), ['hlfvalve_a'], 'c');
-link(lib_path + 'libScratch' + getdynlibext(), ['trivalve_a1'], 'c');
-link(lib_path + 'libScratch' + getdynlibext(), ['valve_a'], 'c');
-link(lib_path + 'libScratch' + getdynlibext(), ['friction'], 'c');
-link(lib_path + 'libScratch' + getdynlibext(), ['lim_int'], 'c');
-// remove temp. variables on stack
-//clear lib_path;
-clear bOK;
-clear ilib;
-// ----------------------------------------------------------------------------
+
+// Load library
+exec('../Lib/init_libScratch.sce', -1);
+chdir(this_path);
+
 mprintf('Executed ' + this + ' up to importXcosDiagram*********\n');
 
 try
@@ -133,6 +99,7 @@ catch
     importXcosDiagram("./"+this_zcos_file);
     xcos('./'+this_zcos_file);
 end
+
 //scicos_simulate(scs_m);
 //scs_m.props.context
 

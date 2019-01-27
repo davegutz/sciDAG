@@ -58,4 +58,8 @@ pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.s
 
 // Finalize the palette
 xcosPalAdd(pal);
+
+// Load the library
+exec(lib_path+'LibScratchLoader.sce', -1);
+
 mprintf('%s done\n', sfilename())
