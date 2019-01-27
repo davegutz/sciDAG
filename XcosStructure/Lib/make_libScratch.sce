@@ -27,7 +27,7 @@ chdir(lib_path);
 libs = SCI + '\bin\scicos'
 incs1 = SCI + '\modules\scicos_blocks\includes'
 entries = ['lim_int',   'friction', 'valve_a', 'trivalve_a1',  'hlfvalve_a',   'table1_a',..
-           'binsearch', 'tab1',     'tab2',         'hole',..
+           'head_b', 'binsearch', 'tab1',     'tab2',         'hole',..
            'cor_aptow', 'cor_awpstopd', 'cor_awpdtops', 'ctab1'];
-sources = ['lim_int_comp.c', 'friction_comp.c', 'valve.c', 'table.c', 'orifice.c', 'hyd_mod.c'];
+sources = ['lim_int_comp.c', 'friction_comp.c', 'valve.c', 'table.c', 'orifice.c', 'hyd_mod.c', 'device.c'];
 ilib_for_link(entries, sources, libs, 'c', '', 'LibScratchLoader.sce', 'Scratch', '','-I'+incs1, '', '');

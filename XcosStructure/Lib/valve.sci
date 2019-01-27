@@ -142,7 +142,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx(GEO.vsv)"; string(SG); string(LINCOS_OVERRIDE); "INI.vsv.x"]
+        exprs = ["lsx(GEO.vsv)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.vsv.x"]
         gr_i = [];
         x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
     end
@@ -245,7 +245,7 @@ function [x,y,typ] = TRIVALVE_A1(job, arg1, arg2)
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx_tva1(GEO.reg)"; string(SG); string(LINCOS_OVERRIDE); "INI.reg.x"]
+        exprs = ["lsx_tva1(GEO.reg)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.reg.x"]
         gr_i = [];
         x = standard_define([16 22],model,exprs,gr_i)  // size icon [h v], etc..
     end
@@ -347,7 +347,7 @@ function [x,y,typ] = HLFVALVE_A(job, arg1, arg2)
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx_hva1(GEO.mv)"; string(SG); string(LINCOS_OVERRIDE); "INI.mv.x"]
+        exprs = ["lsx_hva1(GEO.mv)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.mv.x"]
         gr_i = [];
         x = standard_define([16 26],model,exprs,gr_i)  // size icon [h v], etc..
     end

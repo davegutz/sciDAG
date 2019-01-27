@@ -22,7 +22,7 @@
 
 global LINCOS_OVERRIDE
 global loaded_scratch
-global GEO INI
+global GEO INI FP
 global start02_x        start02_v
 global start02_ph       start02_prs     start02_pxr
 global start02_ps       start02_wfs     start02_wfh
@@ -117,6 +117,9 @@ clear M comments
 INI.vsv.x = start02_x.values(1,:);
 INI.reg.x = start02_t_x.values(1,:);
 INI.mv.x = start02_h_x.values(1,:);
+INI.hs.x = start02_b_x.values(1,:);
+FP.sg = start02_sg.values(1,:);
+FP.beta = start02_beta.values(1,:);
 
 // Define valve vsv geometry
 d = 0.2657;

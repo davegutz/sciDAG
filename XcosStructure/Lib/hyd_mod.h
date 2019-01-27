@@ -48,4 +48,10 @@
 #define DWDC(SG)    (129.93948 * (SG))
 #define PI          (3.1415926535897932384626433832795)
 double hole(double x, double d);
+
+// Sharp edge to reattached flow characteristic of flapper nozzle
+static double f_lqx[]   = {1.2, 2.5, 4.5, 7.5,\
+                            .61, .65, .88, .95};
+static int n_lqxcf = 4; // Length of table above
+
 #endif

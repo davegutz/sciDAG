@@ -37,7 +37,7 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch
-global GEO INI
+global GEO INI FP
 global start02_x        start02_v
 global start02_ph       start02_prs     start02_pxr
 global start02_ps       start02_wfs     start02_wfh
