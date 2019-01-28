@@ -60,10 +60,14 @@ global start02_h_wfwd   start02_h_wfx   start02_h_wfwx
 global start02_h_wfxa   start02_h_wfrc  start02_h_wfx
 global start02_h_wfa    start02_h_wfc   start02_h_wfr
 global start02_h_uf_net start02_h_uf    start02_h_wfw
+global start02_b_x      start02_b_v     start02_b_pf 
+global start02_b_ph     start02_b_pl    start02_b_plx
+global start02_b_wff    start02_b_wfh   start02_b_wfl
+global start02_b_uf_net start02_b_uf    start02_b_f_f
 
 Tf = 0.001;
 
-GEO = tlist(["sys_geo", "vsv", "reg", "mv"], vlv_a_default, tv_a1_default, hlfvlv_a_default);
+GEO = tlist(["sys_geo", "vsv", "reg", "mv", "hs"], vlv_a_default, tv_a1_default, hlfvlv_a_default, head_b_default);
 
 function %sys_geo_p(g)
     // Display geo overload
@@ -71,6 +75,7 @@ function %sys_geo_p(g)
     disp(g.vsv)
     disp(g.reg)
     disp(g.mv)
+    disp(g.hs)
 endfunction
 
 loaded_scratch = %f;

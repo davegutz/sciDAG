@@ -111,25 +111,23 @@
 // **********head_b
 // valve_a Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define AE      ((GetRealOparPtrs(blk,1))[0]);  // Bellows effective area, sqin
-#define AO      ((GetRealOparPtrs(blk,2))[0]);  // Bellows orifice area, sqin
-#define C       ((GetRealOparPtrs(blk,3))[0]);  // Bellows damping, lbf/in/s
-#define CDO     ((GetRealOparPtrs(blk,4))[0]);  // Bellows orifice discharge coefficient
-#define FB      ((GetRealOparPtrs(blk,5))[0]);  // Bellows preload at xmin, lbf
-#define FDYF    ((GetRealOparPtrs(blk,6))[0]);  // Dynamic friction, lbf
-#define FS      ((GetRealOparPtrs(blk,7))[0]);  // Spring preload at xmin, lbf
-#define FSTF    ((GetRealOparPtrs(blk,8))[0]);  // Static friction, lbf
-#define KB      ((GetRealOparPtrs(blk,9))[0]);  // Spring rate, lbf/in
-#define KS      ((GetRealOparPtrs(blk,10))[0]); // Spring rate, lbf/in
-#define M       ((GetRealOparPtrs(blk,11))[0]); // Total mass, lbm
-#define XMAX    ((GetRealOparPtrs(blk,12))[0]); // Max head sensor position from flapper, in
-#define XMIN    ((GetRealOparPtrs(blk,13))[0]); // Min head sensor position from flapper, in
-#define F_AN    ((GetRealOparPtrs(blk,14))[0]); // Nozzle flow area, sqin
-#define F_CF    ((GetRealOparPtrs(blk,15))[0]); // Flapper discharge coeff
-#define F_CN    ((GetRealOparPtrs(blk,16))[0]); // Nozzle discharge coeff
-#define F_DN    ((GetRealOparPtrs(blk,17))[0]); // Nozzle diameter, in
-#define F_F     ((GetRealOparPtrs(blk,18))[0]); // Flapper force, lbf
-#define F_LN    ((GetRealOparPtrs(blk,19))[0]); // Nozzle flat width, in
+#define F_AN    ((GetRealOparPtrs(blk,1))[0]);  // Nozzle flow area, sqin
+#define F_CN    ((GetRealOparPtrs(blk,2))[0]);  // Nozzle discharge coeff
+#define F_DN    ((GetRealOparPtrs(blk,3))[0]);  // Nozzle diameter, in
+#define F_LN    ((GetRealOparPtrs(blk,4))[0]);  // Nozzle flat width, in
+#define AE      ((GetRealOparPtrs(blk,5))[0]);  // Bellows effective area, sqin
+#define AO      ((GetRealOparPtrs(blk,6))[0]);  // Bellows orifice area, sqin
+#define C       ((GetRealOparPtrs(blk,7))[0]);  // Bellows damping, lbf/in/s
+#define CDO     ((GetRealOparPtrs(blk,8))[0]);  // Bellows orifice discharge coefficient
+#define FB      ((GetRealOparPtrs(blk,9))[0]); // Bellows preload at xmin, lbf
+#define FDYF    ((GetRealOparPtrs(blk,10))[0]); // Dynamic friction, lbf
+#define FS      ((GetRealOparPtrs(blk,11))[0]); // Spring preload at xmin, lbf
+#define FSTF    ((GetRealOparPtrs(blk,12))[0]); // Static friction, lbf
+#define KB      ((GetRealOparPtrs(blk,13))[0]); // Spring rate, lbf/in
+#define KS      ((GetRealOparPtrs(blk,14))[0]); // Spring rate, lbf/in
+#define M       ((GetRealOparPtrs(blk,15))[0]); // Total mass, lbm
+#define XMAX    ((GetRealOparPtrs(blk,16))[0]); // Max head sensor position from flapper, in
+#define XMIN    ((GetRealOparPtrs(blk,17))[0]); // Min head sensor position from flapper, in
 
 // inputs
 #define PF  (r_IN(0,0)) // Flapper supply, psia
@@ -167,11 +165,11 @@ void head_b(scicos_block *blk, int flag)
     double xmin = XMIN;
     double xmax = XMAX;
     double f_an = F_AN;
-    double f_cf = F_CF;
     double f_cn = F_CN;
     double f_dn = F_DN;
-    double f_f = F_F;
 
+    double f_f = 0;
+    double f_cf = 0;
     double df = 0;
     double sg = SG;
     double dwdc = DWDC(sg);
@@ -187,6 +185,11 @@ void head_b(scicos_block *blk, int flag)
 
 
     // compute info needed for all passes
+    wfl = Xdot*dwdc*ae;
+    plx = OR_AWPDTOPS(ao, wfl, pl, cdo, sg);
+    f_cf = tab1(max(X, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
+    f_f = (pf - ph) * f_an * \
+            (1. + 16. * SQR(f_cf * X / f_dn));
     df  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X;
     
     stops = 0;
@@ -246,11 +249,9 @@ void head_b(scicos_block *blk, int flag)
 
         case 1:
             // compute the outputs of the block
-            f_cf = tab1(max(X, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
             wff = SGN(pf - ph) * 19020. * \
                 sqrt(fabs(pf - ph)*sg / \
                     (1./SQR(f_cn * f_an) + 1./SQR(f_cf * PI * f_dn * X)));
-            wfl = Xdot*dwdc*ae;
             wfh = wfl - wff;
             WFF = wff;
             WFL = wfl;

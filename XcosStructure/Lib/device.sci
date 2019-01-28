@@ -21,17 +21,20 @@
 
 
 //// Default valve_a prototype **************************************
-head_b_default = tlist(["hd_b", "ae", "ao", "c", "cdo", "fb", "fdyf", "fs", "fstf",..
+head_b_default = tlist(["hdb", "f_an", "f_cn", "f_dn", "f_ln",..
+        "ae", "ao", "c", "cdo", "fb", "fdyf", "fs", "fstf",..
         "kb", "ks", "m", "xmax", "xmin"],..
+         0, 0, 0, 0, 0,..
          0, 0, 0, 0, 0, 0, 0, 0,..
          0, 0, 0, 1, -1);
 
-function [hs] = %head_b_string(h)
+function [hs] = %hdb_string(h)
     // Cast head type to string
     hs = msprintf('list(');
 
     // Scalars
-    hs = hs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
+    hs = hs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
+             h.f_an, h.f_cn, h.f_dn, h.f_ln,..
              h.ae, h.ao, h.c, h.cdo, h.fb, h.fdyf, h.fs, h.fstf,..
              h.kb, h.ks, h.m, h.xmax, h.xmin);
 
@@ -42,12 +45,13 @@ function [hs] = %head_b_string(h)
 endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
-function lis = lsx(h)
-    lis = list(h.ae, h.ao, h.c, h.cdo, h.fb, h.fdyf, h.fs, h.fstf,..
+function lis = lsx_hdb(h)
+    lis = list(h.f_an, h.f_cn, h.f_dn, h.f_ln,..
+             h.ae, h.ao, h.c, h.cdo, h.fb, h.fdyf, h.fs, h.fstf,..
              h.kb, h.ks, h.m, h.xmax, h.xmin);
 endfunction
 
-function str = %hd_b_p(h)
+function str = %hdb_p(h)
     // Display valve type
     str = string(h);
     disp(str)
@@ -79,7 +83,7 @@ function [x,y,typ] = HEAD_B(job, arg1, arg2)
         model = arg1.model
         while %t do
             [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set prototype valve parameters',..
-            ['lsx(head_b)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            ['lsx_hdb(head_b)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
             list('lis',-1,'vec',1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
@@ -108,7 +112,7 @@ function [x,y,typ] = HEAD_B(job, arg1, arg2)
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx(GEO.hs)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.hs.x"]
+        exprs = ["lsx_hdb(GEO.hs)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.hs.x"]
         gr_i = [];
         x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
     end

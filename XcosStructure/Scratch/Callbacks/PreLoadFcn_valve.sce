@@ -45,6 +45,10 @@ global start02_h_wfwd   start02_h_wfx   start02_h_wfwx
 global start02_h_wfxa   start02_h_wfrc  start02_h_wfx
 global start02_h_wfa    start02_h_wfc   start02_h_wfr
 global start02_h_uf_net start02_h_uf    start02_h_wfw
+global start02_b_x      start02_b_v     start02_b_pf 
+global start02_b_ph     start02_b_pl    start02_b_plx
+global start02_b_wff    start02_b_wfh   start02_b_wfl
+global start02_b_uf_net start02_b_uf    start02_b_f_f
 mprintf('In %s\n', sfilename())  
 
 
@@ -111,6 +115,21 @@ start02_h_wfc = struct("time", M(:,1), "values", M(:,60));
 start02_h_wfr = struct("time", M(:,1), "values", M(:,61));
 start02_h_uf_net = struct("time", M(:,1), "values", M(:,62));
 start02_h_uf = struct("time", M(:,1), "values", M(:,63));
+start02_b_x = struct("time", M(:,1), "values", M(:,65));
+start02_b_v = struct("time", M(:,1), "values", M(:,66));
+start02_b_pf = struct("time", M(:,1), "values", M(:,67));
+start02_b_ph = struct("time", M(:,1), "values", M(:,68));
+start02_b_pl = struct("time", M(:,1), "values", M(:,69));
+start02_b_plx = struct("time", M(:,1), "values", M(:,70));
+start02_b_wff = struct("time", M(:,1), "values", M(:,71));
+start02_b_wfh = struct("time", M(:,1), "values", M(:,72));
+start02_b_wfl = struct("time", M(:,1), "values", M(:,73));
+start02_b_uf_net = struct("time", M(:,1), "values", M(:,74));
+start02_b_uf = struct("time", M(:,1), "values", M(:,75));
+start02_b_f_f = struct("time", M(:,1), "values", M(:,76));
+start02_b_f_cf = struct("time", M(:,1), "values", M(:,77));
+start02_sg = struct("time", M(:,1), "values", M(:,78));
+start02_beta = struct("time", M(:,1), "values", M(:,79));
 
 clear M comments
 
@@ -121,7 +140,7 @@ INI.hs.x = start02_b_x.values(1,:);
 FP.sg = start02_sg.values(1,:);
 FP.beta = start02_beta.values(1,:);
 
-// Define valve vsv geometry
+// Define valve vsv start valve geometry
 d = 0.2657;
 GEO.vsv.ax1 = d^2*%pi/4;
 clear d
@@ -193,5 +212,21 @@ exec('./Callbacks/mvwin_a.sci', -1);
 [xt, at] = mvwin_a(40);
 GEO.mv.at.tb = [xt at];
 clear xt at
+
+// Define head_b hs=mvhead geometry
+GEO.hs.f_cn = 0.75;
+GEO.hs.f_dn = 0.055;
+GEO.hs.f_ln = 0.003;
+GEO.hs.f_an = GEO.hs.f_dn^2*%pi/4;
+GEO.hs.ae = 0.307;
+GEO.hs.ao = 0.125^2*%pi/4;
+GEO.hs.cdo = 1;
+GEO.hs.fb = 0;
+GEO.hs.fs = 12.6;
+GEO.hs.kb = 0;
+GEO.hs.ks = 520;
+GEO.hs.m = 1.29e-4*386.4;
+GEO.hs.xmax = 0.0325;
+GEO.hs.xmin = 0;
 
 mprintf('Completed %s\n', sfilename())  
