@@ -130,20 +130,20 @@
 #define XMIN    ((GetRealOparPtrs(blk,17))[0]); // Min head sensor position from flapper, in
 
 // inputs
-#define PF  (r_IN(0,0)) // Flapper supply, psia
-#define PH  (r_IN(1,0)) // Cavity, psia
-#define PL  (r_IN(2,0)) // Bellows supply, psia.
-#define PLX (r_IN(3,0)) // Bellows, psia.
-#define XOL (r_IN(4,0)) // Bellows displacement from flapper, in (open loop)
+#define PF      (r_IN(0,0))     // Flapper supply, psia
+#define PH      (r_IN(1,0))     // Cavity, psia
+#define PL      (r_IN(2,0))     // Bellows supply, psia.
+#define XOL     (r_IN(3,0))     // Bellows displacement from flapper, in (open loop)
 
 // outputs
 #define WFF     (r_OUT(0,0))    // Flapper discharge, pph
 #define WFH     (r_OUT(1,0))    // Cavity inflow, pph
 #define WFL     (r_OUT(2,0))    // Bellows outflow, pph.
-#define Vo      (r_OUT(3,0))    // Velocity to open flapper, in/sec.
-#define Xo      (r_OUT(4,0))    // Displacement from flapper, in
-#define UF      (r_OUT(5,0))    // Unbalanced force from flapper, lbf
-#define MODE    (r_OUT(6,0))    // ZCD mode
+#define PLX     (r_OUT(3,0))    // Bellows, psia.
+#define Vo      (r_OUT(4,0))    // Velocity to open flapper, in/sec.
+#define Xo      (r_OUT(5,0))    // Displacement from flapper, in
+#define UF      (r_OUT(6,0))    // Unbalanced force from flapper, lbf
+#define MODE    (r_OUT(7,0))    // ZCD mode
 
 
 void head_b(scicos_block *blk, int flag)
@@ -151,6 +151,10 @@ void head_b(scicos_block *blk, int flag)
     double DFnet = 0;
     int stops = 0;
 
+    double f_an = F_AN;
+    double f_cn = F_CN;
+    double f_dn = F_DN;
+    double f_ln = F_LN;
     double ae = AE;
     double ao = AO;
     double c = C;
@@ -164,9 +168,6 @@ void head_b(scicos_block *blk, int flag)
     double mass = M;
     double xmin = XMIN;
     double xmax = XMAX;
-    double f_an = F_AN;
-    double f_cn = F_CN;
-    double f_dn = F_DN;
 
     double f_f = 0;
     double f_cf = 0;
@@ -179,15 +180,14 @@ void head_b(scicos_block *blk, int flag)
     double pf = PF;
     double ph = PH;
     double pl = PL;
-    double plx = PLX;
     double xol = XOL;
-    double wff, wfh, wfl;
+    double wff, wfh, wfl, plx;
 
 
     // compute info needed for all passes
     wfl = Xdot*dwdc*ae;
     plx = OR_AWPDTOPS(ao, wfl, pl, cdo, sg);
-    f_cf = tab1(max(X, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
+    f_cf = tab1(f_ln/max(X, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
     f_f = (pf - ph) * f_an * \
             (1. + 16. * SQR(f_cf * X / f_dn));
     df  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X;
@@ -256,10 +256,12 @@ void head_b(scicos_block *blk, int flag)
             WFF = wff;
             WFL = wfl;
             WFH = wfh;
+            PLX = plx;
             Vo = Xdot;
             Xo = X;
             UF = df;
             MODE = mode0;
+//            MODE = f_cf;
             break;
 
         case 9:

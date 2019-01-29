@@ -49,6 +49,7 @@ global start02_b_x      start02_b_v     start02_b_pf
 global start02_b_ph     start02_b_pl    start02_b_plx
 global start02_b_wff    start02_b_wfh   start02_b_wfl
 global start02_b_uf_net start02_b_uf    start02_b_f_f
+global start02_b_f_cf
 mprintf('In %s\n', sfilename())  
 
 
