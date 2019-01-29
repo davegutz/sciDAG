@@ -23,11 +23,11 @@
 global LINCOS_OVERRIDE
 global loaded_scratch
 global GEO INI FP
-global start02_x        start02_v
-global start02_ph       start02_prs     start02_pxr
-global start02_ps       start02_wfs     start02_wfh
-global start02_wfvrs    start02_wfvx    start02_uf
-global start02_uf_net   start02_px start02_a
+//global start02_x        start02_v
+//global start02_ph       start02_prs     start02_pxr
+//global start02_ps       start02_wfs     start02_wfh
+//global start02_wfvrs    start02_wfvx    start02_uf
+//global start02_uf_net   start02_px start02_a
 global start02_t_x      start02_t_v     start02_t_ped
 global start02_t_pes    start02_t_pd    start02_t_pld
 global start02_t_plr    start02_t_ps    start02_t_wfd

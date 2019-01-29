@@ -38,11 +38,11 @@ xdel(winsid())
 global m k c
 global loaded_scratch
 global GEO INI FP
-global start02_x        start02_v
-global start02_ph       start02_prs     start02_pxr
-global start02_ps       start02_wfs     start02_wfh
-global start02_wfvrs    start02_wfvx    start02_uf
-global start02_uf_net   start02_px start02_a
+//global start02_x        start02_v
+//global start02_ph       start02_prs     start02_pxr
+//global start02_ps       start02_wfs     start02_wfh
+//global start02_wfvrs    start02_wfvx    start02_uf
+//global start02_uf_net   start02_px      start02_a
 global start02_t_x      start02_t_v     start02_t_ped
 global start02_t_pes    start02_t_pd    start02_t_pld
 global start02_t_plr    start02_t_ps    start02_t_wfd
@@ -65,6 +65,14 @@ global start02_b_ph     start02_b_pl    start02_b_plx
 global start02_b_wff    start02_b_wfh   start02_b_wfl
 global start02_b_uf_net start02_b_uf    start02_b_f_f
 global start02_b_f_cf
+
+// Auto data overplot load
+[V, C, Mnames, Mvals] = load_xls_data('./Data/start02.ven.xls', 'row');
+[n_names, m_names] = size(Mnames);
+for i_name = 1:m_names;
+    execstr(Mnames(i_name) + "=struct(''time'', V.timex, ''values'', V." + Mnames(i_name) + ");")
+end
+clear V C Mnames Mvals n_names m_names i_name
 
 Tf = 0.001;
 
