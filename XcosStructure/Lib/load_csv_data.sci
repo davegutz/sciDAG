@@ -17,16 +17,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jsn 1, 2019      DA Gutz     Created
+// Jan 30, 2019    DA Gutz        Created
 // 
-global LINCOS_OVERRIDE
-mprintf('In %s\n', sfilename())  
-LINCOS_OVERRIDE = 0;
-INI.vsv.x = start_x.values(1,:);
-INI.reg.x = tri_x.values(1,:);
-INI.mv.x = mv_x.values(1,:);
-INI.hs.x = hs_x.values(1,:);
-FP.sg = fp_sg.values(1,:);
-FP.beta = fp_beta.values(1,:);
-
-mprintf('Completed %s\n', sfilename())  
+function [data, names, time] = load_csv_data(csv_file, time_index)
+    // Load csv file that has variable names in first row
+    data = csvRead(csv_file, [], [], [], [], [], [2 1 100000000 10000]);
+    names = csvRead(csv_file, [], [], 'string', [], [], [1 1 1 10000]);
+    time = data(:,time_index);
+endfunction

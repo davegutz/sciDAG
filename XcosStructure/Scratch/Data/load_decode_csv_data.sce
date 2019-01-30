@@ -17,16 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jsn 1, 2019      DA Gutz     Created
+// Jan 30, 2019    DA Gutz        Created
 // 
-global LINCOS_OVERRIDE
-mprintf('In %s\n', sfilename())  
-LINCOS_OVERRIDE = 0;
-INI.vsv.x = start_x.values(1,:);
-INI.reg.x = tri_x.values(1,:);
-INI.mv.x = mv_x.values(1,:);
-INI.hs.x = hs_x.values(1,:);
-FP.sg = fp_sg.values(1,:);
-FP.beta = fp_beta.values(1,:);
-
-mprintf('Completed %s\n', sfilename())  
+[n_names, m_names] = size(N);
+for i = 2:m_names
+    execstr(N(i) + "=struct(''time'', time, ''values'', D(:," + string(i) + "));")
+end
+clear m_names n_names
