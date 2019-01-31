@@ -41,9 +41,10 @@ global GEO INI FP
 // Auto data overplot load
 [D, N, time] = load_csv_data('./Data/start02.ven.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
+NBUF = ceil(length(time)/1000)*1000;
+Tf = time($);
 clear D N time
 
-Tf = 0.001;
 
 GEO = tlist(["sys_geo", "vsv", "reg", "mv", "hs"], vlv_a_default, tv_a1_default, hlfvlv_a_default, head_b_default);
 
