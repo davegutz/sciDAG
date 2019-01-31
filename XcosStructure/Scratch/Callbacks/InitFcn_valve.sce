@@ -19,8 +19,9 @@
 // SOFTWARE.
 // Jsn 1, 2019      DA Gutz     Created
 // 
-global LINCOS_OVERRIDE
+global LINCOS_OVERRIDE figs
 mprintf('In %s\n', sfilename())  
+try close(figs); end
 LINCOS_OVERRIDE = 0;
 INI.vsv.x = start_x.values(1,:);
 INI.reg.x = tri_x.values(1,:);

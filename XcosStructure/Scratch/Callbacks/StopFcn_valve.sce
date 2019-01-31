@@ -30,10 +30,12 @@ function overplot(st, c, %title)
     legend(st);
 endfunction
 
-global LINCOS_OVERRIDE
+global LINCOS_OVERRIDE figs
 mprintf('In %s\n', sfilename())  
 
-figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
+try close(figs); end
+figs=[];
+figs($+1) = figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
 subplot(221)
 overplot(['start_ps'], ['r--'], 'Start Valve Pressures')
 subplot(222)
@@ -41,7 +43,7 @@ overplot(['start_ph', 'start_prs'], ['b-', 'r--'], '')
 subplot(223)
 overplot(['start_pxr'], ['g--'], '')
 
-figure("Figure_name", 'Start_States', "Position", [10,50,610,460]);
+figs($+1) = figure("Figure_name", 'Start_States', "Position", [10,50,610,460]);
 subplot(221)
 overplot(['START_X', 'start_x'], ['r-', 'b--'], 'Start Valve Position')
 subplot(222)
@@ -51,7 +53,7 @@ overplot(['START_UF', 'start_uf'], ['r-', 'b--'], 'Start Valve Unbal Force')
 subplot(224)
 overplot(['START_MODE'], ['r-'], 'Start Valve ZCD Mode0')
 
-figure("Figure_name", 'Start_Flow_1', "Position", [10,70,610,460]);
+figs($+1) = figure("Figure_name", 'Start_Flow_1', "Position", [10,70,610,460]);
 subplot(221)
 overplot(['START_WFS', 'start_wfs'], ['r-',  'b--'], 'Start Valve Supply Flow')
 subplot(222)
@@ -62,7 +64,7 @@ subplot(224)
 overplot(['START_WFVX', 'start_wfvx'], ['r-',  'b--'], 'Start Valve Damping Flow')
 
 // Trivalve regulator plots
-figure("Figure_name", 'Trivalve_Pressure_1', "Position", [100,30,610,460]);
+figs($+1) = figure("Figure_name", 'Trivalve_Pressure_1', "Position", [100,30,610,460]);
 subplot(221)
 overplot(['tri_ps', 'tri_pes'], ['r--', 'b--'], 'Tri Valve Pressures')
 subplot(222)
@@ -72,7 +74,7 @@ overplot(['tri_pld', 'tri_plr'], ['c--', 'b-'], '')
 subplot(224)
 overplot(['tri_px'], ['k--'], '')
 
-figure("Figure_name", 'Trivalve_States', "Position", [100,50,610,460]);
+figs($+1) = figure("Figure_name", 'Trivalve_States', "Position", [100,50,610,460]);
 subplot(221)
 overplot(['TRI_X', 'tri_x'], ['r-', 'b--'], 'Trivalve Position')
 subplot(222)
@@ -82,7 +84,7 @@ overplot(['TRI_UF', 'tri_uf'], ['r-', 'b--'], 'Trivalve Unbal Force')
 subplot(224)
 overplot(['TRI_MODE'], ['r-'], 'Trivalve ZCD Mode0')
 
-figure("Figure_name", 'Tri_Flow_1', "Position", [100,70,610,460]);
+figs($+1) = figure("Figure_name", 'Tri_Flow_1', "Position", [100,70,610,460]);
 subplot(221)
 overplot(['TRI_WFS', 'tri_wfs'], ['r-',  'b--'], 'Trivalve Supply Flow')
 subplot(222)
@@ -92,7 +94,7 @@ overplot(['TRI_WFX', 'tri_wfx'], ['r-',  'b--'], 'Trivalve Control Flow')
 subplot(224)
 overplot(['TRI_WFDE', 'tri_wfde'], ['r-',  'b--'], 'Trivalve Discharge End Flow')
 
-figure("Figure_name", 'Tri_Flow_2', "Position", [100,90,610,460]);
+figs($+1) = figure("Figure_name", 'Tri_Flow_2', "Position", [100,90,610,460]);
 subplot(321)
 overplot(['TRI_WFLE', 'tri_wfle'], ['r-',  'b--'], 'Trivalve L End Flow')
 subplot(322)
