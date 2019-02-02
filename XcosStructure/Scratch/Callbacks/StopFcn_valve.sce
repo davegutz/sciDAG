@@ -43,7 +43,7 @@ overplot(['start_ph', 'start_prs'], ['b-', 'r--'], '')
 subplot(223)
 overplot(['start_pxr'], ['g--'], '')
 
-figs($+1) = figure("Figure_name", 'Start_States', "Position", [10,50,610,460]);
+figs($+1) = figure("Figure_name", 'Start_States', "Position", [30,50,610,460]);
 subplot(221)
 overplot(['START_X', 'start_x'], ['r-', 'b--'], 'Start Valve Position')
 subplot(222)
@@ -53,7 +53,7 @@ overplot(['START_UF', 'start_uf'], ['r-', 'b--'], 'Start Valve Unbal Force')
 subplot(224)
 overplot(['START_MODE'], ['r-'], 'Start Valve ZCD Mode0')
 
-figs($+1) = figure("Figure_name", 'Start_Flow_1', "Position", [10,70,610,460]);
+figs($+1) = figure("Figure_name", 'Start_Flow_1', "Position", [50,70,610,460]);
 subplot(221)
 overplot(['START_WFS', 'start_wfs'], ['r-',  'b--'], 'Start Valve Supply Flow')
 subplot(222)
@@ -74,7 +74,7 @@ overplot(['tri_pld', 'tri_plr'], ['c--', 'b-'], '')
 subplot(224)
 overplot(['tri_px'], ['k--'], '')
 
-figs($+1) = figure("Figure_name", 'Trivalve_States', "Position", [100,50,610,460]);
+figs($+1) = figure("Figure_name", 'Trivalve_States', "Position", [120,50,610,460]);
 subplot(221)
 overplot(['TRI_X', 'tri_x'], ['r-', 'b--'], 'Trivalve Position')
 subplot(222)
@@ -84,7 +84,7 @@ overplot(['TRI_UF', 'tri_uf'], ['r-', 'b--'], 'Trivalve Unbal Force')
 subplot(224)
 overplot(['TRI_MODE'], ['r-'], 'Trivalve ZCD Mode0')
 
-figs($+1) = figure("Figure_name", 'Tri_Flow_1', "Position", [100,70,610,460]);
+figs($+1) = figure("Figure_name", 'Tri_Flow_1', "Position", [140,70,610,460]);
 subplot(221)
 overplot(['TRI_WFS', 'tri_wfs'], ['r-',  'b--'], 'Trivalve Supply Flow')
 subplot(222)
@@ -94,7 +94,7 @@ overplot(['TRI_WFX', 'tri_wfx'], ['r-',  'b--'], 'Trivalve Control Flow')
 subplot(224)
 overplot(['TRI_WFDE', 'tri_wfde'], ['r-',  'b--'], 'Trivalve Discharge End Flow')
 
-figs($+1) = figure("Figure_name", 'Tri_Flow_2', "Position", [100,90,610,460]);
+figs($+1) = figure("Figure_name", 'Tri_Flow_2', "Position", [160,90,610,460]);
 subplot(321)
 overplot(['TRI_WFLE', 'tri_wfle'], ['r-',  'b--'], 'Trivalve L End Flow')
 subplot(322)
@@ -119,7 +119,7 @@ overplot(['mv_pw', 'mv_pd'], ['c--', 'b-'], '')
 subplot(224)
 overplot(['mv_px'], ['k--'], '')
 
-figs($+1) = figure("Figure_name", 'Halfvalve_States', "Position", [200,50,610,460]);
+figs($+1) = figure("Figure_name", 'Halfvalve_States', "Position", [220,50,610,460]);
 subplot(221)
 overplot(['MV_X', 'mv_x'], ['r-', 'b--'], 'Halfvalve Position')
 subplot(222)
@@ -129,7 +129,7 @@ overplot(['MV_UF', 'mv_uf'], ['r-', 'b--'], 'Halfvalve Unbal Force')
 subplot(224)
 overplot(['MV_MODE'], ['r-'], 'Halfvalve ZCD Mode0')
 
-figs($+1) = figure("Figure_name", 'Half_Flow_1', "Position", [200,70,610,460]);
+figs($+1) = figure("Figure_name", 'Half_Flow_1', "Position", [240,70,610,460]);
 subplot(321)
 overplot(['MV_WFS', 'mv_wfs'], ['r-',  'b--'], 'Halfvalve Supply Flow')
 subplot(322)
@@ -143,7 +143,7 @@ overplot(['MV_WFW', 'mv_wfw'], ['r-',  'b--'], 'Halfvalve Flow')
 subplot(326)
 overplot(['MV_WFWX', 'mv_wfwx'], ['r-',  'b--'], 'Halfvalve Flow')
 
-figs($+1) = figure("Figure_name", 'Half_Flow_2', "Position", [200,90,610,460]);
+figs($+1) = figure("Figure_name", 'Half_Flow_2', "Position", [260,90,610,460]);
 subplot(321)
 overplot(['MV_WFXA', 'mv_wfxa'], ['r-',  'b--'], 'Halfvalve Flow')
 subplot(322)
@@ -164,7 +164,7 @@ overplot(['hs_pf', 'hs_ph', 'hs_pl', 'hs_plx'], ['r--', 'b--', 'm-', 'g--'], 'Ha
 subplot(122)
 overplot(['HS_PLX', 'hs_plx'], ['r-', 'g--'], 'Head Damped Pressure')
 
-figs($+1) = figure("Figure_name", 'Head_States', "Position", [300,50,610,460]);
+figs($+1) = figure("Figure_name", 'Head_States', "Position", [320,50,610,460]);
 subplot(221)
 overplot(['HS_X', 'hs_x'], ['r-', 'b--'], 'Head Position')
 subplot(222)
@@ -174,7 +174,7 @@ overplot(['HS_UF', 'hs_uf'], ['r-', 'b--'], 'Head Unbal Force')
 subplot(224)
 overplot(['HS_MODE'], ['r-'], 'Head ZCD Mode0')
 
-figs($+1) = figure("Figure_name", 'Half_Flow_1', "Position", [300,70,610,460]);
+figs($+1) = figure("Figure_name", 'Head_Flow_1', "Position", [340,70,610,460]);
 subplot(221)
 overplot(['HS_WFF', 'hs_wff'], ['r-',  'b--'], 'Head Flapper Flow')
 subplot(222)

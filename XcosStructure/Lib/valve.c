@@ -66,12 +66,6 @@
 // -->findmsvccompiler() ==> msvc120express
 // and 
 // -->haveacompiler() ==> T
-//// libs = 'C:\Program"" ""Files\scilab-5.5.2\bin\scicos'
-// libs = 'C:\PROGRA~1\SCILAB~1.2\bin\scicos'
-// incs = 'C:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
-// ilib_for_link('friction','friction_comp.c',libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
-// This is the computational function for a Scicos model block.
-// The model is of a dynamic/static friction model
 #include <scicos_block4.h>
 #include <math.h>
 #include <stdio.h>
@@ -154,7 +148,7 @@
 #define Vo      (r_OUT(6,0))    // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(7,0))    // Spool displacement toward drain, in
 #define UF      (r_OUT(8,0))    // Unbalanced force toward drain, lbf
-#define MODE    (r_OUT(9,0))    // Spool displacement toward drain, in
+#define MODE    (r_OUT(9,0))    // Zero-crossing mode
 
 
 void valve_a(scicos_block *blk, int flag)
@@ -390,7 +384,7 @@ void valve_a(scicos_block *blk, int flag)
 #define Vo      (r_OUT(10,0))   // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(11,0))   // Spool displacement toward drain, in
 #define UF      (r_OUT(12,0))   // Unbalanced force toward drain, lbf
-#define MODE    (r_OUT(13,0))   // Spool displacement toward drain, in
+#define MODE    (r_OUT(13,0))   // Zero-crossing mode
 
 #define REG_UNDERLAP -.001    /* "  Dead zone of drain, - is underlap. */
 #define SBIAS .005              /* dead zone of supply + is underlap */
@@ -666,7 +660,7 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define Vo      (r_OUT(12,0))   // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(13,0))   // Spool displacement toward drain, in
 #define UF      (r_OUT(14,0))   // Unbalanced force toward drain, lbf
-#define MODE    (r_OUT(15,0))   // Spool displacement toward drain, in
+#define MODE    (r_OUT(15,0))   // Zero-crossing mode
 void hlfvalve_a(scicos_block *blk, int flag)
 {
     double DFnet = 0;
@@ -706,8 +700,11 @@ void hlfvalve_a(scicos_block *blk, int flag)
     double axa = AXA;
     double dwdc = DWDC(sg);
 
+    double x = X;
+
     // compute info needed for all passes
-    at = tab1(X, AT, AT+N_A, N_A);
+    if(mode0==mode_lincos_override) x = XOL;
+    at = tab1(x, AT, AT+N_A, N_A);
     df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
              + fj;
     stops = 0;
@@ -746,7 +743,6 @@ void hlfvalve_a(scicos_block *blk, int flag)
     {
         case 0:
             // compute the derivative of the continuous time states
-            // TODO:  insert xol logic here
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
@@ -807,7 +803,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
 
             if (get_phase_simulation() == 1)
             {
-                if(LINCOS_OVERRIDE && stops==0)
+                if(LINCOS_OVERRIDE)
                     mode0 = mode_lincos_override;
                 else if(surf3<=0 && surf1<=0)
                     mode0 = mode_stop_min;
