@@ -39,8 +39,8 @@ global loaded_scratch
 global GEO INI FP
 
 // Auto data overplot load
-//[D, N, time] = load_csv_data('./Data/start02.ven.csv', 1);
-[D, N, time] = load_csv_data('./Data/start03.ven.csv', 1);
+[D, N, time] = load_csv_data('./Data/start02.ven.csv', 1);
+//[D, N, time] = load_csv_data('./Data/start03.ven.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
 Tf = time($);
 //TBUF = 0.000001;
