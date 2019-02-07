@@ -136,7 +136,7 @@
 #define XOL     (r_IN(3,0))     // Bellows displacement from flapper, in (open loop)
 
 // outputs
-#define WFF     (r_OUT(0,0))    // Flapper discharge, pph
+#define WFF     (r_OUT(0,0))    // Flapper discharge out, pph
 #define WFH     (r_OUT(1,0))    // Cavity inflow, pph
 #define WFL     (r_OUT(2,0))    // Bellows outflow, pph.
 #define PLX     (r_OUT(3,0))    // Bellows, psia.

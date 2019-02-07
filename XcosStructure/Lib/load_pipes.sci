@@ -21,7 +21,8 @@
 // 
 getd('../Lib/Pipes')
 
-
+vol_default = tlist(["vol", "beta", "dwdc", "vol", "tvp"], 135000, 129.93948*0.8, 0, 7);
+mom_default = tlist(["mom", "area", "length", "min_flow", "max_flow"], 0, 1, -1e6, 1e6);
 pipeVV_default = tlist(["pipeVV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D"],..
         18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 3, 0, [], [], [], [], []);
 pipeMV_default = tlist(["pipeMV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D"],..
