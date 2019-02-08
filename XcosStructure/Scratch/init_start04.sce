@@ -50,7 +50,7 @@ NBUF = ceil(Tf/TBUF);
 clear D N time
 
 
-GEO = tlist(["sys_geo", "vsv", "reg", "mv", "hs"], vlv_a_default, tv_a1_default, hlfvlv_a_default, head_b_default);
+GEO = tlist(["sys_geo", "vsv", "reg", "mv", "hs", "noz"], vlv_a_default, tv_a1_default, hlfvlv_a_default, head_b_default, ctab1_default);
 
 function %sys_geo_p(g)
     // Display geo overload

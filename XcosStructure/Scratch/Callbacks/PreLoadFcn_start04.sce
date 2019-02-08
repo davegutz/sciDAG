@@ -117,4 +117,10 @@ GEO.hs.m = 1.29e-4*386.4;
 GEO.hs.xmax = 0.0325;
 GEO.hs.xmin = 0;
 
+// Define main nozzle 
+xwfnoz = [0.,     540.,   900.,   6300., 10440., 13590., 15300., 16560., 17000., 18000.]';
+ydpnoz = [125.,   130.,   154.,   265.,   365.,  450.,   510.,   573.,   615.,   735]';
+GEO.noz.tb = [xwfnoz, ydpnoz];
+clear xwfnoz ydpnoz
+
 mprintf('Completed %s\n', sfilename())  
