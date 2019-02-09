@@ -1,4 +1,4 @@
-// Copyright (C) 2018 - Dave Gutz
+// Copyright (C) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,10 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 3, 2018 	DA Gutz		Created
+// Jan 1, 2019 	DA Gutz		Created
 // 
 function post_xcos_simulate(%cpr, scs_m, needcompile)
-    mprintf('\nIn %s\n', sfilename())  
-    exec('Callbacks\StopFcn_sec_order_6.sce', -1);
+    global root
+    StopFileName = 'Callbacks\StopFcn_' + root + '.sce';
+    mprintf('Started %s\n', sfilename())  
+    exec(StopFileName, -1);
     mprintf('Completed %s\n', sfilename())  
 endfunction

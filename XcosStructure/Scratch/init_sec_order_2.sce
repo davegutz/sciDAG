@@ -36,13 +36,13 @@ n_fig = -1;
 xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
 global m k c
-global loaded_scratch
+global loaded_scratch root
 loaded_scratch = %f;
 m = 4.4; // lbm
 k = 0.0126; // lbf/in
 c = 0.0057; // lbf-s/in
-exec('Callbacks\pre_xcos_simulate_' + root + '.sci');
-exec('Callbacks\post_xcos_simulate_' + root + '.sci');
+exec('Callbacks\pre_xcos_simulate_default.sci');
+exec('Callbacks\post_xcos_simulate_default.sci');
 loadXcosLibs(); loadScicos();
 
 

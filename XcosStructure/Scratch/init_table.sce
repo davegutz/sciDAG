@@ -38,13 +38,13 @@ xdel(winsid())
 
 
 global m k c
-global loaded_scratch
+global loaded_scratch root
 global GEO
 
 loaded_scratch = %f;
 
-exec('Callbacks\pre_xcos_simulate_' + root + '.sci');
-exec('Callbacks\post_xcos_simulate_' + root + '.sci');
+exec('Callbacks\pre_xcos_simulate_default.sci');
+exec('Callbacks\post_xcos_simulate_default.sci');
 loadXcosLibs(); loadScicos();
 
 

@@ -36,7 +36,7 @@ n_fig = -1;
 xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
 global plant A B C D
-global loaded_scratch
+global loaded_scratch root
 A=0;B=1;C=1;D=0;
 loaded_scratch = %f;
 plant.a = A;
@@ -44,8 +44,8 @@ plant.b = B;
 plant.c = C;
 plant.d = D;
 m = 4.4; k = .0126; c = .0057;
-exec('Callbacks\pre_xcos_simulate_' + root + '.sci');
-exec('Callbacks\post_xcos_simulate_' + root + '.sci');
+exec('Callbacks\pre_xcos_simulate_default.sci');
+exec('Callbacks\post_xcos_simulate_default.sci');
 loadXcosLibs(); loadScicos();
 
 

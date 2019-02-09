@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - Dave Gutz
+// Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,16 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 14, 2019  DA Gutz     Created
+// Dec 3, 2018      DA Gutz     Created
 // 
-function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
-    global loaded_scratch
-    mprintf('\nIn %s\n', sfilename())  
-    if ~loaded_scratch then
-        exec('Callbacks\PreLoadFcn_orifice.sce', -1); 
-        loaded_scratch = %t;
-    end
-    exec('Callbacks\InitFcn_orifice.sce', -1);
-    mprintf('Completed %s\n', sfilename())  
-    continueSimulation = %t;
-endfunction
+global m k c LINCOS_OVERRIDE
+mprintf('In %s\n', sfilename())  
+LINCOS_OVERRIDE = 0;
+mprintf('Completed %s\n', sfilename())  

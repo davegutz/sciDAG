@@ -50,8 +50,8 @@ ori = tlist(["orifice", "a", "cd"], 0.001, 0.61);
 
 loaded_scratch = %f;
 
-exec('Callbacks\pre_xcos_simulate_' + root + '.sci');
-exec('Callbacks\post_xcos_simulate_' + root + '.sci');
+exec('Callbacks\pre_xcos_simulate_default.sci');
+exec('Callbacks\post_xcos_simulate_default.sci');
 loadXcosLibs(); loadScicos();
 
 

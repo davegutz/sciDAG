@@ -17,9 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Dec 3, 2018 	DA Gutz		Created
+// Dec 3, 2018      DA Gutz     Created
 // 
-function post_xcos_simulate(%cpr, scs_m, needcompile)
-    exec('Callbacks\StopFcn_sec_order_3.sce', -1);
-    mprintf('Completed %s\n', sfilename())  
-endfunction
+global m k c LINCOS_OVERRIDE
+mprintf('In %s\n', sfilename())  
+LINCOS_OVERRIDE = 0;
+mprintf('Completed %s\n', sfilename())  

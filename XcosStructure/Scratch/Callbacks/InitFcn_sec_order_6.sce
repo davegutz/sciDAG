@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - Dave Gutz
+// Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,10 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 1, 2019 	DA Gutz		Created
+// Dec 3, 2018      DA Gutz     Created
 // 
-function post_xcos_simulate(%cpr, scs_m, needcompile)
-    mprintf('Started %s\n', sfilename())  
-    exec('Callbacks\StopFcn_valve.sce', -1);
-    mprintf('Completed %s\n', sfilename())  
-endfunction
+global m k c LINCOS_OVERRIDE
+mprintf('In %s\n', sfilename())  
+LINCOS_OVERRIDE = 0;
+mprintf('Completed %s\n', sfilename())  

@@ -35,7 +35,7 @@ xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
 
 global m k c
-global loaded_scratch
+global loaded_scratch root
 global GEO INI FP
 
 // Auto data overplot load
@@ -64,8 +64,8 @@ endfunction
 loaded_scratch = %f;
 LINCOS_OVERRIDE = 0;
 LINCOS_OPEN_LOOP = 0;
-exec('Callbacks\pre_xcos_simulate_' + root + '.sci');
-exec('Callbacks\post_xcos_simulate_' + root + '.sci');
+exec('Callbacks\pre_xcos_simulate_default.sci');
+exec('Callbacks\post_xcos_simulate_default.sci');
 loadXcosLibs(); loadScicos();
 
 

@@ -19,14 +19,12 @@
 // SOFTWARE.
 // Dec 3, 2018  DA Gutz     Created
 // 
-function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
-    global loaded_scratch
-    mprintf('\nIn %s\n', sfilename())  
-    if ~loaded_scratch then
-        exec('Callbacks\PreLoadFcn_sec_order.sce', -1); 
-        loaded_scratch = %t;
-    end
-    exec('Callbacks\InitFcn_sec_order.sce', -1);
-    mprintf('Completed %s\n', sfilename())  
-    continueSimulation = %t;
-endfunction
+
+global m c k LINCOS_OVERRIDE
+global loaded_scratch
+mprintf('In %s\n', sfilename())  
+m = 4.4; // lbm
+k = 0.0126; // lbf/in
+c = 0.0057; // lbf-s/in
+LINCOS_OVERRIDE = 0;
+mprintf('Completed %s\n', sfilename())  

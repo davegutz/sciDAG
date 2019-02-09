@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - Dave Gutz
+// Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,16 +17,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 1, 2019  DA Gutz     Created
+// Dec 3, 2018 	DA Gutz		Created
 // 
-function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
-    global loaded_scratch
-    mprintf('\nIn %s\n', sfilename())  
-    if ~loaded_scratch then
-        exec('Callbacks\PreLoadFcn_valve.sce', -1); 
-        loaded_scratch = %t;
+global m c k LINCOS_OVERRIDE
+mprintf('In %s\n', sfilename())  
+
+
+// bode of SEC_ORDER
+LINCOS_OVERRIDE = 1;
+for i=1:length(scs_m.objs)
+    if (typeof(scs_m.objs(i))=="Block"..
+         & (scs_m.objs(i).gui=="DSUPER" | scs_m.objs(i).gui=="SUPER_f")..
+          & scs_m.objs(i).model.label=="SEC_ORDER_SUPER") then
+          scs_m_lin_f = scs_m.objs(i).model.rpar;
+        break;
     end
-    exec('Callbacks\InitFcn_valve.sce', -1);
-    mprintf('Completed %s\n', sfilename())  
-    continueSimulation = %t;
-endfunction
+end
+mprintf('In %s before lincos f\n', sfilename())  
+sys_f = lincos(scs_m_lin_f);
+mprintf('In %s after lincos f\n', sfilename())  
+try
+    figure()
+    bode(sys_f, 'rad');
+catch
+    if lasterror() == 'Singularity of log or tan function.' then
+        warning('Linear response of ""SEC_ORDER_SUPER"" is undefined...showing small DC response')
+        bode(syslin('c',0,0,0,1e-12), [1,10], 'rad')
+    end
+end
+LINCOS_OVERRIDE = 0;
+
+mprintf('Completed %s\n', sfilename())  

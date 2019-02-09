@@ -17,9 +17,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 7, 2019 	DA Gutz		Created
+// Jan 1, 2019  DA Gutz     Created
 // 
-function post_xcos_simulate(%cpr, scs_m, needcompile)
-    exec('Callbacks\StopFcn_table.sce', -1);
+function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
+    global loaded_scratch root
+    mprintf('\nIn %s\n', sfilename())  
+    PreLoadFileName = 'Callbacks\PreLoadFcn_' + root + '.sce';
+    InitFileName = 'Callbacks\InitFcn_' + root + '.sce';
+    if ~loaded_scratch then
+        exec(PreLoadFileName, -1); 
+        loaded_scratch = %t;
+    end
+    exec(InitFileName, -1);
     mprintf('Completed %s\n', sfilename())  
+    continueSimulation = %t;
 endfunction
