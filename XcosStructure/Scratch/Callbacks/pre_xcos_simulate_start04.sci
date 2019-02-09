@@ -23,10 +23,10 @@ function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
     global loaded_scratch
     mprintf('\nIn %s\n', sfilename())  
     if ~loaded_scratch then
-        exec('Callbacks\PreLoadFcn_valve.sce', -1); 
+        exec('Callbacks\PreLoadFcn_start04.sce', -1); 
         loaded_scratch = %t;
     end
-    exec('Callbacks\InitFcn_valve.sce', -1);
+    exec('Callbacks\InitFcn_start04.sce', -1);
     mprintf('Completed %s\n', sfilename())  
     continueSimulation = %t;
 endfunction

@@ -33,6 +33,7 @@ endfunction
 global LINCOS_OVERRIDE figs
 mprintf('In %s\n', sfilename())  
 
+if 0 then
 try close(figs); end
 figs=[];
 figs($+1) = figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
@@ -181,5 +182,6 @@ subplot(222)
 overplot(['HS_WFL', 'hs_wfl'], ['r-',  'b--'], 'Head  Flow')
 subplot(223)
 overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
+end
 
 mprintf('Completed %s\n', sfilename())  

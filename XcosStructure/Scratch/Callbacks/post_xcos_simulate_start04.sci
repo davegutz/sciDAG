@@ -21,6 +21,6 @@
 // 
 function post_xcos_simulate(%cpr, scs_m, needcompile)
     mprintf('Started %s\n', sfilename())  
-    exec('Callbacks\StopFcn_valve.sce', -1);
+    exec('Callbacks\StopFcn_start04.sce', -1);
     mprintf('Completed %s\n', sfilename())  
 endfunction

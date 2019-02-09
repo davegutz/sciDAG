@@ -117,6 +117,15 @@ GEO.hs.m = 1.29e-4*386.4;
 GEO.hs.xmax = 0.0325;
 GEO.hs.xmin = 0;
 
+// P3 sense line
+GEO.mo_p3s.area = sqr(0.0135)*%pi/4;
+GEO.mo_p3s.length = 0.01; 
+GEO.vo_p3s.vol = 1.5;
+GEO.ln_p3s.l = 11.0;
+GEO.ln_p3s.a = sqr(0.1875)*%pi/4;
+GEO.ln_p3s.vol = GEO.ln_p3s.l*GEO.ln_p3s.a; 
+GEO.ln_p3s.n = 1;
+
 // Define main nozzle 
 xwfnoz = [0.,     540.,   900.,   6300., 10440., 13590., 15300., 16560., 17000., 18000.]';
 ydpnoz = [125.,   130.,   154.,   265.,   365.,  450.,   510.,   573.,   615.,   735]';
