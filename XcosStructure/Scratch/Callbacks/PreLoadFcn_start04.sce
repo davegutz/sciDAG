@@ -90,16 +90,10 @@ GEO.reg.as.tb = [xh as];
 GEO.reg.ad.tb = [xh ad];
 clear xh as ad
 
-// Define hlfvalve mv geometry
-GEO.mv.ax1 = 1.227;
-GEO.mv.cd = 0.69;
-GEO.mv.m = 0.497;
-GEO.mv.xmax = 0.536;
-GEO.mv.xmin = 0;
-exec('./Callbacks/mvwin_a.sci', -1);
-[xt, at] = mvwin_a(40);
-GEO.mv.at.tb = [xt at];
-clear xt at
+// Start line
+GEO.ln_vs.l = 23.7;
+GEO.ln_vs.vol = 3.42;
+GEO.ln_vs.a = GEO.ln_vs.vol/GEO.ln_vs.l;
 
 // Define head_b hs=mvhead geometry
 GEO.hs.f_cn = 0.75;
@@ -117,7 +111,49 @@ GEO.hs.m = 1.29e-4*386.4;
 GEO.hs.xmax = 0.0325;
 GEO.hs.xmin = 0;
 
-// P3 sense line
+// Define hlfvalve mv geometry
+GEO.mv.ax1 = 1.227;
+GEO.mv.cd = 0.69;
+GEO.mv.m = 0.497;
+GEO.mv.xmax = 0.536;
+GEO.mv.xmin = 0;
+exec('./Callbacks/mvwin_a.sci', -1);
+[xt, at] = mvwin_a(40);
+GEO.mv.at.tb = [xt at];
+clear xt at
+
+// Define valve mvtv geometry
+GEO.mvtv.ax1 = sqr(1)*%pi/4.;
+GEO.mvtv.ax2 = sqr(1.125)*%pi/4.;
+GEO.mvtv.ax3 = 0;
+GEO.mvtv.ax4 = 0;
+GEO.mvtv.c = 0.1;
+GEO.mvtv.clin = 0.1;
+GEO.mvtv.cd = 0.7;
+GEO.mvtv.cdo = 0.7;
+GEO.mvtv.cp = 0.43;
+d = 0.5;
+GEO.mvtv.ao = d^2*%pi/4;
+clear d
+GEO.mvtv.fdyf = 0;
+GEO.mvtv.fstf = 0;
+GEO.mvtv.fs = 25.2;
+GEO.mvtv.ks = 69;
+GEO.mvtv.ld = 0;
+GEO.mvtv.lh = 0;
+mv = (6.87e-4) * 386.4;
+ms = 0;
+GEO.mvtv.m = mv + ms/2;
+clear mv ms
+GEO.mvtv.xmax = 0.36;
+GEO.mvtv.xmin = -0.12;
+exec('./Callbacks/mvtvwin.sci', -1);
+GEO.mvtv.ah.tb = [-1 0; 1 0];
+[xd, ad] = mvtvwin(40);
+GEO.mvtv.ad.tb = [xd ad];
+clear xd ad
+
+// IFC volumes
 GEO.mo_p3s.area = sqr(0.0135)*%pi/4;
 GEO.mo_p3s.length = 0.01; 
 GEO.vo_p3s.vol = 1.5;
@@ -125,8 +161,20 @@ GEO.ln_p3s.l = 11.0;
 GEO.ln_p3s.a = sqr(0.1875)*%pi/4;
 GEO.ln_p3s.vol = GEO.ln_p3s.l*GEO.ln_p3s.a; 
 GEO.ln_p3s.n = 1;
+vo_p1c_on = 14;
+vo_p1c_so = 6.6;
+GEO.vo_p1so.vol = vo_p1c_on - vo_p1c_so;
+GEO.vo_p2.vol = 5.61;
+GEO.vo_p3.vol = 9.6;
+GEO.vo_px.vol = 1.6;
 
-// Define main nozzle 
+// Define main line 
+GEO.main_line.l = 48;
+GEO.main_line.a = 0.363;
+GEO.main_line.vol = GEO.main_line.l*GEO.main_line.a; 
+GEO.main_line.n = 5;
+GEO.vo_pnozin.vol = 20;
+// Nozzle pressure drop
 xwfnoz = [0.,     540.,   900.,   6300., 10440., 13590., 15300., 16560., 17000., 18000.]';
 ydpnoz = [125.,   130.,   154.,   265.,   365.,  450.,   510.,   573.,   615.,   735]';
 GEO.noz.tb = [xwfnoz, ydpnoz];

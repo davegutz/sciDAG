@@ -17,32 +17,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jsn 1, 2019      DA Gutz     Created
+// Feb 10, 2019    DA Gutz        Created
 // 
-global LINCOS_OVERRIDE figs
-global GEO INI FP
-mprintf('In %s\n', sfilename())  
-try close(figs); end
-LINCOS_OVERRIDE = 0;
+function [x, a] = mvtvwin(n)
+    x = zeros(n);
+    a = zeros(n);
+    XTVMAX = 0.32;       // Max value of table
+    XTVMIN = -.05;       // Min value of table
 
-GEO.ln_vs = lti_man_n_vm(GEO.ln_vs, FP.sg, FP.beta);
-GEO.ln_p3s = lti_man_n_vm(GEO.ln_p3s, FP.sg, FP.beta);
-GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
+    //Calculate evenly spaced position interval. */
+    dx  = (XTVMAX - XTVMIN) / (n -1);
 
-INI.ln_vs = ini_man_n_vm(GEO.ln_vs, p1so.values(1,:), wf1v.values(1,:));
-INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, p3sup1.values(1,:), wf3s.values(1,:));
-INI.main_line = ini_man_n_mm(GEO.main_line, p3.values(1,:), wfmd.values(1,:));
-INI.p3s = p3s.values(1,:);
-INI.wf3s = wf3s.values(1,:);
-INI.vsv.x = start_x.values(1,:);
-INI.reg.x = tri_x.values(1,:);
-INI.mv.x = mv_x.values(1,:);
-INI.mvtv.x = mvtv_x.values(1,:);
-INI.hs.x = hs_x.values(1,:);
-
-FP.sg = fp_sg.values(1,:);
-FP.beta = fp_beta.values(1,:);
-FP.dwdc = DWDC(FP.sg);
-FP.tvp = 7;
-
-mprintf('Completed %s\n', sfilename())  
+    //Calculate position, and area. */
+    for i=1:n
+        x(i)    = XTVMIN + (i-1)*dx;
+        if x(i) < 0 then
+            a(i) = (x(i) - XTVMIN) * abs(0.002/XTVMIN);
+        elseif x(i) < 0.24 then
+            a(i) = -.0055 - 2.1876e-5*x(i) + .0075*exp(13.33*x(i));
+        else
+            a(i) = 2.47 * x(i) - .41446;
+        end
+    end
+endfunction

@@ -36,6 +36,7 @@ mprintf('In %s\n', sfilename())
 if 0 then
 try close(figs); end
 figs=[];
+
 figs($+1) = figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
 subplot(221)
 overplot(['start_ps'], ['r--'], 'Start Valve Pressures')
@@ -183,5 +184,38 @@ overplot(['HS_WFL', 'hs_wfl'], ['r-',  'b--'], 'Head  Flow')
 subplot(223)
 overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
 end
+
+figs($+1) = figure("Figure_name", 'Throttle_Pressure_1', "Position", [400,30,610,460]);
+subplot(221)
+overplot(['p2'], ['r--'], 'Throttle Valve Pressures')
+subplot(222)
+overplot(['p3'], ['b--'], 'Throttle Valve Pressures')
+subplot(223)
+overplot(['px'], ['g--'], 'Throttle Valve Pressures')
+subplot(224)
+overplot(['pprt'], ['c--'], 'Throttle Valve Pressures')
+
+figs($+1) = figure("Figure_name", 'Throttle_States', "Position", [400,50,610,460]);
+subplot(221)
+overplot(['MVTV_X', 'mvtv_x'], ['r-', 'b--'], 'Throttle Valve Position')
+subplot(222)
+overplot(['MVTV_V', 'mvtv_v'], ['r-', 'b--'], 'Throttle Valve Velocity')
+subplot(223)
+overplot(['MVTV_UF', 'mvtv_uf'], ['r-', 'b--'], 'Throttle Valve Unbal Force')
+subplot(224)
+overplot(['MVTV_MODE'], ['r-'], 'Throttle Valve ZCD Mode0')
+
+figs($+1) = figure("Figure_name", 'Throttle_Flow_1', "Position", [400,70,610,460]);
+subplot(221)
+overplot(['MVTV_WFS', 'mvtv_wfs'], ['r-',  'b--'], 'Throttle Valve Supply Flow')
+subplot(222)
+overplot(['MVTV_WFD', 'mvtv_wfd'], ['r-',  'b--'], 'Throttle Valve Discharge Flow')
+subplot(223)
+overplot(['MVTV_WFVR', 'mvtv_wfvr'], ['r-',  'b--'], 'Throttle Valve Reference Opposite Spring End')
+subplot(224)
+overplot(['MVTV_WFVX', 'mvtv_wfvx'], ['r-',  'b--'], 'Throttle Valve Damping Flow')
+
+
+
 
 mprintf('Completed %s\n', sfilename())  
