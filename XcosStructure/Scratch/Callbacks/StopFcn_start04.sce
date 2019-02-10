@@ -33,7 +33,7 @@ endfunction
 global LINCOS_OVERRIDE figs
 mprintf('In %s\n', sfilename())  
 
-if 0 then
+if 1 then
 try close(figs); end
 figs=[];
 

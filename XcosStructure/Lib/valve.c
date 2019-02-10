@@ -162,7 +162,7 @@ void valve_a(scicos_block *blk, int flag)
     double mass = M;
     double c = C;
     double fstf = FSTF;
-    double fdyf = FDYF;
+    //double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
 
@@ -215,11 +215,13 @@ void valve_a(scicos_block *blk, int flag)
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = df - fdyf;
+//        DFnet = df - fdyf;
+        DFnet = df - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = df + fdyf;
+//        DFnet = df + fdyf;
+        DFnet = df + fstf;
     }
     else if(mode0==mode_stop_min)
     {
@@ -285,74 +287,32 @@ void valve_a(scicos_block *blk, int flag)
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-            surf1 = df-fdyf;
-            surf2 = df+fdyf;
+//            surf1 = df-fdyf;
+//            surf2 = df+fdyf;
+            surf1 = df-fstf;
+            surf2 = df+fstf;
             surf3 = X-xmin;
             surf4 = X-xmax;
-//            surf3 = df-fstf;
-//            surf4 = df+fstf;
-//            surf5 = X-xmin;
-//            surf6 = X-xmax;
 
             if (get_phase_simulation() == 1)
             {
-                // Old version wrong....
                 if(LINCOS_OVERRIDE && stops==0)
                     mode0 = mode_lincos_override;
                 else if(surf3<=0 && surf1<=0)
                     mode0 = mode_stop_min;
                 else if(surf4>=0 && surf2>=0)
                     mode0 = mode_stop_max;
-                else if(df>0)
-                {
-                    if(surf1<=0) mode0 = mode_stuck_plus;
-                    else mode0 = mode_move_plus; 
-                }
+                else if(Xdot>0)
+                    mode0 = mode_move_plus;
+                else if(Xdot<0)
+                    mode0 = mode_move_neg;
                 else
                 { 
-                    if(surf2>=0) mode0 = mode_stuck_neg;
-                    else mode0 = mode_move_neg; 
-                 }
-
-//                // This version goes through stuck mode on way between move modes
-//                if(LINCOS_OVERRIDE && stops==0)
-//                    mode0 = mode_lincos_override;
-//                else if(surf5<=0 && surf1<=0)
-//                    mode0 = mode_stop_min;
-//                else if(surf6>=0 && surf2>=0)
-//                    mode0 = mode_stop_max;
-//                else if(surf0==0)
-//                {
-//                    if(surf1>0 && surf3>0) mode0 = mode_move_plus;
-//                    else if(surf2<0 && surf4<0) mode0 = mode_move_neg;
-//                    else if(df>0) mode0 = mode_stuck_plus;
-//                    else mode0 = mode_stuck_neg; 
-//                }
-//                else if(surf0>0)
-//                { 
-//                    if(surf1>0) mode0 = mode_move_plus;
-//                    else
-//                    {
-//                        if(df>0) mode0 = mode_stuck_plus;
-//                        else mode0 = mode_stuck_neg;
-//                    }
-//                }
-//                else if(surf0<0)
-//                {
-//                    if(surf2<0) mode0 = mode_move_neg;
-//                    else
-//                    {
-//                        if(df>0) mode0 = mode_stuck_plus;
-//                        else mode0 = mode_stuck_neg;
-//                    }
-//                }
-//                else
-//                {
-//                    if(df>0) mode0 = mode_stuck_plus;
-//                    else mode0 = mode_stuck_neg;
-//                }
-//
-
+                    if(surf1>0) mode0 = mode_move_plus;
+                    else if(surf2<0) mode0 = mode_move_neg;
+                    else if(df>0)mode0 = mode_stuck_plus;
+                    else mode0 = mode_stuck_neg;
+                }
             }
             break;
     }
@@ -376,8 +336,6 @@ void valve_a(scicos_block *blk, int flag)
 #undef UF_NET
 #undef MODE
 #undef UF
-#undef surf5
-#undef surf6
 
 // **********trivalve_a1
 // trivalve_a1 Object parameters.  1st index is 1-based, 2nd index is 0-based.
@@ -475,7 +433,7 @@ void trivalve_a1(scicos_block *blk, int flag)
     double mass = M;
     double c = C;
     double fstf = FSTF;
-    double fdyf = FDYF;
+//    double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
 
@@ -522,19 +480,19 @@ void trivalve_a1(scicos_block *blk, int flag)
     ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(pd - px));
     fts = ls * 0.01365 * cd * Xdot * SSQRT(sg*(ps - px));
     df = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
-             + fext + fs - X*ks + fjd + fjs + ftd + fts;
+             + fext + fs - X*ks + fjd + fjs + ftd + fts - Xdot*c;
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = df - Xdot*c;
+        DFnet = df;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = df - fdyf - Xdot*c;
+        DFnet = df - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = df + fdyf - Xdot*c;
+        DFnet = df + fstf;
     }
     else if(mode0==mode_stop_min)
     {
@@ -624,16 +582,17 @@ void trivalve_a1(scicos_block *blk, int flag)
                     mode0 = mode_stop_min;
                 else if(surf4>=0 && surf2>=0)
                     mode0 = mode_stop_max;
-                else if(df>0)
-                {
-                    if(surf1<=0) mode0 = mode_stuck_plus;
-                    else mode0 = mode_move_plus; 
-                }
+                else if(Xdot>0)
+                    mode0 = mode_move_plus;
+                else if(Xdot<0)
+                    mode0 = mode_move_neg;
                 else
                 { 
-                    if(surf2>=0) mode0 = mode_stuck_neg;
-                    else mode0 = mode_move_neg; 
-                 }
+                    if(surf1>0) mode0 = mode_move_plus;
+                    else if(surf2<0) mode0 = mode_move_neg;
+                    else if(df>0)mode0 = mode_stuck_plus;
+                    else mode0 = mode_stuck_neg;
+                }
             }
             break;
     }
@@ -718,7 +677,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
     double mass = M;
     double c = C;
     double fstf = FSTF;
-    double fdyf = FDYF;
+//    double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
     double fj = 0;
@@ -755,19 +714,19 @@ void hlfvalve_a(scicos_block *blk, int flag)
     if(mode0==mode_lincos_override) x = XOL;
     at = tab1(x, AT, AT+N_A, N_A);
     df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
-             + fj;
+             + fj - Xdot*c;
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = df - Xdot*c;
+        DFnet = df;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = df - fdyf - Xdot*c;
+        DFnet = df - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = df + fdyf - Xdot*c;
+        DFnet = df + fstf;
     }
     else if(mode0==mode_stop_min)
     {
@@ -852,22 +811,23 @@ void hlfvalve_a(scicos_block *blk, int flag)
 
             if (get_phase_simulation() == 1)
             {
-                if(LINCOS_OVERRIDE)
+                if(LINCOS_OVERRIDE && stops==0)
                     mode0 = mode_lincos_override;
                 else if(surf3<=0 && surf1<=0)
                     mode0 = mode_stop_min;
                 else if(surf4>=0 && surf2>=0)
                     mode0 = mode_stop_max;
-                else if(df>0)
-                {
-                    if(surf1<=0) mode0 = mode_stuck_plus;
-                    else mode0 = mode_move_plus; 
-                }
+                else if(Xdot>0)
+                    mode0 = mode_move_plus;
+                else if(Xdot<0)
+                    mode0 = mode_move_neg;
                 else
                 { 
-                    if(surf2>=0) mode0 = mode_stuck_neg;
-                    else mode0 = mode_move_neg; 
-                 }
+                    if(surf1>0) mode0 = mode_move_plus;
+                    else if(surf2<0) mode0 = mode_move_neg;
+                    else if(df>0)mode0 = mode_stuck_plus;
+                    else mode0 = mode_stuck_neg;
+                }
             }
             break;
     }

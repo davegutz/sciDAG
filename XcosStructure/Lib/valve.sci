@@ -141,7 +141,6 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 5
-//        model.nzcross = 7
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
         exprs = ["lsx(GEO.vsv)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.vsv.x"]
         gr_i = [];
