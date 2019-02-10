@@ -127,7 +127,8 @@ GEO.mvtv.ax1 = sqr(1)*%pi/4.;
 GEO.mvtv.ax2 = sqr(1.125)*%pi/4.;
 GEO.mvtv.ax3 = 0;
 GEO.mvtv.ax4 = 0;
-GEO.mvtv.c = 0.1;
+// GEO.mvtv.c = 0.1;  linux c-code model acts like c=0 always
+GEO.mvtv.c = 0.;
 GEO.mvtv.clin = 0.1;
 GEO.mvtv.cd = 0.7;
 GEO.mvtv.cdo = 0.7;

@@ -33,7 +33,7 @@ endfunction
 global LINCOS_OVERRIDE figs
 mprintf('In %s\n', sfilename())  
 
-if 1 then
+if 0 then
 try close(figs); end
 figs=[];
 
@@ -185,6 +185,7 @@ subplot(223)
 overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
 end
 
+if 0 then
 figs($+1) = figure("Figure_name", 'Throttle_Pressure_1', "Position", [400,30,610,460]);
 subplot(221)
 overplot(['p2'], ['r--'], 'Throttle Valve Pressures')
@@ -214,6 +215,7 @@ subplot(223)
 overplot(['MVTV_WFVR', 'mvtv_wfvr'], ['r-',  'b--'], 'Throttle Valve Reference Opposite Spring End')
 subplot(224)
 overplot(['MVTV_WFVX', 'mvtv_wfvx'], ['r-',  'b--'], 'Throttle Valve Damping Flow')
+end
 
 
 
