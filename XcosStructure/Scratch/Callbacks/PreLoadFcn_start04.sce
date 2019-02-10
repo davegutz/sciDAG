@@ -168,6 +168,10 @@ GEO.vo_p1so.vol = vo_p1c_on - vo_p1c_so;
 GEO.vo_p2.vol = 5.61;
 GEO.vo_p3.vol = 9.6;
 GEO.vo_px.vol = 1.6;
+GEO.a_p3s.ao =  sqr(.0135)*%pi/4;
+GEO.a_p3s.cd = 0.73;
+GEO.a_tvb.ao = sqr(.032)*%pi/4;
+GEO.a_tvb.cd = 0.73;
 
 // Define main line 
 GEO.main_line.l = 48;

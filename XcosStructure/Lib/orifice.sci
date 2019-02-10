@@ -40,7 +40,8 @@
 // SOFTWARE.
 // Jan 1, 2019     DA Gutz     Created
 //
-// interfacing function for sharp-edged orifice
+// interfacing functions for sharp-edged orifice
+or_default = tlist(["or", "ao", "cd"], 0, 0.61);
 function d = dwdc(sg)
     d = 129.93948*sg;
 endfunction
