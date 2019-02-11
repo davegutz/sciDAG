@@ -45,11 +45,6 @@ INI.mv.x = mv_x.values(1,:);
 INI.mvtv.x = mvtv_x.values(1,:);
 INI.hs.x = hs_x.values(1,:);
 INI.wf1bias = wf1leak.values(1,:)+wf1vg.values(1,:)+wf1w.values(1,:)-wf1c.values(1,:);
-INI.ven_ps = start_pxr.values(1,:);
-INI.ven_pd = start_ps.values(1,:);
-INI.pamb = mv_pa.values(1,:);
-INI.pr = mv_pr.values(1,:);
-
 
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);
