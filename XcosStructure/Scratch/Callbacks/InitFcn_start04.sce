@@ -44,7 +44,8 @@ INI.reg.x = tri_x.values(1,:);
 INI.mv.x = mv_x.values(1,:);
 INI.mvtv.x = mvtv_x.values(1,:);
 INI.hs.x = hs_x.values(1,:);
-INI.wf1leak = wf1v.values(1,:)-wf1s.values(1,:)-wf1mv.values(1,:);
+INI.wf1bias = -0*(wf1v.values(1,:)-wf1s.values(1,:)-wf1leak.values(1,:)-..
+                wf1vg.values(1,:)-wf1w.values(1,:)+wf1c.values(1,:));
 
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);
