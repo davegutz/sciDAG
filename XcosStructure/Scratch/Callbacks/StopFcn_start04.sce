@@ -65,6 +65,7 @@ overplot(['START_WFVRS', 'start_wfvrs'], ['r-',  'b--'], 'Start Valve Reference 
 subplot(224)
 overplot(['START_WFVX', 'start_wfvx'], ['r-',  'b--'], 'Start Valve Damping Flow')
 end
+
 if 0 then
 // Trivalve regulator plots
 figs($+1) = figure("Figure_name", 'Trivalve_Pressure_1', "Position", [100,30,610,460]);
@@ -111,6 +112,7 @@ overplot(['TRI_WFSX', 'tri_wfsx'], ['r-',  'b--'], 'Trivalve SX Flow')
 subplot(326)
 overplot(['TRI_WFXD', 'tri_wfxd'], ['r-',  'b--'], 'Trivalve XD Flow')
 end
+
 if 1 then
 // Metering valve halfvalve plots**********
 figs($+1) = figure("Figure_name", 'Halfvalve_Pressure_1', "Position", [200,30,610,460]);
@@ -139,7 +141,8 @@ overplot(['MV_WFS', 'mv_wfs'], ['r-',  'b--'], 'Halfvalve Supply Flow')
 subplot(212)
 overplot(['MV_WFD', 'mv_wfd'], ['r-',  'b--'], 'Halfvalve Discharge Flow')
 end
-if 0 then
+
+if 1 then
 // Head sensor head plots**********
 figs($+1) = figure("Figure_name", 'Head_Pressure_1', "Position", [300,30,610,460]);
 subplot(121)
@@ -166,7 +169,7 @@ subplot(223)
 overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
 end
 
-if 0 then
+if 1 then
 figs($+1) = figure("Figure_name", 'Throttle_Pressure_1', "Position", [400,30,610,460]);
 subplot(221)
 overplot(['p2'], ['r--'], 'Throttle Valve Pressures')

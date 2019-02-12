@@ -49,6 +49,7 @@ INI.ven_ps = start_pxr.values(1,:);
 INI.ven_pd = start_ps.values(1,:);
 INI.pamb = mv_pa.values(1,:);
 INI.pr = mv_pr.values(1,:);
+INI.ps3 = ps3.values(1,:);
 
 
 FP.sg = fp_sg.values(1,:);
