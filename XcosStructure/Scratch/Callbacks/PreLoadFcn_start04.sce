@@ -26,7 +26,7 @@ global GEO INI FP
 
 mprintf('In %s\n', sfilename())  
 
-stacksize('max');
+//stacksize('max');
 
 // Define valve vsv start valve geometry
 d = 0.2657;
@@ -180,10 +180,11 @@ GEO.main_line.a = 0.363;
 GEO.main_line.vol = GEO.main_line.l*GEO.main_line.a; 
 GEO.main_line.n = 5;
 GEO.vo_pnozin.vol = 20;
+
 // Nozzle pressure drop
-xwfnoz = [0.,     540.,   900.,   6300., 10440., 13590., 15300., 16560., 17000., 18000.]';
-ydpnoz = [125.,   130.,   154.,   265.,   365.,  450.,   510.,   573.,   615.,   735]';
-GEO.noz.tb = [xwfnoz, ydpnoz];
-clear xwfnoz ydpnoz
+ywfnoz = [0.,     540.,   900.,   6300., 10440., 13590., 15300., 16560., 17000., 18000.]';
+xdpnoz = [125.,   130.,   154.,   265.,   365.,  450.,   510.,   573.,   615.,   735]';
+GEO.noz.tb = [xdpnoz, ywfnoz];
+clear ywfnoz xdpnoz
 
 mprintf('Completed %s\n', sfilename())  

@@ -36,7 +36,7 @@ mprintf('In %s\n', sfilename())
 try close(figs); end
 figs=[];
 
-if 1 then
+if 0 then
 figs($+1) = figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
 subplot(221)
 overplot(['start_ps'], ['r--'], 'Start Valve Pressures')
@@ -113,7 +113,7 @@ subplot(326)
 overplot(['TRI_WFXD', 'tri_wfxd'], ['r-',  'b--'], 'Trivalve XD Flow')
 end
 
-if 1 then
+if 0 then
 // Metering valve halfvalve plots**********
 figs($+1) = figure("Figure_name", 'Halfvalve_Pressure_1', "Position", [200,30,610,460]);
 subplot(221)
@@ -142,7 +142,7 @@ subplot(212)
 overplot(['MV_WFD', 'mv_wfd'], ['r-',  'b--'], 'Halfvalve Discharge Flow')
 end
 
-if 1 then
+if 0 then
 // Head sensor head plots**********
 figs($+1) = figure("Figure_name", 'Head_Pressure_1', "Position", [300,30,610,460]);
 subplot(121)
@@ -169,7 +169,7 @@ subplot(223)
 overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
 end
 
-if 1 then
+if 0 then
 figs($+1) = figure("Figure_name", 'Throttle_Pressure_1', "Position", [400,30,610,460]);
 subplot(221)
 overplot(['p2'], ['r--'], 'Throttle Valve Pressures')
@@ -201,7 +201,17 @@ subplot(224)
 overplot(['MVTV_WFVX', 'mvtv_wfvx'], ['r-',  'b--'], 'Throttle Valve Damping Flow')
 end
 
-
+if 1 then
+figs($+1) = figure("Figure_name", 'MAIN_FLOW', "Position", [10,30,610,460]);
+subplot(221)
+overplot(['WFMD', 'wfmd'], ['r-', 'b--'], 'TV Discharge Flow')
+subplot(222)
+overplot(['WFCD', 'wfcd'], ['r-', 'b--'], 'Check Drain Flow')
+subplot(223)
+overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
+subplot(224)
+overplot(['WFMV', 'wfmv', 'WFAREA'], ['r-', 'b--', 'g-'], 'Metering Valve Discharge Flow')
+end
 
 
 mprintf('Completed %s\n', sfilename())  
