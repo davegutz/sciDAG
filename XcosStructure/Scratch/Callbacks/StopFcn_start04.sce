@@ -202,15 +202,25 @@ overplot(['MVTV_WFVX', 'mvtv_wfvx'], ['r-',  'b--'], 'Throttle Valve Damping Flo
 end
 
 if 1 then
-figs($+1) = figure("Figure_name", 'MAIN_FLOW', "Position", [10,30,610,460]);
+figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [10,30,610,460]);
 subplot(221)
-overplot(['WFMD', 'wfmd'], ['r-', 'b--'], 'TV Discharge Flow')
+overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
 subplot(222)
-overplot(['WFCD', 'wfcd'], ['r-', 'b--'], 'Check Drain Flow')
+overplot(['WF1MV', 'wf1mv'], ['r-', 'b--'], 'MV Supply Flow')
 subplot(223)
-overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
+overplot(['WF1S', 'wf1s'], ['r-', 'b--'], 'Sense Flow')
 subplot(224)
-overplot(['WFMV', 'wfmv', 'WFAREA'], ['r-', 'b--', 'g-'], 'Metering Valve Discharge Flow')
+overplot(['WFMV', 'mv_wfd', 'WFAREA'], ['r-', 'b--', 'g-'], 'MV Discharge Flow')
+
+figs($+1) = figure("Figure_name", 'MAIN_FLOW_2', "Position", [10,30,610,460]);
+subplot(221)
+overplot(['WF3', 'wf3'], ['r-', 'b--'], 'Throttle Valve Discharge Flow')
+subplot(222)
+overplot(['WFMD', 'wfmd'], ['r-', 'b--'], 'Main Discharge Flow')
+subplot(223)
+overplot(['WFCD', 'wfcd'], ['r-', 'b--'], 'Check Drain Flow')
+subplot(224)
+overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
 end
 
 
