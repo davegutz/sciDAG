@@ -36,6 +36,18 @@ mprintf('In %s\n', sfilename())
 try close(figs); end
 figs=[];
 
+
+PDVEN = struct('time', PALL.time(:,1), 'values', PALL.values(1,:));
+P1SO = struct('time', PALL.time(:,1), 'values', PALL.values(:,2));
+P2 = struct('time', PALL.time(:,1), 'values', PALL.values(:,3));
+P_3 = struct('time', PALL.time(:,1), 'values', PALL.values(:,4));
+PX = struct('time', PALL.time(:,1), 'values', PALL.values(:,5));
+P_NOZIN = struct('time', PALL.time(:,1), 'values', PALL.values(:,6));
+PS3 = struct('time', PALL.time(:,1), 'values', PALL.values(:,7));
+clear PALL
+
+
+
 if 0 then
 figs($+1) = figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
 subplot(221)
@@ -221,6 +233,16 @@ subplot(223)
 overplot(['WFCD', 'wfcd'], ['r-', 'b--'], 'Check Drain Flow')
 subplot(224)
 overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
+
+figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [10,30,610,460]);
+subplot(221)
+overplot(['P1SO', 'p1so'], ['r-', 'b--'], 'MV Supply Pressure')
+subplot(222)
+overplot(['P2', 'p2'], ['r-', 'b--'], 'MV Discharge Pressure')
+subplot(223)
+overplot(['P_3', 'p3'], ['r-', 'b--'], 'TV Discharge Pressure')
+subplot(224)
+overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
 end
 
 
