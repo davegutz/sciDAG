@@ -36,15 +36,25 @@ mprintf('In %s\n', sfilename())
 try close(figs); end
 figs=[];
 
+tWALL = WALL.time(:,1);
+WFAREA = struct('time', tWALL, 'values', WALL.values(:,1));
+WFMV = struct('time', tWALL, 'values', WALL.values(:,2));
+WF1V = struct('time', tWALL, 'values', WALL.values(:,3));
+WFMD = struct('time', tWALL, 'values', WALL.values(:,4));
+WF36 = struct('time', tWALL, 'values', WALL.values(:,5));
+WF3 = struct('time', tWALL, 'values', WALL.values(:,6));
+WF1MV = struct('time', tWALL, 'values', WALL.values(:,7));
+clear WALL tWALL
 
-PDVEN = struct('time', PALL.time(:,1), 'values', PALL.values(1,:));
-P1SO = struct('time', PALL.time(:,1), 'values', PALL.values(:,2));
-P2 = struct('time', PALL.time(:,1), 'values', PALL.values(:,3));
-P_3 = struct('time', PALL.time(:,1), 'values', PALL.values(:,4));
-PX = struct('time', PALL.time(:,1), 'values', PALL.values(:,5));
-P_NOZIN = struct('time', PALL.time(:,1), 'values', PALL.values(:,6));
-PS3 = struct('time', PALL.time(:,1), 'values', PALL.values(:,7));
-clear PALL
+tPALL = PALL.time(:,1);
+PDVEN = struct('time', tPALL, 'values', PALL.values(:,1));
+P1SO = struct('time', tPALL, 'values', PALL.values(:,2));
+P2 = struct('time', tPALL, 'values', PALL.values(:,3));
+P_3 = struct('time', tPALL, 'values', PALL.values(:,4));
+PX = struct('time', tPALL, 'values', PALL.values(:,5));
+P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,6));
+PS3 = struct('time', tPALL, 'values', PALL.values(:,7));
+clear PALL tPALL
 
 
 
