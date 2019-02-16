@@ -40,6 +40,10 @@ exec('init_start04detail.sce', -1);
 exec('init_start04.sce', -1);
 // press play.  Same memory issues as detail
 // interactive results in Results.   Formal plots in Results
+// Third version to let components interact.  Implicit initialization.
+exec('init_start04selfinit.sce', -1);
+// press play.  Same memory issues as detail
+// interactive results in Results.   Formal plots in Results
 
 
 
