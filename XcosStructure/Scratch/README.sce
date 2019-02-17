@@ -30,13 +30,13 @@
 // Start flow system development
 // c-code model run first in Linux Ubuntu to generate .csv files in Data folder
 // First version to zoom on each component
+// See Diagrams/start04_handSketch.png for high-level schematic
 exec('init_start04detail.sce', -1);
 // press play.   May throw memory error.   Activate "stacksize('max')" line
 // in PreLoadFcn_start04detail.sce.   May not run on all platforms - comment
 // it back out to run without bomb
 // interactive result in Results/expected_start04detail*.png
 // Formal plots in Results/expected_start04detail_formal*.png
-// Second version to let components interact.  Explicit initialization.
 exec('init_start04.sce', -1);
 // press play.  Same memory issues as detail
 // interactive results in Results.   Formal plots in Results
@@ -44,15 +44,7 @@ exec('init_start04.sce', -1);
 exec('init_start04selfinit.sce', -1);
 // press play.  Same memory issues as detail
 // interactive results in Results.   Formal plots in Results
-
-
-
-exec('init_start04detail.sce', -1);
-// press play.   May throw memory error.   Activate "stacksize('max')" line
-// in PreLoadFcn_start04detail.sce.   May not run on all platforms - comment
-// it back out to run without bomb
-// interactive result in Results/expected_start04detail*.png
-// Formal plots in Results/expected_start04detail_formal*.png
+// Fourth version to self initialize using a solver
 
 // Test pipes
 exec('init_pipe.sce', -1);
