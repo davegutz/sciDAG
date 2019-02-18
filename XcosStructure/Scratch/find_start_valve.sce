@@ -19,27 +19,53 @@
 // SOFTWARE.
 // Feb 17, 2019    DA Gutz        Created
 // 
-clear blstart
-for i = 1:length(scs_m.objs)
-    if typeof(scs_m.objs(i)) == "Block" &..
-         scs_m.objs(i).gui=="SUPER_f" &..
-          scs_m.objs(i).model.label=="VBP"  then
-          iVBP = i;
-          break;
-     end
+function blk_f = find_block(parent_m, label)
+    if typeof(parent_m)=="diagram" then
+//        mprintf('searching %s for %s.   %ld objects...\n', parent_m.props.title, label, length(parent_m.objs));
+    end
+    for i = 1:length(parent_m.objs)
+//        mprintf('i=%ld, type=%s\n', i, typeof(parent_m.objs(i)));
+        if typeof(parent_m.objs(i))=="Block" & parent_m.objs(i).gui=="SUPER_f" then
+//            mprintf('i=%ld, gui=%s\n', i, parent_m.objs(i).gui);
+            blk_f = find_block(parent_m.objs(i).model.rpar, label);
+            if typeof(blk_f)=="scicos_block"
+                return;
+            end
+        end
+        if typeof(parent_m.objs(i))=="Block" then
+//            mprintf('checking %s for %s..\n', parent_m.objs(i).model.label, label);
+            if parent_m.objs(i).model.label==label then
+                blk_f = model2blk(parent_m.objs(i).model);
+//                mprintf('*****found %s*******typeof=%s\n', label, typeof(blk_f))
+                return
+            end
+        end    
+    end
+    if ~exists('blk_f') then
+        blk_f = "not found";
+    end
+endfunction
+
+clear bl_start
+bl_start = find_block(scs_m, 'start');
+if typeof(bl_start)~="scicos_block" then
+    error('start not found');
 end
-
-for j = 1:length(scs_m.objs(iVBP).model.rpar.objs)
-    if typeof(scs_m.objs(iVBP).model.rpar.objs(j))=="Block" &..
-         scs_m.objs(iVBP).model.rpar.objs(j).gui=="VALVE_A" &..
-          scs_m.objs(iVBP).model.rpar.objs(j).model.label=="start"  then
-          jSTART = j;
-          break;
-     end
- end
-
-o_start = scs_m.objs(iVBP).model.rpar.objs(jSTART).model;
-bl_start = model2blk(o_start);
+clear bl_mv
+bl_mv = find_block(scs_m, 'mv');
+if typeof(bl_mv)~="scicos_block" then
+    error('mv not found');
+end
+clear bl_mvtv
+bl_mvtv = find_block(scs_m, 'mvtv');
+if typeof(bl_mvtv)~="scicos_block" then
+    error('mvtv not found');
+end
+clear bl_hs
+bl_hs = find_block(scs_m, 'hs');
+if typeof(bl_hs)~="scicos_block" then
+    error('hs not found');
+end
 
 x = INI.vsv.x;
  
