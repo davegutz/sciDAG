@@ -160,7 +160,7 @@ void head_b(scicos_block *blk, int flag)
     double c = C;
     double cdo = CDO;
     double fb = FB;
-    double fdyf = FDYF;
+    //double fdyf = FDYF;
     double fs = FS;
     double fstf = FSTF;
     double kb = KB;
@@ -190,20 +190,22 @@ void head_b(scicos_block *blk, int flag)
     f_cf = tab1(f_ln/max(X, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
     f_f = (pf - ph) * f_an * \
             (1. + 16. * SQR(f_cf * X / f_dn));
-    df  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X;
+    df  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X - Xdot*c;
     
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = df - Xdot*c;
+        DFnet = df;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = df - fdyf - Xdot*c;
+//        DFnet = df - fdyf;
+        DFnet = df - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = df + fdyf - Xdot*c;
+//        DFnet = df + fdyf;
+        DFnet = df + fstf;
     }
     else if(mode0==mode_stop_min)
     {
