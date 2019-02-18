@@ -19,31 +19,128 @@
 // SOFTWARE.
 // Feb 17, 2019    DA Gutz        Created
 // 
-function blk_f = find_block(parent_m, label)
-    if typeof(parent_m)=="diagram" then
-//        mprintf('searching %s for %s.   %ld objects...\n', parent_m.props.title, label, length(parent_m.objs));
-    end
-    for i = 1:length(parent_m.objs)
-//        mprintf('i=%ld, type=%s\n', i, typeof(parent_m.objs(i)));
-        if typeof(parent_m.objs(i))=="Block" & parent_m.objs(i).gui=="SUPER_f" then
-//            mprintf('i=%ld, gui=%s\n', i, parent_m.objs(i).gui);
-            blk_f = find_block(parent_m.objs(i).model.rpar, label);
-            if typeof(blk_f)=="scicos_block"
-                return;
-            end
-        end
-        if typeof(parent_m.objs(i))=="Block" then
-//            mprintf('checking %s for %s..\n', parent_m.objs(i).model.label, label);
-            if parent_m.objs(i).model.label==label then
-                blk_f = model2blk(parent_m.objs(i).model);
-//                mprintf('*****found %s*******typeof=%s\n', label, typeof(blk_f))
-                return
-            end
-        end    
-    end
-    if ~exists('blk_f') then
-        blk_f = "not found";
-    end
+
+function [blkcall] = callblk_valve_a(blk, ps, pd, ph, prs, pr, pxr, xol)
+    // Call compiled funcion VALVE_A that is scicos_block blk
+    blk.inptr(1) = ps;
+    blk.inptr(2) = pd;
+    blk.inptr(3) = ph;
+    blk.inptr(4) = prs;
+    blk.inptr(5) = pr;
+    blk.inptr(6) = pxr;
+    blk.inptr(7) = xol;
+    blkcall.ps = ps;
+    blkcall.pd = pd;
+    blkcall.ph = ph;
+    blkcall.prs = prs;
+    blkcall.pr = pr;
+    blkcall.pxr = pxr;
+    blkcall.xol = xol;
+    blkcall.sg = blk.rpar(1);
+    blkcall.LINCOS_OVERRIDE = blk.rpar(2);
+    blk = callblk(blk, 0, 0);
+    blk = callblk(blk, 1, 0);
+    blk = callblk(blk, 9, 0);
+    blkcall.wfs = blk.outptr(1);
+    blkcall.wfd = blk.outptr(2);
+    blkcall.wfh = blk.outptr(3);
+    blkcall.wfvrs = blk.outptr(4);
+    blkcall.wfvr = blk.outptr(5);
+    blkcall.wfvx = blk.outptr(6);
+    blkcall.v = blk.outptr(7);
+    blkcall.x = blk.outptr(8);
+    blkcall.uf = blk.outptr(9);
+//    blkcall.mode = blk.outptr(10);
+    blkcall.V = blk.xd(1);
+    blkcall.A = blk.xd(2);
+    blkcall.mode = blk.mode;
+    blkcall.surf0 = blk.g(1);
+    blkcall.surf1 = blk.g(2);
+    blkcall.surf2 = blk.g(3);
+    blkcall.surf3 = blk.g(4);
+    blkcall.surf4 = blk.g(5);
+endfunction
+
+function [blkcall] = callblk_halfvalve_a(blk, ps, px, pr, pc, pa, pw, pd, xol)
+    // Call compiled funcion HALFVALVE_A that is scicos_block blk
+    blk.inptr(1) = ps;
+    blk.inptr(2) = px;
+    blk.inptr(3) = pr;
+    blk.inptr(4) = pc;
+    blk.inptr(5) = pa;
+    blk.inptr(6) = pw;
+    blk.inptr(7) = pd;
+    blk.inptr(8) = xol;
+    blkcall.ps = ps;
+    blkcall.px = px;
+    blkcall.pr = pr;
+    blkcall.pc = pc;
+    blkcall.pa = pa;
+    blkcall.pw = pw;
+    blkcall.pd = pd;
+    blkcall.xol = xol;
+    blkcall.sg = blk.rpar(1);
+    blkcall.LINCOS_OVERRIDE = blk.rpar(2);
+    blk = callblk(blk, 0, 0);
+    blk = callblk(blk, 1, 0);
+    blk = callblk(blk, 9, 0);
+    blkcall.wfs = blk.outptr(1);
+    blkcall.wfd = blk.outptr(2);
+    blkcall.wfsr = blk.outptr(3);
+    blkcall.wfwd = blk.outptr(4);
+    blkcall.wfw = blk.outptr(5);
+    blkcall.wfwx = blk.outptr(6);
+    blkcall.wfxa = blk.outptr(7);
+    blkcall.wfrc = blk.outptr(8);
+    blkcall.wfx = blk.outptr(9);
+    blkcall.wfa = blk.outptr(10);
+    blkcall.wfc = blk.outptr(11);
+    blkcall.wfr = blk.outptr(12);
+    blkcall.v = blk.outptr(13);
+    blkcall.x = blk.outptr(14);
+    blkcall.uf = blk.outptr(15);
+//    blkcall.mode = blk.outptr(16);
+    blkcall.V = blk.xd(1);
+    blkcall.A = blk.xd(2);
+    blkcall.mode = blk.mode;
+    blkcall.surf0 = blk.g(1);
+    blkcall.surf1 = blk.g(2);
+    blkcall.surf2 = blk.g(3);
+    blkcall.surf3 = blk.g(4);
+    blkcall.surf4 = blk.g(5);
+endfunction
+
+function [blkcall] = callblk_head_b(blk, pf, ph, pl, xol)
+    // Call compiled funcion HEAD_B that is scicos_block blk
+    blk.inptr(1) = pf;
+    blk.inptr(2) = ph;
+    blk.inptr(3) = pl;
+    blk.inptr(4) = xol;
+    blkcall.pf = pf;
+    blkcall.ph = ph;
+    blkcall.pl = pl;
+    blkcall.xol = xol;
+    blkcall.sg = blk.rpar(1);
+    blkcall.LINCOS_OVERRIDE = blk.rpar(2);
+    blk = callblk(blk, 0, 0);
+    blk = callblk(blk, 1, 0);
+    blk = callblk(blk, 9, 0);
+    blkcall.wff = blk.outptr(1);
+    blkcall.wfh = blk.outptr(2);
+    blkcall.wfl = blk.outptr(3);
+    blkcall.plx = blk.outptr(4);
+    blkcall.v = blk.outptr(5);
+    blkcall.x = blk.outptr(6);
+    blkcall.uf = blk.outptr(7);
+//    blkcall.mode = blk.outptr(8);
+    blkcall.V = blk.xd(1);
+    blkcall.A = blk.xd(2);
+    blkcall.mode = blk.mode;
+    blkcall.surf0 = blk.g(1);
+    blkcall.surf1 = blk.g(2);
+    blkcall.surf2 = blk.g(3);
+    blkcall.surf3 = blk.g(4);
+    blkcall.surf4 = blk.g(5);
 endfunction
 
 clear bl_start
@@ -67,8 +164,23 @@ if typeof(bl_hs)~="scicos_block" then
     error('hs not found');
 end
 
-x = INI.vsv.x;
- 
+
+
+
+
+bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, INI.p1so,..
+                    INI.p1so, 0, INI.ven_ps, INI.vsv.x);
+                    
+bl_mv_call = callblk_halfvalve_a(bl_mv, INI.p1so, INI.pr, INI.pr, ..
+                    INI.ven_ps, INI.pamb, INI.p1so, INI.p2, INI.mv.x);
+
+bl_mvtv_call = callblk_valve_a(bl_mvtv, INI.p2, INI.p3, 0,..
+                    0, INI.prt, INI.px, INI.mvtv.x);
+
+bl_hs_call = callblk_head_b(bl_hs, INI.px, INI.p1so, INI.p3s, INI.hs.x);
+
+
+if 0 then
 bl_start.inptr(1) = INI.ven_pd;
 bl_start.inptr(2) = 0;
 bl_start.inptr(3) = INI.p1so;
@@ -111,5 +223,6 @@ blstart.surf1 = bl_start.g(2);
 blstart.surf2 = bl_start.g(3);
 blstart.surf3 = bl_start.g(4);
 blstart.surf4 = bl_start.g(5);
+end
 
 

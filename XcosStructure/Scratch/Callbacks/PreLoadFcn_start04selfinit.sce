@@ -26,7 +26,7 @@ global GEO INI FP
 
 mprintf('In %s\n', sfilename())  
 
-stacksize('max');
+//stacksize('max');
 
 // Define valve vsv start valve geometry
 d = 0.2657;

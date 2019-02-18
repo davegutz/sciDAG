@@ -50,6 +50,7 @@ INI.ven_pd = 1451.2;
 INI.pamb = 14.696;
 INI.pr = 198.59;
 INI.ps3 = 15;
+INI.prt = 132.879;
 
 
 FP.sg = fp_sg.values(1,:);
