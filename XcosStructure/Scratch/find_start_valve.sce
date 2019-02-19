@@ -143,6 +143,21 @@ function [blkcall] = callblk_head_b(blk, pf, ph, pl, xol)
     blkcall.surf4 = blk.g(5);
 endfunction
 
+function [blkcall] = callblk_cor_aptow(blk, a, %cd, ps, pd)
+    // Call compiled funcion HEAD_B that is scicos_block blk
+    blk.inptr(1) = a;
+    blk.inptr(2) = ps;
+    blk.inptr(3) = pd;
+    blkcall.a = a;
+    blkcall.ps = ps;
+    blkcall.pd = pd;
+    blk.rpar(1) = %cd;
+    blkcall.cd = %cd;
+    blkcall.sg = blk.rpar(2);
+    blk = callblk(blk, 0, 0);
+    blkcall.wf = blk.outptr(1);
+endfunction
+
 clear bl_start
 bl_start = find_block(scs_m, 'start');
 if typeof(bl_start)~="scicos_block" then
@@ -163,66 +178,49 @@ bl_hs = find_block(scs_m, 'hs');
 if typeof(bl_hs)~="scicos_block" then
     error('hs not found');
 end
+clear bl_a_tvb
+bl_a_tvb = find_block(scs_m, 'a_tvb');
+if typeof(bl_a_tvb)~="scicos_block" then
+    error('a_tvb not found');
+end
 
+INI.x = [INI.vsv.x; INI.p1so; INI.p2; INI.mvtv.x; INI.px; INI.hs.x; INI.mv.x];
 
-
-
-
+INI.vsv.x = INI.x(1);
+INI.p1so = INI.x(2);
+INI.p2 = INI.x(3);
+INI.mvtv.x = INI.x(4);
+INI.px = INI.x(5);
+INI.hs.x = INI.x(6);
+INI.mv.x = INI.x(7);
 bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, INI.p1so,..
                     INI.p1so, 0, INI.ven_ps, INI.vsv.x);
+INI.wf1v = -(bl_start_call.wfh+bl_start_call.wfvrs);              
                     
 bl_mv_call = callblk_halfvalve_a(bl_mv, INI.p1so, INI.pr, INI.pr, ..
                     INI.ven_ps, INI.pamb, INI.p1so, INI.p2, INI.mv.x);
+INI.wf1mv = bl_mv_call.wfs;
+INI.wfmv = bl_mv_call.wfd;
 
 bl_mvtv_call = callblk_valve_a(bl_mvtv, INI.p2, INI.p3, 0,..
                     0, INI.prt, INI.px, INI.mvtv.x);
+INI.wfvx = bl_mvtv_call.wfvx;
+INI.wf3 = bl_mvtv_call.wfd;
 
-bl_hs_call = callblk_head_b(bl_hs, INI.px, INI.p1so, INI.p3s, INI.hs.x);
+bl_hs_call = callblk_head_b(bl_hs, INI.px, INI.p1so, INI.p2, INI.hs.x);
+INI.wf1s = bl_hs_call.wfh;
+INI.wfx = bl_hs_call.wff;
+INI.wf3s = bl_hs_call.wfl;
+INI.wf2s = INI.wf3s;
 
+bl_a_tvb_call = callblk_cor_aptow(bl_a_tvb, GEO.a_tvb.ao, GEO.a_tvb.cd, INI.prt, INI.px);
+INI.wftvb = bl_a_tvb_call.wf;
 
-if 0 then
-bl_start.inptr(1) = INI.ven_pd;
-bl_start.inptr(2) = 0;
-bl_start.inptr(3) = INI.p1so;
-bl_start.inptr(4) = INI.p1so;
-bl_start.inptr(5) = 0;
-bl_start.inptr(6) = INI.ven_ps;
-bl_start.inptr(7) = 0;
-
-bl_start.rpar(1) = FP.sg;
-bl_start.rpar(2) = 1;  // LINCOS_OVERRIDE doesn't seem to do anything this mode
-
-bl_start.x(1) = x;
-bl_start.x(2) = 0;
-
-t = 0;
-bl_start = callblk(bl_start, 0, t);
-bl_start = callblk(bl_start, 1, t);
-bl_start = callblk(bl_start, 9, t);
-
-blstart.sg = bl_start.rpar(1);
-blstart.LINCOS_OVERRIDE = bl_start.rpar(2);
-blstart.wfs = bl_start.outptr(1);
-blstart.wfd = bl_start.outptr(2);
-blstart.wfh = bl_start.outptr(3);
-blstart.wfvrs = bl_start.outptr(4);
-blstart.wfvr = bl_start.outptr(5);
-blstart.wfvx = bl_start.outptr(6);
-blstart.v = bl_start.outptr(7);
-blstart.x = bl_start.outptr(8);
-blstart.uf = bl_start.outptr(9);
-blstart.mode = bl_start.outptr(10);
-
-blstart.V = bl_start.xd(1);
-blstart.A = bl_start.xd(2);
-
-blstart.mode = bl_start.mode;
-
-blstart.surf0 = bl_start.g(1);
-blstart.surf1 = bl_start.g(2);
-blstart.surf2 = bl_start.g(3);
-blstart.surf3 = bl_start.g(4);
-blstart.surf4 = bl_start.g(5);
-end
-
-
+e_start = bl_start_call.uf/10;
+e_p1so = (INI.wf1v - INI.wf1bias - INI.wf1mv - INI.wf1s)/INI.wf36;
+e_p2 = (INI.wfmv + INI.wf2s - bl_mvtv_call.wfs)/INI.wf36;
+e_mvtv = bl_mvtv_call.uf/10;
+e_px = (INI.wfx + INI.wfvx - INI.wftvb)/100;
+e_hs = bl_hs_call.uf/10;
+e_p3 = (INI.wf3 - INI.wf36)/INI.wf36;
+INI.e = [e_start; e_p1so; e_p2; e_mvtv; e_px; e_hs; e_p3];

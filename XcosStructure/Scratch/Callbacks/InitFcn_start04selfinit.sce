@@ -29,9 +29,8 @@ GEO.ln_vs = lti_man_n_vm(GEO.ln_vs, FP.sg, FP.beta);
 GEO.ln_p3s = lti_man_n_vm(GEO.ln_p3s, FP.sg, FP.beta);
 GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
 
-INI.ln_vs = ini_man_n_vm(GEO.ln_vs, 448.552, 711.774);
-INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, 395.834, 0);
-INI.main_line = ini_man_n_mm(GEO.main_line, 59.4582, 100);
+INI.wf36 = 100;
+INI.wfmd = INI.wf36;
 INI.p3s = 395.834;
 INI.px = 317.942;
 INI.p2 = 395.834;
@@ -51,6 +50,9 @@ INI.pamb = 14.696;
 INI.pr = 198.59;
 INI.ps3 = 15;
 INI.prt = 132.879;
+INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, 711.774);
+INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
+INI.main_line = ini_man_n_mm(GEO.main_line, 59.4582, INI.wf36);
 
 
 FP.sg = fp_sg.values(1,:);
