@@ -144,6 +144,21 @@ function [x,y,typ] = COR_APTOW(job, arg1, arg2)
     end
 endfunction
 
+function [blkcall] = callblk_cor_aptow(blk, a, %cd, ps, pd)
+    // Call compiled funcion HEAD_B that is scicos_block blk
+    blk.inptr(1) = a;
+    blk.inptr(2) = ps;
+    blk.inptr(3) = pd;
+    blkcall.a = a;
+    blkcall.ps = ps;
+    blkcall.pd = pd;
+    blk.rpar(1) = %cd;
+    blkcall.cd = %cd;
+    blkcall.sg = blk.rpar(2);
+    blk = callblk(blk, 0, 0);
+    blkcall.wf = blk.outptr(1);
+endfunction
+
 function [x,y,typ] = COR_AWPSTOPD(job, arg1, arg2)
 
     x = [];

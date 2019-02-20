@@ -27,6 +27,8 @@
 // make_libScratch it will do a clear/close so that you are forced to re-run
 // the init_libScratch and avoid a lot of headscratching.
 
+// Be sure to install PSO toolbox using Applications - Module Manager - Optimization
+
 // Start flow system development
 // c-code model run first in Linux Ubuntu to generate .csv files in Data folder
 // First version to zoom on each component

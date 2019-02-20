@@ -117,3 +117,36 @@ function [x,y,typ] = HEAD_B(job, arg1, arg2)
         x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
     end
 endfunction
+
+function [blkcall] = callblk_head_b(blk, pf, ph, pl, xol)
+    // Call compiled funcion HEAD_B that is scicos_block blk
+    blk.inptr(1) = pf;
+    blk.inptr(2) = ph;
+    blk.inptr(3) = pl;
+    blk.inptr(4) = xol;
+    blkcall.pf = pf;
+    blkcall.ph = ph;
+    blkcall.pl = pl;
+    blkcall.xol = xol;
+    blkcall.sg = blk.rpar(1);
+    blkcall.LINCOS_OVERRIDE = blk.rpar(2);
+    blk = callblk(blk, 0, 0);
+    blk = callblk(blk, 1, 0);
+    blk = callblk(blk, 9, 0);
+    blkcall.wff = blk.outptr(1);
+    blkcall.wfh = blk.outptr(2);
+    blkcall.wfl = blk.outptr(3);
+    blkcall.plx = blk.outptr(4);
+    blkcall.v = blk.outptr(5);
+    blkcall.x = blk.outptr(6);
+    blkcall.uf = blk.outptr(7);
+//    blkcall.mode = blk.outptr(8);
+    blkcall.V = blk.xd(1);
+    blkcall.A = blk.xd(2);
+    blkcall.mode = blk.mode;
+    blkcall.surf0 = blk.g(1);
+    blkcall.surf1 = blk.g(2);
+    blkcall.surf2 = blk.g(3);
+    blkcall.surf3 = blk.g(4);
+    blkcall.surf4 = blk.g(5);
+endfunction
