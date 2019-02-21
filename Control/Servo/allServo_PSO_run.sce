@@ -330,7 +330,7 @@ for case_num=1:n_cases
 //            PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
 //            PSO.N, allServo_PSO_Outputfun, PSO.x0);
 //radius = [32 .01 .01 .01 .01 .01 .01]/1; n_radius = 5;
-            [P.fopt, P.xopt, iopt]=myPSO_bsg_starcraft_radius(evstr(P.obj_function),.. 
+            [P.fopt, P.xopt, iopt]=myPSO_bsg_starcraft_rad(evstr(P.obj_function),.. 
             [PSO.boundsmin, PSO.boundsmax],..
             X.speed, PSO.itmax, PSO.N,..
             PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..

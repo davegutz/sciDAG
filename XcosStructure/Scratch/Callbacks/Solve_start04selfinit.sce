@@ -30,18 +30,18 @@
 // INI.wf1bias
 // INI.prt
 // INI.pr
-
 global verbose
 global INI GEO FP
+clearglobal W E X PSO
 global W E X PSO
 clearglobal bl_start  bl_mv bl_mvtv bl_hs bl_a_tvb
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 verbose = 1;
 
 // Explicitly calculated parameters
-INI.pnozin = min(130*(INI.wf36/540)^2, interp1(GEO.noz.tb(:,2), GEO.noz.tb(:,1), INI.wf36, 'linear', 'extrap'))+INI.ps3;
-//INI.p3 = 59.4582;
-INI.p3 = max(171.5*(INI.wf36/17000)^2, 40) + INI.pnozin;
+//INI.pnozin = min(130*(INI.wf36/540)^2, interp1(GEO.noz.tb(:,2), GEO.noz.tb(:,1), INI.wf36, 'linear', 'extrap'))+INI.ps3;
+////INI.p3 = 59.4582;
+//INI.p3 = max(171.5*(INI.wf36/17000)^2, 40) + INI.pnozin;
 INI.wfmd = INI.wf36;
 INI.wf3s = 0;
 W.start = 0.1;
@@ -54,7 +54,7 @@ W.p3 = 1/INI.wf36;
 
 exec('./Callbacks/ObjFcn_start04selfinit.sci', -1);
 exec('./Callbacks/OutFcn_start04selfinit.sci', -1);
-exec('./Callbacks/OutFcn_start04selfinit.sci', -1);
+outputfun_str = 'OutFcn_start04selfinit';
 
 // Find the blocks
 bl_start = find_block(scs_m, 'start');
@@ -80,38 +80,47 @@ end
 
 // First guess use init file
 INI.x = [INI.vsv.x, INI.p1so, INI.p2, INI.mvtv.x, INI.px, INI.hs.x, INI.mv.x];
-
 obj_score = ObjFcn_start04selfinit(INI.x);
-
-PSO.wmax = 0.9; PSO.wmin = 0.4;
-PSO.itmax = 10;
-PSO.c1 = 0.7; PSO.c2 = 1.47;
-PSO.N = 50; PSO.D = 7;
-PSO.launchp = 0.9;
-PSO.speedf = [2.0000000000000000 2.0000000000000000 2.0000000000000000 2.0000000000000000 2.0000000000000000 2.0000000000000000 2.0000000000000000];
-PSO.verbose = 1;
-PSO.boundsmax = [50.000000000000000;0.25000000000000000;0.050000000000000010;0.25000000000000000;0.050000000000000010;0.25000000000000000;0.25000000000000000];
-PSO.boundsmin = [25.000000000000000;0.00000000000000000;0.0080000000000000002;0.00000000000000000;0.0080000000000000002;0.00000000000000000;0.12500000000000000];
-PSO.radius = [32.000000000000000 0.010000000000000000 0.010000000000000000 0.010000000000000000 0.010000000000000000 0.010000000000000000 0.010000000000000000];
-PSO.n_radius = 8; PSO.n_stuck = 10;
-PSO.weights = [0.90000000000000002;0.40000000000000002];
-PSO.c = [0.69999999999999996;1.4700000000000000];
-PSO.x0 = INI.x;
-
-        // PSO inputs
-        speed_max = 0.1*PSO.boundsmax;
-        speed_min = 0.1*PSO.boundsmin;
-        X.speed = [speed_min, speed_max];
-        grand('setsd', 0); // must initialize random generator.  Want same result on repeated runs.
-
 X.obj_function = 'ObjFcn_start04selfinit';
-        [fopt, xopt, iopt] = myPSO_bsg_starcraft_rad(evstr(X.obj_function),.. 
+PSO.iters = 0;
+evstr(outputfun_str + '(PSO.iters, obj_score, INI.x)')
+ 
+PSO.wmax = 0.9; PSO.wmin = 0.4;
+PSO.itmax = 200;
+PSO.c1 = 2; PSO.c2 = 2;
+PSO.N = 20; PSO.D = 7;
+PSO.launchp = 0.9;
+//PSO.speedf = 2*ones(1, PSO.D); 
+PSO.speedf = [.01 1 1 .01 1 .01 .01];
+PSO.verbose = 1;
+PSO.x0 = INI.x;
+dx = 0.05; dp = 100;
+PSO.boundsmax = [GEO.vsv.xmax INI.ven_pd INI.ven_pd GEO.mvtv.xmax INI.ven_pd GEO.hs.xmax INI.mv.x+dx]';
+PSO.boundsmin = [GEO.vsv.xmin INI.ven_ps INI.ven_ps GEO.mvtv.xmin INI.ven_ps GEO.hs.xmin INI.mv.x-dx]';
+PSO.weights = [0.9; 0.4];
+PSO.c = [0.7; 1.47];
+
+// PSO inputs
+//speed_min = 0.1*PSO.boundsmin;
+speed_max = 1*(PSO.boundsmax-PSO.boundsmin);
+speed_min = -speed_max;
+X.speed = [speed_min, speed_max];
+grand('setsd', 0); // must initialize random generator.  Want same result on repeated runs.
+
+//[fopt, xopt, iopt] = myPSO_bsg_starcraft_rad(evstr(X.obj_function),.. 
+//           [PSO.boundsmin, PSO.boundsmax],..
+//            X.speed, PSO.itmax, PSO.N,..
+//            PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
+//            PSO.N,.. 
+//            PSO.radius, PSO.n_radius,..
+//            OutFcn_start04selfinit, PSO.x0,..
+//            PSO.n_stuck);
+[fopt, xopt] = myPSO_bsg_starcraft(evstr(X.obj_function),.. 
            [PSO.boundsmin, PSO.boundsmax],..
             X.speed, PSO.itmax, PSO.N,..
             PSO.weights, PSO.c, PSO.launchp, PSO.speedf,..
-            PSO.N,.. 
-            PSO.radius, PSO.n_radius,..
-            OutFcn_start04selfinit, PSO.x0,..
-            PSO.n_stuck);
-            PSO.iters = PSO.iters + 1;
-            evstr(outputfun_str + '(PSO.iters, fopt, xopt)');
+            PSO.N, OutFcn_start04selfinit,.. 
+            PSO.x0);
+            
+PSO.iters = PSO.iters + 1;
+evstr(outputfun_str + '(PSO.iters, fopt, xopt)');

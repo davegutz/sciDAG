@@ -116,7 +116,7 @@ GEO.mv.ax1 = 1.227;
 GEO.mv.cd = 0.69;
 GEO.mv.m = 0.497;
 GEO.mv.xmax = 0.536;
-GEO.mv.xmin = 0;
+GEO.mv.xmin = -0.1;
 exec('./Callbacks/mvwin_a.sci', -1);
 [xt, at] = mvwin_a(40);
 GEO.mv.at.tb = [xt at];
