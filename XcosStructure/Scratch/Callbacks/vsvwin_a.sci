@@ -51,7 +51,7 @@ function [x, a, wv] = vsvwin_a(n)
 
     // Calculate position, and area. */
     for i=1:n
-        x(i)    = i*dx;
+        x(i)    = (i-1)*dx;
         %xend    = XVSVMAX - x(i);
         a(i)    = AVSVMIN;
         a(i)   = a(i) + VSVHOLES * hole(max(min(%xend, VSVHMX), 0.), VSVHDIA);

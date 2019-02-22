@@ -167,6 +167,7 @@ void valve_a(scicos_block *blk, int flag)
     double xmax = XMAX;
 
     // inputs and outputs
+    double x = X;
     double ps = PS;
     double pd = PD;
     double ph = PH;
@@ -197,19 +198,27 @@ void valve_a(scicos_block *blk, int flag)
     double cdo = CDO;
 
     // compute info needed for all passes
+    if(flag==-1)
+    {
+        // Initialization
+        xol = max(min((ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
+             - fs - fjd - fjh - ftd - fth - Xdot*c)/ks, xmin), xmax);
+        df = 0;
+        x = xol;
+    }
+    else x = X;
     wfvx   = Xdot*dwdc*ax2;
     px = OR_AWPDTOPS(ao, wfvx, pxr, cdo, sg);
-    ad = tab1(X, AD, AD+N_AD, N_AD);
-    ah = tab1(X, AH, AH+N_AH, N_AH);
+    ad = tab1(x, AD, AD+N_AD, N_AD);
+    ah = tab1(x, AH, AH+N_AH, N_AH);
     fjd = cp * fabs(ps - pd)*ad;
     fjh = -cp * fabs(ps - ph)*ah;
     ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(ps - pd));
     fth = -lh * 0.01365 * cd * Xdot * SSQRT(sg*(ps - ph));
     df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-             - fs - X*ks - fjd - fjh - ftd - fth - Xdot*c;
-    
+             - fs - x*ks - fjd - fjh - ftd - fth - Xdot*c;
     stops = 0;
-    if(mode0==mode_lincos_override)
+    if(mode0==mode_lincos_override || flag==-1)
     {
         DFnet = df;
     }
@@ -265,6 +274,7 @@ void valve_a(scicos_block *blk, int flag)
             }
             break;
 
+        case -1:
         case 1:
             // compute the outputs of the block
             wfd = OR_APTOW(ad, ps, pd, cd, sg);
@@ -279,7 +289,8 @@ void valve_a(scicos_block *blk, int flag)
             WFVR = wfvr;
             WFVX = wfvx;
             Vo = Xdot;
-            Xo = X;
+            Vo = ah+ad;//debug tables
+            Xo = x;
             UF = df;
             MODE = mode0;
             break;
@@ -479,8 +490,18 @@ void trivalve_a1(scicos_block *blk, int flag)
     fjs = -cp * fabs(px - ps)*as;
     ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(pd - px));
     fts = ls * 0.01365 * cd * Xdot * SSQRT(sg*(ps - px));
-    df = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
+    if(flag==-1)
+    {
+        // Initialization
+        xol = (pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
+             + fext + fs + fjd + fjs + ftd + fts - Xdot*c)/ks;
+        df = 0;
+    }
+    else
+    {
+        df = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
              + fext + fs - X*ks + fjd + fjs + ftd + fts - Xdot*c;
+    }    
     stops = 0;
     if(mode0==mode_lincos_override)
     {
@@ -536,6 +557,7 @@ void trivalve_a1(scicos_block *blk, int flag)
             }
             break;
 
+        case -1:
         case 1:
             // compute the outputs of the block
             wfsx = OR_APTOW(as, ps, px, cd, sg);
@@ -561,7 +583,8 @@ void trivalve_a1(scicos_block *blk, int flag)
             WFSX = wfsx;
             WFXD = wfxd;
             Vo = Xdot;
-            Xo = X;
+            if(flag==-1)    Xo = xol;  // Initialization
+            else            Xo = X;
             UF = df;
             MODE = mode0;
             break;
@@ -639,7 +662,7 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define M       ((GetRealOparPtrs(blk,15))[0]); // Total mass, spool plus load, lbm.
 #define XMAX    ((GetRealOparPtrs(blk,16))[0]); // Max stroke, in
 #define XMIN    ((GetRealOparPtrs(blk,17))[0]); // Min stroke, in
-#define N_A     (blk->oparsz[17])
+#define N_AT    (blk->oparsz[17])
 #define AT      (GetRealOparPtrs(blk,18))  // Table
 
 // inputs
@@ -711,8 +734,8 @@ void hlfvalve_a(scicos_block *blk, int flag)
     double x = X;
 
     // compute info needed for all passes
-    if(mode0==mode_lincos_override) x = XOL;
-    at = tab1(x, AT, AT+N_A, N_A);
+    if(mode0==mode_lincos_override || flag==-1) x = xol;
+    at = tab1(x, AT, AT+N_AT, N_AT);
     df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
              + fj - Xdot*c;
     stops = 0;
@@ -769,6 +792,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
             }
             break;
 
+        case -1:
         case 1:
             // compute the outputs of the block
             wfs = OR_APTOW(at, ps, pd, cd, sg);
@@ -796,7 +820,9 @@ void hlfvalve_a(scicos_block *blk, int flag)
             WFC = wfc;
             WFR = wfr;
             Vo = Xdot;
-            Xo = X;
+            Vo = at;///////////DEBUGGING TABLE LOOKUP
+            if(flag==-1) Xo = xol;
+            else         Xo = X;
             UF = df;
             MODE = mode0;
             break;

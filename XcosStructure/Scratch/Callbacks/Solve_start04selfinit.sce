@@ -52,9 +52,6 @@ W.px = 1/100;
 W.hs = 0.1;
 W.p3 = 1/INI.wf36;
 
-exec('./Callbacks/ObjFcn_start04selfinit.sci', -1);
-exec('./Callbacks/OutFcn_start04selfinit.sci', -1);
-outputfun_str = 'OutFcn_start04selfinit';
 
 // Find the blocks
 bl_start = find_block(scs_m, 'start');
@@ -78,6 +75,92 @@ if typeof(bl_a_tvb)~="scicos_block" then
     error('a_tvb not found');
 end
 
+if 1,  // solve using relaxation method
+p1so = INI.p1so;
+p2 = INI.p2;
+p3 = INI.p3;
+px = INI.px;
+hs_x = INI.hs.x;
+mv_x = INI.mv.x;
+e_p1so = 0;
+e_p2 = 0;
+e_px = 0;
+e_hs = 0;
+e_mv = 0;
+count = 0;
+while ( count== 0 |..
+      ((abs(e_p1so)>1e-16 |..
+        abs(e_p2)>1e-20 |..
+        abs(e_px)>1e-20 |..
+        abs(e_hs)>1e-20 |..
+        abs(e_mv)>1e-20) ..
+        & count<50 ))
+        count   = count + 1;
+
+        p1so = p1so + max(min(e_p1so*0.1, 1), -1);
+        p2 = p2 + max(min(e_p2*0.1, 1), -1);
+        px = px + max(min(-e_px*0.1, 1), -1);
+        hs_x = hs_x + max(min(e_hs/1000, 0.001), -0.001);
+        mv_x = mv_x + max(min(e_mv/100, 0.002), -0.002);
+        
+        bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, p1so,..
+        p1so, 0, INI.ven_ps, 0); // last arg ignored
+        INI.vsv.x = bl_start_call.x;
+        wf1v = -(bl_start_call.wfh+bl_start_call.wfvrs);              
+
+        bl_mv_call = callblk_halfvalve_a(bl_mv, p1so, INI.pr, INI.pr, ..
+        INI.ven_ps, INI.pamb, p1so, p2, mv_x);
+        wf1mv = bl_mv_call.wfs;
+        wfmv = bl_mv_call.wfd;
+
+        bl_mvtv_call = callblk_valve_a(bl_mvtv, p2, p3, 0,..
+        0, INI.prt, px, 0); // last arg ignored
+        mvtv_x = bl_mvtv_call.x;
+        wfvx = bl_mvtv_call.wfvx;
+        wf3 = bl_mvtv_call.wfd;
+
+        bl_hs_call = callblk_head_b(bl_hs, px, p1so, p2, hs_x);
+        wf1s = bl_hs_call.wfh;
+        wfx = bl_hs_call.wff;
+        wf3s = bl_hs_call.wfl;
+        wf2s = wf3s;
+
+        bl_a_tvb_call = callblk_cor_aptow(bl_a_tvb, GEO.a_tvb.ao,..
+        GEO.a_tvb.cd, INI.prt, px);
+        wftvb = bl_a_tvb_call.wf;
+
+        e_p1so = wf1v - INI.wf1bias - wf1mv - wf1s;
+        e_p2 = wfmv + wf2s - bl_mvtv_call.wfs;
+        e_px = wfx + wfvx - wftvb;
+        e_hs = bl_hs_call.uf;
+        e_mv = INI.wf36 - wfmv;
+
+        INI.x = [p1so, p2, px, hs_x, mv_x];
+        INI.e = [e_p1so, e_p2, e_px, e_hs, e_mv]
+        mprintf('x= [%5.1f %5.1f %5.1f %6.4f %6.4f ]  ', INI.x);
+        mprintf('e= [%6.4f %6.4f %6.4f %6.4f %6.4f ]\n', INI.e);
+end
+INI.wf1s = wf1s;
+INI.wfx = wfx;
+INI.wfvx = wfvx;
+INI.wftvb = wftvb;
+INI.wf3s = wf3s;
+INI.wf2s = wf2s;
+INI.wfmv = wfmv;
+INI.wf1mv = wfmv;
+INI.wf1v = wf1v;
+INI.hs.x = hs_x;
+INI.mv.x = mv_x;
+INI.mvtv.x = mvtv_x;
+INI.p1so = p1so;
+INI.p2 = p2;
+INI.px = px;
+
+// solve using PSO
+else
+exec('./Callbacks/ObjFcn_start04selfinit.sci', -1);
+exec('./Callbacks/OutFcn_start04selfinit.sci', -1);
+outputfun_str = 'OutFcn_start04selfinit';
 // First guess use init file
 INI.x = [INI.vsv.x, INI.p1so, INI.p2, INI.mvtv.x, INI.px, INI.hs.x, INI.mv.x];
 obj_score = ObjFcn_start04selfinit(INI.x);
@@ -124,3 +207,4 @@ grand('setsd', 0); // must initialize random generator.  Want same result on rep
             
 PSO.iters = PSO.iters + 1;
 evstr(outputfun_str + '(PSO.iters, fopt, xopt)');
+end

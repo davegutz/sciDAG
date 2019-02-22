@@ -177,6 +177,7 @@ void head_b(scicos_block *blk, int flag)
     
 
     // inputs and outputs
+    double x = X;
     double pf = PF;
     double ph = PH;
     double pl = PL;
@@ -187,10 +188,12 @@ void head_b(scicos_block *blk, int flag)
     // compute info needed for all passes
     wfl = Xdot*dwdc*ae;
     plx = OR_AWPDTOPS(ao, wfl, pl, cdo, sg);
-    f_cf = tab1(f_ln/max(X, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
+    if(flag==-1)    x = xol;   // Initialization
+    else            x = X;
+    f_cf = tab1(f_ln/max(x, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
     f_f = (pf - ph) * f_an * \
-            (1. + 16. * SQR(f_cf * X / f_dn));
-    df  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X - Xdot*c;
+            (1. + 16. * SQR(f_cf * x / f_dn));
+    df  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*x - Xdot*c;
     
     stops = 0;
     if(mode0==mode_lincos_override)
@@ -249,6 +252,7 @@ void head_b(scicos_block *blk, int flag)
             }
             break;
 
+        case -1:
         case 1:
             // compute the outputs of the block
             wff = SGN(pf - ph) * 19020. * \
