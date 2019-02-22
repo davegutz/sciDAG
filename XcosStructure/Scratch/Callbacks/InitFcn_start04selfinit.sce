@@ -20,7 +20,7 @@
 // Jsn 1, 2019      DA Gutz     Created
 // 
 global LINCOS_OVERRIDE figs
-global GEO INI FP
+global GEO INI FP mv_x
 mprintf('In %s\n', sfilename())  
 try close(figs); end
 LINCOS_OVERRIDE = 0;
@@ -56,6 +56,23 @@ INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, 711.774);
 INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, 59.4582, INI.wf36);
 
+if 1 then
+INI.p1so = 442.62;
+INI.p2 = 388.378;
+INI.p3s = INI.p2;
+INI.px = 310.869;
+INI.hs.x = .00712903;
+INI.mv.x = 0.0165;
+mv_x.values(:,1) = mv_x.values(:,1)*0+INI.mv.x;
+//mv_x.values(:,1) = mv_x.values(:,1)*0+mv_x.values(1,1);
+INI.mvtv.x = -0.0380373;
+INI.vsv.x = 0.114757;
+INI.wf1v = INI.wf1bias + INI.wf36;
+INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
+INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
+INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf36);
+end
+mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);

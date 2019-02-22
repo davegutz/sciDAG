@@ -257,14 +257,15 @@ void head_b(scicos_block *blk, int flag)
             // compute the outputs of the block
             wff = SGN(pf - ph) * 19020. * \
                 sqrt(fabs(pf - ph)*sg / \
-                    (1./SQR(f_cn * f_an) + 1./SQR(f_cf * PI * f_dn * X)));
+                    (1./SQR(f_cn * f_an) + 1./SQR(f_cf * PI * f_dn * x)));
             wfh = wfl - wff;
             WFF = wff;
             WFL = wfl;
             WFH = wfh;
             PLX = plx;
             Vo = Xdot;
-            Xo = X;
+            Vo = flag; // debug init call
+            Xo = x;
             UF = df;
             MODE = mode0;
 //            MODE = f_cf;

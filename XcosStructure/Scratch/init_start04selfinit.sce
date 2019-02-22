@@ -36,7 +36,7 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch root
-global GEO INI FP
+global GEO INI FP mv_x
 
 // Auto data overplot load
 [D, N, time] = load_csv_data('./Data/start04.ven.csv', 1);
@@ -45,7 +45,7 @@ exec('./Data/load_decode_csv_data.sce', -1);
 exec('./Data/load_decode_csv_data.sce', -1);
 Tf = time($);
 //TBUF = 0.000001;
-TBUF = (time(4)-time(3))*10;
+TBUF = (time(4)-time(3))*40;
 NBUF = ceil(Tf/TBUF);
 clear D N time
 

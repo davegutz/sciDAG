@@ -198,15 +198,6 @@ void valve_a(scicos_block *blk, int flag)
     double cdo = CDO;
 
     // compute info needed for all passes
-    if(flag==-1)
-    {
-        // Initialization
-        xol = max(min((ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-             - fs - fjd - fjh - ftd - fth - Xdot*c)/ks, xmin), xmax);
-        df = 0;
-        x = xol;
-    }
-    else x = X;
     wfvx   = Xdot*dwdc*ax2;
     px = OR_AWPDTOPS(ao, wfvx, pxr, cdo, sg);
     ad = tab1(x, AD, AD+N_AD, N_AD);
@@ -215,6 +206,15 @@ void valve_a(scicos_block *blk, int flag)
     fjh = -cp * fabs(ps - ph)*ah;
     ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(ps - pd));
     fth = -lh * 0.01365 * cd * Xdot * SSQRT(sg*(ps - ph));
+    if(flag==-1)
+    {
+        // Initialization
+        xol = max(min((ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
+             - fs - fjd - fjh - ftd - fth - Xdot*c)/ks, xmax), xmin);
+        df = 0;
+        x = xol;
+    }
+    else x = X;
     df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
              - fs - x*ks - fjd - fjh - ftd - fth - Xdot*c;
     stops = 0;
@@ -289,7 +289,6 @@ void valve_a(scicos_block *blk, int flag)
             WFVR = wfvr;
             WFVX = wfvx;
             Vo = Xdot;
-            Vo = ah+ad;//debug tables
             Xo = x;
             UF = df;
             MODE = mode0;
@@ -302,8 +301,8 @@ void valve_a(scicos_block *blk, int flag)
 //            surf2 = df+fdyf;
             surf1 = df-fstf;
             surf2 = df+fstf;
-            surf3 = X-xmin;
-            surf4 = X-xmax;
+            surf3 = x-xmin;
+            surf4 = x-xmax;
 
             if (get_phase_simulation() == 1)
             {
@@ -735,7 +734,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
 
     // compute info needed for all passes
     if(mode0==mode_lincos_override || flag==-1) x = xol;
-    at = tab1(x, AT, AT+N_AT, N_AT);
+    at = tab1(x, AT, AT+N_AT, N_AT)*.805;//////////////debug init
     df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
              + fj - Xdot*c;
     stops = 0;
@@ -820,9 +819,8 @@ void hlfvalve_a(scicos_block *blk, int flag)
             WFC = wfc;
             WFR = wfr;
             Vo = Xdot;
-            Vo = at;///////////DEBUGGING TABLE LOOKUP
             if(flag==-1) Xo = xol;
-            else         Xo = X;
+            else         Xo = x;
             UF = df;
             MODE = mode0;
             break;
@@ -832,8 +830,8 @@ void hlfvalve_a(scicos_block *blk, int flag)
             surf0 = Xdot;
             surf1 = df-fstf;
             surf2 = df+fstf;
-            surf3 = X-xmin;
-            surf4 = X-xmax;
+            surf3 = x-xmin;
+            surf4 = x-xmax;
 
             if (get_phase_simulation() == 1)
             {

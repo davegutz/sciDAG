@@ -82,6 +82,7 @@ p3 = INI.p3;
 px = INI.px;
 hs_x = INI.hs.x;
 mv_x = INI.mv.x;
+//mv_x = 0;
 e_p1so = 0;
 e_p2 = 0;
 e_px = 0;
@@ -94,27 +95,24 @@ while ( count== 0 |..
         abs(e_px)>1e-20 |..
         abs(e_hs)>1e-20 |..
         abs(e_mv)>1e-20) ..
-        & count<50 ))
+        & count<1 ))
         count   = count + 1;
 
-        p1so = p1so + max(min(e_p1so*0.1, 1), -1);
-        p2 = p2 + max(min(e_p2*0.1, 1), -1);
-        px = px + max(min(-e_px*0.1, 1), -1);
-        hs_x = hs_x + max(min(e_hs/1000, 0.001), -0.001);
-        mv_x = mv_x + max(min(e_mv/100, 0.002), -0.002);
+        p1so = p1so + max(min(e_p1so*0.1, 10), -10);
+        p2 = p2 + max(min(e_p2*0.1, 10), -10);
+        px = px + max(min(-e_px*0.1, 10), -10);
+        hs_x = min(max(hs_x + max(min(e_hs/1000, 0.0002), -0.0002), GEO.hs.xmin), GEO.hs.xmax);
+        mv_x = mv_x + max(min(e_mv/10000, 0.002), -0.002);
         
-        bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, p1so,..
-        p1so, 0, INI.ven_ps, 0); // last arg ignored
+        bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, p1so, p1so, 0, INI.ven_ps, 0); // last arg ignored
         INI.vsv.x = bl_start_call.x;
         wf1v = -(bl_start_call.wfh+bl_start_call.wfvrs);              
 
-        bl_mv_call = callblk_halfvalve_a(bl_mv, p1so, INI.pr, INI.pr, ..
-        INI.ven_ps, INI.pamb, p1so, p2, mv_x);
+        bl_mv_call = callblk_halfvalve_a(bl_mv, p1so, INI.pr, INI.pr, INI.ven_ps, INI.pamb, p1so, p2, mv_x);
         wf1mv = bl_mv_call.wfs;
         wfmv = bl_mv_call.wfd;
 
-        bl_mvtv_call = callblk_valve_a(bl_mvtv, p2, p3, 0,..
-        0, INI.prt, px, 0); // last arg ignored
+        bl_mvtv_call = callblk_valve_a(bl_mvtv, p2, p3, 0, 0, INI.prt, px, 0); // last arg ignored
         mvtv_x = bl_mvtv_call.x;
         wfvx = bl_mvtv_call.wfvx;
         wf3 = bl_mvtv_call.wfd;
