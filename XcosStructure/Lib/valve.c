@@ -734,7 +734,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
 
     // compute info needed for all passes
     if(mode0==mode_lincos_override || flag==-1) x = xol;
-    at = tab1(x, AT, AT+N_AT, N_AT)*.805;//////////////debug init
+    at = tab1(x, AT, AT+N_AT, N_AT);
     df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
              + fj - Xdot*c;
     stops = 0;
@@ -819,8 +819,8 @@ void hlfvalve_a(scicos_block *blk, int flag)
             WFC = wfc;
             WFR = wfr;
             Vo = Xdot;
-            if(flag==-1) Xo = xol;
-            else         Xo = x;
+            Vo = at;  // debug init
+            Xo = x;
             UF = df;
             MODE = mode0;
             break;

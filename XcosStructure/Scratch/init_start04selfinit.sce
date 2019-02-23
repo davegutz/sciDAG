@@ -44,6 +44,7 @@ exec('./Data/load_decode_csv_data.sce', -1);
 [D, N, time] = load_csv_data('./Data/start04.ifc.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
 Tf = time($);
+Tf=0.05;
 //TBUF = 0.000001;
 TBUF = (time(4)-time(3))*40;
 NBUF = ceil(Tf/TBUF);

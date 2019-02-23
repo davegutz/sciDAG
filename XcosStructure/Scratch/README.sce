@@ -47,6 +47,8 @@ exec('init_start04selfinit.sce', -1);
 // press play.  Same memory issues as detail
 // interactive results in Results.   Formal plots in Results
 // Fourth version to self initialize using a solver
+// To run steady state without oscillations
+GEO.ln_vs.c=100;GEO.vsv.c=10;GEO.mvtv.c=10;GEO.hs.c=10;GEO.main_line.c=100;
 
 // Test pipes
 exec('init_pipe.sce', -1);

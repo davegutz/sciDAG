@@ -22,8 +22,11 @@
 // Be sure to install PSO toolbox using Applications - Module Manager - Optimization
 
 // Inputs:
-// INI.wf36
-// INI.ps3
+// INI.p1so
+// INI.p2
+// INI.px
+// INI.p3
+// INI.mv.x
 // INI.ven_ps
 // INI.ven_pd
 // INI.pamb
@@ -76,19 +79,19 @@ if typeof(bl_a_tvb)~="scicos_block" then
 end
 
 if 1,  // solve using relaxation method
-p1so = INI.p1so;
-p2 = INI.p2;
-p3 = INI.p3;
-px = INI.px;
-hs_x = INI.hs.x;
-mv_x = INI.mv.x;
-//mv_x = 0;
+//p2 = INI.p2;
+//p3 = INI.p3;
+//px = INI.px;
+INI.x_hs = INI.hs.x;
+INI.x_mv = INI.mv.x;
+//INI.x_mv = 0;
 e_p1so = 0;
 e_p2 = 0;
 e_px = 0;
 e_hs = 0;
 e_mv = 0;
 count = 0;
+INI.wfmd = INI.wf36;
 while ( count== 0 |..
       ((abs(e_p1so)>1e-16 |..
         abs(e_p2)>1e-20 |..
@@ -98,61 +101,68 @@ while ( count== 0 |..
         & count<1 ))
         count   = count + 1;
 
-        p1so = p1so + max(min(e_p1so*0.1, 10), -10);
-        p2 = p2 + max(min(e_p2*0.1, 10), -10);
-        px = px + max(min(-e_px*0.1, 10), -10);
-        hs_x = min(max(hs_x + max(min(e_hs/1000, 0.0002), -0.0002), GEO.hs.xmin), GEO.hs.xmax);
-        mv_x = mv_x + max(min(e_mv/10000, 0.002), -0.002);
+        INI.pnozin = min(130*(INI.wfmd/540)^2, interp1(GEO.noz.tb(:,2), GEO.noz.tb(:,1), INI.wfmd, 'linear', 'extrap'))+INI.ps3;
+        INI.p3 = max(171.5*(INI.wfmd/17000)^2, 40) + INI.pnozin;
+
+
+        INI.p1so = INI.p1so + max(min(e_p1so*0.1, 10), -10);
+        INI.p2 = INI.p2     + max(min(e_p2*0.1, 10), -10);
+        INI.px = INI.px + max(min(-e_px*0.1, 10), -10);
+        INI.x_hs = min(max(INI.x_hs + max(min(e_hs/1000, 0.0002), -0.0002), GEO.hs.xmin), GEO.hs.xmax);
+        INI.x_mv = INI.x_mv + max(min(e_mv/10000, 0.002), -0.002);
         
-        bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, p1so, p1so, 0, INI.ven_ps, 0); // last arg ignored
+        bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, INI.p1so, INI.p1so, 0, INI.ven_ps, 0); // last arg ignored
         INI.vsv.x = bl_start_call.x;
-        wf1v = -(bl_start_call.wfh+bl_start_call.wfvrs);              
+        x_vsv = INI.vsv.x;
+        INI.wf1v = -(bl_start_call.wfh+bl_start_call.wfvrs);              
 
-        bl_mv_call = callblk_halfvalve_a(bl_mv, p1so, INI.pr, INI.pr, INI.ven_ps, INI.pamb, p1so, p2, mv_x);
+        bl_mv_call = callblk_halfvalve_a(bl_mv, INI.p1so, INI.pr, INI.pr, INI.ven_ps, INI.pamb, INI.p1so, INI.p2    , INI.x_mv);
         wf1mv = bl_mv_call.wfs;
-        wfmv = bl_mv_call.wfd;
+        INI.wfmv = bl_mv_call.wfd;
 
-        bl_mvtv_call = callblk_valve_a(bl_mvtv, p2, p3, 0, 0, INI.prt, px, 0); // last arg ignored
-        mvtv_x = bl_mvtv_call.x;
-        wfvx = bl_mvtv_call.wfvx;
+        bl_mvtv_call = callblk_valve_a(bl_mvtv, INI.p2    , INI.p3, 0, 0, INI.prt, INI.px, 0); // last arg ignored
+        INI.x_mvtv = bl_mvtv_call.x;
+        INI.wfvx = bl_mvtv_call.wfvx;
         wf3 = bl_mvtv_call.wfd;
 
-        bl_hs_call = callblk_head_b(bl_hs, px, p1so, p2, hs_x);
-        wf1s = bl_hs_call.wfh;
-        wfx = bl_hs_call.wff;
-        wf3s = bl_hs_call.wfl;
-        wf2s = wf3s;
+        bl_hs_call = callblk_head_b(bl_hs, INI.px, INI.p1so, INI.p2    , INI.x_hs);
+        INI.wf1s = bl_hs_call.wfh;
+        INI.wfx = bl_hs_call.wff;
+        INI.wf3s = bl_hs_call.wfl;
+        INI.wf2s = INI.wf3s;
 
         bl_a_tvb_call = callblk_cor_aptow(bl_a_tvb, GEO.a_tvb.ao,..
-        GEO.a_tvb.cd, INI.prt, px);
-        wftvb = bl_a_tvb_call.wf;
+        GEO.a_tvb.cd, INI.prt, INI.px);
+        INI.wftvb = bl_a_tvb_call.wf;
 
-        e_p1so = wf1v - INI.wf1bias - wf1mv - wf1s;
-        e_p2 = wfmv + wf2s - bl_mvtv_call.wfs;
-        e_px = wfx + wfvx - wftvb;
+        e_p1so = INI.wf1v - INI.wf1bias - wf1mv - INI.wf1s;
+        e_p2 = INI.wfmv + INI.wf2s - bl_mvtv_call.wfs;
+        e_px = INI.wfx + INI.wfvx - INI.wftvb;
         e_hs = bl_hs_call.uf;
-        e_mv = INI.wf36 - wfmv;
+        e_mv = INI.wf36 - INI.wfmv;
 
-        INI.x = [p1so, p2, px, hs_x, mv_x];
+        INI.x = [INI.p1so, INI.p2    , INI.px, INI.x_hs, INI.x_mv];
         INI.e = [e_p1so, e_p2, e_px, e_hs, e_mv]
         mprintf('x= [%5.1f %5.1f %5.1f %6.4f %6.4f ]  ', INI.x);
         mprintf('e= [%6.4f %6.4f %6.4f %6.4f %6.4f ]\n', INI.e);
 end
-INI.wf1s = wf1s;
-INI.wfx = wfx;
-INI.wfvx = wfvx;
-INI.wftvb = wftvb;
-INI.wf3s = wf3s;
-INI.wf2s = wf2s;
-INI.wfmv = wfmv;
-INI.wf1mv = wfmv;
-INI.wf1v = wf1v;
-INI.hs.x = hs_x;
-INI.mv.x = mv_x;
-INI.mvtv.x = mvtv_x;
-INI.p1so = p1so;
-INI.p2 = p2;
-INI.px = px;
+//INI.wf1s = wf1s;
+//INI.wfx = wfx;
+//INI.wfvx = wfvx;
+//INI.wftvb = wftvb;
+//INI.wf3s = wf3s;
+//INI.wf2s = wf2s;
+//INI.wfmv = wfmv;
+INI.wf1mv = INI.wfmv;
+INI.x_vsv = INI.vsv.x;
+INI.wf3 = bl_mvtv_call.wfd;
+//INI.wf1v = wf1v;
+//INI.hs.x = x_hs;
+//INI.mv.x = x_mv;
+//INI.mvtv.x = x_mvtv;
+//INI.p1so = p1so;
+//INI.p2 = p2;
+//INI.px = px;
 
 // solve using PSO
 else

@@ -240,7 +240,7 @@ overplot(['WF1S', 'wf1s'], ['r-', 'b--'], 'Sense Flow')
 subplot(224)
 overplot(['WFMV', 'mv_wfd', 'WFAREA'], ['r-', 'b--', 'g-'], 'MV Discharge Flow')
 
-figs($+1) = figure("Figure_name", 'MAIN_FLOW_2', "Position", [10,30,610,460]);
+figs($+1) = figure("Figure_name", 'MAIN_FLOW_2', "Position", [10,50,610,460]);
 subplot(221)
 overplot(['WF3', 'wf3'], ['r-', 'b--'], 'Throttle Valve Discharge Flow')
 subplot(222)
@@ -250,7 +250,7 @@ overplot(['WFCD', 'wfcd'], ['r-', 'b--'], 'Check Drain Flow')
 subplot(224)
 overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
 
-figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [10,50,610,460]);
+figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [10,70,610,460]);
 subplot(221)
 overplot(['P1SO', 'p1so'], ['r-', 'b--'], 'MV Supply Pressure')
 subplot(222)
@@ -260,7 +260,7 @@ overplot(['P_3', 'p3'], ['r-', 'b--'], 'TV Discharge Pressure')
 subplot(224)
 overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
 
-figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [10,70,610,460]);
+figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [10,90,610,460]);
 subplot(221)
 overplot(['MV_POS', 'mv_x'], ['r-',  'b--'], 'MV Poaition')
 subplot(222)
