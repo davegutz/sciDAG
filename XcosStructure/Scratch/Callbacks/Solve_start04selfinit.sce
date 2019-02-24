@@ -43,27 +43,27 @@
 // Be sure to install PSO toolbox using Applications - Module Manager - Optimization
 
 // Inputs:
-// INI.p1so
-// INI.p2
-// INI.px
-// INI.p3
-// INI.mv.x
+// INI.wf36
+// INI.ps3
 // INI.ven_ps
 // INI.ven_pd
 // INI.pamb
 // INI.wf1bias
 // INI.pr
+
+// Initialized locally with guess
+// INI.p1so
+// INI.p2
+// INI.px
+// INI.p3
+// INI.mv.x
+
 global verbose
 global INI GEO FP
 clearglobal bl_start  bl_mv bl_mvtv bl_hs bl_a_tvb
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 verbose = 1;
 mprintf('In %s\n', sfilename())  
-
-
-// Explicitly calculated parameters
-INI.wfmd = INI.wf36;
-INI.wf3s = 0;
 
 // Find the blocks
 bl_start = find_block(scs_m, 'start');
@@ -86,6 +86,11 @@ bl_a_tvb = find_block(scs_m, 'a_tvb');
 if typeof(bl_a_tvb)~="scicos_block" then
     error('a_tvb not found');
 end
+
+// Init guess TODO:  need better logic
+INI.p1so = 442.72465;
+INI.p2 = 388.48432;
+INI.px = 310.97791;
 
 // solve using relaxation method
 INI.pnozin = min(130*(INI.wf36/540)^2, interp1(GEO.noz.tb(:,2), GEO.noz.tb(:,1), INI.wf36, 'linear', 'extrap'))+INI.ps3;
@@ -153,5 +158,5 @@ INI.x_vsv = INI.vsv.x;
 INI.hs.x = INI.x_hs;
 INI.mv.x = INI.x_mv;
 INI.x_mvtv = bl_mvtv_call.x;
-clear e_p1so e_p2 e_px e_hs e_mv
+clear e_p1so e_p2 e_px e_hs e_mv bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 mprintf('Completed %s.   INI.count = %ld\n', sfilename(), INI.count)  

@@ -40,11 +40,6 @@ INI.ven_pd = 1451.2;
 INI.pamb = 14.696;
 INI.pr = 198.59;
 
-// Init guess TODO:  need better logic
-INI.p1so = 442.72465;
-INI.p2 = 388.48432;
-INI.px = 310.97791;
-
 // Initialize
 exec('./Callbacks/Solve_start04selfinit.sce', -1);
 mv_x.values(:,1) = mv_x.values(:,1)*0+INI.mv.x;
