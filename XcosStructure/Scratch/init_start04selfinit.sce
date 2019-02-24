@@ -50,7 +50,10 @@ TBUF = (time(4)-time(3))*40;
 NBUF = ceil(Tf/TBUF);
 clear D N time
 
-FP = FP_default;
+FP.sg = fp_sg.values(1,:);
+FP.beta = fp_beta.values(1,:);
+FP.dwdc = DWDC(FP.sg);
+FP.tvp = 7;
 GEO = tlist(["sys_geo", "vsv", "reg", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vlv_a_default, tv_a1_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
 
 function %sys_geo_p(g)
