@@ -177,6 +177,9 @@ void valve_a(scicos_block *blk, int flag)
     double xol = XOL;
     double wfs, wfd, wfh, wfvrs, wfvr;
 
+    int count = 0;
+    double xp = XOL;
+
     double fjd = 0;
     double fjh = 0;
     double ftd, fth;
@@ -196,27 +199,51 @@ void valve_a(scicos_block *blk, int flag)
     double wfvx, px;
     double ao = AO;
     double cdo = CDO;
+    double xmaxl = XMAX;
+    double xminl = XMIN;
 
     // compute info needed for all passes
     wfvx   = Xdot*dwdc*ax2;
     px = OR_AWPDTOPS(ao, wfvx, pxr, cdo, sg);
-    ad = tab1(x, AD, AD+N_AD, N_AD);
-    ah = tab1(x, AH, AH+N_AH, N_AH);
-    fjd = cp * fabs(ps - pd)*ad;
-    fjh = -cp * fabs(ps - ph)*ah;
     ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(ps - pd));
     fth = -lh * 0.01365 * cd * Xdot * SSQRT(sg*(ps - ph));
+    
     if(flag==-1)
     {
         // Initialization
-        xol = max(min((ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-             - fs - fjd - fjh - ftd - fth - Xdot*c)/ks, xmax), xmin);
-        df = 0;
-        x = xol;
+        count = 0;
+        while ((fabs(df)>1e-14 & count<100) | count<1)
+        {
+            count += 1;
+            ad = tab1(x, AD, AD+N_AD, N_AD);
+            ah = tab1(x, AH, AH+N_AH, N_AH);
+            fjd = cp * fabs(ps - pd)*ad;
+            fjh = -cp * fabs(ps - ph)*ah;
+            df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
+                - fs - x*ks - fjd - fjh;
+            xp = x;
+            if(df>0)
+            {
+                x = (xp + xmaxl)/2;
+                xminl = xp;
+            }
+            else
+            {
+                x = (xp + xminl)/2;
+                xmaxl = xp;
+            }
+        }
+        xol = x;
     }
-    else x = X;
-    df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
+    else
+    {
+        ad = tab1(x, AD, AD+N_AD, N_AD);
+        ah = tab1(x, AH, AH+N_AH, N_AH);
+        fjd = cp * fabs(ps - pd)*ad;
+        fjh = -cp * fabs(ps - ph)*ah;
+        df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
              - fs - x*ks - fjd - fjh - ftd - fth - Xdot*c;
+    }
     stops = 0;
     if(mode0==mode_lincos_override || flag==-1)
     {
@@ -819,7 +846,6 @@ void hlfvalve_a(scicos_block *blk, int flag)
             WFC = wfc;
             WFR = wfr;
             Vo = Xdot;
-            Vo = at;  // debug init
             Xo = x;
             UF = df;
             MODE = mode0;

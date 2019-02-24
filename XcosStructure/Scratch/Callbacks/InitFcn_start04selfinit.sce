@@ -57,18 +57,22 @@ INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, 59.4582, INI.wf36);
 
 if 1 then
-INI.p1so = 442.61718;
-INI.p2 = 388.37528;
+INI.p1so = 442.72465;
+INI.p2 = 388.48432;
 INI.p3s = INI.p2;
-INI.px = 310.86937;
-INI.hs.x = .0071299;
-INI.mv.x = 0.01328;
+INI.px = 310.97791;
+INI.hs.x = 0.0071297;
+INI.mv.x = 0.0132802;
 INI.prt = INI.p1so  - 315;
 mv_x.values(:,1) = mv_x.values(:,1)*0+INI.mv.x;
 //mv_x.values(:,1) = mv_x.values(:,1)*0+mv_x.values(1,1);
-INI.mvtv.x = -0.0380391;
-INI.vsv.x = 0.1147567;
-INI.wf36 = 100.046;
+INI.mvtv.x = -0.0380412;
+INI.vsv.x = 0.1147568;
+INI.wf36 = 100;
+
+INI.wf36 = 100;
+exec('./Callbacks/Solve_start04selfinit.sce', -1);
+
 INI.wf1v = INI.wf1bias + INI.wf36;
 INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
 INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);

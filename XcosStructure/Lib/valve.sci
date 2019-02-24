@@ -1,3 +1,24 @@
+// Copyright (C) 2019 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Feb 24, 2019    DA Gutz        Created
+// 
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -188,6 +209,31 @@ function [blkcall] = callblk_valve_a(blk, ps, pd, ph, prs, pr, pxr, xol)
     blkcall.surf2 = blk.g(3);
     blkcall.surf3 = blk.g(4);
     blkcall.surf4 = blk.g(5);
+endfunction
+function [x,xp,count]=solve_valve_a(geo,ps,pd,ph,prs,pr,px,xp)
+    count = 0;
+    x = xp;
+    df = 0;xmax = geo.xmax;xmin = geo.xmin;
+    while ((abs(df)>1e-14 & count<500) | count<1),
+        count = count+1;
+        //ad = tab1(x, AD, AD+N_AD, N_AD);
+        //ah = tab1(x, AH, AH+N_AH, N_AH);
+        ad = interp1(geo.ad.tb(:,1), geo.ad.tb(:,2), x, 'linear', 'extrap');
+        ah = interp1(geo.ah.tb(:,1), geo.ah.tb(:,2), x, 'linear', 'extrap');
+        fjd = geo.cp * abs(ps - pd)*ad;
+        fjh = -geo.cp * abs(ps - ph)*ah;
+        df = ps*(geo.ax1-geo.ax4) + prs*geo.ax4 - pr*(geo.ax1-geo.ax2) - px*geo.ax2 ..
+        - geo.fs -x*geo.ks - fjd - fjh;
+        xp = x;
+        if df>0
+            x = (xp+xmax)/2;
+            xmin = xp;
+        else
+            x = (xp+xmin)/2;
+            xmax = xp;
+        end
+        mprintf('%8.6f %8.6f %8.6f %8.6f %18.16f\n', xp, x, ad, ah, abs(df));
+    end
 endfunction
 
 //// Default three-way valve_a prototype **************************************
