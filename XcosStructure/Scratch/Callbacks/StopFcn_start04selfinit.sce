@@ -251,14 +251,16 @@ subplot(224)
 overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
 
 figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [10,70,610,460]);
-subplot(221)
+subplot(321)
 overplot(['P1SO', 'p1so'], ['r-', 'b--'], 'MV Supply Pressure')
-subplot(222)
+subplot(322)
 overplot(['P2', 'p2'], ['r-', 'b--'], 'MV Discharge Pressure')
-subplot(223)
+subplot(323)
 overplot(['P_3', 'p3'], ['r-', 'b--'], 'TV Discharge Pressure')
-subplot(224)
+subplot(324)
 overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
+subplot(325)
+overplot(['PX', 'px'], ['r-', 'b--'], 'MVTV Control Pressure')
 
 figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [10,90,610,460]);
 subplot(221)

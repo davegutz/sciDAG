@@ -73,7 +73,6 @@ INI.wf36 = 100;
 INI.wf36 = 100;
 exec('./Callbacks/Solve_start04selfinit.sce', -1);
 
-INI.wf1v = INI.wf1bias + INI.wf36;
 INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
 INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf36);

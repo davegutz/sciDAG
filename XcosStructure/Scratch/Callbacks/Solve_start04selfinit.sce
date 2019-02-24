@@ -109,16 +109,16 @@ e_p2 = 0;
 e_px = 0;
 e_hs = 0;
 e_mv = 0;
-count = 0;
+INI.count = 0;
 INI.wfmd = INI.wf36;
-while ( count== 0 |..
+while ( INI.count== 0 |..
       ((abs(e_p1so)>1e-5 |..
         abs(e_p2)>1e-5 |..
         abs(e_px)>1e-5 |..
         abs(e_hs)>1e-7 |..
         abs(e_mv)>1e-7) ..
-        & count<100 ))
-        count   = count + 1;
+        & INI.count<100 ))
+        INI.count   = INI.count + 1;
 
         INI.p1so = INI.p1so + max(min(e_p1so*0.01, 2), -2);
         INI.prt = INI.p1so - 315;
@@ -166,4 +166,5 @@ INI.x_vsv = INI.vsv.x;
 INI.hs.x = INI.x_hs;
 INI.mv.x = INI.x_mv;
 INI.x_mvtv = bl_mvtv_call.x;
-mprintf('Completed %s.   count = %ld\n', sfilename(), count)  
+clear e_p1so e_p2 e_px e_hs e_mv
+mprintf('Completed %s.   INI.count = %ld\n', sfilename(), INI.count)  
