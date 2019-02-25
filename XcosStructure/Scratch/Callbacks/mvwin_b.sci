@@ -24,7 +24,7 @@ function s = sqr(x)
     s = x*x;
 endfunction
 
-function [x, a] = mvwin_a(n)
+function [x, a] = mvwin_b(n)
     x = zeros(n);
     a = zeros(n);
     AMVMIN = (.00453 - .09*.036); //Min flow window area, sqin. */

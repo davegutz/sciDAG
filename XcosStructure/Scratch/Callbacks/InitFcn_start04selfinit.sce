@@ -42,7 +42,8 @@ INI.pr = 198.59;
 
 // Initialize
 exec('./Callbacks/Solve_start04selfinit.sce', -1);
-mv_x.values(:,1) = mv_x.values(:,1)*0+INI.mv.x;
+mvx0 = mv_x.values(1,1);
+mv_x.values(:,1) = mv_x.values(:,1) - mvx0 + INI.mv.x;
 INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
 INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf3);
