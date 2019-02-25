@@ -264,7 +264,6 @@ void head_b(scicos_block *blk, int flag)
             WFH = wfh;
             PLX = plx;
             Vo = Xdot;
-            Vo = flag; // debug init call
             Xo = x;
             UF = df;
             MODE = mode0;

@@ -1,9 +1,10 @@
-// function sys = lti_man_n_mm(l, a, vol, n, spgr, beta, c)
+// function obj = lti_man_n_mm(obj, spgr, beta)
 // Building block for a line distributed among equally sized
 // volumes and momentum slices, with momentum first & last (n = #
 // of volume nodes and n+1 = # momentum slices).
 // Author:       D. A. Gutz
 // Written:      22-Oct-2012
+//               19-Jan-19    Port to xcos
 // Input:
 // a     Line cross-section, sqin.
 // beta  Fluid bulk modulus, psi.
@@ -13,8 +14,9 @@
 // vol   Line volume, cuin.
 // c     Damping, psi/in/sec, (OPTIONAL).
 // 
-//Output:
-// sys   Packed lti
+// Output:
+// lti   LTI in packed form
+// A,B,C,D  LTI in unpacked form
 // 
 // Differential I/O:
 // ps    Input  # 1, supply pressure, psia.
@@ -46,10 +48,17 @@
 // SOFTWARE.
 // Oct 11, 2018     DA Gutz    Created
 // ******************************************************************
-function [sys] = lti_man_n_mm(l, a, vol, n, spgr, %beta, c)
+function obj = lti_man_n_mm(obj, spgr, %beta)
+    if typeof(obj) ~= 'pipeMM' then
+        mprintf('ERROR:   wrong type %s\n', typeof(obj));
+        error('wrong type')
+    end
+
+    l = obj.l; a = obj.a; vol =  obj.vol; n = obj.n; c = obj.c;
 
     // Output variables initialisation (not found in input variables)
-    sys=[];
+    obj.lti = [];  obj.A = []; obj.B = []; obj.C = []; obj.D = [];
+
 
     // Number of arguments in function call
     [%nargout,%nargin] = argn(0)
@@ -66,14 +75,18 @@ function [sys] = lti_man_n_mm(l, a, vol, n, spgr, %beta, c)
     end;
 
     // Single manifold slice.
-    if %nargin==7 then
+    if c~=0 then
         man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta, c);
     else
         man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta);
     end;
 
     // Single momentum slice.
-    endmom = lti_mom_1(l/(n+1), a);
+    if c~=0 then
+        endmom = lti_mom_1(l/(n+1), a, c);
+    else
+        endmom = lti_mom_1(l/(n+1), a);
+    end
 
     // Inputs are ps and pd.
     u = [1, 2*n+2];
@@ -92,6 +105,23 @@ function [sys] = lti_man_n_mm(l, a, vol, n, spgr, %beta, c)
     q = [q;   2*n, 2*n+1;  2*n+1, 2*n];
 
     // Form the system.
-    sys = connect_ss(temp, q, u, y);
-
+    obj.lti = connect_ss(temp, q, u, y);
+   [a, b, c, d] = unpack_ss(obj.lti);
+    obj.A = a; obj.B = b; obj.C = c; obj.D = d;
 endfunction
+
+function vec = ini_man_n_mm(obj, pi, wfi)
+    if typeof(obj) ~= 'pipeMM' then
+        mprintf('ERROR:   wrong type %s\n', typeof(obj));
+        error('wrong type')
+    end
+    len = 2*obj.n + 1;
+    vec = zeros(1, len);
+    for i=1:2:len
+        vec(i) = wfi;
+    end
+    for i=2:2:len
+        vec(i) = pi;
+    end
+endfunction
+
