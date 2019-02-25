@@ -35,7 +35,8 @@ end
 
 % Volume.
 v_1 = lti_vol_1(vol, beta, spgr);
-
+m_1
+v_1
 % Put system into block diagonal form.
 temp = adjoin(m_1, v_1);
 

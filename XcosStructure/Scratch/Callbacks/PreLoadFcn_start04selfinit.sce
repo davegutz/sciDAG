@@ -94,6 +94,7 @@ clear xh as ad
 GEO.ln_vs.l = 23.7;
 GEO.ln_vs.vol = 3.42;
 GEO.ln_vs.a = GEO.ln_vs.vol/GEO.ln_vs.l;
+GEO.ln_vs.n = 8;
 
 // Define head_b hs=mvhead geometry
 GEO.hs.f_cn = 0.75;

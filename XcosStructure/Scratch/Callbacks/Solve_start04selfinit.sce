@@ -93,10 +93,9 @@ INI.p2 = 388.48432;
 INI.px = 310.97791;
 
 // solve using relaxation method
-INI.pnozin = min(130*(INI.wf36/540)^2, interp1(GEO.noz.tb(:,2), GEO.noz.tb(:,1), INI.wf36, 'linear', 'extrap'))+INI.ps3;
-INI.p3 = max(171.5*(INI.wf36/17000)^2, 40) + INI.pnozin;
-INI.x_hs = 0.007;
+INI.x_hs = 0.007; // Todo:  need better guess logic here?
 INI.x_mv = 0.0133; // Todo:  need better guess logic here
+INI.wf3 = INI.wf36;
 e_p1so = 0;
 e_p2 = 0;
 e_px = 0;
@@ -119,8 +118,10 @@ while ( INI.count== 0 |..
         INI.x_hs = min(max(INI.x_hs + max(min(e_hs*0.002, 0.0004), -0.0004), GEO.hs.xmin), GEO.hs.xmax);
         INI.x_mv = min(max(INI.x_mv + max(min(e_mv*0.0002, 0.004), -0.004), GEO.mv.xmin), GEO.mv.xmax);
         
+        INI.pnozin = min(130*(INI.wf3/540)^2, interp1(GEO.noz.tb(:,2), GEO.noz.tb(:,1), INI.wf3, 'linear', 'extrap'))+INI.ps3;
+        INI.p3 = max(171.5*(INI.wf3/17000)^2, 40) + INI.pnozin;
+
         bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, INI.p1so, INI.p1so, 0, INI.ven_ps, 0);
-        INI.vsv.x = bl_start_call.x;
         INI.wf1v = -(bl_start_call.wfh+bl_start_call.wfvrs);              
 
         bl_mv_call = callblk_halfvalve_a(bl_mv, INI.p1so, INI.pr, INI.pr, INI.ven_ps, INI.pamb, INI.p1so, INI.p2    , INI.x_mv);
@@ -131,14 +132,13 @@ while ( INI.count== 0 |..
         INI.wfvx = bl_mvtv_call.wfvx;
         INI.wf3 = bl_mvtv_call.wfd;
 
-        bl_hs_call = callblk_head_b(bl_hs, INI.px, INI.p1so, INI.p2    , INI.x_hs);
+        bl_hs_call = callblk_head_b(bl_hs, INI.px, INI.p1so, INI.p2, INI.x_hs);
         INI.wf1s = bl_hs_call.wfh;
         INI.wfx = bl_hs_call.wff;
         INI.wf3s = bl_hs_call.wfl;
         INI.wf2s = INI.wf3s;
 
-        bl_a_tvb_call = callblk_cor_aptow(bl_a_tvb, GEO.a_tvb.ao,..
-        GEO.a_tvb.cd, INI.prt, INI.px);
+        bl_a_tvb_call = callblk_cor_aptow(bl_a_tvb, GEO.a_tvb.ao, GEO.a_tvb.cd, INI.prt, INI.px);
         INI.wftvb = bl_a_tvb_call.wf;
 
         e_p1so = INI.wf1v - INI.wf1bias - INI.wf1mv - INI.wf1s;
@@ -147,16 +147,18 @@ while ( INI.count== 0 |..
         e_hs = bl_hs_call.uf;
         e_mv = INI.wf36 - INI.wfmv;
 
-        INI.x = [INI.p1so, INI.p2    , INI.px, INI.x_hs, INI.x_mv];
+        INI.x = [INI.p1so, INI.p2, INI.px, INI.x_hs, INI.x_mv];
         INI.e = [e_p1so, e_p2, e_px, e_hs, e_mv]
         mprintf('x= [%7.3f %7.3f %7.3f %9.7f %9.7f ]  ', INI.x);
         mprintf('e= [%9.7f %9.7f %9.7f %9.7f %9.7f ]\n', INI.e);
 end
 INI.p3s = INI.p2;
 INI.wfmd = INI.wf3;
+INI.vsv.x = bl_start_call.x;
 INI.x_vsv = INI.vsv.x;
 INI.hs.x = INI.x_hs;
 INI.mv.x = INI.x_mv;
-INI.x_mvtv = bl_mvtv_call.x;
+INI.mvtv.x = bl_mvtv_call.x;
+INI.x_mvtv = INI.mvtv.x;
 clear e_p1so e_p2 e_px e_hs e_mv bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 mprintf('Completed %s.   INI.count = %ld\n', sfilename(), INI.count)  

@@ -82,7 +82,11 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
     end;
 
     // Single momentum slice.
-    endmom = lti_mom_1(l/(n+1), a);
+    if c~=0 then
+        endmom = lti_mom_1(l/(n+1), a, c);
+    else
+        endmom = lti_mom_1(l/(n+1), a);
+    end
 
     // Inputs are ps and pd.
     u = [1, 2*n+2];

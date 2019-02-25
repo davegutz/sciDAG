@@ -39,7 +39,7 @@ if nargin == 7,
 else
     man    = lti_man_1_mv(l/(n+1), a, vol/n, spgr, beta);
 end
-
+man
 % Single momentum slice.
 endmom    = lti_mom_1(l/(n+1), a);
 
