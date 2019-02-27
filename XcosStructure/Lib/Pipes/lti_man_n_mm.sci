@@ -54,7 +54,7 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
         error('wrong type')
     end
 
-    l = obj.l; a = obj.a; vol =  obj.vol; n = obj.n; c = obj.c;
+    l = obj.l; a = obj.a; vol =  obj.vol; n = obj.n; %c = obj.c;
 
     // Output variables initialisation (not found in input variables)
     obj.lti = [];  obj.A = []; obj.B = []; obj.C = []; obj.D = [];
@@ -75,18 +75,10 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
     end;
 
     // Single manifold slice.
-    if c~=0 then
-        man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta, c);
-    else
-        man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta);
-    end;
+    man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta, %c, %c);
 
     // Single momentum slice.
-    if c~=0 then
-        endmom = lti_mom_1(l/(n+1), a, c);
-    else
-        endmom = lti_mom_1(l/(n+1), a);
-    end
+    endmom = lti_mom_1(l/(n+1), a, %c);
 
     // Inputs are ps and pd.
     u = [1, 2*n+2];
@@ -108,6 +100,7 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
     obj.lti = connect_ss(temp, q, u, y);
    [a, b, c, d] = unpack_ss(obj.lti);
     obj.A = a; obj.B = b; obj.C = c; obj.D = d;
+    obj.ltis = syslin('c', a, b, c, d); 
 endfunction
 
 function vec = ini_man_n_mm(obj, pi, wfi)

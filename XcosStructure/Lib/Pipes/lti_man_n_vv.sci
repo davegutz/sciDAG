@@ -77,7 +77,7 @@ function obj = lti_man_n_vv(obj,spgr,%beta)
         error('wrong type')
     end
 
-    l = obj.l; a = obj.a; vol =  obj.vol; n = obj.n; c = obj.c;
+    l = obj.l; a = obj.a; vol =  obj.vol; n = obj.n; %c = obj.c;
 
     // Output variables initialisation (not found in input variables)
     obj.lti = [];  obj.A = []; obj.B = []; obj.C = []; obj.D = [];
@@ -96,14 +96,10 @@ function obj = lti_man_n_vv(obj,spgr,%beta)
         error("Number of nodes < 1 in man_n.")
     end;
     // Single manifold slice.
-    if c~=0 then
-        man = lti_man_1_vm(l/n, a, vol/(n+1), spgr, %beta, c);
-    else
-        man = lti_man_1_vm(l/n, a, vol/(n+1), spgr, %beta);
-    end;
+    man = lti_man_1_vm(l/n, a, vol/(n+1), spgr, %beta, %c, %c);
 
     // Single volume node.
-    endvol = lti_vol_1(vol/(n+1), %beta, spgr);
+    endvol = lti_vol_1(vol/(n+1), %beta, spgr, %c);
 
     // Inputs are wfs and wfd.
     u = [1, (2*n+2)];
@@ -125,6 +121,7 @@ function obj = lti_man_n_vv(obj,spgr,%beta)
     obj.lti = connect_ss(temp, q, u, y);
    [a, b, c, d] = unpack_ss(obj.lti);
     obj.A = a; obj.B = b; obj.C = c; obj.D = d;
+    obj.ltis = syslin('c', a, b, c, d); 
 endfunction
 
 function vec = ini_man_n_vv(obj, pi, wfi)

@@ -45,7 +45,7 @@
 // SOFTWARE.
 // Oct 10, 2018 	DA Gutz		Created
 // ******************************************************************************
-function [sys] = lti_man_1_mv(l, a, vol, spgr, %beta, c)
+function [sys] = lti_man_1_mv(l, a, vol, spgr, %beta, %cm, %cv)
 
     // Output variables initialisation (not found in input variables)
     sys=[];
@@ -59,15 +59,16 @@ function [sys] = lti_man_1_mv(l, a, vol, spgr, %beta, c)
     // Display warning for floating point exception
     ieee(1);
 
+    if %nargin<7 then
+        %cv = 0;
+        %cm = 0;
+    end
+
     // Momentum slice.
-    if %nargin==6 then
-        m_1 = lti_mom_1(l, a, c);
-    else
-        m_1 = lti_mom_1(l, a);
-    end;
+    m_1 = lti_mom_1(l, a, %cm);
 
     // Volume.
-    v_1 = lti_vol_1(vol, %beta, spgr);
+    v_1 = lti_vol_1(vol, %beta, spgr, %cv);
 
     // Put system into block diagonal form.
     temp = adjoin(m_1, v_1);
