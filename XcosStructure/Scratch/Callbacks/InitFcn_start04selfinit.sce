@@ -29,6 +29,15 @@ GEO.ln_vs = lti_man_n_vm(GEO.ln_vs, FP.sg, FP.beta);
 GEO.ln_p3s = lti_man_n_vm(GEO.ln_p3s, FP.sg, FP.beta);
 GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
 
+if INI.initialized & INI.skip_init then
+    mprintf("Skipping init.  If you want to re-init, set ''INI.skip_init = %%f;'' at the command line \n and resume, otherwise type resume\n");
+    pause;
+    if INI.skip_init then
+        mprintf('running...\n');
+        return;
+    end
+end
+
 // Inputs
 INI.wf36 = 107.08;
 INI.ps3 = 15;
@@ -55,5 +64,6 @@ INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
 INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf3);
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
+INI.initialized = %t;
 
 mprintf('Completed %s\n', sfilename())  

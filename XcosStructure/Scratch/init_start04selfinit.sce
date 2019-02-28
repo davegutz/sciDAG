@@ -50,6 +50,9 @@ TBUF = (time(4)-time(3))*40;
 NBUF = ceil(Tf/TBUF);
 clear D N time
 
+INI.initialized = %f;
+INI.skip_init = %t;
+
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);
 FP.dwdc = DWDC(FP.sg);
