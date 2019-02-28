@@ -38,7 +38,7 @@
 // Oct 10, 2018     DA Gutz     Created
 // Jan 19, 2019     DA Gutz     Damping added so no effect on dc gain
 // ******************************************************************************
-function [sys] = lti_mom_1(l,a,%c)
+function [sys] = lti_mom_1(l, a, %c)
 
     // Output variables initialisation (not found in input variables)
     sys=[];
@@ -52,17 +52,19 @@ function [sys] = lti_mom_1(l,a,%c)
     // Display warning for floating point exception
     ieee(1);
 
-    // Derivatives.   Damping must not be passed through to dc gain
-    dw = ((3600*386.4)*a)/l;// Derivative, pph/sec.
     if %nargin<3 then
         %c = 0;
-    end;
+    end
+
+    // Derivatives.   Damping must not be passed through to dc gain
+    dm = ((3600*386.4)*a)/l;// Derivative, pph/sec.
+    cm = %c*dm;
     a = 0;
-    b = [dw,-dw];
+    b = [dm, -dm];
     c = 1;
-    e = [%c,-%c];  // Proporttional gain is %c to add damping
+    e = [cm, -cm];  // Proporttional gain is %c to add damping
 
     // Form the system.
-    sys = pack_ss(a,b,c,e);
+    sys = pack_ss(a, b, c, e);
 
 endfunction

@@ -39,7 +39,7 @@
 // SOFTWARE.
 // Oct 10, 2018 	DA Gutz		Created
 // ******************************************************************************
-function [sys] = lti_vol_1(vol,%beta,spgr,%c)
+function [sys] = lti_vol_1(vol, %beta, spgr, %c)
 
     // Output variables initialisation (not found in input variables)
     sys=[];
@@ -50,17 +50,19 @@ function [sys] = lti_vol_1(vol,%beta,spgr,%c)
     // Display warning for floating point exception
     ieee(1);
 
-    // Derivative
-    dp = ((%beta/129.93948)/vol)/spgr;// Derivative, psi/sec.
     if %nargin<4 then
         %c = 0;
-    end;
+    end
+
+    // Derivative
+    dv = ((%beta/129.93948)/vol)/spgr;// Derivative, psi/sec.
+    cv = %c*dv;
     a = 0;
-    b = [dp, -dp];
+    b = [dv, -dv];
     c = 1;
-    e = [%c, -%c];
+    e = [cv, -cv];
 
     // Form the system.
-    sys = pack_ss(a,b,c,e);
+    sys = pack_ss(a, b, c, e);
 
 endfunction

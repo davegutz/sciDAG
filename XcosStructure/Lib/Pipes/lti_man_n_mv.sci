@@ -75,7 +75,7 @@ function obj = lti_man_n_mv(obj, spgr, %beta)
     end;
 
     // Single manifold slice.
-    man = lti_man_1_mv(l/n, a, vol/n, spgr, %beta, %c, %c);
+    man = lti_man_1_mv(l/n, a, vol/n, spgr, %beta, %c);
 
     // Inputs are ps and wfd.
     u = [1, n*2];

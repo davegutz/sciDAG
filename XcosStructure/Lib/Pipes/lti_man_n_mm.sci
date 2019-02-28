@@ -75,7 +75,7 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
     end;
 
     // Single manifold slice.
-    man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta, %c, %c);
+    man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta, %c);
 
     // Single momentum slice.
     endmom = lti_mom_1(l/(n+1), a, %c);

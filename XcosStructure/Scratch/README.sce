@@ -40,15 +40,15 @@ exec('init_start04detail.sce', -1);
 // interactive result in Results/expected_start04detail*.png
 // Formal plots in Results/expected_start04detail_formal*.png
 exec('init_start04.sce', -1);
-// press play.  Same memory issues as detail
-// interactive results in Results.   Formal plots in Results
 // Third version to let components interact.  Implicit initialization.
-exec('init_start04selfinit.sce', -1);
-// press play.  Same memory issues as detail
+// press play.  Same memory issues as ...detail.sce
 // interactive results in Results.   Formal plots in Results
+exec('init_start04selfinit.sce', -1);
 // Fourth version to self initialize using a solver
+// press play.  Same memory issues as ...detail.sce
+// interactive results in Results.   Formal plots in Results
 // To run steady state without oscillations
-GEO.ln_vs.c=1;GEO.vsv.c=10;GEO.mvtv.c=10;GEO.hs.c=10;GEO.main_line.c=1;GEO.ln_p3s.c=1;
+GEO.ln_vs.c=.001;GEO.vsv.c=0;GEO.mvtv.c=0;GEO.hs.c=0;GEO.main_line.c=0;GEO.ln_p3s.c=0;
 
 // Test pipes
 exec('init_pipe.sce', -1);

@@ -96,7 +96,7 @@ function obj = lti_man_n_vv(obj,spgr,%beta)
         error("Number of nodes < 1 in man_n.")
     end;
     // Single manifold slice.
-    man = lti_man_1_vm(l/n, a, vol/(n+1), spgr, %beta, %c, %c);
+    man = lti_man_1_vm(l/n, a, vol/(n+1), spgr, %beta, %c);
 
     // Single volume node.
     endvol = lti_vol_1(vol/(n+1), %beta, spgr, %c);
