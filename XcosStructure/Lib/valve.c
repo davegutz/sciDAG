@@ -168,6 +168,7 @@ void valve_a(scicos_block *blk, int flag)
 
     // inputs and outputs
     double x = X;
+    double xin = X;
     double ps = PS;
     double pd = PD;
     double ph = PH;
@@ -237,12 +238,15 @@ void valve_a(scicos_block *blk, int flag)
     }
     else
     {
-        ad = tab1(x, AD, AD+N_AD, N_AD);
-        ah = tab1(x, AH, AH+N_AH, N_AH);
+        // Open loop for frequency response
+        if (LINCOS_OVERRIDE==1) xin = xol;
+        else                    xin = x;
+        ad = tab1(xin, AD, AD+N_AD, N_AD);
+        ah = tab1(xin, AH, AH+N_AH, N_AH);
         fjd = cp * fabs(ps - pd)*ad;
         fjh = -cp * fabs(ps - ph)*ah;
         df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-             - fs - x*ks - fjd - fjh - ftd - fth - Xdot*c;
+             - fs - xin*ks - fjd - fjh - ftd - fth - Xdot*c;
     }
     stops = 0;
     if(mode0==mode_lincos_override || flag==-1)
@@ -282,7 +286,6 @@ void valve_a(scicos_block *blk, int flag)
     {
         case 0:
             // compute the derivative of the continuous time states
-            // TODO:  insert xol logic here
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;

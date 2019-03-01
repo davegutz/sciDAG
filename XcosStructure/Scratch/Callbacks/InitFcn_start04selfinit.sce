@@ -30,9 +30,9 @@ GEO.ln_p3s = lti_man_n_vm(GEO.ln_p3s, FP.sg, FP.beta);
 GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
 
 if INI.initialized & INI.skip_init then
+    btn = messagebox('Reinitialization needed?', 'Query Re-Init', 'question', ['yes', 'no'], 'modal');
     mprintf("Skipping init.  If you want to re-init, set ''INI.skip_init = %%f;'' at the command line \n and resume, otherwise type resume\n");
-    pause;
-    if INI.skip_init then
+    if btn~=1 then
         mprintf('running...\n');
         return;
     end

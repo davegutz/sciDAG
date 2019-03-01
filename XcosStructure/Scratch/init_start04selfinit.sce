@@ -36,7 +36,7 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch root
-global GEO INI FP mv_x mv_xa
+global GEO INI FP LIN mv_x mv_xa
 
 // Auto data overplot load
 [D, N, time] = load_csv_data('./Data/start04.ven.csv', 1);
@@ -52,6 +52,8 @@ clear D N time
 
 INI.initialized = %f;
 INI.skip_init = %t;
+
+LIN.open_tv = 0;
 
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);

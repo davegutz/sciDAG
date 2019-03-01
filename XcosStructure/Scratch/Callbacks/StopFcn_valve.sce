@@ -182,4 +182,36 @@ overplot(['HS_WFL', 'hs_wfl'], ['r-',  'b--'], 'Head  Flow')
 subplot(223)
 overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
 
+if 1 then
+// bode of top level using open loop
+LINCOS_OVERRIDE = 1;
+mprintf('In %s before lincos top level\n', sfilename())
+try
+    sys_f = lincos(scs_m);
+catch
+    LINCOS_OVERRIDE = 0;
+    disp(lasterror())
+    error(lasterror())
+end
+LINCOS_OVERRIDE = 0;
+mprintf('In %s after lincos top_level\n', sfilename())
+try
+    figure()
+    myBodePlot(sys_f, 'rad');
+    [gm, frg] = g_margin(sys_f);
+    [pm, frp] = p_margin(sys_f);
+    show_margins(sys_f)
+    legend(['Open Loop Valve' 'gm' msprintf('pm= %f deg @ %f r/s', pm, frp)])
+catch
+    if lasterror(%f) == 'Singularity of log or tan function.' then
+        warning('Linear response of ""scs_m"" is undefined...showing small DC response')
+        myBodePlot(syslin('c',0,0,0,1e-12), [1,10], 'rad')
+        legend('default system')
+    else
+        disp(lasterror())
+    end
+end
+end
+
+
 mprintf('Completed %s\n', sfilename())  
