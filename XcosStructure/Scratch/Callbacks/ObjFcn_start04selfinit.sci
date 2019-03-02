@@ -47,7 +47,7 @@ function obj_score = ObjFcn_start04selfinit(particles)
     global W E X PSO
     global GEO INI FP
     global verbose
-    global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
+    global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb bl_mvtv_call
     [n_particles, m] = size(particles);
     obj_score = zeros(n_particles,1);
     for i = 1:n_particles

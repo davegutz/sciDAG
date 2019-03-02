@@ -60,8 +60,8 @@
 
 global verbose
 global INI GEO FP
-clearglobal bl_start  bl_mv bl_mvtv bl_hs bl_a_tvb
-global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
+clearglobal bl_start  bl_mv bl_mvtv bl_hs bl_a_tvb bl_mvtv_call
+global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb bl_mvtv_call
 verbose = 1;
 mprintf('In %s\n', sfilename())  
 
@@ -160,5 +160,5 @@ INI.hs.x = INI.x_hs;
 INI.mv.x = INI.x_mv;
 INI.mvtv.x = bl_mvtv_call.x;
 INI.x_mvtv = INI.mvtv.x;
-clear e_p1so e_p2 e_px e_hs e_mv bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
+clear e_p1so e_p2 e_px e_hs e_mv
 mprintf('Completed %s.   INI.count = %ld\n', sfilename(), INI.count)  

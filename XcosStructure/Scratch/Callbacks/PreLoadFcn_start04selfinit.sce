@@ -95,6 +95,7 @@ GEO.ln_vs.l = 23.7;
 GEO.ln_vs.vol = 3.42;
 GEO.ln_vs.a = GEO.ln_vs.vol/GEO.ln_vs.l;
 GEO.ln_vs.n = 8;
+GEO.ln_vs.c = 0.001;  // For no ss oscillations.   Set to 0 for normal.
 
 // Define head_b hs=mvhead geometry
 GEO.hs.f_cn = 0.75;
@@ -149,6 +150,7 @@ GEO.mvtv.m = mv + ms/2;
 clear mv ms
 GEO.mvtv.xmax = 0.36;
 GEO.mvtv.xmin = -0.12;
+//GEO.mvtv.xmin = -0.05;  // was -0.12 fix init
 exec('./Callbacks/mvtvwin.sci', -1);
 GEO.mvtv.ah.tb = [-1 0; 1 0];
 [xd, ad] = mvtvwin(40);

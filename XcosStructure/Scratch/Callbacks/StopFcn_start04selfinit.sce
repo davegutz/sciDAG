@@ -30,7 +30,7 @@ function overplot(st, c, %title)
     legend(st);
 endfunction
 
-global LINCOS_OVERRIDE figs
+global LINCOS_OVERRIDE figs sys_f
 mprintf('In %s\n', sfilename())  
 
 try close(figs); end
@@ -262,14 +262,16 @@ overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
 subplot(325)
 overplot(['PX', 'px'], ['r-', 'b--'], 'MVTV Control Pressure')
 
-figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [10,90,610,460]);
-subplot(221)
+figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [10,90,610,600]);
+subplot(321)
 overplot(['MV_POS', 'mv_x'], ['r-',  'b--'], 'MV Poaition')
-subplot(222)
-overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
-subplot(223)
+subplot(322)
 overplot(['HS_POS', 'hs_x'], ['r-',  'b--'], 'Head Sensor Position')
-subplot(224)
+subplot(323)
+overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
+subplot(324)
+overplot(['TV_POS', 'MVTV_XOL'], ['r-',  'b-'], 'Throttle Valve Position')
+subplot(325)
 overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
 end
@@ -289,10 +291,10 @@ LIN.open_tv = 0;
 mprintf('In %s after lincos top_level\n', sfilename())
 try
     figure()
-    myBodePlot(sys_f, 'rad');
+    myBodePlot(sys_f, 1, 50);
     [gm, frg] = g_margin(sys_f);
     [pm, frp] = p_margin(sys_f);
-    show_margins(sys_f)
+//    show_margins(sys_f)
     legend(['Open Loop TV' 'gm' msprintf('pm= %f deg @ %f r/s', pm, frp)])
 catch
     if lasterror(%f) == 'Singularity of log or tan function.' then

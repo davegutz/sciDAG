@@ -213,6 +213,7 @@ void valve_a(scicos_block *blk, int flag)
     {
         // Initialization
         count = 0;
+        x = (xmaxl + xminl)/2;
         while ((fabs(df)>1e-14 & count<100) | count<1)
         {
             count += 1;
@@ -246,7 +247,7 @@ void valve_a(scicos_block *blk, int flag)
         fjd = cp * fabs(ps - pd)*ad;
         fjh = -cp * fabs(ps - ph)*ah;
         df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-             - fs - xin*ks - fjd - fjh - ftd - fth - Xdot*c;
+             - fs - x*ks - fjd - fjh - ftd - fth - Xdot*c;
     }
     stops = 0;
     if(mode0==mode_lincos_override || flag==-1)
