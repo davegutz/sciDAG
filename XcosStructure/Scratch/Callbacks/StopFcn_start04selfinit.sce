@@ -30,7 +30,7 @@ function overplot(st, c, %title)
     legend(st);
 endfunction
 
-global LINCOS_OVERRIDE figs sys_f
+global LINCOS_OVERRIDE figs sys_f cpr scs_m
 mprintf('In %s\n', sfilename())  
 
 try close(figs); end
@@ -278,10 +278,11 @@ end
 
 if 1 then
 // bode of top level using open loop
-LIN.open_tv = 1;
+LIN.open_tv = 2;
+cpr = %cpr;
 mprintf('In %s before lincos top level\n', sfilename())
 try
-    sys_f = lincos(scs_m);
+    sys_f = lincos(scs_m, %cpr.state.x, 0, [1e-10,0]);
 catch
     LIN.open_tv = 0;
     disp(lasterror())
@@ -291,10 +292,10 @@ LIN.open_tv = 0;
 mprintf('In %s after lincos top_level\n', sfilename())
 try
     figure()
-    myBodePlot(sys_f, 1, 50);
+    myBodePlot(sys_f, 10, 100);
     [gm, frg] = g_margin(sys_f);
     [pm, frp] = p_margin(sys_f);
-//    show_margins(sys_f)
+    //show_margins(sys_f)
     legend(['Open Loop TV' 'gm' msprintf('pm= %f deg @ %f r/s', pm, frp)])
 catch
     if lasterror(%f) == 'Singularity of log or tan function.' then

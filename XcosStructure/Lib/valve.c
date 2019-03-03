@@ -239,20 +239,22 @@ void valve_a(scicos_block *blk, int flag)
     }
     else
     {
-        // Open loop for frequency response
-        if (LINCOS_OVERRIDE==1) xin = xol;
+        // Open loop for driving with input
+        if (LINCOS_OVERRIDE==2) xin = xol;
         else                    xin = x;
         ad = tab1(xin, AD, AD+N_AD, N_AD);
         ah = tab1(xin, AH, AH+N_AH, N_AH);
         fjd = cp * fabs(ps - pd)*ad;
         fjh = -cp * fabs(ps - ph)*ah;
         df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-             - fs - x*ks - fjd - fjh - ftd - fth - Xdot*c;
+             - fs - xin*ks - fjd - fjh - ftd - fth - Xdot*c;
     }
     stops = 0;
     if(mode0==mode_lincos_override || flag==-1)
     {
-        DFnet = df;
+        // Open loop for frequency response
+        if (LINCOS_OVERRIDE==1) DFnet = xol;
+        else                    DFnet = df;
     }
     else if(mode0==mode_move_plus)
     {

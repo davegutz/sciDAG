@@ -35,7 +35,7 @@ xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
 
 global m k c
-global loaded_scratch root sys_f
+global loaded_scratch root sys_f scs_m cpr
 global GEO INI FP LIN mv_x mv_xa
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb bl_mvtv_call
  
