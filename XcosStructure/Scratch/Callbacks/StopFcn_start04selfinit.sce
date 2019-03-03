@@ -282,7 +282,8 @@ LIN.open_tv = 2;
 cpr = %cpr;
 mprintf('In %s before lincos top level\n', sfilename())
 try
-    sys_f = lincos(scs_m, %cpr.state.x, 0, [1e-10,0]);
+    // TODO:  need actual steady state state here
+    sys_f = lincos(scs_m, %cpr.state.x, 0, [1e-9,0]);
 catch
     LIN.open_tv = 0;
     disp(lasterror())
@@ -292,7 +293,7 @@ LIN.open_tv = 0;
 mprintf('In %s after lincos top_level\n', sfilename())
 try
     figure()
-    myBodePlot(sys_f, 10, 100);
+    myBodePlot(sys_f, 1, 1000);
     [gm, frg] = g_margin(sys_f);
     [pm, frp] = p_margin(sys_f);
     //show_margins(sys_f)
