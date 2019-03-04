@@ -30,12 +30,14 @@ function overplot(st, c, %title)
     legend(st);
 endfunction
 
-global LINCOS_OVERRIDE figs sys_f cpr scs_m
+global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN
 mprintf('In %s\n', sfilename())  
+try cpr = %cpr; end
 
 try close(figs); end
 figs=[];
 
+if 1 then
 tWALL = WALL.time(:,1);
 WFAREA = struct('time', tWALL, 'values', WALL.values(:,1));
 WFMV = struct('time', tWALL, 'values', WALL.values(:,2));
@@ -62,7 +64,7 @@ TV_POS = struct('time', tXALL, 'values', XALL.values(:,2));
 HS_POS = struct('time', tXALL, 'values', XALL.values(:,3));
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,4));
 clear XALL tXALL
-
+end
 
 if 0 then
 figs($+1) = figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
@@ -279,11 +281,16 @@ end
 if 1 then
 // bode of top level using open loop
 LIN.open_tv = 2;
-cpr = %cpr;
 mprintf('In %s before lincos top level\n', sfilename())
 try
     // TODO:  need actual steady state state here
-    sys_f = lincos(scs_m, %cpr.state.x, 0, [1e-9,0]);
+    mprintf('In %s:  generating steadycos...\n', sfilename())
+    [XSC,UXC,YSC,XPSC] = steadycos(scs_m, %cpr.state.x, [],[],1:$, [], []);
+    LIN.X = XSC; LIN.U = UXC; LIN.Y=YSC; LIN.XP=XPSC; LIN.open_tv_sav = LIN.open_tv;
+//    sys_f = lincos(scs_m, %cpr.state.x, 0, [1e-9,0]);
+    mprintf('In %s:  generating lincos...\n', sfilename())
+    sys_f = lincos(scs_m, XSC, 0, [1e-9,0]);
+    LIN.sys_f = sys_f;
 catch
     LIN.open_tv = 0;
     disp(lasterror())
@@ -296,6 +303,7 @@ try
     myBodePlot(sys_f, 1, 1000);
     [gm, frg] = g_margin(sys_f);
     [pm, frp] = p_margin(sys_f);
+    LIN.gm = gm; LIN.frg = frg; LIN.pm = pm; LIN.frp = frp;
     //show_margins(sys_f)
     legend(['Open Loop TV' 'gm' msprintf('pm= %f deg @ %f r/s', pm, frp)])
 catch
