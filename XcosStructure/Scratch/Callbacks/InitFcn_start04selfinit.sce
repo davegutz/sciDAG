@@ -29,11 +29,18 @@ GEO.ln_vs = lti_man_n_vm(GEO.ln_vs, FP.sg, FP.beta);
 GEO.ln_p3s = lti_man_n_vm(GEO.ln_p3s, FP.sg, FP.beta);
 GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
 
-if INI.initialized & INI.skip_init then
-    btn = messagebox('Reinitialization needed?', 'Query Re-Init', 'question', ['yes', 'no'], 'modal');
-    mprintf("Skipping init.  If you want to re-init, set ''INI.skip_init = %%f;'' at the command line \n and resume, otherwise type resume\n");
-    if btn~=1 then
-        mprintf('running...\n');
+if ~INI.batch then
+    if INI.initialized & INI.skip_init then
+        btn = messagebox('Reinitialization needed?', 'Query Re-Init', 'question', ['yes', 'no'], 'modal');
+        mprintf("Skipping init\n");
+        if btn~=1 then
+            mprintf('running...\n');
+            return;
+        end
+    end
+else
+    if INI.initialized then
+        mprintf("Skipping init\n");
         return;
     end
 end
@@ -59,7 +66,7 @@ if isempty(mv_xa), mv_xa = mv_x.values(:,1); end
 mv_aa = interp1(xa, aa, mv_xa, 'linear', aa(1));
 mv_xb = interp1(ab, xb, mv_aa);
 mv_x.values(:,1) = mv_xb;
-mv_x.values(:,1) = mv_xb*0+mv_xb(1);
+//mv_x.values(:,1) = mv_xb*0+mv_xb(1);
 INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
 INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf3);

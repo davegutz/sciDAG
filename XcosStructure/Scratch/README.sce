@@ -48,7 +48,10 @@ exec('init_start04selfinit.sce', -1);
 // press play.  Same memory issues as ...detail.sce
 // interactive results in Results.   Formal plots in Results
 // To run steady state without oscillations
-GEO.ln_vs.c=.001;GEO.vsv.c=0;GEO.mvtv.c=0;GEO.hs.c=0;GEO.main_line.c=0;GEO.ln_p3s.c=0;
+GEO.ln_vs.c=.001;
+// To see linear response XTV-->XTV
+exec('init_start04selfinit.sce', -1);
+exec('./Scripts/linearize_start04selfinit.sce', -1);
 
 // Test pipes
 exec('init_pipe.sce', -1);

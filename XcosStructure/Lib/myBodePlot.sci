@@ -41,7 +41,7 @@ function [] = myBodePlot(varargin)
     else
         comments = [];
     end
-    fname = "bode"; // For error messages
+    fname = "myBodePlot"; // For error messages
     fmax = [];
     discr = %f; // For Shannon limit
     if or(typeof(varargin(1)) == ["state-space" "rational" "zpk"]) then

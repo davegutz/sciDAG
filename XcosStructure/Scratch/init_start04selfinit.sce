@@ -36,8 +36,8 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch root sys_f scs_m cpr
-global GEO INI FP LIN mv_x mv_xa TF
-global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb bl_mvtv_call
+global GEO INI FP LIN mv_x mv_xa
+global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
  
 // Auto data overplot load
 [D, N, time] = load_csv_data('./Data/start04.ven.csv', 1);
@@ -45,7 +45,9 @@ exec('./Data/load_decode_csv_data.sce', -1);
 [D, N, time] = load_csv_data('./Data/start04.ifc.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
 Tf = time($);
-TF=0.05;
+Tf = 0.01;
+Tb = Tf;
+
 //TBUF = 0.000001;
 TBUF = (time(4)-time(3))*40;
 NBUF = ceil(Tf/TBUF);
@@ -53,6 +55,7 @@ clear D N time
 
 INI.initialized = %f;
 INI.skip_init = %t;
+INI.batch = %f;
 
 LIN.open_tv = 0;
 

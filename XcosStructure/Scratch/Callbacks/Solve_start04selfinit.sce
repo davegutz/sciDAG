@@ -60,8 +60,8 @@
 
 global verbose
 global INI GEO FP
-clearglobal bl_start  bl_mv bl_mvtv bl_hs bl_a_tvb bl_mvtv_call
-global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb bl_mvtv_call
+//clearglobal bl_start  bl_mv bl_mvtv bl_hs bl_a_tvb
+global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 verbose = 1;
 mprintf('In %s\n', sfilename())  
 

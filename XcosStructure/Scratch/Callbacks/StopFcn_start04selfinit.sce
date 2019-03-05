@@ -66,7 +66,7 @@ SV_POS = struct('time', tXALL, 'values', XALL.values(:,4));
 clear XALL tXALL
 end
 
-if 0 then
+if 0  & Tf>0 then
 figs($+1) = figure("Figure_name", 'Start_Pressure_1', "Position", [10,30,610,460]);
 subplot(221)
 overplot(['start_ps'], ['r--'], 'Start Valve Pressures')
@@ -96,7 +96,7 @@ subplot(224)
 overplot(['START_WFVX', 'start_wfvx'], ['r-',  'b--'], 'Start Valve Damping Flow')
 end
 
-if 0 then
+if 0  & Tf>0 then
 // Trivalve regulator plots
 figs($+1) = figure("Figure_name", 'Trivalve_Pressure_1', "Position", [100,30,610,460]);
 subplot(221)
@@ -143,7 +143,7 @@ subplot(326)
 overplot(['TRI_WFXD', 'tri_wfxd'], ['r-',  'b--'], 'Trivalve XD Flow')
 end
 
-if 0 then
+if 0  & Tf>0 then
 // Metering valve halfvalve plots**********
 figs($+1) = figure("Figure_name", 'Halfvalve_Pressure_1', "Position", [200,30,610,460]);
 subplot(221)
@@ -172,7 +172,7 @@ subplot(212)
 overplot(['MV_WFD', 'mv_wfd'], ['r-',  'b--'], 'Halfvalve Discharge Flow')
 end
 
-if 0 then
+if 0  & Tf>0 then
 // Head sensor head plots**********
 figs($+1) = figure("Figure_name", 'Head_Pressure_1', "Position", [300,30,610,460]);
 subplot(121)
@@ -199,7 +199,7 @@ subplot(223)
 overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
 end
 
-if 0 then
+if 0  & Tf>0 then
 figs($+1) = figure("Figure_name", 'Throttle_Pressure_1', "Position", [400,30,610,460]);
 subplot(221)
 overplot(['p2'], ['r--'], 'Throttle Valve Pressures')
@@ -231,7 +231,7 @@ subplot(224)
 overplot(['MVTV_WFVX', 'mvtv_wfvx'], ['r-',  'b--'], 'Throttle Valve Damping Flow')
 end
 
-if 1 then
+if 1  & Tf>0 then
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [10,30,610,460]);
 subplot(221)
 overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
@@ -276,45 +276,6 @@ overplot(['TV_POS', 'MVTV_XOL'], ['r-',  'b-'], 'Throttle Valve Position')
 subplot(325)
 overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
-end
-
-if 1 then
-// bode of top level using open loop
-LIN.open_tv = 2;
-mprintf('In %s before lincos top level\n', sfilename())
-try
-    // TODO:  need actual steady state state here
-    mprintf('In %s:  generating steadycos...\n', sfilename())
-    [XSC,UXC,YSC,XPSC] = steadycos(scs_m, %cpr.state.x, [],[],1:$, [], []);
-    LIN.X = XSC; LIN.U = UXC; LIN.Y=YSC; LIN.XP=XPSC; LIN.open_tv_sav = LIN.open_tv;
-//    sys_f = lincos(scs_m, %cpr.state.x, 0, [1e-9,0]);
-    mprintf('In %s:  generating lincos...\n', sfilename())
-    sys_f = lincos(scs_m, XSC, 0, [1e-9,0]);
-    LIN.sys_f = sys_f;
-catch
-    LIN.open_tv = 0;
-    disp(lasterror())
-    error(lasterror())
-end
-LIN.open_tv = 0;
-mprintf('In %s after lincos top_level\n', sfilename())
-try
-    figure()
-    myBodePlot(sys_f, 1, 1000);
-    [gm, frg] = g_margin(sys_f);
-    [pm, frp] = p_margin(sys_f);
-    LIN.gm = gm; LIN.frg = frg; LIN.pm = pm; LIN.frp = frp;
-    //show_margins(sys_f)
-    legend(['Open Loop TV' 'gm' msprintf('pm= %f deg @ %f r/s', pm, frp)])
-catch
-    if lasterror(%f) == 'Singularity of log or tan function.' then
-        warning('Linear response of ""scs_m"" is undefined...showing small DC response')
-        myBodePlot(syslin('c',0,0,0,1e-12), [1,10], 'rad')
-        legend('default system')
-    else
-        disp(lasterror())
-    end
-end
 end
 
 mprintf('Completed %s\n', sfilename())  
