@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Jsn 1, 2019      DA Gutz     Created
 // 
-global LINCOS_OVERRIDE figs LIN
+global LINCOS_OVERRIDE figs LIN time_tic time_toc
 global GEO INI FP mv_x mv_xa
 mprintf('In %s\n', sfilename())  
 try close(figs); end
@@ -35,12 +35,14 @@ if ~INI.batch then
         mprintf("Skipping init\n");
         if btn~=1 then
             mprintf('running...\n');
+            time_tic = getdate();
             return;
         end
     end
 else
     if INI.initialized then
         mprintf("Skipping init\n");
+        time_tic = getdate();
         return;
     end
 end
@@ -72,4 +74,5 @@ INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf3);
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 INI.initialized = %t;
+time_tic = getdate();
 mprintf('Completed %s\n', sfilename())  

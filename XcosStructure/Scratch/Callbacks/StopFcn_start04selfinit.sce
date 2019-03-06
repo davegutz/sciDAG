@@ -30,12 +30,16 @@ function overplot(st, c, %title)
     legend(st);
 endfunction
 
-global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN
+global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN  time_tic time_toc
 mprintf('In %s\n', sfilename())  
 try cpr = %cpr; end
 
 try close(figs); end
 figs=[];
+
+// Calculate run time.   tic is in InitFcn
+time_toc = getdate();
+mprintf('Run took %8.3f seconds\n', etime(time_toc, time_tic));
 
 if 1 then
 tWALL = WALL.time(:,1);

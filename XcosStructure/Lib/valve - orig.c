@@ -107,16 +107,16 @@
 // **********valve_a
 // valve_a Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define ao      (*GetRealOparPtrs(blk,1))   // Valve damp orifice area, sqin
-#define ax1     (*GetRealOparPtrs(blk,2))   // Supply to reference cross section, sqin
-#define ax2     (*GetRealOparPtrs(blk,3))   // Damping cross section, sqin
-#define ax3     (*GetRealOparPtrs(blk,4))   // Supply cross section, sqin
-#define ax4     (*GetRealOparPtrs(blk,5))   // Supply to opposite spring end cross section, sqin
-#define c_      (*GetRealOparPtrs(blk,6))   // Damping coefficient, lbf/in/s
-#define clin    (*GetRealOparPtrs(blk,7))   // Damping coefficient when linearizing (LINCOS_OVERRIDE), lbf/in/s
-#define cd_     (*GetRealOparPtrs(blk,8))   // Coefficient of discharge
-#define cdo     (*GetRealOparPtrs(blk,9))   // Damping orifice coefficient of discharge
-#define cp      (*GetRealOparPtrs(blk,10))  // Pressure force coefficient, usually .69
+#define AO      ((GetRealOparPtrs(blk,1))[0]);  // Valve damp orifice area, sqin
+#define AX1     ((GetRealOparPtrs(blk,2))[0]);  // Supply to reference cross section, sqin
+#define AX2     ((GetRealOparPtrs(blk,3))[0]);  // Damping cross section, sqin
+#define AX3     ((GetRealOparPtrs(blk,4))[0]);  // Supply cross section, sqin
+#define AX4     ((GetRealOparPtrs(blk,5))[0]);  // Supply to opposite spring end cross section, sqin
+#define C       ((GetRealOparPtrs(blk,6))[0]);  // Damping coefficient, lbf/in/s
+#define CLIN    ((GetRealOparPtrs(blk,7))[0]);  // Damping coefficient when linearizing (LINCOS_OVERRIDE), lbf/in/s
+#define CD      ((GetRealOparPtrs(blk,8))[0]);  // Coefficient of discharge
+#define CDO     ((GetRealOparPtrs(blk,9))[0]);  // Damping orifice coefficient of discharge
+#define CP      ((GetRealOparPtrs(blk,10))[0]); // Pressure force coefficient, usually .69
 #define FDYF    ((GetRealOparPtrs(blk,11))[0]); // Dynamic friction, lbf
 #define FS      ((GetRealOparPtrs(blk,12))[0]); // Spring preload, lbf
 #define FSTF    ((GetRealOparPtrs(blk,13))[0]); // Static friction, lbf
@@ -152,15 +152,15 @@
 #define UF      (r_OUT(8,0))    // Unbalanced force toward drain, lbf
 #define MODE    (r_OUT(9,0))    // Zero-crossing mode
 
+
 void valve_a(scicos_block *blk, int flag)
 {
-//    SCSREAL_COP *ax1 = GetRealOparPtrs(blk,2);
-
     double DFnet = 0;
     int stops = 0;
     double ad = 0;
     double ah = 0;
     double mass = M;
+    double c = C;
     double fstf = FSTF;
     //double fdyf = FDYF;
     double xmin = XMIN;
@@ -184,22 +184,30 @@ void valve_a(scicos_block *blk, int flag)
     double fjd = 0;
     double fjh = 0;
     double ftd, fth;
+    double cp = CP;
+    double cd = CD;
     double sg = SG;
     double ld = LD;
     double lh = LH;
     double df = 0;
+    double ax1 = AX1;
+    double ax2 = AX2;
+    double ax3 = AX3;
+    double ax4 = AX4;
     double fs = FS;
     double ks = KS;
     double dwdc = DWDC(sg);
     double wfvx, px;
+    double ao = AO;
+    double cdo = CDO;
     double xmaxl = XMAX;
     double xminl = XMIN;
 
     // compute info needed for all passes
     wfvx   = Xdot*dwdc*ax2;
     px = OR_AWPDTOPS(ao, wfvx, pxr, cdo, sg);
-    ftd = ld * 0.01365 * cd_ * Xdot * SSQRT(sg*(ps - pd));
-    fth = -lh * 0.01365 * cd_ * Xdot * SSQRT(sg*(ps - ph));
+    ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(ps - pd));
+    fth = -lh * 0.01365 * cd * Xdot * SSQRT(sg*(ps - ph));
     
     if(flag==-1)
     {
@@ -239,7 +247,7 @@ void valve_a(scicos_block *blk, int flag)
         fjd = cp * fabs(ps - pd)*ad;
         fjh = -cp * fabs(ps - ph)*ah;
         df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-             - fs - xin*ks - fjd - fjh - ftd - fth - Xdot*c_;
+             - fs - xin*ks - fjd - fjh - ftd - fth - Xdot*c;
     }
     stops = 0;
     if(mode0==mode_lincos_override || flag==-1)
@@ -302,8 +310,8 @@ void valve_a(scicos_block *blk, int flag)
         case -1:
         case 1:
             // compute the outputs of the block
-            wfd = OR_APTOW(ad, ps, pd, cd_, sg);
-            wfh = OR_APTOW(ah, ph, ps, cd_, sg);
+            wfd = OR_APTOW(ad, ps, pd, cd, sg);
+            wfh = OR_APTOW(ah, ph, ps, cd, sg);
             wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
             wfvrs  = Xdot*dwdc*ax4;
             wfvr   = Xdot*dwdc*(ax1-ax2);
@@ -352,7 +360,8 @@ void valve_a(scicos_block *blk, int flag)
             break;
     }
 }
-#undef cd_
+#undef C
+#undef CD
 #undef CP
 #undef FDYF
 #undef FS
@@ -370,7 +379,6 @@ void valve_a(scicos_block *blk, int flag)
 #undef UF_NET
 #undef MODE
 #undef UF
-#undef c_
 
 // **********trivalve_a1
 // trivalve_a1 Object parameters.  1st index is 1-based, 2nd index is 0-based.
@@ -383,9 +391,8 @@ void valve_a(scicos_block *blk, int flag)
 #define ALR     ((GetRealOparPtrs(blk,6))[0]);  // Supply end load head area, sqin
 #define AR      ((GetRealOparPtrs(blk,7))[0]);  // Calculated spool rod area, sqin
 #define ASL     ((GetRealOparPtrs(blk,8))[0]);  // Spool supply end leakage area, sqin
-//#define C       ((GetRealOparPtrs(blk,9))[0]);  // Dynamic damping, lbf/(in/s)
-#define c_      (*GetRealOparPtrs(blk,9))   // Dynamic damping, lbf/(in/s)
-#define cd_     (*GetRealOparPtrs(blk,10))   // Window discharge coefficient
+#define C       ((GetRealOparPtrs(blk,9))[0]);  // Dynamic damping, lbf/(in/s)
+#define CD      ((GetRealOparPtrs(blk,10))[0]); // Window discharge coefficient
 #define CP      ((GetRealOparPtrs(blk,11))[0]); // Pressure force coeff, usually .69
 #define FDYF    ((GetRealOparPtrs(blk,12))[0]); // Dynamic friction, lbf
 #define FS      ((GetRealOparPtrs(blk,13))[0]); // Total spring preload toward drain, lbf
@@ -467,6 +474,7 @@ void trivalve_a1(scicos_block *blk, int flag)
     double ad = 0;
     double as = 0;
     double mass = M;
+    double c = C;
     double fstf = FSTF;
 //    double fdyf = FDYF;
     double xmin = XMIN;
@@ -488,7 +496,8 @@ void trivalve_a1(scicos_block *blk, int flag)
     double fjd = 0;
     double fjs = 0;
     double ftd, fts;
-//    double cp = CP;
+    double cp = CP;
+    double cd = CD;
     double sg = SG;
     double ld = LD;
     double ls = LS;
@@ -511,19 +520,19 @@ void trivalve_a1(scicos_block *blk, int flag)
     reg_win_a(X, &as, &ad);
     fjd = cp * fabs(pd - px)*ad;
     fjs = -cp * fabs(px - ps)*as;
-    ftd = ld * 0.01365 * cd_ * Xdot * SSQRT(sg*(pd - px));
-    fts = ls * 0.01365 * cd_ * Xdot * SSQRT(sg*(ps - px));
+    ftd = ld * 0.01365 * cd * Xdot * SSQRT(sg*(pd - px));
+    fts = ls * 0.01365 * cd * Xdot * SSQRT(sg*(ps - px));
     if(flag==-1)
     {
         // Initialization
         xol = (pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
-             + fext + fs + fjd + fjs + ftd + fts - Xdot*c_)/ks;
+             + fext + fs + fjd + fjs + ftd + fts - Xdot*c)/ks;
         df = 0;
     }
     else
     {
         df = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
-             + fext + fs - X*ks + fjd + fjs + ftd + fts - Xdot*c_;
+             + fext + fs - X*ks + fjd + fjs + ftd + fts - Xdot*c;
     }    
     stops = 0;
     if(mode0==mode_lincos_override)
@@ -583,11 +592,11 @@ void trivalve_a1(scicos_block *blk, int flag)
         case -1:
         case 1:
             // compute the outputs of the block
-            wfsx = OR_APTOW(as, ps, px, cd_, sg);
-            wfxd = OR_APTOW(ad, px, pd, cd_, sg);
+            wfsx = OR_APTOW(as, ps, px, cd, sg);
+            wfxd = OR_APTOW(ad, px, pd, cd, sg);
             wfx = wfsx - wfxd;
-            wfse = OR_APTOW(asl, ps, pes, cd_, sg);
-            wfde = OR_APTOW(adl, pd, ped, cd_, sg);
+            wfse = OR_APTOW(asl, ps, pes, cd, sg);
+            wfde = OR_APTOW(adl, pd, ped, cd, sg);
             wfs = wfsx - wfse;
             wfd = wfxd - wfde;
             wfse -= Xdot*dwdc*ahs;
@@ -643,13 +652,12 @@ void trivalve_a1(scicos_block *blk, int flag)
             break;
     }
 }
-#undef c_
 #undef UF
-#undef ax1
-#undef ax1
-#undef ax2
-#undef ax3
-#undef cd_
+#undef AX1
+#undef AX2
+#undef AX3
+#undef C
+#undef CD
 #undef CP
 #undef FDYF
 #undef FSTF
@@ -669,17 +677,17 @@ void trivalve_a1(scicos_block *blk, int flag)
 // *******hlfvalve_a
 // hlfvalve_a Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define arc     (*GetRealOparPtrs(blk,1))   // Leakage area r to c, sqin
-#define arx     (*GetRealOparPtrs(blk,2))   // Leakage area r to x, sqin
-#define asr     (*GetRealOparPtrs(blk,3))   // Leakage area s to r, sqin
-#define awd     (*GetRealOparPtrs(blk,4))   // Leakage area w to d, sqin
-#define awx     (*GetRealOparPtrs(blk,5))   // Leakage area w to x, sqin
-#define ax1     (*GetRealOparPtrs(blk,6))   // Supply cross section, sqin
-#define ax2     (*GetRealOparPtrs(blk,7))   // Damping cross section, sqin
-#define ax3     (*GetRealOparPtrs(blk,8))   // Cross section at a, sqin
-#define axa     (*GetRealOparPtrs(blk,9))   // Leakage area x to a, sqin
-#define c_      (*GetRealOparPtrs(blk,10))   // Dynamic damping, lbf/(in/s)
-#define cd_     (*GetRealOparPtrs(blk,11))   // Window discharge coefficient
+#define ARC     ((GetRealOparPtrs(blk,1))[0]);  // Leakage area r to c, sqin
+#define ARX     ((GetRealOparPtrs(blk,2))[0]);  // Leakage area r to x, sqin
+#define ASR     ((GetRealOparPtrs(blk,3))[0]);  // Leakage area s to r, sqin
+#define AWD     ((GetRealOparPtrs(blk,4))[0]);  // Leakage area w to d, sqin
+#define AWX     ((GetRealOparPtrs(blk,5))[0]);  // Leakage area w to x, sqin
+#define AX1     ((GetRealOparPtrs(blk,6))[0]);  // Supply cross section, sqin
+#define AX2     ((GetRealOparPtrs(blk,7))[0]);  // Damping cross section, sqin
+#define AX3     ((GetRealOparPtrs(blk,8))[0]);  // Cross section at a, sqin
+#define AXA     ((GetRealOparPtrs(blk,9))[0]);  // Leakage area x to a, sqin
+#define C       ((GetRealOparPtrs(blk,10))[0]); // Dynamic damping, lbf/(in/s)
+#define CD      ((GetRealOparPtrs(blk,11))[0]); // Window discharge coefficient
 #define CP      ((GetRealOparPtrs(blk,12))[0]); // Pressure force coeff, usually .69
 #define FDYF    ((GetRealOparPtrs(blk,13))[0]); // Dynamic friction, lbf
 #define FSTF    ((GetRealOparPtrs(blk,14))[0]); // Spool static friction, lbf
@@ -722,6 +730,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
     int stops = 0;
     double at = 0;
     double mass = M;
+    double c = C;
     double fstf = FSTF;
 //    double fdyf = FDYF;
     double xmin = XMIN;
@@ -739,9 +748,19 @@ void hlfvalve_a(scicos_block *blk, int flag)
     double xol = XOL;
     double wfs, wfd, wfsr, wfwd, wfw, wfwx, wfxa, wfrc, wfx, wfa, wfc, wfr;
 
-//    double cp = CP;
+    double cp = CP;
+    double cd = CD;
     double sg = SG;
     double df = 0;
+    double arc = ARC;
+    double arx = ARX;
+    double asr = ASR;
+    double awd = AWD;
+    double awx = AWX;
+    double ax1 = AX1;
+    double ax2 = AX2;
+    double ax3 = AX3;
+    double axa = AXA;
     double dwdc = DWDC(sg);
 
     double x = X;
@@ -750,7 +769,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
     if(mode0==mode_lincos_override || flag==-1) x = xol;
     at = tab1(x, AT, AT+N_AT, N_AT);
     df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
-             + fj - Xdot*c_;
+             + fj - Xdot*c;
     stops = 0;
     if(mode0==mode_lincos_override)
     {
@@ -808,12 +827,12 @@ void hlfvalve_a(scicos_block *blk, int flag)
         case -1:
         case 1:
             // compute the outputs of the block
-            wfs = OR_APTOW(at, ps, pd, cd_, sg);
-            wfsr = OR_APTOW(asr, ps, pr, cd_, sg);
-            wfwd = OR_APTOW(awd, pw, pd, cd_, sg);
-            wfwx = OR_APTOW(awx, pw, px, cd_, sg);
-            wfxa = OR_APTOW(axa, px, pa, cd_, sg);
-            wfrc = OR_APTOW(arc, pr, pc, cd_, sg);
+            wfs = OR_APTOW(at, ps, pd, cd, sg);
+            wfsr = OR_APTOW(asr, ps, pr, cd, sg);
+            wfwd = OR_APTOW(awd, pw, pd, cd, sg);
+            wfwx = OR_APTOW(awx, pw, px, cd, sg);
+            wfxa = OR_APTOW(axa, px, pa, cd, sg);
+            wfrc = OR_APTOW(arc, pr, pc, cd, sg);
             wfd = wfs - wfsr + wfwd;
             wfa = -wfxa + dwdc*Xdot*ax3;
             wfc = wfrc + dwdc*Xdot*ax2;
