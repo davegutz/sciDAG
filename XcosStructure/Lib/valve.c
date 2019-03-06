@@ -117,9 +117,9 @@
 #define cd_     (*GetRealOparPtrs(blk,8))   // Coefficient of discharge
 #define cdo     (*GetRealOparPtrs(blk,9))   // Damping orifice coefficient of discharge
 #define cp      (*GetRealOparPtrs(blk,10))  // Pressure force coefficient, usually .69
-#define FDYF    ((GetRealOparPtrs(blk,11))[0]); // Dynamic friction, lbf
-#define FS      ((GetRealOparPtrs(blk,12))[0]); // Spring preload, lbf
-#define FSTF    ((GetRealOparPtrs(blk,13))[0]); // Static friction, lbf
+#define fdyf    (*GetRealOparPtrs(blk,11))  // Dynamic friction, lbf
+#define fs      (*GetRealOparPtrs(blk,12))  // Spring preload, lbf
+#define fstf    (*GetRealOparPtrs(blk,13))  // Static friction, lbf
 #define KS      ((GetRealOparPtrs(blk,14))[0]); // Spring rate, lbf/in
 #define LD      ((GetRealOparPtrs(blk,15))[0]); // Damping length supply to discharge (effective), in
 #define LH      ((GetRealOparPtrs(blk,16))[0]); // Damping length supply to high discharge (effective), in
@@ -161,8 +161,6 @@ void valve_a(scicos_block *blk, int flag)
     double ad = 0;
     double ah = 0;
     double mass = M;
-    double fstf = FSTF;
-    //double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
 
@@ -188,7 +186,6 @@ void valve_a(scicos_block *blk, int flag)
     double ld = LD;
     double lh = LH;
     double df = 0;
-    double fs = FS;
     double ks = KS;
     double dwdc = DWDC(sg);
     double wfvx, px;
@@ -354,9 +351,9 @@ void valve_a(scicos_block *blk, int flag)
 }
 #undef cd_
 #undef CP
-#undef FDYF
-#undef FS
-#undef FSTF
+#undef fdyf
+#undef fs
+#undef fstf
 #undef KS
 #undef LD
 #undef M
@@ -387,9 +384,9 @@ void valve_a(scicos_block *blk, int flag)
 #define c_      (*GetRealOparPtrs(blk,9))   // Dynamic damping, lbf/(in/s)
 #define cd_     (*GetRealOparPtrs(blk,10))   // Window discharge coefficient
 #define CP      ((GetRealOparPtrs(blk,11))[0]); // Pressure force coeff, usually .69
-#define FDYF    ((GetRealOparPtrs(blk,12))[0]); // Dynamic friction, lbf
-#define FS      ((GetRealOparPtrs(blk,13))[0]); // Total spring preload toward drain, lbf
-#define FSTF    ((GetRealOparPtrs(blk,14))[0]); // Spool static friction, lbf
+#define fdyf    (*GetRealOparPtrs(blk,12)); // Dynamic friction, lbf
+#define fs      (*GetRealOparPtrs(blk,13))  // Total spring preload toward drain, lbf
+#define fstf    (*GetRealOparPtrs(blk,14))  // Spool static friction, lbf
 #define KS      ((GetRealOparPtrs(blk,15))[0]); // Total spring rate, load decreases as valve moved toward drain, lbf/in
 #define LD      ((GetRealOparPtrs(blk,16))[0]); // Damping effective length, the axial length between incoming and outgoing drain flow, in, positive
 #define LS      ((GetRealOparPtrs(blk,17))[0]); // Damping effective length, the axial length between incoming and outgoing supply flow, in, positive
@@ -467,8 +464,6 @@ void trivalve_a1(scicos_block *blk, int flag)
     double ad = 0;
     double as = 0;
     double mass = M;
-    double fstf = FSTF;
-//    double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
 
@@ -501,7 +496,6 @@ void trivalve_a1(scicos_block *blk, int flag)
     double alr = ALR;
     double ar = AR;
     double asl = ASL;
-    double fs = FS;
     double ks = KS;
     double dwdc = DWDC(sg);
 
@@ -651,8 +645,8 @@ void trivalve_a1(scicos_block *blk, int flag)
 #undef ax3
 #undef cd_
 #undef CP
-#undef FDYF
-#undef FSTF
+#undef fdyf
+#undef fstf
 #undef M
 #undef XMAX
 #undef XMIN
@@ -678,11 +672,11 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define ax2     (*GetRealOparPtrs(blk,7))   // Damping cross section, sqin
 #define ax3     (*GetRealOparPtrs(blk,8))   // Cross section at a, sqin
 #define axa     (*GetRealOparPtrs(blk,9))   // Leakage area x to a, sqin
-#define c_      (*GetRealOparPtrs(blk,10))   // Dynamic damping, lbf/(in/s)
-#define cd_     (*GetRealOparPtrs(blk,11))   // Window discharge coefficient
+#define c_      (*GetRealOparPtrs(blk,10))  // Dynamic damping, lbf/(in/s)
+#define cd_     (*GetRealOparPtrs(blk,11))  // Window discharge coefficient
 #define CP      ((GetRealOparPtrs(blk,12))[0]); // Pressure force coeff, usually .69
-#define FDYF    ((GetRealOparPtrs(blk,13))[0]); // Dynamic friction, lbf
-#define FSTF    ((GetRealOparPtrs(blk,14))[0]); // Spool static friction, lbf
+#define fdyf    (*GetRealOparPtrs(blk,13)); // Dynamic friction, lbf
+#define fstf    (*GetRealOparPtrs(blk,14))  // Spool static friction, lbf
 #define M       ((GetRealOparPtrs(blk,15))[0]); // Total mass, spool plus load, lbm.
 #define XMAX    ((GetRealOparPtrs(blk,16))[0]); // Max stroke, in
 #define XMIN    ((GetRealOparPtrs(blk,17))[0]); // Min stroke, in
@@ -722,8 +716,6 @@ void hlfvalve_a(scicos_block *blk, int flag)
     int stops = 0;
     double at = 0;
     double mass = M;
-    double fstf = FSTF;
-//    double fdyf = FDYF;
     double xmin = XMIN;
     double xmax = XMAX;
     double fj = 0;
