@@ -163,7 +163,7 @@ void head_b(scicos_block *blk, int flag)
     f_f = (pf - ph) * f_an * \
             (1. + 16. * SQR(f_cf * X / f_dn));
     uf  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X - Xdot*c_;
-    
+
     stops = 0;
     if(mode0==mode_lincos_override)
     {
@@ -198,6 +198,7 @@ void head_b(scicos_block *blk, int flag)
         uf_net = min(uf + fstf, 0);
     }
 
+    // Different passes
     switch (flag)
     {
         case 0:
