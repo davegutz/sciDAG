@@ -143,10 +143,10 @@
 // outputs
 #define wfs     (r_OUT(0,0))    // Supply flow in, pph
 #define wfd     (r_OUT(1,0))    // Discharge flow out, pph
-#define WFH     (r_OUT(2,0))    // High discharge flow in, pph
-#define WFVRS   (r_OUT(3,0))    // Reference opposite spring end flow in, pph
-#define WFVR    (r_OUT(4,0))    // Reference flow out, pph
-#define WFVX    (r_OUT(5,0))    // Damping flow out, pph
+#define wfh     (r_OUT(2,0))    // High discharge flow in, pph
+#define wfvrs   (r_OUT(3,0))    // Reference opposite spring end flow in, pph
+#define wfvr    (r_OUT(4,0))    // Reference flow out, pph
+#define wfvx    (r_OUT(5,0))    // Damping flow out, pph
 #define Vo      (r_OUT(6,0))    // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(7,0))    // Spool displacement toward drain, in
 #define uf      (r_OUT(8,0))    // Unbalanced force toward drain, lbf
@@ -154,31 +154,26 @@
 
 void valve_a(scicos_block *blk, int flag)
 {
-//    SCSREAL_COP *ax1 = GetRealOparPtrs(blk,2);
-
-    double DFnet = 0;
+    double uf_net = 0;
     int stops = 0;
     double ad = 0;
     double ah = 0;
-    
-    // inputs and outputs
-    double x = X;
-    double xin = X;
-    double wfh, wfvrs, wfvr;
 
+    double xin = X;
     int count = 0;
     double xp = xol;
 
     double fjd = 0;
     double fjh = 0;
-    double ftd, fth;
+    double ftd = 0;
+    double fth = 0;
     double dwdc = DWDC(sg);
-    double wfvx, px;
+    double px = 0;
     double xmaxl = xmax;
     double xminl = xmin;
 
     // compute info needed for all passes
-    wfvx   = Xdot*dwdc*ax2;
+    wfvx = Xdot*dwdc*ax2;
     px = OR_AWPDTOPS(ao, wfvx, pxr, cdo, sg);
     ftd = ld * 0.01365 * cd_ * Xdot * SSQRT(sg*(ps - pd));
     fth = -lh * 0.01365 * cd_ * Xdot * SSQRT(sg*(ps - ph));
@@ -187,35 +182,35 @@ void valve_a(scicos_block *blk, int flag)
     {
         // Initialization
         count = 0;
-        x = (xmaxl + xminl)/2;
+        X = (xmaxl + xminl)/2;
         while ((fabs(uf)>1e-14 & count<100) | count<1)
         {
             count += 1;
-            ad = tab1(x, AD, AD+N_AD, N_AD);
-            ah = tab1(x, AH, AH+N_AH, N_AH);
+            ad = tab1(X, AD, AD+N_AD, N_AD);
+            ah = tab1(X, AH, AH+N_AH, N_AH);
             fjd = cp * fabs(ps - pd)*ad;
             fjh = -cp * fabs(ps - ph)*ah;
             uf = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
-                - fs - x*ks - fjd - fjh;
-            xp = x;
+                - fs - X*ks - fjd - fjh;
+            xp = X;
             if(uf>0)
             {
-                x = (xp + xmaxl)/2;
+                X = (xp + xmaxl)/2;
                 xminl = xp;
             }
             else
             {
-                x = (xp + xminl)/2;
+                X = (xp + xminl)/2;
                 xmaxl = xp;
             }
         }
-        xol = x;
+        xol = X;
     }
     else
     {
         // Open loop for driving with input
         if (LINCOS_OVERRIDE==1) xin = xol;
-        else                    xin = x;
+        else                    xin = X;
         ad = tab1(xin, AD, AD+N_AD, N_AD);
         ah = tab1(xin, AH, AH+N_AH, N_AH);
         fjd = cp * fabs(ps - pd)*ad;
@@ -227,36 +222,36 @@ void valve_a(scicos_block *blk, int flag)
     if(mode0==mode_lincos_override || flag==-1)
     {
         // Alternate frequency response
-        if (LINCOS_OVERRIDE==2) DFnet = xol;
-        else                    DFnet = uf;
+        if (LINCOS_OVERRIDE==2) uf_net = xol;
+        else                    uf_net = uf;
     }
     else if(mode0==mode_move_plus)
     {
-//        DFnet = uf - fdyf;
-        DFnet = uf - fstf;
+//        uf_net = uf - fdyf;
+        uf_net = uf - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-//        DFnet = uf + fdyf;
-        DFnet = uf + fstf;
+//        uf_net = uf + fdyf;
+        uf_net = uf + fstf;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(uf - fstf, 0);
+        uf_net = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(uf - fstf, 0);
+        uf_net = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(uf + fstf, 0);
+        uf_net = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(uf + fstf, 0);
+        uf_net = min(uf + fstf, 0);
     }
 
     switch (flag)
@@ -266,12 +261,12 @@ void valve_a(scicos_block *blk, int flag)
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
-                A = DFnet/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_plus || mode0==mode_move_neg)
             {
                 V = Xdot;
-                A = DFnet/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
@@ -289,12 +284,8 @@ void valve_a(scicos_block *blk, int flag)
             wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
             wfvrs  = Xdot*dwdc*ax4;
             wfvr   = Xdot*dwdc*(ax1-ax2);
-            WFH = wfh;
-            WFVRS = wfvrs;
-            WFVR = wfvr;
-            WFVX = wfvx;
             Vo = Xdot;
-            Xo = x;
+            Xo = X;
             MODE = mode0;
             break;
 
@@ -305,8 +296,8 @@ void valve_a(scicos_block *blk, int flag)
 //            surf2 = uf+fdyf;
             surf1 = uf-fstf;
             surf2 = uf+fstf;
-            surf3 = x-xmin;
-            surf4 = x-xmax;
+            surf3 = X-xmin;
+            surf4 = X-xmax;
 
             if (get_phase_simulation() == 1)
             {
@@ -418,30 +409,32 @@ void valve_a(scicos_block *blk, int flag)
 #define WS      0.0               /* Reg supply linear window width, in*/
 #define WD      0               /* Reg drain linear window width, in*/
 
-void    reg_win_a(double x, double *as, double *ad){
-double   xcrl;   /* Aux. leak dim, in. */
-double   xscl;   /* Aux. leak dim, in. */
-double   thcrl;  /* Aux. leak scaler. */
-double   thscl;  /* Aux. leak scaler. */
-double   alk;    /* Leak area, sqin. */
+// Hole ports need to be modeled real-time.   Table lookups are too imprecise causing noise
+void    reg_win_a(double x, double *as, double *ad)
+{
+    double   xcrl;   /* Aux. leak dim, in. */
+    double   xscl;   /* Aux. leak dim, in. */
+    double   thcrl;  /* Aux. leak scaler. */
+    double   thscl;  /* Aux. leak scaler. */
+    double   alk;    /* Leak area, sqin. */
 
-xcrl    = max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.);
-xscl    = max(min((x+SBIAS), DORIFS), 0.);
-thcrl   = acos(1. - xcrl * 2. / DORIFD);
-thscl   = acos(1. - xscl * 2. / DORIFS);
-alk     = CLEAR * (DORIFS + DORIFD)/2. * (PI - thcrl - thscl);
-*as     = HOLES * ( max(hole(max(min(x+SBIAS, DORIFS), 0.), DORIFS),
-            max(min(x+SBIAS, DORIFS),0.)*WS)
-            + alk);
-*ad     = HOLES * ( max(hole(max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.), DORIFD),
-            max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.)*WD) + alk);
-return;
+    xcrl    = max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.);
+    xscl    = max(min((x+SBIAS), DORIFS), 0.);
+    thcrl   = acos(1. - xcrl * 2. / DORIFD);
+    thscl   = acos(1. - xscl * 2. / DORIFS);
+    alk     = CLEAR * (DORIFS + DORIFD)/2. * (PI - thcrl - thscl);
+    *as     = HOLES * ( max(hole(max(min(x+SBIAS, DORIFS), 0.), DORIFS),
+                max(min(x+SBIAS, DORIFS),0.)*WS)
+                + alk);
+    *ad     = HOLES * ( max(hole(max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.), DORIFD),
+    max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.)*WD) + alk);
+    return;
 }   /* End reg_win_a. */
 
 // *******trivalve_a1
 void trivalve_a1(scicos_block *blk, int flag)
 {
-    double DFnet = 0;
+    double uf_net = 0;
     int stops = 0;
     double ad = 0;
     double as = 0;
@@ -474,33 +467,33 @@ void trivalve_a1(scicos_block *blk, int flag)
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = uf;
+        uf_net = uf;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = uf - fstf;
+        uf_net = uf - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = uf + fstf;
+        uf_net = uf + fstf;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(uf - fstf, 0);
+        uf_net = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(uf - fstf, 0);
+        uf_net = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(uf + fstf, 0);
+        uf_net = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(uf + fstf, 0);
+        uf_net = min(uf + fstf, 0);
     }
 
     switch (flag)
@@ -511,12 +504,12 @@ void trivalve_a1(scicos_block *blk, int flag)
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
-                A = DFnet/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_plus || mode0==mode_move_neg)
             {
                 V = Xdot;
-                A = DFnet/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
@@ -653,48 +646,47 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define MODE    (r_OUT(15,0))   // Zero-crossing mode
 void hlfvalve_a(scicos_block *blk, int flag)
 {
-    double DFnet = 0;
+    double uf_net = 0;
     int stops = 0;
     double at = 0;
     double fj = 0;
     double dwdc = DWDC(sg);
-    double x = X;
 
     // compute info needed for all passes
-    if(mode0==mode_lincos_override || flag==-1) x = xol;
-    at = tab1(x, AT, AT+N_AT, N_AT);
+    if(mode0==mode_lincos_override || flag==-1) X = xol;
+    at = tab1(X, AT, AT+N_AT, N_AT);
     uf = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
              + fj - Xdot*c_;
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = uf;
+        uf_net = uf;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = uf - fstf;
+        uf_net = uf - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = uf + fstf;
+        uf_net = uf + fstf;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(uf - fstf, 0);
+        uf_net = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(uf - fstf, 0);
+        uf_net = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(uf + fstf, 0);
+        uf_net = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(uf + fstf, 0);
+        uf_net = min(uf + fstf, 0);
     }
 
     switch (flag)
@@ -704,12 +696,12 @@ void hlfvalve_a(scicos_block *blk, int flag)
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
-                A = DFnet/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_plus || mode0==mode_move_neg)
             {
                 V = Xdot;
-                A = DFnet/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
@@ -735,7 +727,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
             wfw = wfwx + wfwd;
             wfr = wfsr - wfrc + dwdc*Xdot*(ax1-ax2);
             Vo = Xdot;
-            Xo = x;
+            Xo = X;
             MODE = mode0;
             break;
 
@@ -744,8 +736,8 @@ void hlfvalve_a(scicos_block *blk, int flag)
             surf0 = Xdot;
             surf1 = uf-fstf;
             surf2 = uf+fstf;
-            surf3 = x-xmin;
-            surf4 = x-xmax;
+            surf3 = X-xmin;
+            surf4 = X-xmax;
 
             if (get_phase_simulation() == 1)
             {
