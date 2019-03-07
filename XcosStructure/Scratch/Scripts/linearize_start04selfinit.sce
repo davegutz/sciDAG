@@ -28,7 +28,7 @@ batch_sav = INI.batch;
 Tf = 0;
 try
     mprintf('In %s:  generating steadycos...\n', sfilename())
-    INI.batch = %t;  LIN.open_tv = 2;
+    INI.batch = %t;  LIN.open_tv = 1;
     Info = xcos_simulate(scs_m, 4);  LIN.X = cpr.state.x;
     //[LIN.Xs, LIN.U, LIN.Y, LIN.XP] = steadycos(scs_m, cpr.state.x, [],[],1:$, [], []);
     LIN.sys_f = lincos(scs_m, LIN.X, 0, [1e-9, 0]);

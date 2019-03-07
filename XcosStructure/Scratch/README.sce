@@ -29,10 +29,15 @@
 
 // Be sure to install PSO toolbox using Applications - Module Manager - Optimization
 
+// Make source all models
+exec('C:\Users\Dave\Documents\GitHub\sciDAG\XcosStructure\Lib\make_libScratch.sce',-1)
+
 // Start flow system development
 // c-code model run first in Linux Ubuntu to generate .csv files in Data folder
 // First version to zoom on each component
 // See Diagrams/start04_handSketch.png for high-level schematic
+//
+// First version
 exec('init_start04detail.sce', -1);
 // press play.   May throw memory error.   Activate "stacksize('max')" line
 // in PreLoadFcn_start04detail.sce.   May not run on all platforms - comment
@@ -40,18 +45,21 @@ exec('init_start04detail.sce', -1);
 // interactive result in Results/expected_start04detail*.png
 // Formal plots in Results/expected_start04detail_formal*.png
 exec('init_start04.sce', -1);
+//
 // Third version to let components interact.  Implicit initialization.
 // press play.  Same memory issues as ...detail.sce
 // interactive results in Results.   Formal plots in Results
-exec('init_start04selfinit.sce', -1);
+exec('C:\Users\Dave\Documents\GitHub\sciDAG\XcosStructure\Scratch\init_start04detail.sce',-1)
+//
 // Fourth version to self initialize using a solver
 // press play.  Same memory issues as ...detail.sce
 // interactive results in Results.   Formal plots in Results
-// To run steady state without oscillations
-GEO.ln_vs.c=.001;
+exec('C:\Users\Dave\Documents\GitHub\sciDAG\XcosStructure\Scratch\init_start04selfinit.sce',-1)
+// To run steady state with oscillations
+GEO.ln_vs.c=0;
 // To see linear response XTV-->XTV
-exec('init_start04selfinit.sce', -1);
 exec('./Scripts/linearize_start04selfinit.sce', -1);
+exec('benchmark_valve_start04selfinit.sce', -1)
 
 // Test pipes
 exec('init_pipe.sce', -1);

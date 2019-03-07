@@ -81,8 +81,8 @@
 
 // states
 #define X       (GetState(blk)[0])      // Position state
-#define V       (GetDerState(blk)[0])   // Derivative of position
 #define Xdot    (GetState(blk)[1])      // Velocity state
+#define V       (GetDerState(blk)[0])   // Derivative of position
 #define A       (GetDerState(blk)[1])   // Derivative of velocity
 
 // other constants
@@ -215,7 +215,7 @@ void valve_a(scicos_block *blk, int flag)
     else
     {
         // Open loop for driving with input
-        if (LINCOS_OVERRIDE==2) xin = xol;
+        if (LINCOS_OVERRIDE==1) xin = xol;
         else                    xin = x;
         ad = tab1(xin, AD, AD+N_AD, N_AD);
         ah = tab1(xin, AH, AH+N_AH, N_AH);
@@ -227,8 +227,8 @@ void valve_a(scicos_block *blk, int flag)
     stops = 0;
     if(mode0==mode_lincos_override || flag==-1)
     {
-        // Open loop for frequency response
-        if (LINCOS_OVERRIDE==1) DFnet = xol;
+        // Alternate frequency response
+        if (LINCOS_OVERRIDE==2) DFnet = xol;
         else                    DFnet = df;
     }
     else if(mode0==mode_move_plus)
