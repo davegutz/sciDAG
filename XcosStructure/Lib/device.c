@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - Dave Gutz
+// Copyright (c_) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Jan 26, 2019    DA Gutz        Created
 // 
-// Copyright (C) 2019 - Dave Gutz
+// Copyright (c_) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@
 // SOFTWARE.
 // Jan 22, 2019    DA Gutz        Created
 // 
-// Copyright (C) 2019 - Dave Gutz
+// Copyright (c_) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,14 +61,14 @@
 // SOFTWARE.
 // Jan 27, 2019     DA Gutz     Created 
 //                          from http://www.scicos.org/ScicosCBlockTutorial.pdf
-// install "Microsoft Visuall C++ 2013 Resistributable (x64)"
+// install "Microsoft Visuall c_++ 2013 Resistributable (x64)"
 // verify proper install by 
 // -->findmsvccompiler() ==> msvc120express
 // and 
 // -->haveacompiler() ==> T
-//// libs = 'C:\Program"" ""Files\scilab-5.5.2\bin\scicos'
-// libs = 'C:\PROGRA~1\SCILAB~1.2\bin\scicos'
-// incs = 'C:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
+//// libs = 'c_:\Program"" ""Files\scilab-5.5.2\bin\scicos'
+// libs = 'c_:\PROGRA~1\SCILAB~1.2\bin\scicos'
+// incs = 'c_:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
 // ilib_for_link('friction','friction_comp.c',libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
 // This is the computational function for a Scicos model block.
 // The model is of a dynamic/static friction model
@@ -82,7 +82,7 @@
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
 // parameters
-#define SG              (GetRparPtrs(blk)[0]) // Fluid specific gravity
+#define sg              (GetRparPtrs(blk)[0]) // Fluid specific gravity
 #define LINCOS_OVERRIDE (GetRparPtrs(blk)[1]) // flag to disable friction for linearization
 
 // states
@@ -111,122 +111,91 @@
 // **********head_b
 // valve_a Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define F_AN    ((GetRealOparPtrs(blk,1))[0]);  // Nozzle flow area, sqin
-#define F_CN    ((GetRealOparPtrs(blk,2))[0]);  // Nozzle discharge coeff
-#define F_DN    ((GetRealOparPtrs(blk,3))[0]);  // Nozzle diameter, in
-#define F_LN    ((GetRealOparPtrs(blk,4))[0]);  // Nozzle flat width, in
-#define AE      ((GetRealOparPtrs(blk,5))[0]);  // Bellows effective area, sqin
-#define AO      ((GetRealOparPtrs(blk,6))[0]);  // Bellows orifice area, sqin
-#define C       ((GetRealOparPtrs(blk,7))[0]);  // Bellows damping, lbf/in/s
-#define CDO     ((GetRealOparPtrs(blk,8))[0]);  // Bellows orifice discharge coefficient
-#define FB      ((GetRealOparPtrs(blk,9))[0]); // Bellows preload at xmin, lbf
-#define FDYF    ((GetRealOparPtrs(blk,10))[0]); // Dynamic friction, lbf
-#define FS      ((GetRealOparPtrs(blk,11))[0]); // Spring preload at xmin, lbf
-#define FSTF    ((GetRealOparPtrs(blk,12))[0]); // Static friction, lbf
-#define KB      ((GetRealOparPtrs(blk,13))[0]); // Spring rate, lbf/in
-#define KS      ((GetRealOparPtrs(blk,14))[0]); // Spring rate, lbf/in
-#define M       ((GetRealOparPtrs(blk,15))[0]); // Total mass, lbm
-#define XMAX    ((GetRealOparPtrs(blk,16))[0]); // Max head sensor position from flapper, in
-#define XMIN    ((GetRealOparPtrs(blk,17))[0]); // Min head sensor position from flapper, in
+#define f_an    (*GetRealOparPtrs(blk,1))   // Nozzle flow area, sqin
+#define f_cn    (*GetRealOparPtrs(blk,2))   // Nozzle discharge coeff
+#define f_dn    (*GetRealOparPtrs(blk,3))   // Nozzle diameter, in
+#define f_ln    (*GetRealOparPtrs(blk,4))   // Nozzle flat width, in
+#define ae      (*GetRealOparPtrs(blk,5))   // Bellows effective area, sqin
+#define ao      (*GetRealOparPtrs(blk,6))   // Bellows orifice area, sqin
+#define c_      (*GetRealOparPtrs(blk,7))   // Bellows damping, lbf/in/s
+#define cdo     (*GetRealOparPtrs(blk,8))   // Bellows orifice discharge coefficient
+#define fb      (*GetRealOparPtrs(blk,9))   // Bellows preload at xmin, lbf
+#define fdyf    (*GetRealOparPtrs(blk,10))  // Dynamic friction, lbf
+#define fs      (*GetRealOparPtrs(blk,11))  // Spring preload at xmin, lbf
+#define fstf    (*GetRealOparPtrs(blk,12))  // Static friction, lbf
+#define kb      (*GetRealOparPtrs(blk,13))  // Spring rate, lbf/in
+#define ks      (*GetRealOparPtrs(blk,14))  // Spring rate, lbf/in
+#define m_      (*GetRealOparPtrs(blk,15))  // Total m_, lbm
+#define xmax    (*GetRealOparPtrs(blk,16))  // Max head sensor position from flapper, in
+#define xmin    (*GetRealOparPtrs(blk,17))  // Min head sensor position from flapper, in
 
 // inputs
-#define PF      (r_IN(0,0))     // Flapper supply, psia
-#define PH      (r_IN(1,0))     // Cavity, psia
-#define PL      (r_IN(2,0))     // Bellows supply, psia.
-#define XOL     (r_IN(3,0))     // Bellows displacement from flapper, in (open loop)
+#define pf      (r_IN(0,0))     // Flapper supply, psia
+#define ph      (r_IN(1,0))     // Cavity, psia
+#define pl      (r_IN(2,0))     // Bellows supply, psia.
+#define xol     (r_IN(3,0))     // Bellows displacement from flapper, in (open loop)
 
 // outputs
-#define WFF     (r_OUT(0,0))    // Flapper discharge out, pph
-#define WFH     (r_OUT(1,0))    // Cavity inflow, pph
-#define WFL     (r_OUT(2,0))    // Bellows outflow, pph.
-#define PLX     (r_OUT(3,0))    // Bellows, psia.
-#define Vo      (r_OUT(4,0))    // Velocity to open flapper, in/sec.
-#define Xo      (r_OUT(5,0))    // Displacement from flapper, in
-#define UF      (r_OUT(6,0))    // Unbalanced force from flapper, lbf
-#define MODE    (r_OUT(7,0))    // ZCD mode
+#define wff     (r_OUT(0,0))    // Flapper discharge out, pph
+#define wfh     (r_OUT(1,0))    // Cavity inflow, pph
+#define wfl     (r_OUT(2,0))    // Bellows outflow, pph.
+#define plx     (r_OUT(3,0))    // Bellows, psia.
+#define v_out   (r_OUT(4,0))    // Velocity to open flapper, in/sec.
+#define x_out   (r_OUT(5,0))    // Displacement from flapper, in
+#define uf      (r_OUT(6,0))    // Unbalanced force from flapper, lbf
+#define mode_out (r_OUT(7,0))   // ZCD mode
 
 
 void head_b(scicos_block *blk, int flag)
 {
-    double DFnet = 0;
+    double uf_net = 0;
     int stops = 0;
-
-    double f_an = F_AN;
-    double f_cn = F_CN;
-    double f_dn = F_DN;
-    double f_ln = F_LN;
-    double ae = AE;
-    double ao = AO;
-    double c = C;
-    double cdo = CDO;
-    double fb = FB;
-    //double fdyf = FDYF;
-    double fs = FS;
-    double fstf = FSTF;
-    double kb = KB;
-    double ks = KS;
-    double mass = M;
-    double xmin = XMIN;
-    double xmax = XMAX;
 
     double f_f = 0;
     double f_cf = 0;
-    double df = 0;
-    double sg = SG;
     double dwdc = DWDC(sg);
     
-
-    // inputs and outputs
-    double x = X;
-    double pf = PF;
-    double ph = PH;
-    double pl = PL;
-    double xol = XOL;
-    double wff, wfh, wfl, plx;
-
-
     // compute info needed for all passes
     wfl = Xdot*dwdc*ae;
     plx = OR_AWPDTOPS(ao, wfl, pl, cdo, sg);
-    if(flag==-1)    x = xol;   // Initialization
-    else            x = X;
-    f_cf = tab1(f_ln/max(x, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
+    if(flag==-1) X = xol;   // Initialization call
+    f_cf = tab1(f_ln/max(X, 1e-9), f_lqx, f_lqx+n_lqxcf, n_lqxcf);
     f_f = (pf - ph) * f_an * \
-            (1. + 16. * SQR(f_cf * x / f_dn));
-    df  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*x - Xdot*c;
+            (1. + 16. * SQR(f_cf * X / f_dn));
+    uf  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X - Xdot*c_;
     
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = df;
+        uf_net = uf;
     }
     else if(mode0==mode_move_plus)
     {
-//        DFnet = df - fdyf;
-        DFnet = df - fstf;
+//        uf_net = uf - fdyf;
+        uf_net = uf - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-//        DFnet = df + fdyf;
-        DFnet = df + fstf;
+//        uf_net = uf + fdyf;
+        uf_net = uf + fstf;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(df - fstf, 0);
+        uf_net = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(df - fstf, 0);
+        uf_net = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(df + fstf, 0);
+        uf_net = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(df + fstf, 0);
+        uf_net = min(uf + fstf, 0);
     }
 
     switch (flag)
@@ -237,12 +206,12 @@ void head_b(scicos_block *blk, int flag)
             if(mode0==mode_lincos_override)
             {
                 V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else if(mode0==mode_move_plus || mode0==mode_move_neg)
             {
                 V = Xdot;
-                A = DFnet/mass*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
             }
             else
             {
@@ -257,24 +226,24 @@ void head_b(scicos_block *blk, int flag)
             // compute the outputs of the block
             wff = SGN(pf - ph) * 19020. * \
                 sqrt(fabs(pf - ph)*sg / \
-                    (1./SQR(f_cn * f_an) + 1./SQR(f_cf * PI * f_dn * x)));
+                    (1./SQR(f_cn * f_an) + 1./SQR(f_cf * PI * f_dn * X)));
             wfh = wfl - wff;
-            WFF = wff;
-            WFL = wfl;
-            WFH = wfh;
-            PLX = plx;
-            Vo = Xdot;
-            Xo = x;
-            UF = df;
-            MODE = mode0;
-//            MODE = f_cf;
+            wff = wff;
+            wfl = wfl;
+            wfh = wfh;
+            plx = plx;
+            v_out = Xdot;
+            x_out = X;
+            uf = uf;
+            mode_out = mode0;
+//            mode_out = f_cf;
             break;
 
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-			surf1 = df-fstf;
-			surf2 = df+fstf;
+			surf1 = uf-fstf;
+			surf2 = uf+fstf;
             surf3 = X-xmin;
             surf4 = X-xmax;
 
@@ -286,7 +255,7 @@ void head_b(scicos_block *blk, int flag)
                     mode0 = mode_stop_min;
                 else if(surf4>=0 && surf2>=0)
                     mode0 = mode_stop_max;
-                else if(df>0)
+                else if(uf>0)
                 {
                     if(surf1<=0) mode0 = mode_stuck_plus;
                     else mode0 = mode_move_plus; 
