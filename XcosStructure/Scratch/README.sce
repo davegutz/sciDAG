@@ -59,7 +59,9 @@ exec('C:\Users\Dave\Documents\GitHub\sciDAG\XcosStructure\Scratch\init_start04se
 GEO.ln_vs.c=0;
 // To see linear response XTV-->XTV
 exec('./Scripts/linearize_start04selfinit.sce', -1);
+// expected result in Results/expected_FREQ_RESP_start04selfinit.png
 exec('benchmark_valve_start04selfinit.sce', -1)
+// between 9 and 10 seconds is typical
 
 // Test pipes
 exec('init_pipe.sce', -1);
