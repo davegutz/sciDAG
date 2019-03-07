@@ -124,21 +124,21 @@
 #define ld      (*GetRealOparPtrs(blk,15)) // Damping length supply to discharge (effective), in
 #define lh      (*GetRealOparPtrs(blk,16)) // Damping length supply to high discharge (effective), in
 #define m_      (*GetRealOparPtrs(blk,17)) // Total mass (valve + spring contribution), lbm
-#define XMAX    ((GetRealOparPtrs(blk,18))[0]) // Max stroke, in
-#define XMIN    ((GetRealOparPtrs(blk,19))[0]) // Min stroke, in
+#define xmax    (*GetRealOparPtrs(blk,18)) // Max stroke, in
+#define xmin    (*GetRealOparPtrs(blk,19)) // Min stroke, in
 #define N_AD    (blk->oparsz[19])
 #define AD      (GetRealOparPtrs(blk,20))  // Table
 #define N_AH    (blk->oparsz[20])
 #define AH      (GetRealOparPtrs(blk,21))  // Table
 
 // inputs
-#define PS  (r_IN(0,0)) // Supply pressure, psia
-#define PD  (r_IN(1,0)) // Discharge pressure, psia
+#define ps  (r_IN(0,0)) // Supply pressure, psia
+#define pd  (r_IN(1,0)) // Discharge pressure, psia
 #define PH  (r_IN(2,0)) // High discharge pressure, psia
 #define PRS (r_IN(3,0)) // Reference opposite spring end pressure, psia
-#define PR  (r_IN(4,0)) // Regulated pressure, psia
-#define PXR (r_IN(5,0)) // Reference pressure, psia
-#define XOL (r_IN(6,0)) // Spool displacement toward drain, in (open loop)
+#define pr  (r_IN(4,0)) // Regulated pressure, psia
+#define pxr (r_IN(5,0)) // Reference pressure, psia
+#define xol (r_IN(6,0)) // Spool displacement toward drain, in (open loop)
 
 // outputs
 #define WFS     (r_OUT(0,0))    // Supply flow in, pph
@@ -160,23 +160,16 @@ void valve_a(scicos_block *blk, int flag)
     int stops = 0;
     double ad = 0;
     double ah = 0;
-    double xmin = XMIN;
-    double xmax = XMAX;
-
+    
     // inputs and outputs
     double x = X;
     double xin = X;
-    double ps = PS;
-    double pd = PD;
     double ph = PH;
     double prs = PRS;
-    double pr = PR;
-    double pxr = PXR;
-    double xol = XOL;
     double wfs, wfd, wfh, wfvrs, wfvr;
 
     int count = 0;
-    double xp = XOL;
+    double xp = xol;
 
     double fjd = 0;
     double fjh = 0;
@@ -184,8 +177,8 @@ void valve_a(scicos_block *blk, int flag)
     double df = 0;
     double dwdc = DWDC(sg);
     double wfvx, px;
-    double xmaxl = XMAX;
-    double xminl = XMIN;
+    double xmaxl = xmax;
+    double xminl = xmin;
 
     // compute info needed for all passes
     wfvx   = Xdot*dwdc*ax2;
@@ -345,18 +338,18 @@ void valve_a(scicos_block *blk, int flag)
     }
 }
 #undef cd_
-#undef CP
+#undef cp_
 #undef fdyf
 #undef fs
 #undef fstf
 #undef ks
 #undef ld
 #undef m_
-#undef XMAX
-#undef XMIN
+#undef xmax
+#undef xmin
 #undef N_AD
 #undef AD
-#undef XOL
+#undef xol
 #undef Vo
 #undef Xo
 #undef UF_NET
@@ -367,43 +360,43 @@ void valve_a(scicos_block *blk, int flag)
 // **********trivalve_a1
 // trivalve_a1 Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define ADL     ((GetRealOparPtrs(blk,1))[0])   // Spool drain end leakage area, sqin
-#define AHD     ((GetRealOparPtrs(blk,2))[0])   // Calculated drain end spool head area, sqin
-#define AHS     ((GetRealOparPtrs(blk,3))[0])   // Supply end spool head area, sqin
-#define ALD     ((GetRealOparPtrs(blk,4))[0])   // Drain end load head area, sqin
-#define ALE     ((GetRealOparPtrs(blk,5))[0])   // Bitter end load head area, sqin
-#define ALR     ((GetRealOparPtrs(blk,6))[0])   // Supply end load head area, sqin
-#define AR      ((GetRealOparPtrs(blk,7))[0])   // Calculated spool rod area, sqin
-#define ASL     ((GetRealOparPtrs(blk,8))[0])   // Spool supply end leakage area, sqin
+#define adl     (*GetRealOparPtrs(blk,1))   // Spool drain end leakage area, sqin
+#define ahd     (*GetRealOparPtrs(blk,2))   // Calculated drain end spool head area, sqin
+#define ahs     (*GetRealOparPtrs(blk,3))   // Supply end spool head area, sqin
+#define ald     (*GetRealOparPtrs(blk,4))   // Drain end load head area, sqin
+#define ale     (*GetRealOparPtrs(blk,5))   // Bitter end load head area, sqin
+#define alr     (*GetRealOparPtrs(blk,6))   // Supply end load head area, sqin
+#define ar      (*GetRealOparPtrs(blk,7))   // Calculated spool rod area, sqin
+#define asl     (*GetRealOparPtrs(blk,8))   // Spool supply end leakage area, sqin
 //#define C       ((GetRealOparPtrs(blk,9))[0])   // Dynamic damping, lbf/(in/s)
 #define c_      (*GetRealOparPtrs(blk,9))   // Dynamic damping, lbf/(in/s)
-#define cd_     (*GetRealOparPtrs(blk,10))   // Window discharge coefficient
-#define CP      ((GetRealOparPtrs(blk,11))[0])  // Pressure force coeff, usually .69
+#define cd_     (*GetRealOparPtrs(blk,10))  // Window discharge coefficient
+#define cp_     (*GetRealOparPtrs(blk,11))  // Pressure force coeff, usually .69
 #define fdyf    (*GetRealOparPtrs(blk,12))  // Dynamic friction, lbf
 #define fs      (*GetRealOparPtrs(blk,13))  // Total spring preload toward drain, lbf
 #define fstf    (*GetRealOparPtrs(blk,14))  // Spool static friction, lbf
 #define ks      (*GetRealOparPtrs(blk,15))  // Total spring rate, load decreases as valve moved toward drain, lbf/in
 #define ld      (*GetRealOparPtrs(blk,16))  // Damping effective length, the axial length between incoming and outgoing drain flow, in, positive
-#define LS      ((GetRealOparPtrs(blk,17))[0])  // Damping effective length, the axial length between incoming and outgoing supply flow, in, positive
+#define ls      (*GetRealOparPtrs(blk,17))  // Damping effective length, the axial length between incoming and outgoing supply flow, in, positive
 #define m_      (*GetRealOparPtrs(blk,18))  // Total mass, spool plus load, lbm.
-#define XMAX    ((GetRealOparPtrs(blk,19))[0])  // Max stroke, in
-#define XMIN    ((GetRealOparPtrs(blk,20))[0])  // Min stroke, in
+#define xmax    (*GetRealOparPtrs(blk,19))  // Max stroke, in
+#define xmin    (*GetRealOparPtrs(blk,20))  // Min stroke, in
 #define N_AD    (blk->oparsz[20])
 #define AD      (GetRealOparPtrs(blk,21))  // Table
 #define N_AS    (blk->oparsz[21])
 #define AS      (GetRealOparPtrs(blk,22))  // Table
 
 // inputs
-#define PS      (r_IN(0,0)) // Supply pressure, psia
-#define PD      (r_IN(1,0)) // Drain pressure, psia
-#define PX      (r_IN(2,0)) // Servo pressure, psia
-#define PED     (r_IN(3,0)) // Drain end pressure, psia
-#define PEL     (r_IN(4,0)) // Bitter end land load pressure, psia
+#define ps      (r_IN(0,0)) // Supply pressure, psia
+#define pd      (r_IN(1,0)) // Drain pressure, psia
+#define px      (r_IN(2,0)) // Servo pressure, psia
+#define ped     (r_IN(3,0)) // Drain end pressure, psia
+#define pel     (r_IN(4,0)) // Bitter end land load pressure, psia
 #define PES     (r_IN(5,0)) // Supply end pressure, psia
 #define PLD     (r_IN(6,0)) // Pressure on drain side of load land, psia
 #define PLR     (r_IN(7,0)) // Pressure on supply side of load land, psia
 #define FEXT    (r_IN(8,0)) // External load toward drain, lbf
-#define XOL     (r_IN(9,0))// Spool displacement toward drain, in (open loop)
+#define xol     (r_IN(9,0))// Spool displacement toward drain, in (open loop)
 
 // outputs
 #define WFS     (r_OUT(0,0))    // Supply flow in, pph
@@ -458,35 +451,18 @@ void trivalve_a1(scicos_block *blk, int flag)
     int stops = 0;
     double ad = 0;
     double as = 0;
-    double xmin = XMIN;
-    double xmax = XMAX;
 
     // inputs and outputs
-    double ps = PS;
-    double pd = PD;
-    double px = PX;
-    double ped = PED;
-    double pel = PEL;
     double pes = PES;
     double pld = PLD;
     double plr = PLR;
     double fext = FEXT;
-    double xol = XOL;
     double wfs, wfd, wfx, wfde, wfle, wfse, wfld, wflr, wfsx, wfxd;
 
     double fjd = 0;
     double fjs = 0;
     double ftd, fts;
-    double ls = LS;
     double df = 0;
-    double adl = ADL;
-    double ahd = AHD;
-    double ahs = AHS;
-    double ald = ALD;
-    double ale = ALE;
-    double alr = ALR;
-    double ar = AR;
-    double asl = ASL;
     double dwdc = DWDC(sg);
 
     // compute info needed for all passes
@@ -634,16 +610,16 @@ void trivalve_a1(scicos_block *blk, int flag)
 #undef ax2
 #undef ax3
 #undef cd_
-#undef CP
+#undef cp_
 #undef fdyf
 #undef fstf
 #undef m_
-#undef XMAX
-#undef XMIN
-#undef PX
-#undef PR
-#undef PD
-#undef XOL
+#undef xmax
+#undef xmin
+#undef px
+#undef pr
+#undef pd
+#undef xol
 #undef WFX
 #undef Vo
 #undef Xo
@@ -664,24 +640,24 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define axa     (*GetRealOparPtrs(blk,9))   // Leakage area x to a, sqin
 #define c_      (*GetRealOparPtrs(blk,10))  // Dynamic damping, lbf/(in/s)
 #define cd_     (*GetRealOparPtrs(blk,11))  // Window discharge coefficient
-#define CP      ((GetRealOparPtrs(blk,12))[0])  // Pressure force coeff, usually .69
+#define cp_     (*GetRealOparPtrs(blk,12))  // Pressure force coeff, usually .69
 #define fdyf    (*GetRealOparPtrs(blk,13))  // Dynamic friction, lbf
 #define fstf    (*GetRealOparPtrs(blk,14))  // Spool static friction, lbf
 #define m_      (*GetRealOparPtrs(blk,15))  // Total mass, spool plus load, lbm.
-#define XMAX    ((GetRealOparPtrs(blk,16))[0])  // Max stroke, in
-#define XMIN    ((GetRealOparPtrs(blk,17))[0])  // Min stroke, in
+#define xmax    (*GetRealOparPtrs(blk,16))  // Max stroke, in
+#define xmin    (*GetRealOparPtrs(blk,17))  // Min stroke, in
 #define N_AT    (blk->oparsz[17])
 #define AT      (GetRealOparPtrs(blk,18))  // Table
 
 // inputs
-#define PS      (r_IN(0,0)) // Supply pressure, psia
-#define PX      (r_IN(1,0)) // Damping pressure, psia
-#define PR      (r_IN(2,0)) // Regulated pressure, psia
-#define PC      (r_IN(3,0)) // End pressure, psia
+#define ps      (r_IN(0,0)) // Supply pressure, psia
+#define px      (r_IN(1,0)) // Damping pressure, psia
+#define pr      (r_IN(2,0)) // Regulated pressure, psia
+#define pc      (r_IN(3,0)) // End pressure, psia
 #define PA      (r_IN(4,0)) // End pressure, psia
 #define PW      (r_IN(5,0)) // Wash pressure, psia
-#define PD      (r_IN(6,0)) // Discharge pressure, psia
-#define XOL     (r_IN(7,0)) // Spool displacement toward drain, in (open loop)
+#define pd      (r_IN(6,0)) // Discharge pressure, psia
+#define xol     (r_IN(7,0)) // Spool displacement toward drain, in (open loop)
 
 // outputs
 #define WFS     (r_OUT(0,0))    // Supply flow in, pph
@@ -705,19 +681,11 @@ void hlfvalve_a(scicos_block *blk, int flag)
     double DFnet = 0;
     int stops = 0;
     double at = 0;
-    double xmin = XMIN;
-    double xmax = XMAX;
     double fj = 0;
 
     // inputs and outputs
-    double ps = PS;
-    double px = PX;
-    double pr = PR;
-    double pc = PC;
     double pa = PA;
     double pw = PW;
-    double pd = PD;
-    double xol = XOL;
     double wfs, wfd, wfsr, wfwd, wfw, wfwx, wfxa, wfrc, wfx, wfa, wfc, wfr;
     double df = 0;
     double dwdc = DWDC(sg);
