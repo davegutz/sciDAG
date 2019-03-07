@@ -126,10 +126,10 @@
 #define m_      (*GetRealOparPtrs(blk,17)) // Total mass (valve + spring contribution), lbm
 #define xmax    (*GetRealOparPtrs(blk,18)) // Max stroke, in
 #define xmin    (*GetRealOparPtrs(blk,19)) // Min stroke, in
-#define N_AD    (blk->oparsz[19])
-#define AD      (GetRealOparPtrs(blk,20))  // Table
-#define N_AH    (blk->oparsz[20])
-#define AH      (GetRealOparPtrs(blk,21))  // Table
+#define n_ad    (blk->oparsz[19])
+#define ad      (GetRealOparPtrs(blk,20))  // Table
+#define n_ah    (blk->oparsz[20])
+#define ah      (GetRealOparPtrs(blk,21))  // Table
 
 // inputs
 #define ps  (r_IN(0,0)) // Supply pressure, psia
@@ -156,8 +156,8 @@ void valve_a(scicos_block *blk, int flag)
 {
     double uf_net = 0;
     int stops = 0;
-    double ad = 0;
-    double ah = 0;
+    double ad_ = 0;
+    double ah_ = 0;
 
     double xin = X;
     int count = 0;
@@ -186,10 +186,10 @@ void valve_a(scicos_block *blk, int flag)
         while ((fabs(uf)>1e-14 & count<100) | count<1)
         {
             count += 1;
-            ad = tab1(X, AD, AD+N_AD, N_AD);
-            ah = tab1(X, AH, AH+N_AH, N_AH);
-            fjd = cp * fabs(ps - pd)*ad;
-            fjh = -cp * fabs(ps - ph)*ah;
+            ad_ = tab1(X, ad, ad+n_ad, n_ad);
+            ah_ = tab1(X, ah, ah+n_ah, n_ah);
+            fjd = cp * fabs(ps - pd)*ad_;
+            fjh = -cp * fabs(ps - ph)*ah_;
             uf = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
                 - fs - X*ks - fjd - fjh;
             xp = X;
@@ -211,10 +211,10 @@ void valve_a(scicos_block *blk, int flag)
         // Open loop for driving with input
         if (LINCOS_OVERRIDE==1) xin = xol;
         else                    xin = X;
-        ad = tab1(xin, AD, AD+N_AD, N_AD);
-        ah = tab1(xin, AH, AH+N_AH, N_AH);
-        fjd = cp * fabs(ps - pd)*ad;
-        fjh = -cp * fabs(ps - ph)*ah;
+        ad_ = tab1(xin, ad, ad+n_ad, n_ad);
+        ah_ = tab1(xin, ah, ah+n_ah, n_ah);
+        fjd = cp * fabs(ps - pd)*ad_;
+        fjh = -cp * fabs(ps - ph)*ah_;
         uf = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
              - fs - xin*ks - fjd - fjh - ftd - fth - Xdot*c_;
     }
@@ -279,8 +279,8 @@ void valve_a(scicos_block *blk, int flag)
         case -1:
         case 1:
             // compute the outputs of the block
-            wfd = OR_APTOW(ad, ps, pd, cd_, sg);
-            wfh = OR_APTOW(ah, ph, ps, cd_, sg);
+            wfd = OR_APTOW(ad_, ps, pd, cd_, sg);
+            wfh = OR_APTOW(ah_, ph, ps, cd_, sg);
             wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
             wfvrs  = Xdot*dwdc*ax4;
             wfvr   = Xdot*dwdc*(ax1-ax2);
@@ -332,8 +332,8 @@ void valve_a(scicos_block *blk, int flag)
 #undef m_
 #undef xmax
 #undef xmin
-#undef N_AD
-#undef AD
+#undef n_ad
+#undef ad
 #undef xol
 #undef v_out
 #undef x_out
@@ -366,8 +366,8 @@ void valve_a(scicos_block *blk, int flag)
 #define m_      (*GetRealOparPtrs(blk,18))  // Total mass, spool plus load, lbm.
 #define xmax    (*GetRealOparPtrs(blk,19))  // Max stroke, in
 #define xmin    (*GetRealOparPtrs(blk,20))  // Min stroke, in
-#define N_AD    (blk->oparsz[20])
-#define AD      (GetRealOparPtrs(blk,21))  // Table
+#define n_ad    (blk->oparsz[20])
+#define ad      (GetRealOparPtrs(blk,21))  // Table
 #define N_AS    (blk->oparsz[21])
 #define AS      (GetRealOparPtrs(blk,22))  // Table
 
@@ -410,7 +410,7 @@ void valve_a(scicos_block *blk, int flag)
 #define WD      0               /* Reg drain linear window width, in*/
 
 // Hole ports need to be modeled real-time.   Table lookups are too imprecise causing noise
-void    reg_win_a(double x, double *as, double *ad)
+void    reg_win_a(double x, double *as, double *ad_)
 {
     double   xcrl;   /* Aux. leak dim, in. */
     double   xscl;   /* Aux. leak dim, in. */
@@ -426,7 +426,7 @@ void    reg_win_a(double x, double *as, double *ad)
     *as     = HOLES * ( max(hole(max(min(x+SBIAS, DORIFS), 0.), DORIFS),
                 max(min(x+SBIAS, DORIFS),0.)*WS)
                 + alk);
-    *ad     = HOLES * ( max(hole(max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.), DORIFD),
+    *ad_     = HOLES * ( max(hole(max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.), DORIFD),
     max(min(-(x+DBIAS) - REG_UNDERLAP, DORIFD), 0.)*WD) + alk);
     return;
 }   /* End reg_win_a. */
@@ -436,7 +436,7 @@ void trivalve_a1(scicos_block *blk, int flag)
 {
     double uf_net = 0;
     int stops = 0;
-    double ad = 0;
+    double ad_ = 0;
     double as = 0;
     double fjd = 0;
     double fjs = 0;
@@ -445,10 +445,10 @@ void trivalve_a1(scicos_block *blk, int flag)
     double dwdc = DWDC(sg);
 
     // compute info needed for all passes
-    //    ad = tab1(X, AD, AD+N_AD, N_AD);
+    //    ad_ = tab1(X, ad, ad+n_ad, n_ad);
     //    as = tab1(X, AS, AS+N_AS, N_AS);
-    reg_win_a(X, &as, &ad);
-    fjd = cp * fabs(pd - px)*ad;
+    reg_win_a(X, &as, &ad_);
+    fjd = cp * fabs(pd - px)*ad_;
     fjs = -cp * fabs(px - ps)*as;
     ftd = ld * 0.01365 * cd_ * Xdot * SSQRT(sg*(pd - px));
     fts = ls * 0.01365 * cd_ * Xdot * SSQRT(sg*(ps - px));
@@ -523,7 +523,7 @@ void trivalve_a1(scicos_block *blk, int flag)
         case 1:
             // compute the outputs of the block
             wfsx = OR_APTOW(as, ps, px, cd_, sg);
-            wfxd = OR_APTOW(ad, px, pd, cd_, sg);
+            wfxd = OR_APTOW(ad_, px, pd, cd_, sg);
             wfx = wfsx - wfxd;
             wfse = OR_APTOW(asl, ps, pes, cd_, sg);
             wfde = OR_APTOW(adl, pd, ped, cd_, sg);
@@ -604,7 +604,7 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define awx     (*GetRealOparPtrs(blk,5))   // Leakage area w to x, sqin
 #define ax1     (*GetRealOparPtrs(blk,6))   // Supply cross section, sqin
 #define ax2     (*GetRealOparPtrs(blk,7))   // Damping cross section, sqin
-#define ax3     (*GetRealOparPtrs(blk,8))   // Cross section at a, sqin
+#define ax3     (*GetRealOparPtrs(blk,8))   // Cross section at_ a, sqin
 #define axa     (*GetRealOparPtrs(blk,9))   // Leakage area x to a, sqin
 #define c_      (*GetRealOparPtrs(blk,10))  // Dynamic damping, lbf/(in/s)
 #define cd_     (*GetRealOparPtrs(blk,11))  // Window discharge coefficient
@@ -614,8 +614,8 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define m_      (*GetRealOparPtrs(blk,15))  // Total mass, spool plus load, lbm.
 #define xmax    (*GetRealOparPtrs(blk,16))  // Max stroke, in
 #define xmin    (*GetRealOparPtrs(blk,17))  // Min stroke, in
-#define N_AT    (blk->oparsz[17])
-#define AT      (GetRealOparPtrs(blk,18))  // Table
+#define n_at    (blk->oparsz[17])
+#define at      (GetRealOparPtrs(blk,18))  // Table
 
 // inputs
 #define ps      (r_IN(0,0)) // Supply pressure, psia
@@ -648,13 +648,13 @@ void hlfvalve_a(scicos_block *blk, int flag)
 {
     double uf_net = 0;
     int stops = 0;
-    double at = 0;
+    double at_ = 0;
     double fj = 0;
     double dwdc = DWDC(sg);
 
     // compute info needed for all passes
     if(mode0==mode_lincos_override || flag==-1) X = xol;
-    at = tab1(X, AT, AT+N_AT, N_AT);
+    at_ = tab1(X, at, at+n_at, n_at);
     uf = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
              + fj - Xdot*c_;
     stops = 0;
@@ -714,7 +714,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
         case -1:
         case 1:
             // compute the outputs of the block
-            wfs = OR_APTOW(at, ps, pd, cd_, sg);
+            wfs = OR_APTOW(at_, ps, pd, cd_, sg);
             wfsr = OR_APTOW(asr, ps, pr, cd_, sg);
             wfwd = OR_APTOW(awd, pw, pd, cd_, sg);
             wfwx = OR_APTOW(awx, pw, px, cd_, sg);
