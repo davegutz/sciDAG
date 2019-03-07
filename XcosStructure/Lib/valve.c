@@ -134,8 +134,8 @@
 // inputs
 #define ps  (r_IN(0,0)) // Supply pressure, psia
 #define pd  (r_IN(1,0)) // Discharge pressure, psia
-#define PH  (r_IN(2,0)) // High discharge pressure, psia
-#define PRS (r_IN(3,0)) // Reference opposite spring end pressure, psia
+#define ph  (r_IN(2,0)) // High discharge pressure, psia
+#define prs (r_IN(3,0)) // Reference opposite spring end pressure, psia
 #define pr  (r_IN(4,0)) // Regulated pressure, psia
 #define pxr (r_IN(5,0)) // Reference pressure, psia
 #define xol (r_IN(6,0)) // Spool displacement toward drain, in (open loop)
@@ -164,8 +164,6 @@ void valve_a(scicos_block *blk, int flag)
     // inputs and outputs
     double x = X;
     double xin = X;
-    double ph = PH;
-    double prs = PRS;
     double wfs, wfd, wfh, wfvrs, wfvr;
 
     int count = 0;
@@ -392,10 +390,10 @@ void valve_a(scicos_block *blk, int flag)
 #define px      (r_IN(2,0)) // Servo pressure, psia
 #define ped     (r_IN(3,0)) // Drain end pressure, psia
 #define pel     (r_IN(4,0)) // Bitter end land load pressure, psia
-#define PES     (r_IN(5,0)) // Supply end pressure, psia
-#define PLD     (r_IN(6,0)) // Pressure on drain side of load land, psia
-#define PLR     (r_IN(7,0)) // Pressure on supply side of load land, psia
-#define FEXT    (r_IN(8,0)) // External load toward drain, lbf
+#define pes     (r_IN(5,0)) // Supply end pressure, psia
+#define pld     (r_IN(6,0)) // Pressure on drain side of load land, psia
+#define plr     (r_IN(7,0)) // Pressure on supply side of load land, psia
+#define fext    (r_IN(8,0)) // External load toward drain, lbf
 #define xol     (r_IN(9,0))// Spool displacement toward drain, in (open loop)
 
 // outputs
@@ -453,10 +451,6 @@ void trivalve_a1(scicos_block *blk, int flag)
     double as = 0;
 
     // inputs and outputs
-    double pes = PES;
-    double pld = PLD;
-    double plr = PLR;
-    double fext = FEXT;
     double wfs, wfd, wfx, wfde, wfle, wfse, wfld, wflr, wfsx, wfxd;
 
     double fjd = 0;
