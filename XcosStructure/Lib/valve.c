@@ -141,15 +141,15 @@
 #define xol (r_IN(6,0)) // Spool displacement toward drain, in (open loop)
 
 // outputs
-#define WFS     (r_OUT(0,0))    // Supply flow in, pph
-#define WFD     (r_OUT(1,0))    // Discharge flow out, pph
+#define wfs     (r_OUT(0,0))    // Supply flow in, pph
+#define wfd     (r_OUT(1,0))    // Discharge flow out, pph
 #define WFH     (r_OUT(2,0))    // High discharge flow in, pph
 #define WFVRS   (r_OUT(3,0))    // Reference opposite spring end flow in, pph
 #define WFVR    (r_OUT(4,0))    // Reference flow out, pph
 #define WFVX    (r_OUT(5,0))    // Damping flow out, pph
 #define Vo      (r_OUT(6,0))    // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(7,0))    // Spool displacement toward drain, in
-#define UF      (r_OUT(8,0))    // Unbalanced force toward drain, lbf
+#define uf      (r_OUT(8,0))    // Unbalanced force toward drain, lbf
 #define MODE    (r_OUT(9,0))    // Zero-crossing mode
 
 void valve_a(scicos_block *blk, int flag)
@@ -164,7 +164,7 @@ void valve_a(scicos_block *blk, int flag)
     // inputs and outputs
     double x = X;
     double xin = X;
-    double wfs, wfd, wfh, wfvrs, wfvr;
+    double wfh, wfvrs, wfvr;
 
     int count = 0;
     double xp = xol;
@@ -172,7 +172,6 @@ void valve_a(scicos_block *blk, int flag)
     double fjd = 0;
     double fjh = 0;
     double ftd, fth;
-    double df = 0;
     double dwdc = DWDC(sg);
     double wfvx, px;
     double xmaxl = xmax;
@@ -189,17 +188,17 @@ void valve_a(scicos_block *blk, int flag)
         // Initialization
         count = 0;
         x = (xmaxl + xminl)/2;
-        while ((fabs(df)>1e-14 & count<100) | count<1)
+        while ((fabs(uf)>1e-14 & count<100) | count<1)
         {
             count += 1;
             ad = tab1(x, AD, AD+N_AD, N_AD);
             ah = tab1(x, AH, AH+N_AH, N_AH);
             fjd = cp * fabs(ps - pd)*ad;
             fjh = -cp * fabs(ps - ph)*ah;
-            df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
+            uf = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
                 - fs - x*ks - fjd - fjh;
             xp = x;
-            if(df>0)
+            if(uf>0)
             {
                 x = (xp + xmaxl)/2;
                 xminl = xp;
@@ -221,7 +220,7 @@ void valve_a(scicos_block *blk, int flag)
         ah = tab1(xin, AH, AH+N_AH, N_AH);
         fjd = cp * fabs(ps - pd)*ad;
         fjh = -cp * fabs(ps - ph)*ah;
-        df = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
+        uf = ps*(ax1-ax4) + prs*ax4 - pr*(ax1-ax2) - px*ax2 \
              - fs - xin*ks - fjd - fjh - ftd - fth - Xdot*c_;
     }
     stops = 0;
@@ -229,35 +228,35 @@ void valve_a(scicos_block *blk, int flag)
     {
         // Alternate frequency response
         if (LINCOS_OVERRIDE==2) DFnet = xol;
-        else                    DFnet = df;
+        else                    DFnet = uf;
     }
     else if(mode0==mode_move_plus)
     {
-//        DFnet = df - fdyf;
-        DFnet = df - fstf;
+//        DFnet = uf - fdyf;
+        DFnet = uf - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-//        DFnet = df + fdyf;
-        DFnet = df + fstf;
+//        DFnet = uf + fdyf;
+        DFnet = uf + fstf;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(df - fstf, 0);
+        DFnet = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(df - fstf, 0);
+        DFnet = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(df + fstf, 0);
+        DFnet = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(df + fstf, 0);
+        DFnet = min(uf + fstf, 0);
     }
 
     switch (flag)
@@ -290,25 +289,22 @@ void valve_a(scicos_block *blk, int flag)
             wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
             wfvrs  = Xdot*dwdc*ax4;
             wfvr   = Xdot*dwdc*(ax1-ax2);
-            WFS = wfs;
-            WFD = wfd;
             WFH = wfh;
             WFVRS = wfvrs;
             WFVR = wfvr;
             WFVX = wfvx;
             Vo = Xdot;
             Xo = x;
-            UF = df;
             MODE = mode0;
             break;
 
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-//            surf1 = df-fdyf;
-//            surf2 = df+fdyf;
-            surf1 = df-fstf;
-            surf2 = df+fstf;
+//            surf1 = uf-fdyf;
+//            surf2 = uf+fdyf;
+            surf1 = uf-fstf;
+            surf2 = uf+fstf;
             surf3 = x-xmin;
             surf4 = x-xmax;
 
@@ -328,7 +324,7 @@ void valve_a(scicos_block *blk, int flag)
                 { 
                     if(surf1>0) mode0 = mode_move_plus;
                     else if(surf2<0) mode0 = mode_move_neg;
-                    else if(df>0)mode0 = mode_stuck_plus;
+                    else if(uf>0)mode0 = mode_stuck_plus;
                     else mode0 = mode_stuck_neg;
                 }
             }
@@ -352,7 +348,7 @@ void valve_a(scicos_block *blk, int flag)
 #undef Xo
 #undef UF_NET
 #undef MODE
-#undef UF
+#undef uf
 #undef c_
 
 // **********trivalve_a1
@@ -397,19 +393,19 @@ void valve_a(scicos_block *blk, int flag)
 #define xol     (r_IN(9,0))// Spool displacement toward drain, in (open loop)
 
 // outputs
-#define WFS     (r_OUT(0,0))    // Supply flow in, pph
-#define WFD     (r_OUT(1,0))    // Discharge flow out, pph
-#define WFX     (r_OUT(2,0))    // Flow out control port, pph
-#define WFDE    (r_OUT(3,0))    // Leakage out drain end, pph
-#define WFLE    (r_OUT(4,0))    // Flow out of bitter end of land load, pph
-#define WFSE    (r_OUT(5,0))    // Leakage out supply end, pph
-#define WFLD    (r_OUT(6,0))    // Flow out drain end of land load, pph
-#define WFLR    (r_OUT(7,0))    // Flow into supply end of land load, pph
-#define WFSX    (r_OUT(8,0))    // Flow from supply to control, pph
-#define WFXD    (r_OUT(9,0))    // Flow from control to drain, pph
+#define wfs     (r_OUT(0,0))    // Supply flow in, pph
+#define wfd     (r_OUT(1,0))    // Discharge flow out, pph
+#define wfx     (r_OUT(2,0))    // Flow out control port, pph
+#define wfde    (r_OUT(3,0))    // Leakage out drain end, pph
+#define wfle    (r_OUT(4,0))    // Flow out of bitter end of land load, pph
+#define wfse    (r_OUT(5,0))    // Leakage out supply end, pph
+#define wfld    (r_OUT(6,0))    // Flow out drain end of land load, pph
+#define wflr    (r_OUT(7,0))    // Flow into supply end of land load, pph
+#define wfsx    (r_OUT(8,0))    // Flow from supply to control, pph
+#define wfxd    (r_OUT(9,0))    // Flow from control to drain, pph
 #define Vo      (r_OUT(10,0))   // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(11,0))   // Spool displacement toward drain, in
-#define UF      (r_OUT(12,0))   // Unbalanced force toward drain, lbf
+#define uf      (r_OUT(12,0))   // Unbalanced force toward drain, lbf
 #define MODE    (r_OUT(13,0))   // Zero-crossing mode
 
 #define REG_UNDERLAP -.001    /* "  Dead zone of drain, - is underlap. */
@@ -449,14 +445,10 @@ void trivalve_a1(scicos_block *blk, int flag)
     int stops = 0;
     double ad = 0;
     double as = 0;
-
-    // inputs and outputs
-    double wfs, wfd, wfx, wfde, wfle, wfse, wfld, wflr, wfsx, wfxd;
-
     double fjd = 0;
     double fjs = 0;
-    double ftd, fts;
-    double df = 0;
+    double ftd = 0;
+    double fts = 0;
     double dwdc = DWDC(sg);
 
     // compute info needed for all passes
@@ -472,43 +464,43 @@ void trivalve_a1(scicos_block *blk, int flag)
         // Initialization
         xol = (pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
              + fext + fs + fjd + fjs + ftd + fts - Xdot*c_)/ks;
-        df = 0;
+        uf = 0;
     }
     else
     {
-        df = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
+        uf = pes*ahs - ped*ahd + plr*alr - pld*ald - pel*ale \
              + fext + fs - X*ks + fjd + fjs + ftd + fts - Xdot*c_;
     }    
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = df;
+        DFnet = uf;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = df - fstf;
+        DFnet = uf - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = df + fstf;
+        DFnet = uf + fstf;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(df - fstf, 0);
+        DFnet = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(df - fstf, 0);
+        DFnet = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(df + fstf, 0);
+        DFnet = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(df + fstf, 0);
+        DFnet = min(uf + fstf, 0);
     }
 
     switch (flag)
@@ -549,28 +541,17 @@ void trivalve_a1(scicos_block *blk, int flag)
             wfld = Xdot*dwdc*ald;
             wfle = Xdot*dwdc*ale;
             wflr = Xdot*dwdc*alr;
-            WFS = wfs;
-            WFD = wfd;
-            WFX = wfx;
-            WFDE = wfde;
-            WFLE = wfle;
-            WFSE = wfse;
-            WFLD = wfld;
-            WFLR = wflr;
-            WFSX = wfsx;
-            WFXD = wfxd;
             Vo = Xdot;
             if(flag==-1)    Xo = xol;  // Initialization
             else            Xo = X;
-            UF = df;
             MODE = mode0;
             break;
 
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-            surf1 = df-fstf;
-            surf2 = df+fstf;
+            surf1 = uf-fstf;
+            surf2 = uf+fstf;
             surf3 = X-xmin;
             surf4 = X-xmax;
 
@@ -590,7 +571,7 @@ void trivalve_a1(scicos_block *blk, int flag)
                 { 
                     if(surf1>0) mode0 = mode_move_plus;
                     else if(surf2<0) mode0 = mode_move_neg;
-                    else if(df>0)mode0 = mode_stuck_plus;
+                    else if(uf>0)mode0 = mode_stuck_plus;
                     else mode0 = mode_stuck_neg;
                 }
             }
@@ -598,7 +579,7 @@ void trivalve_a1(scicos_block *blk, int flag)
     }
 }
 #undef c_
-#undef UF
+#undef uf
 #undef ax1
 #undef ax1
 #undef ax2
@@ -614,10 +595,10 @@ void trivalve_a1(scicos_block *blk, int flag)
 #undef pr
 #undef pd
 #undef xol
-#undef WFX
+#undef wfx
 #undef Vo
 #undef Xo
-#undef UF
+#undef uf
 #undef MODE
 
 // *******hlfvalve_a
@@ -648,27 +629,27 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define px      (r_IN(1,0)) // Damping pressure, psia
 #define pr      (r_IN(2,0)) // Regulated pressure, psia
 #define pc      (r_IN(3,0)) // End pressure, psia
-#define PA      (r_IN(4,0)) // End pressure, psia
-#define PW      (r_IN(5,0)) // Wash pressure, psia
+#define pa      (r_IN(4,0)) // End pressure, psia
+#define pw      (r_IN(5,0)) // Wash pressure, psia
 #define pd      (r_IN(6,0)) // Discharge pressure, psia
 #define xol     (r_IN(7,0)) // Spool displacement toward drain, in (open loop)
 
 // outputs
-#define WFS     (r_OUT(0,0))    // Supply flow in, pph
-#define WFD     (r_OUT(1,0))    // Discharge flow out, pph
-#define WFSR    (r_OUT(2,0))    // Leakage s to r, pph
-#define WFWD    (r_OUT(3,0))    // Leakage w to d, pph
-#define WFW     (r_OUT(4,0))    // Into w, pph
-#define WFWX    (r_OUT(5,0))    // Leakage w to x, pph
-#define WFXA    (r_OUT(6,0))    // Leakage x to a, pph
-#define WFRC    (r_OUT(7,0))    // Leakage r to c, pph
-#define WFX     (r_OUT(8,0))    // Into x, pph
-#define WFA     (r_OUT(9,0))    // Out a, pph
-#define WFC     (r_OUT(10,0))   // Out c, pph
-#define WFR     (r_OUT(11,0))   // Out r, pph
+#define wfs     (r_OUT(0,0))    // Supply flow in, pph
+#define wfd     (r_OUT(1,0))    // Discharge flow out, pph
+#define wfsr    (r_OUT(2,0))    // Leakage s to r, pph
+#define wfwd    (r_OUT(3,0))    // Leakage w to d, pph
+#define wfw     (r_OUT(4,0))    // Into w, pph
+#define wfwx    (r_OUT(5,0))    // Leakage w to x, pph
+#define wfxa    (r_OUT(6,0))    // Leakage x to a, pph
+#define wfrc    (r_OUT(7,0))    // Leakage r to c, pph
+#define wfx     (r_OUT(8,0))    // Into x, pph
+#define wfa     (r_OUT(9,0))    // Out a, pph
+#define wfc     (r_OUT(10,0))   // Out c, pph
+#define wfr     (r_OUT(11,0))   // Out r, pph
 #define Vo      (r_OUT(12,0))   // Spool velocity toward drain, in/sec
 #define Xo      (r_OUT(13,0))   // Spool displacement toward drain, in
-#define UF      (r_OUT(14,0))   // Unbalanced force toward drain, lbf
+#define uf      (r_OUT(14,0))   // Unbalanced force toward drain, lbf
 #define MODE    (r_OUT(15,0))   // Zero-crossing mode
 void hlfvalve_a(scicos_block *blk, int flag)
 {
@@ -676,51 +657,44 @@ void hlfvalve_a(scicos_block *blk, int flag)
     int stops = 0;
     double at = 0;
     double fj = 0;
-
-    // inputs and outputs
-    double pa = PA;
-    double pw = PW;
-    double wfs, wfd, wfsr, wfwd, wfw, wfwx, wfxa, wfrc, wfx, wfa, wfc, wfr;
-    double df = 0;
     double dwdc = DWDC(sg);
-
     double x = X;
 
     // compute info needed for all passes
     if(mode0==mode_lincos_override || flag==-1) x = xol;
     at = tab1(x, AT, AT+N_AT, N_AT);
-    df = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
+    uf = -pr*(ax1-ax2) - pc*ax2 + pa*ax3 + px*(ax1-ax3) \
              + fj - Xdot*c_;
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        DFnet = df;
+        DFnet = uf;
     }
     else if(mode0==mode_move_plus)
     {
-        DFnet = df - fstf;
+        DFnet = uf - fstf;
     }
     else if(mode0==mode_move_neg)
     {
-        DFnet = df + fstf;
+        DFnet = uf + fstf;
     }
     else if(mode0==mode_stop_min)
     {
-        DFnet = max(df - fstf, 0);
+        DFnet = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        DFnet = max(df - fstf, 0);
+        DFnet = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        DFnet = min(df + fstf, 0);
+        DFnet = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        DFnet = min(df + fstf, 0);
+        DFnet = min(uf + fstf, 0);
     }
 
     switch (flag)
@@ -760,29 +734,16 @@ void hlfvalve_a(scicos_block *blk, int flag)
             wfx = wfxa + dwdc*Xdot*(ax1-ax3) - wfwx;
             wfw = wfwx + wfwd;
             wfr = wfsr - wfrc + dwdc*Xdot*(ax1-ax2);
-            WFS = wfs;
-            WFD = wfd;
-            WFSR = wfsr;
-            WFWD = wfwd;
-            WFW = wfw;
-            WFWX = wfwx;
-            WFXA = wfxa;
-            WFRC = wfrc;
-            WFX = wfx;
-            WFA = wfa;
-            WFC = wfc;
-            WFR = wfr;
             Vo = Xdot;
             Xo = x;
-            UF = df;
             MODE = mode0;
             break;
 
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-            surf1 = df-fstf;
-            surf2 = df+fstf;
+            surf1 = uf-fstf;
+            surf2 = uf+fstf;
             surf3 = x-xmin;
             surf4 = x-xmax;
 
@@ -802,7 +763,7 @@ void hlfvalve_a(scicos_block *blk, int flag)
                 { 
                     if(surf1>0) mode0 = mode_move_plus;
                     else if(surf2<0) mode0 = mode_move_neg;
-                    else if(df>0)mode0 = mode_stuck_plus;
+                    else if(uf>0)mode0 = mode_stuck_plus;
                     else mode0 = mode_stuck_neg;
                 }
             }
