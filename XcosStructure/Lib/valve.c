@@ -147,10 +147,10 @@
 #define wfvrs   (r_OUT(3,0))    // Reference opposite spring end flow in, pph
 #define wfvr    (r_OUT(4,0))    // Reference flow out, pph
 #define wfvx    (r_OUT(5,0))    // Damping flow out, pph
-#define Vo      (r_OUT(6,0))    // Spool velocity toward drain, in/sec
-#define Xo      (r_OUT(7,0))    // Spool displacement toward drain, in
+#define v_out   (r_OUT(6,0))    // Spool velocity toward drain, in/sec
+#define x_out   (r_OUT(7,0))    // Spool displacement toward drain, in
 #define uf      (r_OUT(8,0))    // Unbalanced force toward drain, lbf
-#define MODE    (r_OUT(9,0))    // Zero-crossing mode
+#define mode_out (r_OUT(9,0))   // Zero-crossing mode_out
 
 void valve_a(scicos_block *blk, int flag)
 {
@@ -284,9 +284,9 @@ void valve_a(scicos_block *blk, int flag)
             wfs = wfd - wfh + Xdot*dwdc*(ax1-ax4);
             wfvrs  = Xdot*dwdc*ax4;
             wfvr   = Xdot*dwdc*(ax1-ax2);
-            Vo = Xdot;
-            Xo = X;
-            MODE = mode0;
+            v_out = Xdot;
+            x_out = X;
+            mode_out = mode0;
             break;
 
         case 9:
@@ -335,10 +335,10 @@ void valve_a(scicos_block *blk, int flag)
 #undef N_AD
 #undef AD
 #undef xol
-#undef Vo
-#undef Xo
+#undef v_out
+#undef x_out
 #undef UF_NET
-#undef MODE
+#undef mode_out
 #undef uf
 #undef c_
 
@@ -394,10 +394,10 @@ void valve_a(scicos_block *blk, int flag)
 #define wflr    (r_OUT(7,0))    // Flow into supply end of land load, pph
 #define wfsx    (r_OUT(8,0))    // Flow from supply to control, pph
 #define wfxd    (r_OUT(9,0))    // Flow from control to drain, pph
-#define Vo      (r_OUT(10,0))   // Spool velocity toward drain, in/sec
-#define Xo      (r_OUT(11,0))   // Spool displacement toward drain, in
+#define v_out   (r_OUT(10,0))   // Spool velocity toward drain, in/sec
+#define x_out   (r_OUT(11,0))   // Spool displacement toward drain, in
 #define uf      (r_OUT(12,0))   // Unbalanced force toward drain, lbf
-#define MODE    (r_OUT(13,0))   // Zero-crossing mode
+#define mode_out (r_OUT(13,0))  // Zero-crossing mode_out
 
 #define REG_UNDERLAP -.001    /* "  Dead zone of drain, - is underlap. */
 #define SBIAS .005              /* dead zone of supply + is underlap */
@@ -534,10 +534,10 @@ void trivalve_a1(scicos_block *blk, int flag)
             wfld = Xdot*dwdc*ald;
             wfle = Xdot*dwdc*ale;
             wflr = Xdot*dwdc*alr;
-            Vo = Xdot;
-            if(flag==-1)    Xo = xol;  // Initialization
-            else            Xo = X;
-            MODE = mode0;
+            v_out = Xdot;
+            if(flag==-1)    x_out = xol;  // Initialization
+            else            x_out = X;
+            mode_out = mode0;
             break;
 
         case 9:
@@ -589,10 +589,10 @@ void trivalve_a1(scicos_block *blk, int flag)
 #undef pd
 #undef xol
 #undef wfx
-#undef Vo
-#undef Xo
+#undef v_out
+#undef x_out
 #undef uf
-#undef MODE
+#undef mode_out
 
 // *******hlfvalve_a
 // hlfvalve_a Object parameters.  1st index is 1-based, 2nd index is 0-based.
@@ -640,10 +640,10 @@ void trivalve_a1(scicos_block *blk, int flag)
 #define wfa     (r_OUT(9,0))    // Out a, pph
 #define wfc     (r_OUT(10,0))   // Out c, pph
 #define wfr     (r_OUT(11,0))   // Out r, pph
-#define Vo      (r_OUT(12,0))   // Spool velocity toward drain, in/sec
-#define Xo      (r_OUT(13,0))   // Spool displacement toward drain, in
+#define v_out   (r_OUT(12,0))   // Spool velocity toward drain, in/sec
+#define x_out   (r_OUT(13,0))   // Spool displacement toward drain, in
 #define uf      (r_OUT(14,0))   // Unbalanced force toward drain, lbf
-#define MODE    (r_OUT(15,0))   // Zero-crossing mode
+#define mode_out (r_OUT(15,0))  // Zero-crossing mode_out
 void hlfvalve_a(scicos_block *blk, int flag)
 {
     double uf_net = 0;
@@ -726,9 +726,9 @@ void hlfvalve_a(scicos_block *blk, int flag)
             wfx = wfxa + dwdc*Xdot*(ax1-ax3) - wfwx;
             wfw = wfwx + wfwd;
             wfr = wfsr - wfrc + dwdc*Xdot*(ax1-ax2);
-            Vo = Xdot;
-            Xo = X;
-            MODE = mode0;
+            v_out = Xdot;
+            x_out = X;
+            mode_out = mode0;
             break;
 
         case 9:
