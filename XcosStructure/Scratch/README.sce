@@ -62,6 +62,20 @@ exec('./Scripts/linearize_start04selfinit.sce', -1);
 // expected result in Results/expected_FREQ_RESP_start04selfinit.png
 exec('benchmark_valve_start04selfinit.sce', -1)
 // between 9 and 10 seconds is typical
+//
+// Fifth version to self initialize using a solver and run
+// without data from c-model to drive it in any way.   Use
+// to investigate solver choices.
+// press play.  Same memory issues as ...detail.sce
+// interactive results in Results.   Formal plots in Results
+exec('C:\Users\Dave\Documents\GitHub\sciDAG\XcosStructure\Scratch\init_start04alone.sce',-1)
+// To run steady state with oscillations
+GEO.ln_vs.c=0;
+// To see linear response XTV-->XTV
+exec('./Scripts/linearize_start04alone.sce', -1);
+// expected result in Results/expected_FREQ_RESP_start04alone.png
+exec('benchmark_valve_start04alone.sce', -1)
+// between 9 and 10 seconds is typical
 
 // Test pipes
 exec('init_pipe.sce', -1);
