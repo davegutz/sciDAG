@@ -53,7 +53,7 @@ Tf = 0.01;
 Tb = Tf;
 
 // Data storage setup
-TBUF = 0.001;
+TBUF = 0.0001;
 NBUF = ceil(Tf/TBUF);
 clear D N time
 
