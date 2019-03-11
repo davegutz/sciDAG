@@ -38,40 +38,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 22, 2019    DA Gutz        Created
-// 
-// Copyright (c_) 2019 - Dave Gutz
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-// Jan 27, 2019     DA Gutz     Created 
+// Jan 27, 2019     DA Gutz     Created
 //                          from http://www.scicos.org/ScicosCBlockTutorial.pdf
-// install "Microsoft Visuall c_++ 2013 Resistributable (x64)"
-// verify proper install by 
-// -->findmsvccompiler() ==> msvc120express
-// and 
-// -->haveacompiler() ==> T
-//// libs = 'c_:\Program"" ""Files\scilab-5.5.2\bin\scicos'
-// libs = 'c_:\PROGRA~1\SCILAB~1.2\bin\scicos'
-// incs = 'c_:\PROGRA~1\SCILAB~1.2\modules\scicos_blocks\includes'
-// ilib_for_link('friction','friction_comp.c',libs,'c','','LibScratchLoader.sce', 'Scratch', '','-I'+incs, '', '');
-// This is the computational function for a Scicos model block.
-// The model is of a dynamic/static friction model
+// Mar 10, 2019     DA Gutz     Add actuator_a_b
+// 
 #include <scicos_block4.h>
 #include <math.h>
 #include <stdio.h>
@@ -108,10 +78,10 @@
 #define mode_stuck_neg -1
 #define mode_lincos_override 0
 
-// **********head_b
-// valve_a Object parameters.  1st index is 1-based, 2nd index is 0-based.
+// **********head_b**********************************************
+// Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define NOPAR   (blk->nopar)
-#define f_an    (*GetRealOparPtrs(blk,1))   // Nozzle flow area, sqin
+#define f_an    (*GetRealOparPtrs(blk,1))  //  // Nozzle flow area, sqin
 #define f_cn    (*GetRealOparPtrs(blk,2))   // Nozzle discharge coeff
 #define f_dn    (*GetRealOparPtrs(blk,3))   // Nozzle diameter, in
 #define f_ln    (*GetRealOparPtrs(blk,4))   // Nozzle flat width, in
@@ -144,7 +114,6 @@
 #define x_out   (r_OUT(5,0))    // Displacement from flapper, in
 #define uf      (r_OUT(6,0))    // Unbalanced force from flapper, lbf
 #define mode_out (r_OUT(7,0))   // ZCD mode
-
 
 void head_b(scicos_block *blk, int flag)
 {
@@ -235,9 +204,7 @@ void head_b(scicos_block *blk, int flag)
             plx = plx;
             v_out = Xdot;
             x_out = X;
-            uf = uf;
             mode_out = mode0;
-//            mode_out = f_cf;
             break;
 
         case 9:
@@ -270,3 +237,167 @@ void head_b(scicos_block *blk, int flag)
             break;
     }
 }
+// **********end head_b**********************************************
+
+#undef c_
+#undef fdyf
+#undef fstf
+#undef xmax
+#undef xmin
+#undef ph
+#undef pl
+#undef xol
+#undef v_out
+#undef x_out
+#undef uf
+#undef mode_out
+#undef m_
+
+//*************actuator_a_b**************************************
+// Object parameters.  1st index is 1-based, 2nd index is 0-based.
+#define ab      (*GetRealOparPtrs(blk,1))   // Calculated bleed area, sqin
+#define ah      (*GetRealOparPtrs(blk,2))   // Calculated actuator head area, sqin
+#define ahl     (*GetRealOparPtrs(blk,3))   // Calculated head leakage area, sqin
+#define ar      (*GetRealOparPtrs(blk,4))   // Calculated actuator rod area, sqin
+#define arl     (*GetRealOparPtrs(blk,5))   // Calculated rod leakage area, sqin
+#define c_      (*GetRealOparPtrs(blk,6))   // Dynamic damping, lbf/(in/s)
+#define cd_     (*GetRealOparPtrs(blk,7))   // Bleed and leakage orifice 
+#define fdyf    (*GetRealOparPtrs(blk,8))   // Dynamic friction, lbf
+#define fstf    (*GetRealOparPtrs(blk,9))   // Static friction, lbf
+#define mact    (*GetRealOparPtrs(blk,10))  // Actuator mass, lbm
+#define mext    (*GetRealOparPtrs(blk,11))  // External mass, lbm
+#define xmax    (*GetRealOparPtrs(blk,12))  // Actuator stop, motion toward head, in
+#define xmin    (*GetRealOparPtrs(blk,13))  // Actuator stop, motion toward rod, in
+
+// Inputs
+#define ph      (r_IN(0,0))     // Head pressure, psia
+#define pl      (r_IN(1,0))     // Leakage drain, psia
+#define pr      (r_IN(2,0))     // Rod pressure, psia
+#define per     (r_IN(3,0))     // Rod end pressure, psia
+#define fexth   (r_IN(4,0))     // Ext load opposing motion to head, lbf
+#define fextr   (r_IN(5,0))     // Ext load opposing motion to rod, lbf
+#define xol     (r_IN(6,0))     // Actuator displacement toward head end (open loop)
+
+// Outputs
+#define wfb     (r_OUT(0,0))    // Cross-piston bleed head-rod, pph
+#define wfh     (r_OUT(1,0))    // Flow into head chamber, pph
+#define wfhl    (r_OUT(2,0))    // Leakage out head chamber, pph
+#define wfr     (r_OUT(3,0))    // Flow into rod chamber, pph
+#define wfrl    (r_OUT(4,0))    // Leakage out rod chamber, pph
+#define wfve    (r_OUT(5,0))    // Flow pushed out by rod, pph
+#define v_out   (r_OUT(6,0))    // Velocity towards head end, in/sec.
+#define x_out   (r_OUT(7,0))    // Displacement towards head end, in
+#define uf      (r_OUT(8,0))    // Unbalanced force towards head end, lbf
+#define mode_out (r_OUT(9,0))   // ZCD mode
+
+void actuator_a_b(scicos_block *blk, int flag)
+{
+    double uf_net = 0;
+    int stops = 0;
+    double dwdc = DWDC(sg);
+    double m_ = mact + mext;
+    
+    // compute info needed for all passes
+    if(flag==-1) X = xol;   // Initialization call
+    uf = (pr - per)*ar - (ph - per)*ah;
+    stops = 0;
+    if(mode0==mode_lincos_override)
+    {
+        uf_net = uf - fexth;
+    }
+    else if(mode0==mode_move_plus)
+    {
+        uf_net = uf - fexth - fdyf;
+    }
+    else if(mode0==mode_move_neg)
+    {
+        uf_net = uf + fextr + fdyf;
+    }
+    else if(mode0==mode_stop_min)
+    {
+        uf_net = max(uf + fextr - fstf, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_plus)
+    {
+        uf_net = max(uf - fexth - fstf, 0);
+    }
+    else if(mode0==mode_stop_max)
+    {
+        uf_net = min(uf - fexth + fstf, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_neg)
+    {
+        uf_net = min(uf + fextr + fstf, 0);
+    }
+
+    // Different passes
+    switch (flag)
+    {
+        case 0:
+            // compute the derivative of the continuous time states
+            // TODO:  insert xol logic here
+            if(mode0==mode_lincos_override)
+            {
+                V = Xdot;
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+            }
+            else if(mode0==mode_move_plus || mode0==mode_move_neg)
+            {
+                V = Xdot;
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+            }
+            else
+            {
+                V = 0;
+                A = 0;
+                Xdot = 0;
+            }
+            break;
+
+        case -1:
+        case 1:
+            // compute the outputs of the block
+            wfve = dwdc*(ah - ar)*Xdot;
+            wfb = OR_APTOW(ab, pr, ph, cd_, sg);
+            wfhl = OR_APTOW(ahl, ph, pl, cd_, sg);
+            wfrl = OR_APTOW(arl, pr, pl, cd_, sg);
+            wfh = -dwdc*ah*Xdot - wfb + wfhl;
+            wfr = dwdc*ar*Xdot + wfb + wfrl;
+            v_out = Xdot;
+            x_out = X;
+            mode_out = mode0;
+            break;
+
+        case 9:
+            // compute zero crossing surfaces and set modes
+            surf0 = Xdot;
+			surf1 = uf+fextr-fstf;
+			surf2 = uf-fexth+fstf;
+            surf3 = X-xmin;
+            surf4 = X-xmax;
+
+            if (get_phase_simulation() == 1)
+            {
+                if(LINCOS_OVERRIDE && stops==0)
+                    mode0 = mode_lincos_override;
+                else if(surf3<=0 && surf1<=0)
+                    mode0 = mode_stop_min;
+                else if(surf4>=0 && surf2>=0)
+                    mode0 = mode_stop_max;
+                else if(uf>0)
+                {
+                    if(surf1<=0) mode0 = mode_stuck_plus;
+                    else mode0 = mode_move_plus; 
+                }
+                else
+                { 
+                    if(surf2>=0) mode0 = mode_stuck_neg;
+                    else mode0 = mode_move_neg; 
+                 }
+            }
+            break;
+    }
+}
+// **********end actuator_a_b**********************************************

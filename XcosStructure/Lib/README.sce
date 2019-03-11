@@ -34,6 +34,10 @@ findmsvccompiler()
 // and 
 haveacompiler()
 // -->haveacompiler() ==> T
+// Notice that scicos does everything automatically, both these steps
+// are just confirmation that you installed msvc
+
+
 
 //// libs = 'C:\Program"" ""Files\scilab-5.5.2\bin\scicos'
 libs = 'C:\PROGRA~1\SCILAB~1.2\bin\scicos'

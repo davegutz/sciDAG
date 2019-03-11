@@ -51,6 +51,7 @@ pal = init_add_struct('COR_AWPSTOPD', 'black', lib_path+'/images/blocks/COR_AWPS
 pal = init_add_struct('COR_APTOW', 'black', lib_path+'/images/blocks/COR_APTOW.png', pal);
 pal = init_add_struct('CTAB1', 'orange', lib_path+'/images/blocks/CTAB1.png', pal);
 pal = init_add_struct('HEAD_B', 'magenta', lib_path+'/images/blocks/HEAD_B.png', pal);
+pal = init_add_struct('ACTUATOR_A_B', 'magenta', lib_path+'/images/blocks/ACTUATOR_A_B.png', pal);
 pal = init_add_struct('VALVE_A', 'green', lib_path+'/images/blocks/VALVE_A.png', pal);
 pal = init_add_struct('TRIVALVE_A1', 'green', lib_path+'/images/blocks/TRIVALVE_A1.png', pal);
 pal = init_add_struct('HLFVALVE_A', 'cyan', lib_path+'/images/blocks/HLFVALVE_A.png', pal);
