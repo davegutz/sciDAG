@@ -35,21 +35,28 @@ xdel(winsid())
 //mclose('all');   This cannot be scripted, has to be called at command line
 
 global m k c
-global loaded_scratch root
+global loaded_scratch root figs
 global GEO INI FP
 
 // Auto data overplot load
 [D, N, time] = load_csv_data('./Data/start02.ven.csv', 1);
 //[D, N, time] = load_csv_data('./Data/start03.ven.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
+
+// Length of simulation
 Tf = time($);
+Tf = 0.01;
+
+// Real time plot buffer
+Tb = Tf;
+
+// Data storage setup
 //TBUF = 0.000001;
 TBUF = time(4)-time(3);
 NBUF = ceil(Tf/TBUF);
 clear D N time
 
-
-GEO = tlist(["sys_geo", "vsv", "reg", "mv", "hs"], vlv_a_default, tv_a1_default, hlfvlv_a_default, head_b_default);
+GEO = tlist(["sys_geo", "vsv", "reg", "pact", "mv", "hs"], vlv_a_default, tv_a1_default, actuator_a_b_default, hlfvlv_a_default, head_b_default);
 
 function %sys_geo_p(g)
     // Display geo overload

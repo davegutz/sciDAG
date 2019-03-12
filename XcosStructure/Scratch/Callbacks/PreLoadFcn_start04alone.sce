@@ -90,6 +90,20 @@ GEO.reg.as.tb = [xh as];
 GEO.reg.ad.tb = [xh ad];
 clear xh as ad
 
+// Pump actuator
+GEO.pact.c_     = 100.;
+GEO.pact.cd_    = .61;
+GEO.pact.ab    = 0.;
+GEO.pact.ah    = (.85)^2*%pi/4;
+GEO.pact.ahl   = 0.;
+GEO.pact.ar    = 0.;
+GEO.pact.arl   = 0.;
+GEO.pact.fdyf  = 10.;
+GEO.pact.fstf  = 10.;
+GEO.pact.mext  = .04834 * 386.4;
+GEO.pact.xmax  = .287;
+GEO.pact.xmin  = .00873;
+
 // Start line
 GEO.ln_vs.l = 23.7;
 GEO.ln_vs.vol = 3.42;

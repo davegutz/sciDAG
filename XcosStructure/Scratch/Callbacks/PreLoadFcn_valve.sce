@@ -90,6 +90,20 @@ GEO.reg.as.tb = [xh as];
 GEO.reg.ad.tb = [xh ad];
 clear xh as ad
 
+// Pump actuator
+GEO.pact.c_     = 50.;
+GEO.pact.cd_    = .61;
+GEO.pact.ab    = 0.;
+GEO.pact.ah    = (.85)^2*%pi/4;
+GEO.pact.ahl   = 0.;
+GEO.pact.ar    = GEO.pact.ah;
+GEO.pact.arl   = 0.;
+GEO.pact.fdyf  = 10.;
+GEO.pact.fstf  = 10.;
+GEO.pact.mext  = .04834 * 386.4;
+GEO.pact.xmax  = .287;
+GEO.pact.xmin  = .00873;
+
 // Define hlfvalve mv geometry
 GEO.mv.ax1 = 1.227;
 GEO.mv.cd = 0.69;

@@ -27,6 +27,7 @@ INI.vsv.x = start_x.values(1,:);
 INI.reg.x = tri_x.values(1,:);
 INI.mv.x = mv_x.values(1,:);
 INI.hs.x = hs_x.values(1,:);
+INI.pact.x = pact_x.values(1,:);
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);
 

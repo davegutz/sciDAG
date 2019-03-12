@@ -181,8 +181,8 @@ endfunction
 
 
 //// Default actuator_a_b prototype ***********************************
-actuator_a_b_default = tlist(["hdb", "ab", "ah", "ahl", "ar", "arl",..
-        "c", "cdo", "fdyf", "fstf",..
+actuator_a_b_default = tlist(["aab", "ab", "ah", "ahl", "ar", "arl",..
+        "c_", "cd_", "fdyf", "fstf",..
         "mact", "mext", "xmax", "xmin"],..
          0, 0, 0, 0, 0,..
          0, 0, 0, 0,..
@@ -264,7 +264,7 @@ function [x,y,typ] = ACTUATOR_A_B(job, arg1, arg2)
         model = scicos_model()
         model.sim = list('actuator_a_b', 4)
         model.in = [1;1;1;1;1;1;1]
-        model.out = [1;1;1;1;1;1;1;1;1;1]
+        model.out = [1;1;1;1;1;1;1;1;1;1;1]
         model.state = [Xinit; 0]
         model.dstate = [0]
         model.rpar = [SG;LINCOS_OVERRIDE]
@@ -272,9 +272,9 @@ function [x,y,typ] = ACTUATOR_A_B(job, arg1, arg2)
         model.nmode = 1
         model.nzcross = 5
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx_aab(GEO.aab)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.aab.x"]
+        exprs = ["lsx_aab(GEO.pact)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.pact.x"]
         gr_i = [];
-        x = standard_define([12 16],model,exprs,gr_i)  // size icon, etc..
+        x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
     end
 endfunction
 
@@ -309,7 +309,8 @@ function [blkcall] = callblk_actuator_a_b(blk, ph, pl, pr, per, fexth, fextr, xo
     blkcall.v = blk.outptr(7);
     blkcall.x = blk.outptr(8);
     blkcall.uf = blk.outptr(9);
-//    blkcall.mode = blk.outptr(10);
+    blkcall.uf_net = blk.outptr(10);
+//    blkcall.mode = blk.outptr(11);
     blkcall.V = blk.xd(1);
     blkcall.A = blk.xd(2);
     blkcall.mode = blk.mode;

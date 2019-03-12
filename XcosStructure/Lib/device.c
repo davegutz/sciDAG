@@ -288,18 +288,18 @@ void head_b(scicos_block *blk, int flag)
 #define v_out   (r_OUT(6,0))    // Velocity towards head end, in/sec.
 #define x_out   (r_OUT(7,0))    // Displacement towards head end, in
 #define uf      (r_OUT(8,0))    // Unbalanced force towards head end, lbf
-#define mode_out (r_OUT(9,0))   // ZCD mode
+#define uf_net  (r_OUT(9,0))    // Unbalanced force towards head end, lbf
+#define mode_out (r_OUT(10,0))   // ZCD mode
 
 void actuator_a_b(scicos_block *blk, int flag)
 {
-    double uf_net = 0;
     int stops = 0;
     double dwdc = DWDC(sg);
     double m_ = mact + mext;
     
     // compute info needed for all passes
     if(flag==-1) X = xol;   // Initialization call
-    uf = (pr - per)*ar - (ph - per)*ah;
+    uf = (pr - per)*ar - (ph - per)*ah - Xdot*c_;
     stops = 0;
     if(mode0==mode_lincos_override)
     {
@@ -315,7 +315,7 @@ void actuator_a_b(scicos_block *blk, int flag)
     }
     else if(mode0==mode_stop_min)
     {
-        uf_net = max(uf + fextr - fstf, 0);
+        uf_net = max(uf - fexth - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
@@ -324,7 +324,7 @@ void actuator_a_b(scicos_block *blk, int flag)
     }
     else if(mode0==mode_stop_max)
     {
-        uf_net = min(uf - fexth + fstf, 0);
+        uf_net = min(uf + fextr + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
@@ -359,12 +359,12 @@ void actuator_a_b(scicos_block *blk, int flag)
         case -1:
         case 1:
             // compute the outputs of the block
-            wfve = dwdc*(ah - ar)*Xdot;
             wfb = OR_APTOW(ab, pr, ph, cd_, sg);
             wfhl = OR_APTOW(ahl, ph, pl, cd_, sg);
             wfrl = OR_APTOW(arl, pr, pl, cd_, sg);
             wfh = -dwdc*ah*Xdot - wfb + wfhl;
             wfr = dwdc*ar*Xdot + wfb + wfrl;
+            wfve = dwdc*(ah - ar)*Xdot;
             v_out = Xdot;
             x_out = X;
             mode_out = mode0;
@@ -373,8 +373,8 @@ void actuator_a_b(scicos_block *blk, int flag)
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-			surf1 = uf+fextr-fstf;
-			surf2 = uf-fexth+fstf;
+			surf1 = uf-fextr-fstf;
+			surf2 = uf+fexth+fstf;
             surf3 = X-xmin;
             surf4 = X-xmax;
 
