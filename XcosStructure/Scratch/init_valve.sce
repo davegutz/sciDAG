@@ -37,6 +37,7 @@ xdel(winsid())
 global m k c
 global loaded_scratch root figs
 global GEO INI FP
+global pact_fext
 
 // Auto data overplot load
 [D, N, time] = load_csv_data('./Data/start02.ven.csv', 1);

@@ -185,16 +185,18 @@ overplot(['HS_WFH', 'hs_wfh'], ['r-',  'b--'], 'Head Flow')
 // Actuator_a_b plots**********
 figs($+1) = figure("Figure_name", 'Act_a_b_Loads_1', "Position", [400,30,610,460]);
 subplot(111)
-overplot(['pact_fexth', 'pact_fextr'], ['r--', 'b--'], 'Act_a_b_loads')
+overplot(['pact_fexth', 'pact_fextr', 'pact_fext'], ['r--', 'b--', 'g-'], 'Act_a_b_loads')
 
 figs($+1) = figure("Figure_name", 'Act_a_b_States', "Position", [420,50,610,460]);
-subplot(221)
+subplot(321)
 overplot(['PACT_X', 'pact_x'], ['r-', 'b--'], 'Act Position')
-subplot(222)
+subplot(322)
 overplot(['PACT_V', 'pact_v'], ['r-', 'b--'], 'Act Velocity')
-subplot(223)
-overplot(['PACT_UF', 'pact_uf', 'PACT_UF_NET', 'pact_uf_net', ], ['g-', 'k--', 'r-', 'b--'], 'Act Unbal Forces')
-subplot(224)
+subplot(323)
+overplot(['PACT_UF', 'pact_uf'], ['r-', 'b--'], 'Act Unbal Forces')
+subplot(324)
+overplot(['PACT_UF_NET', 'pact_uf_net', ], ['r-', 'b--'], 'Act Unbal Net Forces')
+subplot(325)
 overplot(['PACT_MODE'], ['r-'], 'Act ZCD Mode0')
 
 figs($+1) = figure("Figure_name", 'Act_a_b_Flow_1', "Position", [440,70,610,460]);

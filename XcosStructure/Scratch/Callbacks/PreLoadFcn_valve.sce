@@ -91,7 +91,7 @@ GEO.reg.ad.tb = [xh ad];
 clear xh as ad
 
 // Pump actuator
-GEO.pact.c_     = 50.;
+GEO.pact.c_     = 100.;
 GEO.pact.cd_    = .61;
 GEO.pact.ab    = 0.;
 GEO.pact.ah    = (.85)^2*%pi/4;

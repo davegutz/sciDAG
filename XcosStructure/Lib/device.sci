@@ -263,7 +263,7 @@ function [x,y,typ] = ACTUATOR_A_B(job, arg1, arg2)
         Xinit = 0
         model = scicos_model()
         model.sim = list('actuator_a_b', 4)
-        model.in = [1;1;1;1;1;1;1]
+        model.in = [1;1;1;1;1;1]
         model.out = [1;1;1;1;1;1;1;1;1;1;1]
         model.state = [Xinit; 0]
         model.dstate = [0]
@@ -278,21 +278,19 @@ function [x,y,typ] = ACTUATOR_A_B(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_actuator_a_b(blk, ph, pl, pr, per, fexth, fextr, xol)
+function [blkcall] = callblk_actuator_a_b(blk, ph, pl, pr, per, fext, xol)
     // Call compiled funcion ACTUATOR_A_B that is scicos_block blk
     blk.inptr(1) = ph;
     blk.inptr(2) = pl;
     blk.inptr(3) = pr;
     blk.inptr(4) = per;
-    blk.inptr(5) = fexth;
-    blk.inptr(6) = fextr;
-    blk.inptr(7) = xol;
+    blk.inptr(5) = fext;
+    blk.inptr(6) = xol;
     blkcall.ph = ph;
     blkcall.pl = pl;
     blkcall.pr = pr;
     blkcall.per = per;
-    blkcall.fexth = fexth;
-    blkcall.fextr = fextr;
+    blkcall.fextr = fext;
     blkcall.xol = xol;
     blkcall.sg = blk.rpar(1);
     blkcall.LINCOS_OVERRIDE = blk.rpar(2);

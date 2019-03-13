@@ -274,9 +274,8 @@ void head_b(scicos_block *blk, int flag)
 #define pl      (r_IN(1,0))     // Leakage drain, psia
 #define pr      (r_IN(2,0))     // Rod pressure, psia
 #define per     (r_IN(3,0))     // Rod end pressure, psia
-#define fexth   (r_IN(4,0))     // Ext load opposing motion to head, lbf
-#define fextr   (r_IN(5,0))     // Ext load opposing motion to rod, lbf
-#define xol     (r_IN(6,0))     // Actuator displacement toward head end (open loop)
+#define fext    (r_IN(4,0))     // Ext load opposing motion to head, lbf
+#define xol     (r_IN(5,0))     // Actuator displacement toward head end (open loop)
 
 // Outputs
 #define wfb     (r_OUT(0,0))    // Cross-piston bleed head-rod, pph
@@ -299,37 +298,37 @@ void actuator_a_b(scicos_block *blk, int flag)
     
     // compute info needed for all passes
     if(flag==-1) X = xol;   // Initialization call
-    uf = (pr - per)*ar - (ph - per)*ah - Xdot*c_;
+    uf = (pr - per)*ar - (ph - per)*ah - fext - Xdot*c_;
     stops = 0;
     if(mode0==mode_lincos_override)
     {
-        uf_net = uf - fexth;
+        uf_net = uf;
     }
     else if(mode0==mode_move_plus)
     {
-        uf_net = uf - fexth - fdyf;
+        uf_net = uf - fdyf;
     }
     else if(mode0==mode_move_neg)
     {
-        uf_net = uf + fextr + fdyf;
+        uf_net = uf + fdyf;
     }
     else if(mode0==mode_stop_min)
     {
-        uf_net = max(uf - fexth - fstf, 0);
+        uf_net = max(uf - fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_plus)
     {
-        uf_net = max(uf - fexth - fstf, 0);
+        uf_net = max(uf - fstf, 0);
     }
     else if(mode0==mode_stop_max)
     {
-        uf_net = min(uf + fextr + fstf, 0);
+        uf_net = min(uf + fstf, 0);
         stops = 1;
     }
     else if(mode0==mode_stuck_neg)
     {
-        uf_net = min(uf + fextr + fstf, 0);
+        uf_net = min(uf + fstf, 0);
     }
 
     // Different passes
@@ -373,8 +372,8 @@ void actuator_a_b(scicos_block *blk, int flag)
         case 9:
             // compute zero crossing surfaces and set modes
             surf0 = Xdot;
-			surf1 = uf-fextr-fstf;
-			surf2 = uf+fexth+fstf;
+			surf1 = uf-fstf;
+			surf2 = uf+fstf;
             surf3 = X-xmin;
             surf4 = X-xmax;
 
