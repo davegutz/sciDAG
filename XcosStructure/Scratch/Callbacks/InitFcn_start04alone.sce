@@ -59,7 +59,7 @@ INI.pamb = 14.696;
 INI.pr = 198.59;
 
 // Initialize
-exec('./Callbacks/Solve_start04selfinit.sce', -1);
+exec('./Callbacks/Solve_start04alone.sce', -1);
 exec('./Callbacks/mvwin_b.sci', -1);
 [xb, ab] = mvwin_b(40);
 exec('./Callbacks/mvwin_a.sci', -1);
@@ -78,4 +78,13 @@ INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf3);
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 INI.initialized = %t;
 time_tic = getdate();
+
+// placeholder for VEN Unit stuff
+INI.xnven = 9000;
+INI.disp = .5;
+INI.pdven = tri_ps.values(1,1);
+INI.psven = tri_pd.values(1,1);
+
+
+
 mprintf('Completed %s\n', sfilename())  

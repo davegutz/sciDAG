@@ -24,6 +24,9 @@ getd('../Lib/Pipes')
 function [dwdc] = DWDC(sg)
     dwdc = 129.93948*sg;
 endfunction
+function [avis] = AVIS(sg, kvis)
+    avis   = 9.312e-5 * .00155 * sg * kvis;
+endfunction
 
 vol_default = tlist(["vol", "beta", "dwdc", "vol", "tvp"], 135000, 129.93948*0.8, 0, 7);
 mom_default = tlist(["mom", "area", "length", "min_flow", "max_flow"], 0, 1, -1e6, 1e6);

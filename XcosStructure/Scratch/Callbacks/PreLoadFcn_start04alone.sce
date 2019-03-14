@@ -104,6 +104,12 @@ GEO.pact.mext  = .04834 * 386.4;
 GEO.pact.xmax  = .287;
 GEO.pact.xmin  = .00873;
 
+// Pump pos disp
+GEO.vdpp.vdpp_cn = 0;
+GEO.vdpp.vdpp_cs = 5.3e-10;
+GEO.vdpp.vdpp_ct = 0.00096;
+GEO.vdpp.vdpp_cf = -0.02;
+
 // Start line
 GEO.ln_vs.l = 23.7;
 GEO.ln_vs.vol = 3.42;

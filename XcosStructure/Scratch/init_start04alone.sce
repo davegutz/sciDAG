@@ -66,11 +66,15 @@ LIN.open_tv = 0;
 // Fuel properties
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);
+FP.kvis = fp_kvis.values(1,:);
 FP.dwdc = DWDC(FP.sg);
+FP.avis = AVIS(FP.sg, FP.kvis);
 FP.tvp = 7;
 
 // Objects
-GEO = tlist(["sys_geo", "vsv", "reg", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vlv_a_default, tv_a1_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
+vdpp_default = tlist(["vdpp", "vdpp_cn", "vdpp_cs", "vdpp_ct", "vdpp_cf"], 0, 0, 0, 0);
+GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdpp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
+VEN = tlist(["sys_ven", "vdpp", "vsv", "reg"], vdpp_default, vlv_a_default, tv_a1_default);
 IFC = tlist(["sys_ifc", "mvtv", "hs"], vlv_a_default, head_b_default);
 IFC_mvtv = vlv_a_default;
 

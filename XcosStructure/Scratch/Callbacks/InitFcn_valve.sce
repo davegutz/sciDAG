@@ -31,6 +31,7 @@ INI.hs.x = hs_x.values(1,:);
 INI.pact.x = pact_x.values(1,:);
 FP.sg = fp_sg.values(1,:);
 FP.beta = fp_beta.values(1,:);
+FP.avis = fp_avis.values(1,:);
 
 pact_fext = pact_fextr;
 pact_fext.values(:,1) = pact_fextr.values(:,1)+GEO.pact.c_*pact_v.values(:,1);
