@@ -134,7 +134,7 @@ ytqa = [1.392,  1.386,  1.380,..
         0.892,  0.882,  0.847,  0.811,  0.774,  0.736};
 GEO.vlink.ctqpv = 0.4418;
 GEO.vlink.cva = 1.588;
-GEO.vlink.cftpa = 0.567;
+GEO.vlink.cftpa = 0.567*0.7;
 GEO.vlink.cdv = 3.1024;
 GEO.vlink.ytqa.tb = [yxpump' ytqa'];
 GEO.vlink.ytqrs.tb = [yxpump' ytqrs']; 

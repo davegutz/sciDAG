@@ -124,9 +124,11 @@ overplot(['VDPP_EFF_VOL'], ['b-'], 'VDPP')
 
 figs($+1) = figure("Figure_name", 'VEN', "Position", [30,110,610,600]);
 subplot(221)
-overplot(['PACT_FEXTH', 'pact_fexth'], ['r-',  'b--'], 'Pump Act Load')
+overplot(['PACT_X', 'pact_x'], ['r-',  'b--'], 'Pump Act Stroke')
 subplot(222)
 overplot(['VLINK_FTPA', 'vlink_ftpa'], ['r-',  'b--'], 'Pump Act Loads')
+subplot(223)
+overplot(['PACT_FEXTH', 'pact_fexth'], ['r-',  'b--'], 'Pump Act Load')
 end
 
 mprintf('Completed %s\n', sfilename())  
