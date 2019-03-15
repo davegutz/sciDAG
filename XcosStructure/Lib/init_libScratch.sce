@@ -55,6 +55,7 @@ pal = init_add_struct('ACTUATOR_A_B', 'magenta', lib_path+'/images/blocks/ACTUAT
 pal = init_add_struct('VALVE_A', 'green', lib_path+'/images/blocks/VALVE_A.png', pal);
 pal = init_add_struct('TRIVALVE_A1', 'green', lib_path+'/images/blocks/TRIVALVE_A1.png', pal);
 pal = init_add_struct('HLFVALVE_A', 'cyan', lib_path+'/images/blocks/HLFVALVE_A.png', pal);
+pal = init_add_struct('VDP', 'blue', lib_path+'/images/blocks/VDP.PNG', pal);
 pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);
 pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.svg', pal);
 

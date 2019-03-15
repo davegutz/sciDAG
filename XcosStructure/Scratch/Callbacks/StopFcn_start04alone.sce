@@ -110,7 +110,17 @@ overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
 figs($+1) = figure("Figure_name", 'VDPP', "Position", [10,90,610,600]);
 subplot(321)
+overplot(['vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['o--',  'k--', 'r-'], 'VDPP')
+subplot(322)
+overplot(['vdpp_ps'], ['o--'], 'VDPP')
+subplot(323)
+overplot(['vdpp_disp'], ['k--'], 'VDPP')
+subplot(324)
 overplot(['VDPP_WF', 'vdpp_wf'], ['r-',  'b--'], 'VDPP Flow')
+subplot(325)
+overplot(['VDPP_MTDQP'], ['r-'], 'VDPP')
+subplot(326)
+overplot(['VDPP_EFF_VOL'], ['b-'], 'VDPP')
 
 end
 
