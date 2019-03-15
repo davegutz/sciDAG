@@ -80,8 +80,8 @@ INI.initialized = %t;
 time_tic = getdate();
 
 // placeholder for VEN Unit stuff
-INI.xnven = 9000;
-INI.disp = .5;
+INI.xnven = vdpp_rpm.values(1,1);
+INI.disp = vdpp_disp.values(1,1);
 INI.pdven = tri_ps.values(1,1);
 INI.psven = tri_pd.values(1,1);
 

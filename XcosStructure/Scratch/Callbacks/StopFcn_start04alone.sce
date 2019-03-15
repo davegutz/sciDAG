@@ -108,6 +108,10 @@ overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
 subplot(325)
 overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
+figs($+1) = figure("Figure_name", 'VDPP', "Position", [10,90,610,600]);
+subplot(321)
+overplot(['VDPP_WF', 'vdpp_wf'], ['r-',  'b--'], 'VDPP Flow')
+
 end
 
 mprintf('Completed %s\n', sfilename())  

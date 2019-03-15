@@ -42,9 +42,6 @@
 //
 // interfacing functions for sharp-edged orifice
 or_default = tlist(["or", "ao", "cd"], 0, 0.61);
-function d = dwdc(sg)
-    d = 129.93948*sg;
-endfunction
 function y = sqr(x)
     y = x*x;
 endfunction
