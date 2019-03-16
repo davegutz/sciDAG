@@ -84,7 +84,7 @@ INI.xnven = vdpp_rpm.values(1,1);
 INI.disp = vdpp_disp.values(1,1);
 INI.pdven = tri_ps.values(1,1);
 INI.psven = tri_pd.values(1,1);
-
-
+INI.pact.x = pact_x.values(1,1);
+INI.reg.x = tri_x.values(1,1);
 
 mprintf('Completed %s\n', sfilename())  
