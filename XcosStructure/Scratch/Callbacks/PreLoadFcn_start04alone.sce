@@ -109,6 +109,7 @@ GEO.vdpp.cn = 0;
 GEO.vdpp.cs = 5.3e-10;
 GEO.vdpp.ct = 0.00096;
 GEO.vdpp.cf = -0.02;
+GEO.vdpp.cdv = 3.1024;
 
 // VEN Unit Linkages
 // Degrees pump position
@@ -135,7 +136,6 @@ ytqa = [1.392,  1.386,  1.380,..
 GEO.vlink.ctqpv = 0.4418;
 GEO.vlink.cva = 1.588;
 GEO.vlink.cftpa = 0.567*0.7;
-GEO.vlink.cdv = 3.1024;
 GEO.vlink.ytqa.tb = [yxpump' ytqa'];
 GEO.vlink.ytqrs.tb = [yxpump' ytqrs']; 
 clear ytqrs yxpump ytqa

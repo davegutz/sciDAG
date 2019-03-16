@@ -43,8 +43,8 @@
 
 
 //// Default vdp prototype *****************************************
-vdp_default = tlist(["vdp", "cf", "cn", "cs", "ct"],..
-         0, 0, 0, 0);
+vdp_default = tlist(["vdp", "cf", "cn", "cs", "ct", "cdv"],..
+         0, 0, 0, 0, 0);
          
 function [ps] = %vdp_string(p)
     // Cast head type to string
