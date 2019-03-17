@@ -78,20 +78,14 @@ vlv_a_default = tlist(["vlv_a", "ao", "ax1", "ax2", "ax3", "ax4",..
 
 function [vs] = %vlv_a_string(v)
     // Cast valve type to string
-    vs = msprintf('list(');
-
-    // Scalars
-    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
-             v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
-             v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
-             v.ld, v.lh, v.m, v.xmax, v.xmin);
+    vs = msprintf('''%s'' type:  ao=%f, ax1=%f; ax2=%f; ax3=%f; ax4=%f; c=%f; clin=%f; cd=%f; cdo=%f; cp=%f; fdyf=%f; fs=%f; fstf=%f; ks=%f; ld=%f; lh=%f; m=%f; xmax=%f; xmin=%f;',..
+       typeof(v), v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
+       v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+       v.ld, v.lh, v.m, v.xmax, v.xmin);
 
     // Tables
-    vs = vs + string(v.ad) + ',';
-    vs = vs + string(v.ah);
-    
-    // end
-    vs = vs + msprintf(')');
+    vs = vs + 'ad: ' + string(v.ad) + ';';
+    vs = vs + 'ah: ' + string(v.ah) + ';';
 endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
@@ -169,7 +163,11 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_valve_a(blk, ps, pd, ph, prs, pr, pxr, xol)
+function [blkcall] = callblk_valve_a(blk, sim, ps, pd, ph, prs, pr, pxr, xol)
+    if sim~='valve_a' then
+        mprintf('ERROR:  %s is not valve_a', sim);
+        error('wrong block type')
+    end
     // Call compiled funcion VALVE_A that is scicos_block blk
     blk.inptr(1) = ps;
     blk.inptr(2) = pd;
@@ -248,20 +246,13 @@ tv_a1_default = tlist(["tv_a1", "adl", "ahd", "ahs", "ald", "ale",..
 
 function [vs] = %tv_a1_string(v)
     // Cast trivalve type to string
-    vs = msprintf('list(');
-
-    // Scalars
-    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
-             v.adl, v.ahd, v.ahs, v.ald, v.ale,..
+    vs = msprintf('''%s'' type:  adl=%f, ahd=%f, ahs=%f, ald=%f, ale=%f, alr=%f, ar=%f, asl=%f, c=%f, cd=%f, cp=%f, fdyf=%f, fs=%f, fstf=%f, ks=%f, ld=%f, ls=%f, m=%f, xmax=%f, xmin=%f,',..
+             typeof(v), v.adl, v.ahd, v.ahs, v.ald, v.ale,..
              v.alr, v.ar, v.asl, v.c, v.cd, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
              v.ld, v.ls, v.m, v.xmax, v.xmin);
-
     // Tables
-    vs = vs + string(v.ad) + ',';
-    vs = vs + string(v.as);
-    
-    // end
-    vs = vs + msprintf(')');
+    vs = vs + 'ad: ' + string(v.ad) + ',';
+    vs = vs + 'as: '+ string(v.as);
 endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
@@ -350,20 +341,13 @@ hlfvlv_a_default = tlist(["hlfvlv_a", "arc", "arx", "asr", "awd", "awx",..
          ctab1_default);
 
 function [vs] = %hlfvlv_a_string(v)
-    // Cast half-area valve type to string
-    vs = msprintf('list(');
-
-    // Scalars
-    vs = vs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
-             v.arc, v.arx, v.asr, v.awd, v.awx,..
+    vs = msprintf('''%s'' type, arc=%f, arx=%f, asr=%f, awd=%f, awx=%f, ax1=%f, ax2=%f, ax3=%f, axa=%f, c=%f, cd=%f, cp=%f, fdyf=%f, fstf=%f, m=%f, xmax=%f, xmin=%f,',..
+             typeof(v), v.arc, v.arx, v.asr, v.awd, v.awx,..
              v.ax1, v.ax2, v.ax3, v.axa, v.c, v.cd, v.cp, v.fdyf, v.fstf,..
              v.m, v.xmax, v.xmin);
 
     // Tables
-    vs = vs + string(v.at);
-    
-    // end
-    vs = vs + msprintf(')');
+    vs = vs + 'at: ' + string(v.at) + ';';
 endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
@@ -441,7 +425,11 @@ function [x,y,typ] = HLFVALVE_A(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_halfvalve_a(blk, ps, px, pr, pc, pa, pw, pd, xol)
+function [blkcall] = callblk_halfvalve_a(blk, sim, ps, px, pr, pc, pa, pw, pd, xol)
+    if sim~='hlfvalve_a' then
+        mprintf('ERROR:  %s is not valve_a', sim);
+        error('wrong block type')
+    end
     // Call compiled funcion HALFVALVE_A that is scicos_block blk
     blk.inptr(1) = ps;
     blk.inptr(2) = px;

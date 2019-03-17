@@ -17,6 +17,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+// Mar 17, 2019    DA Gutz        Created
+// 
+// Copyright (C) 2019 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 // Jan 1, 2019  DA Gutz     Created
 // 
 global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN INI Tf GEO
@@ -30,6 +51,7 @@ try
     mprintf('In %s:  generating steadycos...\n', sfilename())
     INI.batch = %t;  LIN.open_tv = 1;
     Info = xcos_simulate(scs_m, 4);  LIN.X = cpr.state.x;
+    mprintf('completed xcos_simulate in %s\n', sfilename())  
     //[LIN.Xs, LIN.U, LIN.Y, LIN.XP] = steadycos(scs_m, cpr.state.x, [],[],1:$, [], []);
     LIN.sys_f = lincos(scs_m, LIN.X, 0, [1e-9, 0]);
     //LIN.sys_fs = lincos(scs_m, LIN.Xs, 0, [1e-9, 0]);
@@ -41,6 +63,8 @@ end
 Tf = Tf_sav;
 LIN.open_tv = 0;
 INI.batch = batch_sav;
+
+mprintf('Before Plot result in %s\n', sfilename())  
 
 // Plot result
 try

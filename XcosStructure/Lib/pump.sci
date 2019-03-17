@@ -46,27 +46,18 @@
 vdp_default = tlist(["vdp", "cf", "cn", "cs", "ct", "cdv"],..
          0, 0, 0, 0, 0);
          
-function [ps] = %vdp_string(p)
-    // Cast head type to string
-    ps = msprintf('list(');
-
-    // Scalars
-    ps = ps + msprintf('%f,%f,%f,%f,',..
-             p.cf, p.cn, p.cs, p.ct);
-
-    // Tables
-    
-    // end
-    ps = ps + msprintf(')');
-endfunction
-
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
 function lis = lsx_vdp(p)
     lis = list(p.cf, p.cn, p.cs, p.ct);
 endfunction
 
+function ps= %vdp_string(p)
+    ps = msprintf('''%s'' type:  cf=%f; cn=%f; cs=%f; ct=%f;\n',..
+        typeof(p), p.cf, p.cn, p.cs, p.ct);
+endfunction
+
 function str = %vdp_p(p)
-    // Display valve type
+    // Display variable displacement pump (vdp) type
     str = string(p);
     disp(str)
 endfunction

@@ -38,7 +38,7 @@ global m k c
 global loaded_scratch root sys_f scs_m cpr
 global GEO INI FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
- 
+
 // Auto data overplot load
 [D, N, time] = load_csv_data('./Data/start04.ven.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
@@ -73,21 +73,60 @@ FP.avis = AVIS(FP.sg, FP.kvis);
 FP.tvp = 7;
 
 // Objects
-vlink_default = tlist(["ven_link", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs"],..
+vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs"],..
                             0, 0, 0, 0, ctab1_default, ctab1_default);
+function str = %vlk_string(v)
+    // Display head_b type
+    str = msprintf('''%s'' type:  ctqpv=%f, cva=%f, cdv=%f, cftpa=%f,',..
+             typeof(v), v.ctqpv, v.cva, v.cdv, v.cftpa);
+    str = str + 'ytqa: ' + string(v.ytqa) + ',';
+    str = str + 'ytqrs: '+ string(v.ytqrs);
+endfunction
+function str = %vlk_p(v)
+    // Display vlink type
+    str = string(v);
+    disp(str)
+endfunction
+
 GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
 VEN = tlist(["sys_ven", "vdpp", "vsv", "reg"], vdp_default, vlv_a_default, tv_a1_default);
 IFC = tlist(["sys_ifc", "mvtv", "hs"], vlv_a_default, head_b_default);
 IFC_mvtv = vlv_a_default;
 
-function %sys_geo_p(g)
-    // Display geo overload
-    mprintf('sys_geo:  \n');
-    disp(g.vsv)
-    disp(g.reg)
-    disp(g.mv)
-    disp(g.hs)
+function gstr = %sys_geo_string(g)
+    // string geo overload
+    gstr = '';
+    gstr = msprintf('''%s'' type:  \n', typeof(g));
+    gstr = gstr + msprintf('vdpp = %s;\n', string(g.vdpp));
+    gstr = gstr + msprintf('vsv = %s;\n', string(g.vsv));
+    gstr = gstr + msprintf('reg = %s;\n', string(g.reg));
+    gstr = gstr + msprintf('pact = %s;\n', string(g.pact));
+    gstr = gstr + msprintf('pact_lk = %s;\n', string(g.pact_lk));
+    gstr = gstr + msprintf('vlink = %s;\n', string(g.vlink));
+    gstr = gstr + msprintf('mv = %s;\n', string(g.mv));
+    gstr = gstr + msprintf('mvtv = %s;\n', string(g.mvtv));
+    gstr = gstr + msprintf('hs = %s;\n', string(g.hs));
+    gstr = gstr + msprintf('noz = %s;\n', string(g.noz));
+    gstr = gstr + msprintf('mo_p3s = %s;\n', string(g.mo_p3s));
+    gstr = gstr + msprintf('vo_p2 = %s;\n', string(g.vo_p2));
+    gstr = gstr + msprintf('vo_p3 = %s;\n', string(g.vo_p3));
+    gstr = gstr + msprintf('vo_p1so = %s;\n', string(g.vo_p1so));
+    gstr = gstr + msprintf('vo_px = %s;\n', string(g.vo_px));
+    gstr = gstr + msprintf('vo_p3s = %s;\n', string(g.vo_p3s));
+    gstr = gstr + msprintf('vo_pnozin = %s;\n', string(g.vo_pnozin));
+    gstr = gstr + msprintf('ln_p3s = %s;\n', string(g.ln_p3s));
+    gstr = gstr + msprintf('ln_vs = %s;\n', string(g.ln_vs));
+    gstr = gstr + msprintf('main_line = %s;\n', string(g.main_line));
+    gstr = gstr + msprintf('a_p3s = %s;\n', string(g.a_p3s));
+    gstr = gstr + msprintf('a_tvb = %s;\n', string(g.a_tvb));
+    gstr = gstr + msprintf('mvwin = %s;\n', string(g.mvwin));
 endfunction
+
+function %sys_geo_p(g)
+    // Display system geometry (sys_geo) type
+    disp(string(g));
+endfunction
+
 
 loaded_scratch = %f;
 LINCOS_OVERRIDE = 0;

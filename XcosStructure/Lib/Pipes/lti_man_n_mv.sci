@@ -50,7 +50,7 @@
 // Oct 11, 2018     DA Gutz    Created
 // ******************************************************************
 function obj = lti_man_n_mv(obj, spgr, %beta)
-    if typeof(obj) ~= 'pipeMV' then
+    if typeof(obj) ~= 'pMV' then
         mprintf('ERROR:   wrong type %s\n', typeof(obj));
         error('wrong type')
     end
@@ -99,7 +99,7 @@ function obj = lti_man_n_mv(obj, spgr, %beta)
 endfunction
 
 function vec =ini_man_n_mv(obj, pi, wfi)
-    if typeof(obj) ~= 'pipeMV' then
+    if typeof(obj) ~= 'pMV' then
         mprintf('ERROR:   wrong type %s\n', typeof(obj));
         error('wrong type')
     end

@@ -31,6 +31,7 @@ function overplot(st, c, %title)
 endfunction
 
 global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN  time_tic time_toc
+global PALL
 mprintf('In %s\n', sfilename())  
 try cpr = %cpr; end
 

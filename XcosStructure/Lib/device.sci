@@ -50,22 +50,6 @@ head_b_default = tlist(["hdb", "f_an", "f_cn", "f_dn", "f_ln",..
          0, 0, 0, 0, 0, 0, 0, 0,..
          0, 0, 0, 1, -1);
 
-function [hs] = %hdb_string(h)
-    // Cast head type to string
-    hs = msprintf('list(');
-
-    // Scalars
-    hs = hs + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',..
-             h.f_an, h.f_cn, h.f_dn, h.f_ln,..
-             h.ae, h.ao, h.c, h.cdo, h.fb, h.fdyf, h.fs, h.fstf,..
-             h.kb, h.ks, h.m, h.xmax, h.xmin);
-
-    // Tables
-    
-    // end
-    hs = hs + msprintf(')');
-endfunction
-
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
 function lis = lsx_hdb(h)
     lis = list(h.f_an, h.f_cn, h.f_dn, h.f_ln,..
@@ -73,8 +57,16 @@ function lis = lsx_hdb(h)
              h.kb, h.ks, h.m, h.xmax, h.xmin);
 endfunction
 
+function str = %hdb_string(h)
+    // Display head_b type
+    str = msprintf('''%s'' type:  f_an=%f; f_cn=%f; f_dn=%f; f_ln=%f; ae=%f; ao=%f; c=%f; cdo=%f; fb=%f; fdyf=%f; fs=%f; fstf=%f; kb=%f; ks=%f; m=%f; xmax=%f; xmin=%f;',..
+             typeof(h), h.f_an, h.f_cn, h.f_dn, h.f_ln,..
+             h.ae, h.ao, h.c, h.cdo, h.fb, h.fdyf, h.fs, h.fstf,..
+             h.kb, h.ks, h.m, h.xmax, h.xmin);
+endfunction
+
 function str = %hdb_p(h)
-    // Display valve type
+    // Display half-area valve type
     str = string(h);
     disp(str)
 endfunction
@@ -140,7 +132,11 @@ function [x,y,typ] = HEAD_B(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_head_b(blk, pf, ph, pl, xol)
+function [blkcall] = callblk_head_b(blk, sim, pf, ph, pl, xol)
+    if sim~='head_b' then
+        mprintf('ERROR:  %s is not head_b', sim);
+        error('wrong block type')
+    end
     // Call compiled funcion HEAD_B that is scicos_block blk
     blk.inptr(1) = pf;
     blk.inptr(2) = ph;
@@ -188,22 +184,6 @@ actuator_a_b_default = tlist(["aab", "ab", "ah", "ahl", "ar", "arl",..
          0, 0, 0, 0,..
          0, 0, 1, -1);
 
-function [act] = %aab_string(a)
-    // Cast head type to string
-    act = msprintf('list(');
-
-    // Scalars
-    act = act + msprintf('%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f',..
-             a.ab, a.ah, a.ahl, a.ar, a.arl,..
-             a.c_, a.cd_, a.fdyf, a.fstf,..
-             a.mact, a.mext, a.xmax, a.xmin);
-
-    // Tables
-    
-    // end
-    act = act + msprintf(')');
-endfunction
-
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
 function lis = lsx_aab(a)
     lis = list(a.ab, a.ah, a.ahl, a.ar, a.arl,..
@@ -211,8 +191,16 @@ function lis = lsx_aab(a)
              a.mact, a.mext, a.xmax, a.xmin);
 endfunction
 
-function str = %aab_p(a)
-    // Display valve type
+function str = %aab_string(a)
+    // Display actuator_a_b type
+    str = msprintf('''%s'' type:  ab=%f; ah=%f; ahl=%f; ar=%f; arl=%f; c_=%f; cd_=%f; fdyf=%f; fstf=%f;mact=%f; mext=%f; xmax=%f; xmin=%f;\n',..
+             typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
+             a.c_, a.cd_, a.fdyf, a.fstf,..
+             a.mact, a.mext, a.xmax, a.xmin);
+endfunction
+
+function str = %hdb_p(a)
+    // Display actuator_a_b valve type
     str = string(a);
     disp(str)
 endfunction
@@ -278,7 +266,11 @@ function [x,y,typ] = ACTUATOR_A_B(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_actuator_a_b(blk, ph, pl, pr, per, fext, xol)
+function [blkcall] = callblk_actuator_a_b(blk, sim, ph, pl, pr, per, fext, xol)
+    if sim~='aab' then
+        mprintf('ERROR:  %s is not aab', sim);
+        error('wrong block type')
+    end
     // Call compiled funcion ACTUATOR_A_B that is scicos_block blk
     blk.inptr(1) = ph;
     blk.inptr(2) = pl;

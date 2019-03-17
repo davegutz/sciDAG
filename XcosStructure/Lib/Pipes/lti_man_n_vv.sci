@@ -72,7 +72,7 @@
 // Oct 13, 2018 	DA Gutz		Created
 // **************************************************************************
 function obj = lti_man_n_vv(obj,spgr,%beta)
-    if typeof(obj) ~= 'pipeVV' then
+    if typeof(obj) ~= 'pVV' then
         mprintf('ERROR:   wrong type %s\n', typeof(obj));
         error('wrong type')
     end
@@ -125,7 +125,7 @@ function obj = lti_man_n_vv(obj,spgr,%beta)
 endfunction
 
 function vec = ini_man_n_vv(obj, pi, wfi)
-    if typeof(obj) ~= 'pipeVV' then
+    if typeof(obj) ~= 'pVV' then
         mprintf('ERROR:   wrong type %s\n', typeof(obj));
         error('wrong type')
     end

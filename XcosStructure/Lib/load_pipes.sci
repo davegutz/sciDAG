@@ -30,31 +30,83 @@ endfunction
 
 vol_default = tlist(["vol", "beta", "dwdc", "vol", "tvp"], 135000, 129.93948*0.8, 0, 7);
 mom_default = tlist(["mom", "area", "length", "min_flow", "max_flow"], 0, 1, -1e6, 1e6);
-pipeVV_default = tlist(["pipeVV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
+pipeVV_default = tlist(["pVV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
         18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 0, 0, [], [], [], [], [], []);
-pipeMV_default = tlist(["pipeMV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
+pipeMV_default = tlist(["pMV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
         18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 0, 0, [], [], [], [], [], []);
-pipeMM_default = tlist(["pipeMM", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
+pipeMM_default = tlist(["pMM", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
         18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 0, 0, [], [], [], [], [], []);
-pipeVM_default = tlist(["pipeVM", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
+pipeVM_default = tlist(["pVM", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
         18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 0, 0, [], [], [], [], [], []);
 FP_default = tlist(["FP", "sg", "beta", "dwdc", "tvp"],..
         0.8, 135000, DWDC(0.8), 7);
         
-// TODO:  make the following functions work and do useful things.
-function [ps] = %pipe_string(p)
-    // Start
-    ps = msprintf('list(');
-    // Scalars
-    ps = ps + msprintf('%f,%f,%f,%d,%f,%f,%f', p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
-    // End
-    ps = ps + msprintf(')');
+function [vs] = %vol_string(v)
+    vs = msprintf('''%s'' type:  vol=%f, beta=%f, dwdc=%f, tvp=%f', typeof(v), v.vol, v.beta, v.dwdc,  v.tvp);
 endfunction
-
+function [ms] = %mom_string(m)
+    ms = msprintf('''%s'' type:  area=%f, length=%f, vol=%f, min_flow=%f, max_flow=%f', typeof(m), m.area, m.length, m.area*m.length, m.min_flow,  m.max_flow);
+endfunction
+function [fs] = %FP_string(fp)
+    fs = msprintf('''%s'' type:  sg=%f, beta=%f, dwdc=%f, tvp=%f', typeof(fp), fp.sg, fp.beta, fp.dwdc, fp.tvp);
+endfunction
+function [ps] = pipe_string(p)
+    ps = msprintf('''%s'' type:  l=%f, a=%f, vol=%f, n=%d, c=%f', typeof(p), p.l, p.a, p.vol, p.n, p.c);
+endfunction
+function str = %pVV_string(p)
+    // Display pipe type
+    str = pipe_string(p);
+endfunction
+function str = %pMV_string(p)
+    // Display pipe type
+    str = pipe_string(p);
+endfunction
+function str = %pMM_string(p)
+    // Display pipe type
+    str = pipe_string(p);
+endfunction
+function str = %pVM_string(p)
+    // Display pipe type
+    str = pipe_string(p);
+endfunction
+function str = %pVV_p(p)
+    // Display pipe type
+    str = pipe_string(p);
+    disp(str)
+endfunction
+function str = %pMV_p(p)
+    // Display pipe type
+    str = pipe_string(p);
+    disp(str)
+endfunction
+function str = %pMM_p(p)
+    // Display pipe type
+    str = pipe_string(p);
+    disp(str)
+endfunction
+function str = %pVM_p(p)
+    // Display pipe type
+    str = pipe_string(p);
+    disp(str)
+endfunction
+function str = %vol_p(v)
+    // Display vol type
+    str = vol_string(v);
+    disp(str)
+endfunction
+function str = %mom_p(m)
+    // Display mom type
+    str = mom_string(m);
+    disp(str)
+endfunction
+function str = %FP_p(fp)
+    // Display pipe type
+    str = FP_string(fp);
+    disp(str)
+endfunction
 function lis = lsx_pipe(p)
     lis = list(p.l, p.a, p.vol, p.n, p.spgr, p.beta, p.c);
 endfunction
-
 function str = %pipe_p(p)
     // Display pipe type
     str = string(p);

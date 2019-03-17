@@ -66,23 +66,23 @@ verbose = 1;
 mprintf('In %s\n', sfilename())  
 
 // Find the blocks
-bl_start = find_block(scs_m, 'start');
+[bl_start, sim_start] = find_block(scs_m, 'start');
 if typeof(bl_start)~="scicos_block" then
     error('start not found');
 end
-bl_mv = find_block(scs_m, 'mv');
+[bl_mv, sim_mv] = find_block(scs_m, 'mv');
 if typeof(bl_mv)~="scicos_block" then
     error('mv not found');
 end
-bl_mvtv = find_block(scs_m, 'mvtv');
+[bl_mvtv, sim_mvtv] = find_block(scs_m, 'mvtv');
 if typeof(bl_mvtv)~="scicos_block" then
     error('mvtv not found');
 end
-bl_hs = find_block(scs_m, 'hs');
+[bl_hs, sim_hs] = find_block(scs_m, 'hs');
 if typeof(bl_hs)~="scicos_block" then
     error('hs not found');
 end
-bl_a_tvb = find_block(scs_m, 'a_tvb');
+[bl_a_tvb, sim_a_tvb] = find_block(scs_m, 'a_tvb');
 if typeof(bl_a_tvb)~="scicos_block" then
     error('a_tvb not found');
 end
@@ -121,24 +121,24 @@ while ( INI.count== 0 |..
         INI.pnozin = min(130*(INI.wf3/540)^2, interp1(GEO.noz.tb(:,2), GEO.noz.tb(:,1), INI.wf3, 'linear', 'extrap'))+INI.ps3;
         INI.p3 = max(171.5*(INI.wf3/17000)^2, 40) + INI.pnozin;
 
-        bl_start_call = callblk_valve_a(bl_start, INI.ven_pd, 0, INI.p1so, INI.p1so, 0, INI.ven_ps, 0);
+        bl_start_call = callblk_valve_a(bl_start, sim_start, INI.ven_pd, 0, INI.p1so, INI.p1so, 0, INI.ven_ps, 0);
         INI.wf1v = -(bl_start_call.wfh+bl_start_call.wfvrs);              
 
-        bl_mv_call = callblk_halfvalve_a(bl_mv, INI.p1so, INI.pr, INI.pr, INI.ven_ps, INI.pamb, INI.p1so, INI.p2    , INI.x_mv);
+        bl_mv_call = callblk_halfvalve_a(bl_mv, sim_mv, INI.p1so, INI.pr, INI.pr, INI.ven_ps, INI.pamb, INI.p1so, INI.p2    , INI.x_mv);
         INI.wf1mv = bl_mv_call.wfs;
         INI.wfmv = bl_mv_call.wfd;
 
-        bl_mvtv_call = callblk_valve_a(bl_mvtv, INI.p2    , INI.p3, 0, 0, INI.prt, INI.px, 0);
+        bl_mvtv_call = callblk_valve_a(bl_mvtv, sim_mvtv, INI.p2    , INI.p3, 0, 0, INI.prt, INI.px, 0);
         INI.wfvx = bl_mvtv_call.wfvx;
         INI.wf3 = bl_mvtv_call.wfd;
 
-        bl_hs_call = callblk_head_b(bl_hs, INI.px, INI.p1so, INI.p2, INI.x_hs);
+        bl_hs_call = callblk_head_b(bl_hs, sim_hs, INI.px, INI.p1so, INI.p2, INI.x_hs);
         INI.wf1s = bl_hs_call.wfh;
         INI.wfx = bl_hs_call.wff;
         INI.wf3s = bl_hs_call.wfl;
         INI.wf2s = INI.wf3s;
 
-        bl_a_tvb_call = callblk_cor_aptow(bl_a_tvb, GEO.a_tvb.ao, GEO.a_tvb.cd, INI.prt, INI.px);
+        bl_a_tvb_call = callblk_cor_aptow(bl_a_tvb, sim_a_tvb, GEO.a_tvb.ao, GEO.a_tvb.cd, INI.prt, INI.px);
         INI.wftvb = bl_a_tvb_call.wf;
 
         e_p1so = INI.wf1v - INI.wf1bias - INI.wf1mv - INI.wf1s;

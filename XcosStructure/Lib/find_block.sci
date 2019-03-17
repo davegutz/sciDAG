@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Feb 18, 2019    DA Gutz        Created
 // 
-function blk_f = find_block(parent_m, label)
+function [blk_f, sim] = find_block(parent_m, label)
     // Return scicos_block equivalent to block with label ="label"
     if typeof(parent_m)=="diagram" then
 //        mprintf('searching %s for %s.   %ld objects...\n', parent_m.props.title, label, length(parent_m.objs));
@@ -28,7 +28,7 @@ function blk_f = find_block(parent_m, label)
 //        mprintf('i=%ld, type=%s\n', i, typeof(parent_m.objs(i)));
         if typeof(parent_m.objs(i))=="Block" & parent_m.objs(i).gui=="SUPER_f" then
 //            mprintf('i=%ld, gui=%s\n', i, parent_m.objs(i).gui);
-            blk_f = find_block(parent_m.objs(i).model.rpar, label);
+            [blk_f, sim] = find_block(parent_m.objs(i).model.rpar, label);
             if typeof(blk_f)=="scicos_block"
                 return;
             end
@@ -37,12 +37,14 @@ function blk_f = find_block(parent_m, label)
 //            mprintf('checking %s for %s..\n', parent_m.objs(i).model.label, label);
             if parent_m.objs(i).model.label==label then
                 blk_f = model2blk(parent_m.objs(i).model);
-//                mprintf('*****found %s*******typeof=%s\n', label, typeof(blk_f))
+                sim = parent_m.objs(i).model.sim(1);
+//                mprintf('*****found %s*******typeof=%s, sim=%s\n', label, typeof(blk_f), sim)
                 return
             end
         end    
     end
     if ~exists('blk_f') then
         blk_f = "not found";
+        sim = "not found either"
     end
 endfunction

@@ -70,14 +70,10 @@ function [ts] = %tbl1_b_string(t)
 endfunction
 
 function [ts] = %ctab1_string(t)
-    // Start
-    ts = msprintf('list(');
-    // Table
-    ts = ts + xz_string(t.tb);
-    // Scalars
-    ts = ts + msprintf(',%f,%f,%f,%f,', t.sx, t.dx, t.sz, t.dz);
-    // End
-    ts = ts + msprintf(')');
+    // Table string overload
+    ts = msprintf('''%s'' type:  ', typeof(t));
+    ts = ts + 'tb=' + xz_string(t.tb);
+    ts = ts + msprintf(', sx=%f, dx=%f, sz=%f, dz=%f', t.sx, t.dx, t.sz, t.dz);
 endfunction
 
 

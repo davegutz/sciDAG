@@ -49,7 +49,7 @@
 // Oct 11, 2018     DA Gutz    Created
 // ******************************************************************
 function obj = lti_man_n_mm(obj, spgr, %beta)
-    if typeof(obj) ~= 'pipeMM' then
+    if typeof(obj) ~= 'pMM' then
         mprintf('ERROR:   wrong type %s\n', typeof(obj));
         error('wrong type')
     end
@@ -104,7 +104,7 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
 endfunction
 
 function vec = ini_man_n_mm(obj, pi, wfi)
-    if typeof(obj) ~= 'pipeMM' then
+    if typeof(obj) ~= 'pMM' then
         mprintf('ERROR:   wrong type %s\n', typeof(obj));
         error('wrong type')
     end

@@ -64,6 +64,26 @@
 // interfacing functions for sharp-edged orifice
 or_default = tlist(["or", "ao", "cd"], 0, 0.61);
 la_default = tlist(["la", "l", "r", "ecc", "rad_clear"], 0, 0, 0, 0);
+function str = %or_string(o)
+    // Display head_b type
+    str = msprintf('''%s'' type:  ao=%f, cd=%f',..
+             typeof(o), o.ao, o.cd);
+endfunction
+function str = %or_p(o)
+    // Display vlink type
+    str = string(o);
+    disp(str)
+endfunction
+function str = %la_string(v)
+    // Display head_b type
+    str = msprintf('''%s'' type:  l=%f, r=%f, ecc=%f, rad_clear=%f',..
+             typeof(v), v.l, v.r, v.ecc, v.rad_clear);
+endfunction
+function str = %la_p(v)
+    // Display vlink type
+    str = string(v);
+    disp(str)
+endfunction
 function y = sqr(x)
     y = x*x;
 endfunction
@@ -163,7 +183,11 @@ function [x,y,typ] = COR_APTOW(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_cor_aptow(blk, a, %cd, ps, pd)
+function [blkcall] = callblk_cor_aptow(blk, sim, a, %cd, ps, pd)
+    if sim~='cor_aptow' then
+        mprintf('ERROR:  %s is not cor_aptow', sim);
+        error('wrong block type')
+    end
     // Call compiled funcion HEAD_B that is scicos_block blk
     blk.inptr(1) = a;
     blk.inptr(2) = ps;
@@ -383,8 +407,12 @@ function [x,y,typ] = CLA_LRECPTOW(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_cla_lrecptow(blk, l, r, ecc, rad_clear, kvis, ps, pd)
-    // Call compiled funcion HEAD_B that is scicos_block blk
+function [blkcall] = callblk_cla_lrecptow(blk, sim, l, r, ecc, rad_clear, kvis, ps, pd)
+    if sim~='cla_lrecptow' then
+        mprintf('ERROR:  %s is not cla_lrecptow', sim);
+        error('wrong block type')
+    end
+      // Call compiled funcion HEAD_B that is scicos_block blk
     blk.inptr(1) = ps;
     blk.inptr(2) = pd;
     blkcall.ps = ps;
