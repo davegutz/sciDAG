@@ -383,3 +383,21 @@ function [x,y,typ] = CLA_LRECPTOW(job, arg1, arg2)
     end
 endfunction
 
+function [blkcall] = callblk_cla_lrecptow(blk, l, r, ecc, rad_clear, kvis, ps, pd)
+    // Call compiled funcion HEAD_B that is scicos_block blk
+    blk.inptr(1) = ps;
+    blk.inptr(2) = pd;
+    blkcall.ps = ps;
+    blkcall.pd = pd;
+    blk.rpar(1) = l;
+    blk.rpar(2) = r;
+    blk.rpar(3) = ecc;
+    blk.rpar(4) = rad_clear;
+    blkcall.l = l;
+    blkcall.r = r;
+    blkcall.ecc = ecc;
+    blkcall.rad_clear = rad_clear;
+    blkcall.kvis = blk.rpar(5);
+    blk = callblk(blk, 0, 0);
+    blkcall.wf = blk.outptr(1);
+endfunction
