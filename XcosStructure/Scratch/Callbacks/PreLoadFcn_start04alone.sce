@@ -104,6 +104,12 @@ GEO.pact.mext  = .04834 * 386.4;
 GEO.pact.xmax  = .287;
 GEO.pact.xmin  = .00873;
 
+// Pump actuator leakage
+GEO.pact_lk.l = 0.292;
+GEO.pact_lk.r = 0.190 / 2;
+GEO.pact_lk.ecc = 0;
+GEO.pact_lk.rad_clear = 0.0004;
+
 // Pump pos disp
 GEO.vdpp.cn = 0;
 GEO.vdpp.cs = 5.3e-10;

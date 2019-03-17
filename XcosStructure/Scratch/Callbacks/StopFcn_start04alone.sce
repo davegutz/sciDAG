@@ -135,6 +135,11 @@ subplot(325)
 overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Flow')
 subplot(326)
 overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Position')
+
+figs($+1) = figure("Figure_name", 'VEN Misc', "Position", [10,130,610,600]);
+subplot(221)
+overplot(['PACT_WFLKOUT', 'vlink_wflkout'], ['r-',  'b--'], 'Pump Act Leakage')
+
 end
 
 mprintf('Completed %s\n', sfilename())  

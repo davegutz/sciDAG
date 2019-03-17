@@ -58,6 +58,7 @@ pal = init_add_struct('HLFVALVE_A', 'cyan', lib_path+'/images/blocks/HLFVALVE_A.
 pal = init_add_struct('VDP', 'blue', lib_path+'/images/blocks/VDP.PNG', pal);
 pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);
 pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.svg', pal);
+pal = init_add_struct('CLA_LRECPTOW', 'gray', lib_path+'/images/blocks/CLA_LRECPTOW.PNG', pal);
 
 // Finalize the palette
 xcosPalAdd(pal);

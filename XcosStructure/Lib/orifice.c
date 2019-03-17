@@ -114,3 +114,21 @@ void cor_awpdtops(scicos_block *blk, int flag)
     ps = OR_AWPDTOPS(ao, wf, pd, cd, sg);
     PS = ps;
 }
+
+
+// ************CLA_LRECPTOW
+// parameters
+#define L           (GetRparPtrs(blk)[0]) // 
+#define R           (GetRparPtrs(blk)[1]) // 
+#define ECC         (GetRparPtrs(blk)[2]) // 
+#define RAD_CLEAR   (GetRparPtrs(blk)[3]) // 
+#define KVIS        (GetRparPtrs(blk)[4]) // 
+// inputs
+#define PS  (r_IN(0,0))     // Supply pressure, psia
+#define PD  (r_IN(1,0))     // Discharge pressure, psia
+// outputs
+#define WF  (r_OUT(0,0))    // Flow, pph
+void cla_lrecptow(scicos_block *blk, int flag)
+{
+    WF = LA_LRECPTOW(L, R, ECC, RAD_CLEAR, PS, PD, KVIS);
+}

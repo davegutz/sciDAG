@@ -8,6 +8,7 @@ EXPORTS
 	cor_aptow
 	cor_awpstopd
 	cor_awpdtops
+	cla_lrecptow
 	vdp
 	binsearch
 	tab1
