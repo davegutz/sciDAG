@@ -61,6 +61,7 @@ clear D N time
 INI.initialized = %f;
 INI.skip_init = %t;
 INI.batch = %f;
+INI.tPumpFail = %inf;
 LIN.open_tv = 0;
 
 // Fuel properties
