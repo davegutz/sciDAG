@@ -110,7 +110,7 @@ overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
 figs($+1) = figure("Figure_name", 'VDPP', "Position", [10,90,610,600]);
 subplot(321)
-overplot(['vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['o--',  'k--', 'r-'], 'VDPP')
+overplot(['VDPP_RPM', 'vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['r-', 'b--', 'k--', 'o-'], 'VDPP')
 subplot(322)
 overplot(['vdpp_ps'], ['o--'], 'VDPP')
 subplot(323)
@@ -133,6 +133,8 @@ subplot(324)
 overplot(['PACT_FEXTH', 'pact_fexth'], ['r-',  'b--'], 'Pump Act Load')
 subplot(325)
 overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Flow')
+subplot(326)
+overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Position')
 end
 
 mprintf('Completed %s\n', sfilename())  

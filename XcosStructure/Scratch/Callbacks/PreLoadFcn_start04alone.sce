@@ -240,4 +240,8 @@ ywfnoz = [0,    540,  900, 6300, 10440, 13590, 15300, 16560, 17000, 18000]';
 GEO.noz.tb = [xdpnoz, ywfnoz];
 clear ywfnoz xdpnoz
 
+// Engine model
+E.N25100Pct = 17210;
+E.xnvent = 8108;
+
 mprintf('Completed %s\n', sfilename())  
