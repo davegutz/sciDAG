@@ -122,15 +122,17 @@ overplot(['VDPP_MTDQP'], ['r-'], 'VDPP')
 subplot(326)
 overplot(['VDPP_EFF_VOL'], ['b-'], 'VDPP')
 
-figs($+1) = figure("Figure_name", 'VEN', "Position", [30,110,610,600]);
-subplot(221)
+figs($+1) = figure("Figure_name", 'VEN', "Position", [10,110,610,600]);
+subplot(321)
 overplot(['PACT_X', 'pact_x'], ['r-',  'b--'], 'Pump Act Stroke')
-subplot(222)
+subplot(322)
 overplot(['PACT_V', 'pact_v'], ['r-',  'b--'], 'Pump Act Velocity')
-subplot(223)
+subplot(323)
 overplot(['VLINK_FTPA', 'vlink_ftpa'], ['r-',  'b--'], 'Pump Act Loads')
-subplot(224)
+subplot(324)
 overplot(['PACT_FEXTH', 'pact_fexth'], ['r-',  'b--'], 'Pump Act Load')
+subplot(325)
+overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Flow')
 end
 
 mprintf('Completed %s\n', sfilename())  
