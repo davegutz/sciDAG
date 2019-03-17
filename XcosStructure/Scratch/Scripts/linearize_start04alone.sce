@@ -46,7 +46,7 @@ mprintf('In %s\n', sfilename())
 // Generate steady-state lti systems
 Tf_sav = Tf;
 batch_sav = INI.batch;
-Tf = 0;
+Tf = 1e-6;
 try
     mprintf('In %s:  generating steadycos...\n', sfilename())
     INI.batch = %t;  LIN.open_tv = 1;
@@ -56,6 +56,7 @@ try
     LIN.sys_f = lincos(scs_m, LIN.X, 0, [1e-9, 0]);
     //LIN.sys_fs = lincos(scs_m, LIN.Xs, 0, [1e-9, 0]);
 catch
+    mprintf('ERROR xcos_simulate or lincos in %s\n', sfilename())  
     Tf = Tf_sav;
     LIN.open_tv = 0;
     INI.batch = batch_sav;

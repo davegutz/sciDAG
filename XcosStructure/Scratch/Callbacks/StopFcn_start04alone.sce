@@ -31,7 +31,6 @@ function overplot(st, c, %title)
 endfunction
 
 global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN  time_tic time_toc
-global PALL
 mprintf('In %s\n', sfilename())  
 try cpr = %cpr; end
 
@@ -42,6 +41,8 @@ figs=[];
 time_toc = getdate();
 mprintf('Run took %8.3f seconds\n', etime(time_toc, time_tic));
 
+if 1  & Tf>1e-6 then
+    
 tWALL = WALL.time(:,1);
 WFMD = struct('time', tWALL, 'values', WALL.values(:,1));
 WF36 = struct('time', tWALL, 'values', WALL.values(:,2));
@@ -67,8 +68,6 @@ tXALL = XALL.time(:,1);
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,1));
 clear tWALL tIDATA tPALL tXALL
 
-if 1  & Tf>0 then
-    
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [10,30,610,460]);
 subplot(221)
 overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
