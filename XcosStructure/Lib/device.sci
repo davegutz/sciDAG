@@ -199,7 +199,7 @@ function str = %aab_string(a)
              a.mact, a.mext, a.xmax, a.xmin);
 endfunction
 
-function str = %hdb_p(a)
+function str = %aab_p(a)
     // Display actuator_a_b valve type
     str = string(a);
     disp(str)
