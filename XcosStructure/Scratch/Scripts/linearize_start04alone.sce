@@ -44,12 +44,11 @@ global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN INI Tf GEO
 mprintf('In %s\n', sfilename())  
 
 // Generate steady-state lti systems
-Tf_sav = Tf;
-batch_sav = INI.batch;
-Tf = 1e-6;
+Tf_sav = Tf; batch_sav = INI.batch;
 try
     mprintf('In %s:  generating steadycos...\n', sfilename())
-    INI.batch = %t;  LIN.open_tv = 1;
+    Tf = 0; INI.batch = %t;
+    LIN.open_tv = 1;
     Info = xcos_simulate(scs_m, 4);  LIN.X = cpr.state.x;
     mprintf('completed xcos_simulate in %s\n', sfilename())  
     //[LIN.Xs, LIN.U, LIN.Y, LIN.XP] = steadycos(scs_m, cpr.state.x, [],[],1:$, [], []);
@@ -57,13 +56,11 @@ try
     //LIN.sys_fs = lincos(scs_m, LIN.Xs, 0, [1e-9, 0]);
 catch
     mprintf('ERROR xcos_simulate or lincos in %s\n', sfilename())  
-    Tf = Tf_sav;
+    Tf = Tf_sav; INI.batch = batch_sav;
     LIN.open_tv = 0;
-    INI.batch = batch_sav;
 end
-Tf = Tf_sav;
+Tf = Tf_sav; INI.batch = batch_sav;
 LIN.open_tv = 0;
-INI.batch = batch_sav;
 
 mprintf('Before Plot result in %s\n', sfilename())  
 
