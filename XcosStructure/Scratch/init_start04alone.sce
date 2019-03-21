@@ -73,8 +73,10 @@ FP.avis = AVIS(FP.sg, FP.kvis);
 FP.tvp = 7;
 
 // Objects
-vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs"],..
-                            0, 0, 0, 0, ctab1_default, ctab1_default);
+vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs",..
+                       "cdabdamp", "fsb", "ksb"],..
+                       0, 0, 0, 0, ctab1_default, ctab1_default,..
+                       0, 0, 0);
 function str = %vlk_string(v)
     // Display head_b type
     str = msprintf('''%s'' type:  ctqpv=%f, cva=%f, cdv=%f, cftpa=%f,',..
@@ -88,8 +90,8 @@ function str = %vlk_p(v)
     disp(str)
 endfunction
 
-GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
-VEN = tlist(["sys_ven", "vdpp", "vsv", "reg"], vdp_default, vlv_a_default, tv_a1_default);
+GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_px", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
+VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default);
 IFC = tlist(["sys_ifc", "mvtv", "hs"], vlv_a_default, head_b_default);
 IFC_mvtv = vlv_a_default;
 
@@ -103,6 +105,12 @@ function gstr = %sys_geo_string(g)
     gstr = gstr + msprintf('pact = %s;\n', string(g.pact));
     gstr = gstr + msprintf('pact_lk = %s;\n', string(g.pact_lk));
     gstr = gstr + msprintf('vlink = %s;\n', string(g.vlink));
+    gstr = gstr + msprintf('ehsv_klk = %s;\n', string(g.ehsv_klk));
+    gstr = gstr + msprintf('ehsv_powlk = %s;\n', string(g.ehsv_powlk));
+    gstr = gstr + msprintf('rrv = %s;\n', string(g.rrv));
+    gstr = gstr + msprintf('vo_pcham = %s;\n', string(g.vo_pcham));
+    gstr = gstr + msprintf('vo_px = %s;\n', string(g.vo_px));
+    gstr = gstr + msprintf('bias = %s;\n', string(g.bias));
     gstr = gstr + msprintf('mv = %s;\n', string(g.mv));
     gstr = gstr + msprintf('mvtv = %s;\n', string(g.mvtv));
     gstr = gstr + msprintf('hs = %s;\n', string(g.hs));

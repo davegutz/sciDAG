@@ -146,6 +146,53 @@ GEO.vlink.ytqa.tb = [yxpump' ytqa'];
 GEO.vlink.ytqrs.tb = [yxpump' ytqrs']; 
 clear ytqrs yxpump ytqa
 
+GEO.ehsv_klk = 2.257e-6;
+GEO.ehsv_powlk = 0.8;
+
+// Rod relief valve
+GEO.rrv.ax1 = sqr(.15) * %pi / 4.;
+GEO.rrv.ax2 = GEO.rrv.ax1;
+GEO.rrv.ax3 = 0.;
+GEO.rrv.ax4 = 0.;
+GEO.rrv.c = 0.;
+GEO.rrv.cd = .70;
+GEO.rrv.cdo = .61;
+GEO.rrv.cp = 0.43;
+d = 0.100;
+GEO.rrv.ao = d^2*%pi/4;
+clear d
+GEO.rrv.fdyf = 0.0;
+GEO.rrv.fs = 0.09;
+GEO.rrv.fstf = 0.0;
+GEO.rrv.ks = 10.;
+GEO.rrv.ld = 0.;
+GEO.rrv.lh = 0.;
+ms = 0.0001;
+mv = .002;
+GEO.rrv.m = mv + ms/2;
+clear mv ms
+GEO.rrv.xmax = .05;
+GEO.rrv.xmin = 0.;
+
+// VEN volumes
+GEO.vo_pcham.vol = 1.6;
+GEO.vo_px.vol = 1000000;
+
+// Bias piston
+GEO.bias.c_ = .7;
+GEO.bias.cd_ = .61;
+GEO.bias.ab = 0.;
+GEO.bias.ah = (.538)^2*%pi/4;
+GEO.bias.ahl = 0.;
+GEO.bias.ar = (.190)^2*%pi/4;
+GEO.bias.arl = 0.;
+GEO.bias.fdyf = 0.;
+GEO.bias.fstf = 0.;
+GEO.bias.mact = .0383;
+GEO.bias.mext = 0.;
+GEO.bias.xmax = .1736;
+GEO.bias.xmin = 0.;
+
 // Start line
 GEO.ln_vs.l = 23.7;
 GEO.ln_vs.vol = 3.42;
