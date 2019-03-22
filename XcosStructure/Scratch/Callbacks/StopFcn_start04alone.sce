@@ -137,8 +137,34 @@ subplot(326)
 overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Position')
 
 figs($+1) = figure("Figure_name", 'VEN Misc', "Position", [10,130,610,600]);
-subplot(221)
+subplot(321)
 overplot(['PACT_WFLKOUT', 'vlink_wflkout'], ['r-',  'b--'], 'Pump Act Leakage')
+subplot(322)
+overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Leakage')
+subplot(323)
+overplot(['VEN_PD', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
+subplot(324)
+overplot(['VEN_PX', 'tri_px'], ['r-',  'b--'], 'Pump Control Pressure')
+subplot(325)
+overplot(['VLOAD_WFLOAD', 'vload_wfl'], ['r-',  'b--'], 'Total Load Flow')
+subplot(326)
+overplot(['TRI_WFX', 'tri_wfx'], ['r-',  'b--'], 'Regulator Control Flow')
+
+figs($+1) = figure("Figure_name", 'Rod Relief Valve', "Position", [10,150,610,600]);
+subplot(221)
+overplot(['RRV_WFS', 'rrv_wfs'], ['r-',  'b--'], 'Suppy flow')
+subplot(222)
+overplot(['RRV_WFD', 'rrv_wfd'], ['r-',  'b--'], 'Discharge flow')
+subplot(223)
+overplot(['RRV_WFVX', 'rrv_wfvx'], ['r-',  'b--'], 'Motion flow')
+
+figs($+1) = figure("Figure_name", 'Bias Piston', "Position", [10,170,610,600]);
+subplot(221)
+overplot(['BIAS_FEXT', 'bias_fext'], ['r-',  'b--'], 'Force')
+subplot(222)
+overplot(['BIAS_WFVE', 'bias_wfve'], ['r-',  'b--'], 'Force')
+subplot(223)
+overplot(['BIAS_X', 'bias_x'], ['r-',  'b--'], 'Position')
 
 end
 
