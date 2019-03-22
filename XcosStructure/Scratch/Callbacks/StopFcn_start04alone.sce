@@ -157,6 +157,8 @@ subplot(222)
 overplot(['RRV_WFD', 'rrv_wfd'], ['r-',  'b--'], 'Discharge flow')
 subplot(223)
 overplot(['RRV_WFVX', 'rrv_wfvx'], ['r-',  'b--'], 'Motion flow')
+subplot(224)
+overplot(['RRV_X', 'rrv_x'], ['r-',  'b--'], 'Position')
 
 figs($+1) = figure("Figure_name", 'Bias Piston', "Position", [10,170,610,600]);
 subplot(221)
@@ -165,6 +167,27 @@ subplot(222)
 overplot(['BIAS_WFVE', 'bias_wfve'], ['r-',  'b--'], 'Force')
 subplot(223)
 overplot(['BIAS_X', 'bias_x'], ['r-',  'b--'], 'Position')
+
+figs($+1) = figure("Figure_name", 'pcham Volume', "Position", [50,150,610,600]);
+subplot(339)
+overplot(['VEN_PD', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
+subplot(331)
+overplot(['RRV_WFD', 'rrv_wfd'], ['r-',  'b--'], 'Rod Relief Discharge Flow')
+subplot(332)
+overplot(['VDPP_WF', 'vdpp_wf'], ['r-',  'b--'], 'Pump Discharge Flow')
+subplot(333)
+overplot(['TRI_WFSE', 'tri_wfse'], ['r-',  'b--'], 'Regulator Motion Flow')
+subplot(334)
+overplot(['TRI_WFS', 'tri_wfs'], ['r-',  'b--'], 'Regulator Supply Flow')
+subplot(335)
+overplot(['RRV_WFVX', 'rrv_wfvx'], ['r-',  'b--'], 'Rod Relief Motion Flow')
+subplot(336)
+vload_wfload = vload_wfl;
+vload_wfload.values = vload_wfload.values + start_wfs.values;
+overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
+subplot(337)
+overplot(['START_WFS', 'start_wfs'], ['r-',  'b--'], 'Start Valve Flow')
+
 
 end
 

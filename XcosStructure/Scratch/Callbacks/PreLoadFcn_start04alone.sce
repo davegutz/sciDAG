@@ -173,6 +173,11 @@ GEO.rrv.m = mv + ms/2;
 clear mv ms
 GEO.rrv.xmax = .05;
 GEO.rrv.xmin = 0.;
+exec('./Callbacks/rrvwin.sci', -1);
+[x, a] = rrvwin(40);
+GEO.rrv.ad.tb = [x a];
+clear x a
+GEO.rrv.ah.tb = [0 0;1 0];
 
 // VEN volumes
 GEO.vo_pcham.vol = 1.6;

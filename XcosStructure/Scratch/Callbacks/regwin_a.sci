@@ -68,7 +68,7 @@ function [xi, as, ad] = regwin_a(n)
 
     // Calculate position, and area
     for i=1:n
-        xi(i)    = i*dx;
+        xi(i)    = (i-1)*dx;
         %xend    = XVSVMAX - xi(i);
         [as(i), ad(i)] = calc_regwin_a(%xend);
     end

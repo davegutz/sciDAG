@@ -40,9 +40,9 @@ global GEO INI FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 
 // Auto data overplot load
-[D, N, time] = load_csv_data('./Data/start04.ven.csv', 1);
+[D, N, time] = load_csv_data('./Data/start04ss.ven.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
-[D, N, time] = load_csv_data('./Data/start04.ifc.csv', 1);
+[D, N, time] = load_csv_data('./Data/start04ss.ifc.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
 
 // Length of simulation
