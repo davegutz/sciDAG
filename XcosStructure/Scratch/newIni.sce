@@ -23,8 +23,8 @@
 exec('./Callbacks/solve_IFC.sci', -1);
 IFC = tlist(["sys_ifc", "mv", "mvtv", "hs", "mo_p3s", "vo_p2",  "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "ln_p3s", "a_p3s", "a_tvb", "mvwin", "check"],..
 GEO.mv, GEO.mvtv, GEO.hs, GEO.mo_p3s, GEO.vo_p2, GEO.vo_p3, GEO.vo_p1so, GEO.vo_px, GEO.vo_p3s, GEO.ln_p3s, GEO.a_p3s, GEO.a_tvb, GEO.mvwin, G.ifc.check);
-
-G = tlist(['geo', 'ifc'], IFC);
+ENGP = tlist(["sys_eng_pump", "mfp", "engboost"], GEO.mfp, GEO.engboost);
+G = tlist(['geo', 'ifc', 'engp'], IFC, ENGP);
 
 Z.awfb = 0;
 INI.ifc.p1 = INI.p1so;

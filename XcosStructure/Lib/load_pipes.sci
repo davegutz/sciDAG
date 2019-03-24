@@ -45,7 +45,7 @@ function [vs] = %vol_string(v)
     vs = msprintf('''%s'' type:  vol=%f, beta=%f, dwdc=%f, tvp=%f', typeof(v), v.vol, v.beta, v.dwdc,  v.tvp);
 endfunction
 function [ms] = %mom_string(m)
-    ms = msprintf('''%s'' type:  area=%f, length=%f, vol=%f, min_flow=%f, max_flow=%f', typeof(m), m.area, m.length, m.area*m.length, m.min_flow,  m.max_flow);
+    ms = msprintf('''%s'' type:  area=%f, length=%f, min_flow=%f, max_flow=%f', typeof(m), m.area, m.length, m.min_flow,  m.max_flow);
 endfunction
 function [fs] = %FP_string(fp)
     fs = msprintf('''%s'' type:  sg=%f, beta=%f, dwdc=%f, tvp=%f', typeof(fp), fp.sg, fp.beta, fp.dwdc, fp.tvp);

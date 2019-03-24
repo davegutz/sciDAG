@@ -1,3 +1,24 @@
+// Copyright (C) 2019  - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Mar 24, 2019    DA Gutz     Created
+//
 // Copyright (C) 2018 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -72,29 +93,42 @@ FP.dwdc = DWDC(FP.sg);
 FP.avis = AVIS(FP.sg, FP.kvis);
 FP.tvp = 7;
 
-// Objects
+// VEN linkage object
 vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs",..
                        "cdabdamp", "fsb", "ksb"],..
                        0, 0, 0, 0, ctab1_default, ctab1_default,..
                        0, 0, 0);
 function str = %vlk_string(v)
-    // Display head_b type
     str = msprintf('''%s'' type:  ctqpv=%f, cva=%f, cdv=%f, cftpa=%f,',..
              typeof(v), v.ctqpv, v.cva, v.cdv, v.cftpa);
     str = str + 'ytqa: ' + string(v.ytqa) + ',';
     str = str + 'ytqrs: '+ string(v.ytqrs);
 endfunction
 function str = %vlk_p(v)
-    // Display vlink type
     str = string(v);
     disp(str)
 endfunction
 
-GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_px", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
+// wf1leak object
+wf1leak_default = tlist(["wf1leak", "Ao", "k", "Do"], 0, 0, 0);
+function str = %wf1l_string(v)
+    str = msprintf('''%s'' type:  Ao=%f, k=%f, Do=%f',..
+             typeof(v), v.Ao, v.k, v.Do);
+endfunction
+function str = %wf1l_p(v)
+    str = string(v);
+    disp(str)
+endfunction
+
+
+GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_vpx", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin", "mfp", "wf1leak", "faboc", "ocm1", "ocm2", "focOr", "vo_poc", "boost", "inlet", "or_filt", "mom_filt", "vo_pb1", "vo_pb2"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default, cpmp_default, wf1leak_default, pipeMM_default, pipeMM_default, pipeVM_default, or_default, vol_default, cpmp_default, pipeMM_default, or_default, mom_default, vol_default, vol_default);
+
+// Work in progress   TODO:  replace GEO with G elsewhere
 VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default);
 IFC = tlist(["sys_ifc", "mv", "mvtv", "hs", "mo_p3s", "vo_p2",  "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "ln_p3s", "a_p3s", "a_tvb", "mvwin", "check"], hlfvlv_a_default, vlv_a_default, head_b_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, or_default, or_default, ctab1_default, vlv_a_default);
-G = tlist(['geo', 'ifc'], IFC);
-IFC_mvtv = vlv_a_default;
+EPMP = tlist(["sys_ebp", "mfp", "wf1leak", "faboc", "ocm1", "ocm2", "focOr", "vo_poc", "boost", "inlet", "or_filt", "mom_filt", "vo_pb1", "vo_pb2"], cpmp_default, wf1leak_default, pipeMM_default, pipeMM_default, pipeVM_default, or_default, vol_default, cpmp_default, pipeMM_default, or_default, mom_default, vol_default, vol_default)
+G = tlist(['geo', 'ifc', 'ebp'], IFC, EPMP);
+//IFC_mvtv = vlv_a_default;
 
 function gstr = %sys_geo_string(g)
     // string geo overload
@@ -110,7 +144,7 @@ function gstr = %sys_geo_string(g)
     gstr = gstr + msprintf('ehsv_powlk = %s;\n', string(g.ehsv_powlk));
     gstr = gstr + msprintf('rrv = %s;\n', string(g.rrv));
     gstr = gstr + msprintf('vo_pcham = %s;\n', string(g.vo_pcham));
-    gstr = gstr + msprintf('vo_px = %s;\n', string(g.vo_px));
+    gstr = gstr + msprintf('vo_vpx = %s;\n', string(g.vo_vpx));
     gstr = gstr + msprintf('bias = %s;\n', string(g.bias));
     gstr = gstr + msprintf('mv = %s;\n', string(g.mv));
     gstr = gstr + msprintf('mvtv = %s;\n', string(g.mvtv));
@@ -132,7 +166,6 @@ function gstr = %sys_geo_string(g)
 endfunction
 
 function %sys_geo_p(g)
-    // Display system geometry (sys_geo) type
     disp(string(g));
 endfunction
 

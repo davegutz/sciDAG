@@ -17,14 +17,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 1, 2019  DA Gutz     Created
+// Jan 1, 2019 DA Gutz  Created
 // 
 
 global LINCOS_OVERRIDE
 global loaded_scratch
 global GEO INI FP
 
-mprintf('In %s\n', sfilename())  
+mprintf('In %s\n', sfilename()) 
 
 //stacksize('max');
 
@@ -64,12 +64,12 @@ clear xh ah wvh
 // Define trivalve reg geometry
 dh = .190; dlh = 0.; dlr = 0.; dld = 0.; dr = .125; 
 GEO.reg.adl = 0;
-GEO.reg.ahd = max((sqr(dh)  - sqr(dlr)) * %pi / 4., 0.);
-GEO.reg.ahs = sqr(dh)  * %pi / 4.;
+GEO.reg.ahd = max((sqr(dh) - sqr(dlr)) * %pi / 4., 0.);
+GEO.reg.ahs = sqr(dh) * %pi / 4.;
 GEO.reg.ald = max((sqr(dlh) - sqr(dld)) * %pi / 4., 0.);
 GEO.reg.ale = sqr(dld) * %pi / 4.;
 GEO.reg.alr = max((sqr(dlh) - sqr(dlr)) * %pi / 4., 0.);
-GEO.reg.ar = max((sqr(dh)  - sqr(dr))  * %pi / 4., 0.);
+GEO.reg.ar = max((sqr(dh) - sqr(dr)) * %pi / 4., 0.);
 GEO.reg.asl = 0;
 clear dh dlh dlr dld dr
 GEO.reg.c = 0.75;
@@ -91,18 +91,18 @@ GEO.reg.ad.tb = [xh ad];
 clear xh as ad
 
 // Pump actuator
-GEO.pact.c_     = 100.;
-GEO.pact.cd_    = .61;
-GEO.pact.ab    = 0.;
-GEO.pact.ah    = (.85)^2*%pi/4;
-GEO.pact.ahl   = 0.;
-GEO.pact.ar    = GEO.pact.ah;
-GEO.pact.arl   = 0.;
-GEO.pact.fdyf  = 10.;
-GEO.pact.fstf  = 10.;
-GEO.pact.mext  = .04834 * 386.4;
-GEO.pact.xmax  = .287;
-GEO.pact.xmin  = .00873;
+GEO.pact.c_  = 100.;
+GEO.pact.cd_ = .61;
+GEO.pact.ab = 0.;
+GEO.pact.ah = (.85)^2*%pi/4;
+GEO.pact.ahl = 0.;
+GEO.pact.ar = GEO.pact.ah;
+GEO.pact.arl = 0.;
+GEO.pact.fdyf = 10.;
+GEO.pact.fstf = 10.;
+GEO.pact.mext = .04834 * 386.4;
+GEO.pact.xmax = .287;
+GEO.pact.xmin = .00873;
 
 // Pump actuator leakage
 GEO.pact_lk.l = 0.292;
@@ -119,26 +119,26 @@ GEO.vdpp.cdv = 3.1024;
 
 // VEN Unit Linkages
 // Degrees pump position
-yxpump = [0.,     .5,     1.,..
-          2.,     3.,     4.,     5.,     6.,..
-          7.,     8.,     9.,     10.,    11.,..
-          12.,    13.,    14.,    15.,    16.,..
-          17.,    18.,    19.,    20.,    21.,..
-          21.7,   22.,    23.,    24.,    25.,    26.];
+yxpump = [0.,  .5,  1.,..
+   2.,  3.,  4.,  5.,  6.,..
+   7.,  8.,  9.,  10., 11.,..
+   12., 13., 14., 15., 16.,..
+   17., 18., 19., 20., 21.,..
+   21.7, 22., 23., 24., 25., 26.];
 // Return spring force, in-lbf
-ytqrs = [732.2,  723.1,  713.7,..
-         694.,   673.1,  651.4,  628.7,  605.3,..
-         581.2,  556.4,  531.2,  505.4,  479.3,..
-         452.9,  426.1,  399.1,  371.1,  344.6,..
-         317.9,  289.6,  262.1,  234.5,  207.,..
-         187.8,  179.6,  152.2,  124.9,  98.8, 70.9];
+ytqrs = [732.2, 723.1, 713.7,..
+   694., 673.1, 651.4, 628.7, 605.3,..
+   581.2, 556.4, 531.2, 505.4, 479.3,..
+   452.9, 426.1, 399.1, 371.1, 344.6,..
+   317.9, 289.6, 262.1, 234.5, 207.,..
+   187.8, 179.6, 152.2, 124.9, 98.8, 70.9];
 // Pressure force gain, in-lbf/psi
-ytqa = [1.392,  1.386,  1.380,..
-        1.366,  1.352,  1.336,  1.320,  1.303,..
-        1.284,  1.264,  1.244,  1.222,  1.199,..
-        1.176,  1.151,  1.125,  1.098,  1.070,..
-        1.042,  1.012,  0.981,  0.949,  0.916,..
-        0.892,  0.882,  0.847,  0.811,  0.774,  0.736};
+ytqa = [1.392, 1.386, 1.380,..
+  1.366, 1.352, 1.336, 1.320, 1.303,..
+  1.284, 1.264, 1.244, 1.222, 1.199,..
+  1.176, 1.151, 1.125, 1.098, 1.070,..
+  1.042, 1.012, 0.981, 0.949, 0.916,..
+  0.892, 0.882, 0.847, 0.811, 0.774, 0.736};
 GEO.vlink.ctqpv = 0.4418;
 GEO.vlink.cva = 1.588;
 GEO.vlink.cftpa = 0.567*0.7;
@@ -180,8 +180,9 @@ clear x a
 GEO.rrv.ah.tb = [0 0;1 0];
 
 // VEN volumes
-GEO.vo_pcham.vol = 1.6;
-GEO.vo_px.vol = 1000000;
+//GEO.vo_pcham.vol = 3.2; // Match Simulink
+GEO.vo_pcham.vol = 1.6; // Match c-code
+GEO.vo_vpx.vol = 0.2;
 
 // Bias piston
 GEO.bias.c_ = .7;
@@ -203,7 +204,7 @@ GEO.ln_vs.l = 23.7;
 GEO.ln_vs.vol = 3.42;
 GEO.ln_vs.a = GEO.ln_vs.vol/GEO.ln_vs.l;
 GEO.ln_vs.n = 8;
-GEO.ln_vs.c = 0.001;  // For no ss oscillations.   Set to 0 for normal.
+GEO.ln_vs.c = 0.001; // For no ss oscillations. Set to 0 for normal.
 
 // Define head_b hs=mvhead geometry
 GEO.hs.f_cn = 0.75;
@@ -237,13 +238,13 @@ GEO.mvtv.ax1 = sqr(1)*%pi/4.;
 GEO.mvtv.ax2 = sqr(1.125)*%pi/4.;
 GEO.mvtv.ax3 = 0;
 GEO.mvtv.ax4 = 0;
-// GEO.mvtv.c = 0.1;  linux c-code model acts like c=0 always
+// GEO.mvtv.c = 0.1; linux c-code model acts like c=0 always
 GEO.mvtv.c = 0.;
 GEO.mvtv.clin = 0.1;
 GEO.mvtv.cd = 0.7;
 GEO.mvtv.cdo = 0.7;
-GEO.mvtv.cp = 0.43;
-d = 0.5;
+GEO.mvtv.cp = 0.43; // TODO: disable (=0) to match Simulink
+d = 0.5; // disable
 GEO.mvtv.ao = d^2*%pi/4;
 clear d
 GEO.mvtv.fdyf = 0;
@@ -258,7 +259,7 @@ GEO.mvtv.m = mv + ms/2;
 clear mv ms
 GEO.mvtv.xmax = 0.36;
 GEO.mvtv.xmin = -0.12;
-//GEO.mvtv.xmin = -0.05;  // was -0.12 fix init
+//GEO.mvtv.xmin = -0.05; // was -0.12 fix init
 exec('./Callbacks/mvtvwin.sci', -1);
 GEO.mvtv.ah.tb = [-1 0; 1 0];
 [xd, ad] = mvtvwin(40);
@@ -280,7 +281,7 @@ GEO.vo_p1so.vol = vo_p1c_on;
 GEO.vo_p2.vol = 5.61;
 GEO.vo_p3.vol = 9.6;
 GEO.vo_px.vol = 1.6;
-GEO.a_p3s.ao =  sqr(.0135)*%pi/4;
+GEO.a_p3s.ao = sqr(.0135)*%pi/4;
 GEO.a_p3s.cd = 0.73;
 GEO.a_tvb.ao = sqr(.032)*%pi/4;
 GEO.a_tvb.cd = 0.73;
@@ -293,8 +294,8 @@ GEO.main_line.n = 5;
 GEO.vo_pnozin.vol = 20;
 
 // Nozzle pressure drop
-xdpnoz = [125,  130,  154, 265,  365,   450,   510,   573,   615,   735]';
-ywfnoz = [0,    540,  900, 6300, 10440, 13590, 15300, 16560, 17000, 18000]';
+xdpnoz = [125, 130, 154, 265, 365, 450, 510, 573, 615, 735]';
+ywfnoz = [0, 540, 900, 6300, 10440, 13590, 15300, 16560, 17000, 18000]';
 GEO.noz.tb = [xdpnoz, ywfnoz];
 clear ywfnoz xdpnoz
 
@@ -302,4 +303,75 @@ clear ywfnoz xdpnoz
 E.N25100Pct = 17210;
 E.xnvent = 8108;
 
-mprintf('Completed %s\n', sfilename())  
+// Engine fuel supply
+GEO.mfp.a = 1.395;
+GEO.mfp.b = 11.43;
+GEO.mfp.c = -201.8;
+GEO.mfp.d = 0;
+GEO.mfp.w1 = 0.16;
+GEO.mfp.w2 = 0.16;
+GEO.mfp.r1 = 0.7;
+GEO.mfp.r2 = 1.55;
+GEO.mfp.tau = 0.00127;
+// FVG & non servo flowbody leakages
+GEO.wf1leak.Ao = or_wptoa(100., 263., 0., 0.61, .74); // TODO debug only
+GEO.wf1leak.k = la_wptok(97., 263., 0., .84); // TODO debug only
+GEO.wf1leak.Do = sqrt(4/%pi*GEO.wf1leak.Ao);
+fab.n  = 1;
+fab.vol = 6.7;
+fab.l  = 6;
+fab.a  = fab.vol/fab.l;
+fab.c  = 0;
+aboc.n  = 4;
+aboc.vol = 16.8;
+aboc.l  = 24;
+aboc.a  = aboc.vol/aboc.l;
+aboc.c  = 0;
+GEO.faboc.n = 3;
+GEO.faboc.vol = aboc.vol + fab.vol;
+GEO.faboc.l = aboc.l + fab.l;
+GEO.faboc.a = aboc.vol/aboc.l;
+GEO.faboc.c = 100;
+clear fab aboc
+GEO.ocm1.n  = 3;
+GEO.ocm1.vol = 8.4;
+GEO.ocm1.l  = 12;
+GEO.ocm1.a  = GEO.ocm1.vol/GEO.ocm1.l;
+GEO.ocm1.c  = 100;
+GEO.ocm2.n  = 1;
+GEO.ocm2.vol = 4.2;
+GEO.ocm2.l  = 6;
+GEO.ocm2.a  = GEO.ocm2.vol/GEO.ocm2.l;
+GEO.ocm2.c  = 100;
+GEO.focOr.cd = 0.61;
+GEO.focOr.cd = 0.61;
+GEO.focOr.ao = or_wptoa(17000., 60., 0., GEO.focOr.cd, FP.sg);
+//GEO.focOr.Do = sqrt(4/%pi*GEO.focOr.Ao);
+GEO.vo_poc.vol = 36;
+GEO.boost.a = 0.520;
+GEO.boost.b = 6.60;
+GEO.boost.c = -316;
+GEO.boost.d = 0;
+GEO.boost.w1 = 1;
+GEO.boost.w2 = 0.2;
+GEO.boost.r1 = 0;
+GEO.boost.r2 = 2.55;
+GEO.boost.tau = 0.00127;
+GEO.inlet.n = 3;
+GEO.inlet.vol = 88.7;
+GEO.inlet.l = 30;
+GEO.inlet.a = GEO.inlet.vol/GEO.inlet.l;
+GEO.inlet.c = 0;
+GEO.or_filt.cd = 0.61;
+GEO.or_filt.ao = or_wptoa(52000, 2, 0, GEO.or_filt.cd, FP.sg);
+GEO.mom_filt.length = 6;
+vol = 6.7;
+GEO.mom_filt.area = vol/GEO.mom_filt.length;
+clear vol
+//GEO.mom_filt.c = 0;
+GEO.vo_pb1.vol  = 77.9;
+GEO.vo_pb2.vol  = 5;
+
+// Aircraft fuel supply
+
+mprintf('Completed %s\n', sfilename()) 

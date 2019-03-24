@@ -39,14 +39,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 // Jan 27, 2019     DA Gutz     Created
-// Mar 10, 2019     DA Gutz     Add actuator_a_b
+// Mar 24, 2019     DA Gutz     Add cpmp
 
+//// Default c-pump prototype *****************************************
+cpmp_default = tlist(["cpmp", "a", "b", "c", "d", "w1", "w2", "r1", "r2", "tau"],..
+         0, 0, 0, 0, 0, 0, 0, 0, 0);
+         
+function lis = lsx_cpmp(p)
+    lis = list(p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
+endfunction
+
+function ps= %cpmp_string(p)
+    ps = msprintf('''%s'' type:  a=%f, b=%f, c=%f, d=%f, w1=%f, w2=%f, r1=%f, r2=%f, tau=%f;\n',..
+        typeof(p), p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
+endfunction
+
+function str = %cpmp_p(p)
+    str = string(p);
+    disp(str)
+endfunction
 
 //// Default vdp prototype *****************************************
 vdp_default = tlist(["vdp", "cf", "cn", "cs", "ct", "cdv"],..
          0, 0, 0, 0, 0);
          
-// Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
 function lis = lsx_vdp(p)
     lis = list(p.cf, p.cn, p.cs, p.ct);
 endfunction
@@ -57,7 +73,6 @@ function ps= %vdp_string(p)
 endfunction
 
 function str = %vdp_p(p)
-    // Display variable displacement pump (vdp) type
     str = string(p);
     disp(str)
 endfunction

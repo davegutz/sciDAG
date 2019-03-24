@@ -68,6 +68,11 @@ tXALL = XALL.time(:,1);
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,1));
 clear tWALL tIDATA tPALL tXALL
 
+
+vload_wfload = vload_wfl;
+vload_wfload.values = vload_wfload.values + start_wfs.values;
+
+
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
 subplot(221)
 overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
@@ -146,7 +151,7 @@ overplot(['VEN_PD', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
 subplot(324)
 overplot(['VEN_PX', 'tri_px'], ['r-',  'b--'], 'Pump Control Pressure')
 subplot(325)
-overplot(['VLOAD_WFLOAD', 'vload_wfl'], ['r-',  'b--'], 'Total Load Flow')
+overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
 subplot(326)
 overplot(['TRI_WFX', 'tri_wfx'], ['r-',  'b--'], 'Regulator Control Flow')
 
@@ -182,8 +187,6 @@ overplot(['TRI_WFS', 'tri_wfs'], ['r-',  'b--'], 'Regulator Supply Flow')
 subplot(335)
 overplot(['RRV_WFVX', 'rrv_wfvx'], ['r-',  'b--'], 'Rod Relief Motion Flow')
 subplot(336)
-vload_wfload = vload_wfl;
-vload_wfload.values = vload_wfload.values + start_wfs.values;
 overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
 subplot(337)
 overplot(['START_WFS', 'start_wfs'], ['r-',  'b--'], 'Start Valve Flow')
