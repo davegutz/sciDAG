@@ -91,17 +91,17 @@ function str = %pVM_p(p)
 endfunction
 function str = %vol_p(v)
     // Display vol type
-    str = vol_string(v);
+    str = string(v);
     disp(str)
 endfunction
 function str = %mom_p(m)
     // Display mom type
-    str = mom_string(m);
+    str = string(m);
     disp(str)
 endfunction
 function str = %FP_p(fp)
     // Display pipe type
-    str = FP_string(fp);
+    str = string(fp);
     disp(str)
 endfunction
 function lis = lsx_pipe(p)

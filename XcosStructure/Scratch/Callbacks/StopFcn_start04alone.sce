@@ -68,7 +68,7 @@ tXALL = XALL.time(:,1);
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,1));
 clear tWALL tIDATA tPALL tXALL
 
-figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [10,30,610,460]);
+figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
 subplot(221)
 overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
 subplot(222)
@@ -78,7 +78,7 @@ overplot(['WF1S', 'wf1s'], ['r-', 'b--'], 'Sense Flow')
 subplot(224)
 overplot(['WFMV', 'mv_wfd', 'WFAREA'], ['r-', 'b--', 'g-'], 'MV Discharge Flow')
 
-figs($+1) = figure("Figure_name", 'MAIN_FLOW_2', "Position", [10,50,610,460]);
+figs($+1) = figure("Figure_name", 'MAIN_FLOW_2', "Position", [40,50,610,460]);
 subplot(221)
 overplot(['WF3', 'wf3'], ['r-', 'b--'], 'Throttle Valve Discharge Flow')
 subplot(222)
@@ -86,7 +86,7 @@ overplot(['WFMD', 'wfmd'], ['r-', 'b--'], 'Main Discharge Flow')
 subplot(224)
 overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
 
-figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [10,70,610,460]);
+figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [40,70,610,460]);
 subplot(321)
 overplot(['P1SO', 'p1so'], ['r-', 'b--'], 'MV Supply Pressure')
 subplot(322)
@@ -98,7 +98,7 @@ overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
 subplot(325)
 overplot(['PX', 'px'], ['r-', 'b--'], 'MVTV Control Pressure')
 
-figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [10,90,610,600]);
+figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [40,90,610,600]);
 subplot(321)
 overplot(['MV_POS', 'mv_xin'], ['r-',  'b--'], 'MV Poaition')
 subplot(322)
@@ -108,7 +108,7 @@ overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
 subplot(325)
 overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
-figs($+1) = figure("Figure_name", 'VDPP', "Position", [10,90,610,600]);
+figs($+1) = figure("Figure_name", 'VDPP', "Position", [40,90,610,600]);
 subplot(321)
 overplot(['VDPP_RPM', 'vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['r-', 'b--', 'k--', 'o-'], 'VDPP')
 subplot(322)
@@ -122,7 +122,7 @@ overplot(['VDPP_MTDQP'], ['r-'], 'VDPP')
 subplot(326)
 overplot(['VDPP_EFF_VOL'], ['b-'], 'VDPP')
 
-figs($+1) = figure("Figure_name", 'VEN', "Position", [10,110,610,600]);
+figs($+1) = figure("Figure_name", 'VEN', "Position", [40,110,610,600]);
 subplot(321)
 overplot(['PACT_X', 'pact_x'], ['r-',  'b--'], 'Pump Act Stroke')
 subplot(322)
@@ -136,7 +136,7 @@ overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Flow')
 subplot(326)
 overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Position')
 
-figs($+1) = figure("Figure_name", 'VEN Misc', "Position", [10,130,610,600]);
+figs($+1) = figure("Figure_name", 'VEN Misc', "Position", [40,130,610,600]);
 subplot(321)
 overplot(['PACT_WFLKOUT', 'vlink_wflkout'], ['r-',  'b--'], 'Pump Act Leakage')
 subplot(322)
@@ -150,7 +150,7 @@ overplot(['VLOAD_WFLOAD', 'vload_wfl'], ['r-',  'b--'], 'Total Load Flow')
 subplot(326)
 overplot(['TRI_WFX', 'tri_wfx'], ['r-',  'b--'], 'Regulator Control Flow')
 
-figs($+1) = figure("Figure_name", 'Rod Relief Valve', "Position", [10,150,610,600]);
+figs($+1) = figure("Figure_name", 'Rod Relief Valve', "Position", [40,150,610,600]);
 subplot(221)
 overplot(['RRV_WFS', 'rrv_wfs'], ['r-',  'b--'], 'Suppy flow')
 subplot(222)
@@ -160,7 +160,7 @@ overplot(['RRV_WFVX', 'rrv_wfvx'], ['r-',  'b--'], 'Motion flow')
 subplot(224)
 overplot(['RRV_X', 'rrv_x'], ['r-',  'b--'], 'Position')
 
-figs($+1) = figure("Figure_name", 'Bias Piston', "Position", [10,170,610,600]);
+figs($+1) = figure("Figure_name", 'Bias Piston', "Position", [40,170,610,600]);
 subplot(221)
 overplot(['BIAS_FEXT', 'bias_fext'], ['r-',  'b--'], 'Force')
 subplot(222)

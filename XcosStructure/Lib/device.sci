@@ -41,6 +41,8 @@
 // Jan 27, 2019     DA Gutz     Created
 // Mar 10, 2019     DA Gutz     Add actuator_a_b
 
+// Sharp edge to reattached flow characteristic of flapper nozzle
+f_lqx = [1.2, 2.5, 4.5, 7.5; .61, .65, .88, .95];
 
 //// Default head_b prototype *****************************************
 head_b_default = tlist(["hdb", "f_an", "f_cn", "f_dn", "f_ln",..

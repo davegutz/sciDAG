@@ -58,7 +58,6 @@ endfunction
 tbl1_b_default = tlist(["tbl1_b", "tb"], [-1, -10; 1, 10; 2, 20;]);
 ctab1_default = tlist(["ctab1", "tb", "sx", "dx", "sz", "dz"], [-1, -10; 1, 10; 2, 20;], 1, 0, 1, 0);
 
-
 function [ts] = %tbl1_b_string(t)
     // Start
     ts = msprintf('list(');
@@ -76,7 +75,6 @@ function [ts] = %ctab1_string(t)
     ts = ts + msprintf(', sx=%f, dx=%f, sz=%f, dz=%f', t.sx, t.dx, t.sz, t.dz);
 endfunction
 
-
 function lis = lsx_ctab1(t)
     tbx = (t.tb(:,1)-t.dx)/t.sx;
     tbz = t.tb(:,2)*t.sz+t.dz;
@@ -87,6 +85,16 @@ function vec = vec_ctab1(t)
     tbx = (t.tb(:,1)-t.dx)/t.sx;
     tbz = t.tb(:,2)*t.sz+t.dz;
     vec = [tbx tbz];
+endfunction
+
+function z = lookup(x, t)
+    tbl = vec_ctab1(t)';
+    z = interp1(tbl(1,:), tbl(2,:), max(min(x, tbl(1,$)), tbl(1,1)));
+endfunction
+
+function z = rev_lookup(x, t)
+    tbl = vec_ctab1(t)';
+    z = interp1(tbl(2,:), tbl(1,:), max(min(x, tbl(2,$)), tbl(2,1)));
 endfunction
 
 function str = %tbl1_b_p(t)

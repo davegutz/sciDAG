@@ -92,7 +92,8 @@ endfunction
 
 GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_px", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
 VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default);
-IFC = tlist(["sys_ifc", "mvtv", "hs"], vlv_a_default, head_b_default);
+IFC = tlist(["sys_ifc", "mv", "mvtv", "hs", "mo_p3s", "vo_p2",  "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "ln_p3s", "a_p3s", "a_tvb", "mvwin", "check"], hlfvlv_a_default, vlv_a_default, head_b_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, or_default, or_default, ctab1_default, vlv_a_default);
+G = tlist(['geo', 'ifc'], IFC);
 IFC_mvtv = vlv_a_default;
 
 function gstr = %sys_geo_string(g)
