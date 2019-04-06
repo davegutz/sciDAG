@@ -82,8 +82,6 @@ function [vs] = %vlv_a_string(v)
        typeof(v), v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
        v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
        v.ld, v.lh, v.m, v.xmax, v.xmin);
-
-    // Tables
     vs = vs + 'ad: ' + string(v.ad) + ';';
     vs = vs + 'ah: ' + string(v.ah) + ';';
 endfunction

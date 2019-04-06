@@ -57,7 +57,7 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch root sys_f scs_m cpr
-global GEO INI FP LIN mv_x mv_xa mv_xin Tf
+global GEO G INI FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 
 // Auto data overplot load
@@ -92,6 +92,7 @@ FP.kvis = fp_kvis.values(1,:);
 FP.dwdc = DWDC(FP.sg);
 FP.avis = AVIS(FP.sg, FP.kvis);
 FP.tvp = 7;
+FP.tvp_margin = -1e6;
 
 // VEN linkage object
 vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs",..
@@ -121,14 +122,20 @@ function str = %wf1l_p(v)
 endfunction
 
 
-GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_vpx", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin", "mfp", "wf1leak", "faboc", "ocm1", "ocm2", "focOr", "vo_poc", "boost", "inlet", "or_filt", "mom_filt", "vo_pb1", "vo_pb2"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default, cpmp_default, wf1leak_default, pipeMM_default, pipeMM_default, pipeVM_default, or_default, vol_default, cpmp_default, pipeMM_default, or_default, mom_default, vol_default, vol_default);
+GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_vpx", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
 
 // Work in progress   TODO:  replace GEO with G elsewhere
-VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default);
-IFC = tlist(["sys_ifc", "mv", "mvtv", "hs", "mo_p3s", "vo_p2",  "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "ln_p3s", "a_p3s", "a_tvb", "mvwin", "check"], hlfvlv_a_default, vlv_a_default, head_b_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, or_default, or_default, ctab1_default, vlv_a_default);
+MLINE = tlist(["sys_mline", "vo_pnozin", "ln_vs", "main_line", "noz"],vol_default, pipeVM_default, pipeMM_default, ctab1_default);
+IFC = tlist(["sys_ifc", "mv", "mvtv", "hs", "mo_p3s", "vo_p2",  "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "ln_p3s", "a_p3s", "a_tvb", "mvwin", "check", "k1leak", "a1leak"], hlfvlv_a_default, vlv_a_default, head_b_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, or_default, or_default, ctab1_default, vlv_a_default, 0, 0);
 EPMP = tlist(["sys_ebp", "mfp", "wf1leak", "faboc", "ocm1", "ocm2", "focOr", "vo_poc", "boost", "inlet", "or_filt", "mom_filt", "vo_pb1", "vo_pb2"], cpmp_default, wf1leak_default, pipeMM_default, pipeMM_default, pipeVM_default, or_default, vol_default, cpmp_default, pipeMM_default, or_default, mom_default, vol_default, vol_default)
-G = tlist(['geo', 'ifc', 'ebp'], IFC, EPMP);
-//IFC_mvtv = vlv_a_default;
+VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias", "ehsv_klk", "ehsv_powlk", "ksb", "fsb", "leako"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default, 0, 0, 0, 0, la_default);
+ENG = tlist(["sys_eng", "pcn25r", "N25c100Pct", "N25100Pct", "N2c100Pct", "xn25p", "xnvent", "xnmainpt", "ctstd", "spcn25", "sfxven", "swf", "sawfb", "fxvent", "t25t", "ps3t", "dps3dwt", "pcn2rt", "pcn25rt"], ctab1_default, 0, 0, 0, 0, 0, 0, 0, [0 1], [0 1], [0 1], [0 1], [0 1], ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
+MOTOR = tlist(["sys_motor", "dp", "wf"], 0, 0);
+ACSUPPLY = tlist(["sys_acsup", "ltank", "lengine", "acbst", "acmbst", "motor"], pipeMV_default, pipeMV_default, cpmp_default, cpmp_default, MOTOR);
+VENLOAD = tlist(["sys_venload", "act_c", "ehsv", "ehsv_klk", "ehsv_powlk", "rline", "hline", "vo_rcham", "vo_hcham"], actuator_a_c_default, fehsv2_default, 0, 0, pipeVM_default, pipeVM_default, vol_default, vol_default);
+GUESS = tlist(["v_guess", "xn25", "disp", "xehsv", "xreg", "xbias", "pd", "prod", "px", "phead"], ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
+
+G = tlist(['geo', 'ifc', 'ebp', 'ven', 'venload', 'eng', 'mline', 'acsupply', 'guess'], IFC, EPMP, VEN, VENLOAD, ENG, MLINE, ACSUPPLY, GUESS);
 
 function gstr = %sys_geo_string(g)
     // string geo overload

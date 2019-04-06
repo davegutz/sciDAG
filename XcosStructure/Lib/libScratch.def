@@ -2,6 +2,7 @@ LIBRARY    libScratch.dll
 EXPORTS
 	head_b
 	actuator_a_b
+	actuator_a_c
 	friction
 	hole
 	lim_int

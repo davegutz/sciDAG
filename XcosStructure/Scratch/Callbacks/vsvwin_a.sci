@@ -20,21 +20,6 @@
 // Jan 10, 2019    DA Gutz        Created
 // 
 
-function area = hole(x, d)
-    r = d / 2.;
-    x = max( (min(x, d - 1e-16)), 1e-16);
-    frac = 1. - x / r;
-    if frac > 1e-16 then
-        area = atan( sqrt(1. - frac * frac) / frac);
-    elseif frac < -1e-16 then
-        area = pi + atan( sqrt(1. - frac * frac) / frac);
-    else
-        area = pi / 2.;
-    end
-    area = r * r * area   -   (r - x) * sqrt(x * (2.*r - x));
-    area = max(area, 1e-16);
-endfunction
-
 function [x, a, wv] = vsvwin_a(n)
     AVSVMIN = 1e-8;       // Min area, sqin. */
     XVSVMAX = .125;       // Max value of table. */
@@ -54,7 +39,7 @@ function [x, a, wv] = vsvwin_a(n)
         x(i)    = (i-1)*dx;
         %xend    = XVSVMAX - x(i);
         a(i)    = AVSVMIN;
-        a(i)   = a(i) + VSVHOLES * hole(max(min(%xend, VSVHMX), 0.), VSVHDIA);
+        a(i)   = a(i) + VSVHOLES * hole_area(max(min(%xend, VSVHMX), 0.), VSVHDIA);
         if VSVHMX < %xend then
             a(i) = a(i) + VSVDIA*3.1415926 * (%xend - VSVHMX);
         end

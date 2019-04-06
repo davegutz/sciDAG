@@ -19,7 +19,7 @@
 // SOFTWARE.
 // Mar 23, 2019 DA Gutz Created
 //
-function [INI] = solve_IFC(INI, GEOF, Z, FP)
+function [INI] = solve_IFC(INI, GEOF, FP)
     // Initialize IFC
     // Inputs: p1, wfmd=wf36, pd, wf1vg=wf1cvg+wf1fvg, wf1v=wfstart, pc, awfb, precx
     // Outputs: wf1c, wfb
@@ -37,7 +37,7 @@ function [INI] = solve_IFC(INI, GEOF, Z, FP)
     icf.mvtv.pd = INI.pd;
 
     // Thermal bypass valve
-    icf.wfb = or_aptow(Z.awfb, icf.p1, icf.precx, 1., FP.sg);
+    icf.wfb = or_aptow(INI.awfb, icf.p1, icf.precx, 1., FP.sg);
 
     // Loop to solve p1c, xtv, px, and xhs
     if INI.verbose-INI.linearizing > 3
@@ -110,9 +110,8 @@ function [INI] = solve_IFC(INI, GEOF, Z, FP)
         icf.mv.x = rev_lookup(icf.mv.a, GEOF.mv.at);
 
         // MV Servovalve leakage f(p1c)
-//        icf.wf1leak = or_aptow(GEOF.a1leak, icf.pr, icf.pc, 0.61, FP.sg) + ..
-//                        la_kptow(GEOF.k1leak, icf.pr, icf.pc, FP.kvis);
-        icf.wf1leak = 0;
+        icf.wf1leak = or_aptow(GEOF.a1leak, icf.pr, icf.pc, 0.61, FP.sg) + ..
+                        la_kptow(GEOF.k1leak, icf.pr, icf.pc, FP.kvis);
         icf.wfr = 0*(INI.p1c-icf.pc); // mvsv leakage estimate
         icf.wf1w = icf.wfr;
 

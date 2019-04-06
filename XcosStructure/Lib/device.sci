@@ -1,3 +1,24 @@
+// Copyright (C) 2019  - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Mar 31, 2019    DA Gutz     Created
+//
 // Copyright (C) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -173,11 +194,6 @@ function [blkcall] = callblk_head_b(blk, sim, pf, ph, pl, xol)
 endfunction
 //////////********** end head_b ***************************************
 
-
-
-
-
-
 //// Default actuator_a_b prototype ***********************************
 actuator_a_b_default = tlist(["aab", "ab", "ah", "ahl", "ar", "arl",..
         "c_", "cd_", "fdyf", "fstf",..
@@ -215,6 +231,7 @@ function [x,y,typ] = ACTUATOR_A_B(job, arg1, arg2)
     //disp(job)
     select job
     case 'plot' then
+
         standard_draw(arg1)
     case 'getinputs' then
         [x,y,typ] = standard_inputs(arg1)
@@ -312,3 +329,175 @@ function [blkcall] = callblk_actuator_a_b(blk, sim, ph, pl, pr, per, fext, xol)
     blkcall.surf3 = blk.g(4);
     blkcall.surf4 = blk.g(5);
 endfunction
+//////////********** end actuator_a_b ***************************************
+
+//// Default actuator_a_c prototype ***********************************
+actuator_a_c_default = tlist(["aac", "ab", "ah", "ahl", "ar", "arl",..
+        "c_", "cd_", "fdyf", "fstf",..
+        "mact", "mext", "xmax", "xmin"],..
+         0, 0, 0, 0, 0,..
+         0, 0, 0, 0,..
+         0, 0, 1, -1);
+
+// Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
+function lis = lsx_aac(a)
+    lis = list(a.ab, a.ah, a.ahl, a.ar, a.arl,..
+             a.c_, a.cd_, a.fdyf, a.fstf,..
+             a.mact, a.mext, a.xmax, a.xmin);
+endfunction
+
+function str = %aac_string(a)
+    str = msprintf('''%s'' type:  ab=%f; ah=%f; ahl=%f; ar=%f; arl=%f; c_=%f; cd_=%f; fdyf=%f; fstf=%f;mact=%f; mext=%f; xmax=%f; xmin=%f;\n',..
+             typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
+             a.c_, a.cd_, a.fdyf, a.fstf,..
+             a.mact, a.mext, a.xmax, a.xmin);
+endfunction
+
+function str = %aac_p(a)
+    str = string(a);
+    disp(str)
+endfunction
+
+// Callback ******************************************** 
+function [x,y,typ] = ACTUATOR_A_C(job, arg1, arg2)
+    x = [];
+    y = [];
+    typ = [];
+    //disp(job)
+    select job
+    case 'plot' then
+
+        standard_draw(arg1)
+    case 'getinputs' then
+        [x,y,typ] = standard_inputs(arg1)
+        //disp(sci2exp(x))
+    case 'getoutputs' then
+        [x,y,typ] = standard_outputs(arg1)
+        //disp(sci2exp(x))
+    case 'getorigin' then
+        [x,y] = standard_origin(arg1)
+        //disp(sci2exp(x))
+    case 'set' then
+        //message(sci2exp(arg1))
+        x = arg1
+        graphics = arg1.graphics
+        exprs = graphics.exprs
+        model = arg1.model
+        while %t do
+            [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set actuator_a_c parameters',..
+            ['lsx_aab(actuator_a_c)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            list('lis',-1,'vec',1,'vec',1,'vec',1),..
+            exprs)
+            if ~ok then break,end 
+            model.state = [Xinit; 0]
+            model.rpar = [SG;LINCOS_OVERRIDE]
+            model.opar = GEO
+            graphics.exprs = exprs
+            x.graphics = graphics
+            x.model = model
+            break
+        end
+    case 'define' then
+//        message('in define')
+        model.opar=list(actuator_a_c_default);
+        SG = 0.8
+        LINCOS_OVERRIDE = 0
+        Xinit = 0
+        model = scicos_model()
+        model.sim = list('actuator_a_c', 4)
+        model.in = [1;1;1;1;1;1]
+        model.out = [1;1;1;1;1;1;1;1;1;1;1]
+        model.state = [Xinit; 0]
+        model.dstate = [0]
+        model.rpar = [SG;LINCOS_OVERRIDE]
+        model.blocktype = 'c'
+        model.nmode = 1
+        model.nzcross = 5
+        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
+        exprs = ["lsx_aab(G.venload.act_c)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.venload.act_c.x"]
+        gr_i = [];
+        x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
+    end
+endfunction
+
+function [blkcall] = callblk_actuator_a_c(blk, sim, ph, pl, pr, per, fext, xol)
+    if sim~='aac' then
+        mprintf('ERROR:  %s is not aac', sim);
+        error('wrong block type')
+    end
+    // Call compiled funcion ACTUATOR_A_C that is scicos_block blk
+    blk.inptr(1) = ph;
+    blk.inptr(2) = pl;
+    blk.inptr(3) = pr;
+    blk.inptr(4) = per;
+    blk.inptr(5) = fext;
+    blk.inptr(6) = xol;
+    blkcall.ph = ph;
+    blkcall.pl = pl;
+    blkcall.pr = pr;
+    blkcall.per = per;
+    blkcall.fext = fext;
+    blkcall.xol = xol;
+    blkcall.sg = blk.rpar(1);
+    blkcall.LINCOS_OVERRIDE = blk.rpar(2);
+//    blk = callblk(blk, 0, 0);
+//    blk = callblk(blk, 1, 0);
+//    blk = callblk(blk, 9, 0);
+    blk = callblk(blk, -1, 0);
+    blkcall.wfb = blk.outptr(1);
+    blkcall.wfh = blk.outptr(2);
+    blkcall.wfhl = blk.outptr(3);
+    blkcall.wfr = blk.outptr(4);
+    blkcall.wfrl = blk.outptr(5);
+    blkcall.wfve = blk.outptr(6);
+    blkcall.v = blk.outptr(7);
+    blkcall.x = blk.outptr(8);
+    blkcall.uf = blk.outptr(9);
+    blkcall.uf_net = blk.outptr(10);
+//    blkcall.mode = blk.outptr(11);
+    blkcall.V = blk.xd(1);
+    blkcall.A = blk.xd(2);
+    blkcall.mode = blk.mode;
+    blkcall.surf0 = blk.g(1);
+    blkcall.surf1 = blk.g(2);
+    blkcall.surf2 = blk.g(3);
+    blkcall.surf3 = blk.g(4);
+    blkcall.surf4 = blk.g(5);
+endfunction
+//////////********** end actuator_a_c ***************************************
+
+//// Default four-way ehsv 2nd order (fehsv2) prototype ***********************************
+fehsv2_default = tlist(["fehsv2", "tau_s", "wn_s", "zeta_s", "dp_s",..
+        "ael", "kel", "cd_", "cdl", "kix", "mAnull",..
+        "ah", "ar", "vmax_s", "vmin_s",..
+        "underlap", "amn", "wdh", "wsr", "wsh", "wdr", "xmxc_s", "xmxc_rat",..
+        "minPressure", "xmax", "xmaxS", "xmin",..
+        "mA_x", "mA_x0", "awin_dh", "awin_dr", "awin_sh", "awin_sr"],..
+         0, 0, 0, 0,..
+         0, 0, 0.61, 0.61, 0, 0,..
+         0, 0, %inf, -%inf,..
+         0, 0, 0, 0, 0, 0,..
+         0, 0, 0, 1, %inf, -1,..
+         ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
+
+function str = %fehsv2_string(e)
+    str = msprintf('''%s'' type:  tau_s=%f; wn_s=%f; zeta_s=%f; dp_s=%f; ael=%f; kel=%f; cd_=%f; cdl=%f; kix=%f; mAnull=%f; ah=%f; ar=%f; vmax_s=%f; vmin_s=%f; underlap=%f; amn=%f; wdh=%f; wsr=%f; wsh=%f; wdr=%f; xmxc_s=%f; xmxc_rat=%f; minPressure=%f; xmax=%f; xmaxS=%f; xmin=%f;',..
+        typeof(e), e.tau_s, e.wn_s, e.zeta_s, e.dp_s,..
+        e.ael, e.kel, e.cd_, e.cdl, e.kix, e.mAnull,..
+        e.ah, e.ar, e.vmax_s, e.vmin_s,..
+        e.underlap, e.amn, e.wdh, e.wsr, e.wsh, e.wdr, e.xmxc_s, e.xmxc_rat,..
+        e.minPressure, e.xmax, e.xmaxS, e.xmin);
+    str = str + 'mA_x: ' + string(e.mA_x) + ';';
+    str = str + 'mA_x0: ' + string(e.mA_x0) + ';';
+    str = str + 'awin_dh: ' + string(e.awin_dh) + ';';
+    str = str + 'awin_dr: ' + string(e.awin_dr) + ';';
+    str = str + 'awin_sh: ' + string(e.awin_sh) + ';';
+    str = str + 'awin_sr: ' + string(e.awin_sr) + ';';
+endfunction
+
+function str = %fehsv2_p(e)
+    str = string(e);
+    disp(str)
+endfunction
+
+//////////********** end fehsv2 ***************************************

@@ -81,6 +81,7 @@ time_tic = getdate();
 
 // placeholder for VEN Unit stuff
 INI.xnven = vdpp_rpm.values(1,1);
+INI.xn25 = xn25.values(1,1);
 INI.disp = vdpp_disp.values(1,1);
 INI.pdven = tri_ps.values(1,1);
 INI.psven = tri_pd.values(1,1);
@@ -90,5 +91,7 @@ INI.pxven = tri_px.values(1,1);
 INI.rrv.x = rrv_x.values(1,1);
 INI.bias.x = bias_x.values(1,1);
 
+// Cleanup
+INI = order_all_fields(INI);
 
 mprintf('Completed %s\n', sfilename())  

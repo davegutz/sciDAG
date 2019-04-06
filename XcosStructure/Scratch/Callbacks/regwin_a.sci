@@ -20,21 +20,6 @@
 // Jan 22, 2019    DA Gutz        Created
 // 
 
-function area = hole(xi, d)
-    r = d / 2.;
-    xi = max( (min(xi, d - 1e-16)), 1e-16);
-    frac = 1. - xi / r;
-    if frac > 1e-16 then
-        area = atan( sqrt(1. - frac * frac) / frac);
-    elseif frac < -1e-16 then
-        area = %pi + atan( sqrt(1. - frac * frac) / frac);
-    else
-        area = %pi / 2.;
-    end
-    area = r * r * area   -   (r - xi) * sqrt(xi * (2.*r - xi));
-    area = max(area, 1e-16);
-endfunction
-
 function [asi, adi] = calc_regwin_a(xi)
     VEN_REG_UNDERLAP = -.001;   // Dead zone of drain, - is underlap
     SBIAS = .005;               // dead zone of supply + is underlap
@@ -51,9 +36,9 @@ function [asi, adi] = calc_regwin_a(xi)
     thcrl   = acos(1. - xcrl * 2. / DORIFD);
     thscl   = acos(1. - xscl * 2. / DORIFS);
     alk     = CLEAR * (DORIFS + DORIFD)/2. * (%pi - thcrl - thscl);
-    asi     = HOLES * ( max(hole(max(min(xi+SBIAS, DORIFS), 0.), DORIFS),..
+    asi     = HOLES * ( max(hole_area(max(min(xi+SBIAS, DORIFS), 0.), DORIFS),..
             max(min(xi+SBIAS, DORIFS),0.)*WS) + alk);
-    adi     = HOLES * ( max(hole(max(min(-(xi+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.),..
+    adi     = HOLES * ( max(hole_area(max(min(-(xi+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.),..
             DORIFD), max(min(-(xi+DBIAS) - VEN_REG_UNDERLAP, DORIFD), 0.)*WD) + alk);
 endfunction
 

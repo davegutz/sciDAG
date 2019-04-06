@@ -173,7 +173,7 @@ overplot(['BIAS_WFVE', 'bias_wfve'], ['r-',  'b--'], 'Force')
 subplot(223)
 overplot(['BIAS_X', 'bias_x'], ['r-',  'b--'], 'Position')
 
-figs($+1) = figure("Figure_name", 'pcham Volume', "Position", [50,150,610,600]);
+figs($+1) = figure("Figure_name", 'pcham Volume', "Position", [40,190,610,600]);
 subplot(339)
 overplot(['VEN_PD', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
 subplot(331)

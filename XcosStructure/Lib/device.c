@@ -41,6 +41,7 @@
 // Jan 27, 2019     DA Gutz     Created
 //                          from http://www.scicos.org/ScicosCBlockTutorial.pdf
 // Mar 10, 2019     DA Gutz     Add actuator_a_b
+// Mar 30, 2019     DA Gutz     Add actuator_a_c
 // 
 #include <scicos_block4.h>
 #include <math.h>
@@ -400,3 +401,151 @@ void actuator_a_b(scicos_block *blk, int flag)
     }
 }
 // **********end actuator_a_b**********************************************
+
+//*************actuator_a_c**************************************
+// Object parameters.  1st index is 1-based, 2nd index is 0-based.
+#define ab      (*GetRealOparPtrs(blk,1))   // Calculated bleed area, sqin
+#define ah      (*GetRealOparPtrs(blk,2))   // Calculated actuator head area, sqin
+#define ahl     (*GetRealOparPtrs(blk,3))   // Calculated head leakage area, sqin
+#define ar      (*GetRealOparPtrs(blk,4))   // Calculated actuator rod area, sqin
+#define arl     (*GetRealOparPtrs(blk,5))   // Calculated rod leakage area, sqin
+#define c_      (*GetRealOparPtrs(blk,6))   // Dynamic damping, lbf/(in/s)
+#define cd_     (*GetRealOparPtrs(blk,7))   // Bleed and leakage orifice 
+#define fdyf    (*GetRealOparPtrs(blk,8))   // Dynamic friction, lbf
+#define fstf    (*GetRealOparPtrs(blk,9))   // Static friction, lbf
+#define mact    (*GetRealOparPtrs(blk,10))  // Actuator mass, lbm
+#define mext    (*GetRealOparPtrs(blk,11))  // External mass, lbm
+#define xmax    (*GetRealOparPtrs(blk,12))  // Actuator stop, motion toward head, in
+#define xmin    (*GetRealOparPtrs(blk,13))  // Actuator stop, motion toward rod, in
+
+// Inputs
+#define ph      (r_IN(0,0))     // Head pressure, psia
+#define pl      (r_IN(1,0))     // Leakage drain, psia
+#define pr      (r_IN(2,0))     // Rod pressure, psia
+#define per     (r_IN(3,0))     // Rod end pressure, psia
+#define fext    (r_IN(4,0))     // Ext load opposing motion to head, lbf
+#define xol     (r_IN(5,0))     // Actuator displacement toward head end (open loop)
+
+// Outputs
+#define wfb     (r_OUT(0,0))    // Cross-piston bleed head-rod, pph
+#define wfh     (r_OUT(1,0))    // Flow into head chamber, pph
+#define wfhl    (r_OUT(2,0))    // Leakage out head chamber, pph
+#define wfr     (r_OUT(3,0))    // Flow into rod chamber, pph
+#define wfrl    (r_OUT(4,0))    // Leakage out rod chamber, pph
+#define wfve    (r_OUT(5,0))    // Flow pushed out by rod, pph
+#define v_out   (r_OUT(6,0))    // Velocity towards head end, in/sec.
+#define x_out   (r_OUT(7,0))    // Displacement towards head end, in
+#define uf      (r_OUT(8,0))    // Unbalanced force towards head end, lbf
+#define uf_net  (r_OUT(9,0))    // Unbalanced force towards head end, lbf
+#define mode_out (r_OUT(10,0))   // ZCD mode
+
+void actuator_a_c(scicos_block *blk, int flag)
+{
+    int stops = 0;
+    double dwdc = DWDC(sg);
+    double m_ = mact + mext;
+    
+    // compute info needed for all passes
+    if(flag==-1) X = xol;   // Initialization call
+    uf = (pr - per)*ar - (ph - per)*ah - fext - Xdot*c_;
+    stops = 0;
+    if(mode0==mode_lincos_override)
+    {
+        uf_net = uf;
+    }
+    else if(mode0==mode_move_plus)
+    {
+        uf_net = uf - fdyf;
+    }
+    else if(mode0==mode_move_neg)
+    {
+        uf_net = uf + fdyf;
+    }
+    else if(mode0==mode_stop_min)
+    {
+        uf_net = max(uf - fstf, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_plus)
+    {
+        uf_net = max(uf - fstf, 0);
+    }
+    else if(mode0==mode_stop_max)
+    {
+        uf_net = min(uf + fstf, 0);
+        stops = 1;
+    }
+    else if(mode0==mode_stuck_neg)
+    {
+        uf_net = min(uf + fstf, 0);
+    }
+
+    // Different passes
+    switch (flag)
+    {
+        case 0:
+            // compute the derivative of the continuous time states
+            // TODO:  insert xol logic here
+            if(mode0==mode_lincos_override)
+            {
+                V = Xdot;
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+            }
+            else if(mode0==mode_move_plus || mode0==mode_move_neg)
+            {
+                V = Xdot;
+                A = uf_net/m_*386.4; // 386.4 = 32.2*12 to convert ft-->in & lbm-->slugs
+            }
+            else
+            {
+                V = 0;
+                A = 0;
+                Xdot = 0;
+            }
+            break;
+
+        case -1:
+        case 1:
+            // compute the outputs of the block
+            wfb = OR_APTOW(ab, pr, ph, cd_, sg);
+            wfhl = OR_APTOW(ahl, ph, pl, cd_, sg);
+            wfrl = OR_APTOW(arl, pr, pl, cd_, sg);
+            wfh = -dwdc*ah*Xdot - wfb + wfhl;
+            wfr = dwdc*ar*Xdot + wfb + wfrl;
+            wfve = dwdc*(ah - ar)*Xdot;
+            v_out = Xdot;
+            x_out = X;
+            mode_out = mode0;
+            break;
+
+        case 9:
+            // compute zero crossing surfaces and set modes
+            surf0 = Xdot;
+			surf1 = uf-fstf;
+			surf2 = uf+fstf;
+            surf3 = X-xmin;
+            surf4 = X-xmax;
+
+            if (get_phase_simulation() == 1)
+            {
+                if(LINCOS_OVERRIDE && stops==0)
+                    mode0 = mode_lincos_override;
+                else if(surf3<=0 && surf1<=0)
+                    mode0 = mode_stop_min;
+                else if(surf4>=0 && surf2>=0)
+                    mode0 = mode_stop_max;
+                else if(uf>0)
+                {
+                    if(surf1<=0) mode0 = mode_stuck_plus;
+                    else mode0 = mode_move_plus; 
+                }
+                else
+                { 
+                    if(surf2>=0) mode0 = mode_stuck_neg;
+                    else mode0 = mode_move_neg; 
+                 }
+            }
+            break;
+    }
+}
+// **********end actuator_a_c**********************************************
