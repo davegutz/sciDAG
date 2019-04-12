@@ -99,6 +99,29 @@ FP.tvp = 7;
 FP.tvp_margin = -1e6;
 
 // Structures
+vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs",..
+                       "cdabdamp", "fsb", "ksb"],..
+                       0, 0, 0, 0, ctab1_default, ctab1_default,..
+                       0, 0, 0);
+function str = %vlk_string(v)
+    str = msprintf('''%s'' type:  ctqpv=%f, cva=%f, cdv=%f, cftpa=%f,',..
+             typeof(v), v.ctqpv, v.cva, v.cdv, v.cftpa);
+    str = str + 'ytqa: ' + string(v.ytqa) + ',';
+    str = str + 'ytqrs: '+ string(v.ytqrs);
+endfunction
+function str = %vlk_p(v)
+    str = string(v);
+    disp(str)
+endfunction
+wf1leak_default = tlist(["wf1leak", "Ao", "k", "Do"], 0, 0, 0);
+function str = %wf1l_string(v)
+    str = msprintf('''%s'' type:  Ao=%f, k=%f, Do=%f',..
+             typeof(v), v.Ao, v.k, v.Do);
+endfunction
+function str = %wf1l_p(v)
+    str = string(v);
+    disp(str)
+endfunction
 GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_vpx", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
 
 // Work in progress   TODO:  replace GEO with G elsewhere
@@ -117,32 +140,7 @@ G = tlist(['geo', 'ifc', 'ebp', 'ven', 'venload', 'eng', 'mline', 'acsupply', 'g
 // Temporary.  TODO:  remove this line and use zcos diagram + pre_xcos...
 exec('./Callbacks/PreLoadFcn_simul.sce', -1);
 
-// VEN linkage object
-vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs",..
-                       "cdabdamp", "fsb", "ksb"],..
-                       0, 0, 0, 0, ctab1_default, ctab1_default,..
-                       0, 0, 0);
-function str = %vlk_string(v)
-    str = msprintf('''%s'' type:  ctqpv=%f, cva=%f, cdv=%f, cftpa=%f,',..
-             typeof(v), v.ctqpv, v.cva, v.cdv, v.cftpa);
-    str = str + 'ytqa: ' + string(v.ytqa) + ',';
-    str = str + 'ytqrs: '+ string(v.ytqrs);
-endfunction
-function str = %vlk_p(v)
-    str = string(v);
-    disp(str)
-endfunction
 
-// wf1leak object
-wf1leak_default = tlist(["wf1leak", "Ao", "k", "Do"], 0, 0, 0);
-function str = %wf1l_string(v)
-    str = msprintf('''%s'' type:  Ao=%f, k=%f, Do=%f',..
-             typeof(v), v.Ao, v.k, v.Do);
-endfunction
-function str = %wf1l_p(v)
-    str = string(v);
-    disp(str)
-endfunction
 
 function gstr = %geo_string(g)
     // string geo overload
