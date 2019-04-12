@@ -329,6 +329,13 @@ G.ifc.a_tvb = GEO.a_tvb;
 G.ifc.k1leak = 0.3098;
 G.ifc.a1leak = 6.1783e-4;
 
+// PRTV
+//G.ifc.prtv.fs = 24;
+//G.ifc.prtv.ks = 70;
+//G.ifc.prtv.ax1 = 0.076945;
+
+
+
 // Define main line 
 GEO.main_line.l = 48;
 GEO.main_line.a = 0.363;

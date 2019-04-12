@@ -26,7 +26,8 @@ function [INI] = solve_IFC(INI, GEOF, FP)
     // States:  xhs, xtv, xmv, p2, p3, px1, ln_p3s.wf
 
     // Name changes
-    icf.p1 = INI.p1so;
+    icf.p1 = INI.p1;
+    icf.p1so = icf.p1;  // TODO: add check valve
     icf.wf1vg = INI.wf1cvg + INI.wf1fvg;
     icf.wf1f = INI.wf1v;
     icf.pc = INI.pc;
@@ -79,8 +80,8 @@ function [INI] = solve_IFC(INI, GEOF, FP)
         icf.p2 = INI.p1c;
 
         // PRT regulator
-        // icf.prt = max(INI.p1c-(GEOF.prtv.fspr+0.01*GEOF.prtv.ks)/GEOF.prtv.ax1, icf.pc);
-        icf.prt = INI.p1c - 315;
+        icf.prt = max(INI.p1c-(GEOF.prtv.fs+0.01*GEOF.prtv.ks)/GEOF.prtv.ax1, icf.pc);
+//        icf.prt = INI.p1c - 315;
 
         // PR regulator
         icf.pr = min(icf.pc+250, INI.p1c);

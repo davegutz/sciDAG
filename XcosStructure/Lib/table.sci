@@ -89,20 +89,21 @@ endfunction
 
 function z = lookup(x, t)
     tbl = vec_ctab1(t)';
-    z = interp1(tbl(1,:), tbl(2,:), max(min(x, tbl(1,$)), tbl(1,1)));
+    z = interpln(tbl, max(min(x, tbl(1,$)), tbl(1,1)));
 endfunction
 
 function z = lookup_short(x, t)
-    z = interp1(t.tb(:,1), t.tb(:,2), max(min(x, t.tb($,1)), t.tb(1,1)));
+    tbl = t.tb';
+    z = interpln(tbl, max(min(x, tbl(1,$)), tbl(1,1)));
 endfunction
 
 function z = lookup_super_short(x, t)
-    z = interp1(t.tb(:,1), t.tb(:,2), x);
+    z = interpln(t.tb', x);
 endfunction
 
 function z = rev_lookup(x, t)
     tbl = vec_ctab1(t)';
-    z = interp1(tbl(2,:), tbl(1,:), max(min(x, tbl(2,$)), tbl(2,1)));
+    z = interpln([tbl(2,:);tbl(1,:)], max(min(x, tbl(2,$)), tbl(2,1)));
 endfunction
 
 function str = %tbl1_b_p(t)

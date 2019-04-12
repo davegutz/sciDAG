@@ -63,6 +63,7 @@ exec('./Scripts/linearize_start04selfinit.sce', -1);
 exec('benchmark_valve_start04selfinit.sce', -1)
 // between 9 and 10 seconds is typical
 //
+
 // Fifth version to self initialize using a solver and run
 // without data from c-model to drive it in any way.   Use
 // to investigate solver choices.
@@ -76,6 +77,28 @@ exec('./Scripts/linearize_start04alone.sce', -1);
 // expected result in Results/expected_FREQ_RESP_start04alone.png
 exec('benchmark_valve_start04alone.sce', -1)
 // between 9 and 10 seconds is typical
+
+// Sixth version to self initialize and match with Simulink model
+// Prework
+    // In simulink
+    //% uiopen('F414_Fuel.slx',1)
+    //% Z.INPUTS_TUNE_T_C_S_D_V = {'Basic Data', 'cOp09', 'sNone',  'dNone', 'vPwf2'};
+    //% sim('F414_Fuel.slx')
+    //% save('IRP_datalog','-v7.3') 
+    //% writeAllLogs('IRP')
+    // copy *_IRP.csv to ./Data
+    [D, N, time] = load_csv_data('./Data/DV_IRP.csv', 1);
+    exec('./Data/load_decode_csv_data.sce', -1);
+    [D, N, time] = load_csv_data('./Data/DI_IRP.csv', 1);
+    exec('./Data/load_decode_csv_data.sce', -1);
+    clear D N
+    save('DATA_00_08000_00000_16005_09060_147_79_13_sNone.dat', 'DV', 'DI');
+    exec('.\init_start04alone.sce',-1)
+    // run briefly to generate G
+    exec('.\newIni.sce', -1) // 10 minutes run time
+    save('./Data/init_00_08000_00000_16005_09060_147_79_13.dat', 'INI');
+// Load the simulation
+exec('.\init_simul.sce',-1)
 
 // Test pipes
 exec('init_pipe.sce', -1);

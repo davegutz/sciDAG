@@ -19,22 +19,56 @@
 // SOFTWARE.
 // Mar 23, 2019    DA Gutz     Created
 //
-// run exec('./init_start04alone.sce', -1) first
-exec('./Callbacks/solve_VEN.sci', -1);
-exec('./Callbacks/solve_MAIN.sci', -1);
-exec('./Callbacks/solve_IFC.sci', -1);
-exec('./Callbacks/regwin_a.sci', -1);
+funcprot(0);
+getd('../Lib')
+global m k c
+global loaded_scratch root sys_f scs_m cpr
+global GEO G INI FP LIN mv_x mv_xa mv_xin Tf
+global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
+// VEN linkage object
+vlink_default = tlist(["vlk", "ctqpv", "cva", "cdv", "cftpa", "ytqa", "ytqrs",..
+                       "cdabdamp", "fsb", "ksb"],..
+                       0, 0, 0, 0, ctab1_default, ctab1_default,..
+                       0, 0, 0);
+function str = %vlk_string(v)
+    str = msprintf('''%s'' type:  ctqpv=%f, cva=%f, cdv=%f, cftpa=%f,',..
+             typeof(v), v.ctqpv, v.cva, v.cdv, v.cftpa);
+    str = str + 'ytqa: ' + string(v.ytqa) + ',';
+    str = str + 'ytqrs: '+ string(v.ytqrs);
+endfunction
+function str = %vlk_p(v)
+    str = string(v);
+    disp(str)
+endfunction
 
-clear INIx
+// wf1leak object
+wf1leak_default = tlist(["wf1leak", "Ao", "k", "Do"], 0, 0, 0);
+function str = %wf1l_string(v)
+    str = msprintf('''%s'' type:  Ao=%f, k=%f, Do=%f',..
+             typeof(v), v.Ao, v.k, v.Do);
+endfunction
+function str = %wf1l_p(v)
+    str = string(v);
+    disp(str)
+endfunction
 
-INIx.wf36 = INI.wf36;
-INIx.pamb = INI.pamb;
-INIx.p1so = INI.p1so;
-INIx.awfb = 0;
-INIx.ven.fxven = 0;
-//INIx.ven.pr = INI.pr;
-//INIx.ven.ps = INI.pr;
-INIx.ven.pamb =INI.pamb;
+
+GEO = tlist(["sys_geo", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "ehsv_klk", "ehsv_powlk", "rrv", "vo_pcham", "vo_vpx", "bias", "mv", "mvtv", "hs", "noz", "mo_p3s", "vo_p2", "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "vo_pnozin", "ln_p3s", "ln_vs", "main_line", "a_p3s", "a_tvb", "mvwin"], vdp_default, vlv_a_default, tv_a1_default,  actuator_a_b_default, la_default, vlink_default, 0, 0, vlv_a_default, vol_default, vol_default, actuator_a_b_default, hlfvlv_a_default, vlv_a_default, head_b_default, ctab1_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, pipeVM_default, pipeMM_default, or_default, or_default, ctab1_default);
+
+// Work in progress   TODO:  replace GEO with G elsewhere
+MLINE = tlist(["sys_mline", "vo_pnozin", "ln_vs", "main_line", "noz"],vol_default, pipeVM_default, pipeMM_default, ctab1_default);
+IFC = tlist(["sys_ifc", "mv", "mvtv", "hs", "mo_p3s", "vo_p2",  "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "ln_p3s", "a_p3s", "a_tvb", "mvwin", "check", "k1leak", "a1leak", "prtv"], hlfvlv_a_default, vlv_a_default, head_b_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, or_default, or_default, ctab1_default, vlv_a_default, 0, 0, vlv_a_default);
+EPMP = tlist(["sys_ebp", "mfp", "wf1leak", "faboc", "ocm1", "ocm2", "focOr", "vo_poc", "boost", "inlet", "or_filt", "mom_filt", "vo_pb1", "vo_pb2"], cpmp_default, wf1leak_default, pipeMM_default, pipeMM_default, pipeVM_default, or_default, vol_default, cpmp_default, pipeMM_default, or_default, mom_default, vol_default, vol_default)
+VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias", "ehsv_klk", "ehsv_powlk", "ksb", "fsb", "leako"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default, 0, 0, 0, 0, la_default);
+ENG = tlist(["sys_eng", "pcn25r", "N25c100Pct", "N25100Pct", "N2c100Pct", "xn25p", "xnvent", "xnmainpt", "ctstd", "spcn25", "sfxven", "swf", "sawfb", "fxvent", "t25t", "ps3t", "dps3dwt", "pcn2rt", "pcn25rt"], ctab1_default, 0, 0, 0, 0, 0, 0, 0, [0 1], [0 1], [0 1], [0 1], [0 1], ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
+MOTOR = tlist(["sys_motor", "dp", "wf"], 0, 0);
+ACSUPPLY = tlist(["sys_acsup", "ltank", "lengine", "acbst", "acmbst", "motor"], pipeMV_default, pipeMV_default, cpmp_default, cpmp_default, MOTOR);
+VENLOAD = tlist(["sys_venload", "act_c", "ehsv", "ehsv_klk", "ehsv_powlk", "rline", "hline", "vo_rcham", "vo_hcham"], actuator_a_c_default, fehsv2_default, 0, 0, pipeVM_default, pipeVM_default, vol_default, vol_default);
+GUESS = tlist(["v_guess", "xn25", "disp", "xehsv", "xreg", "xbias", "pd", "prod", "px", "phead"], ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
+
+G = tlist(['geo', 'ifc', 'ebp', 'ven', 'venload', 'eng', 'mline', 'acsupply', 'guess'], IFC, EPMP, VEN, VENLOAD, ENG, MLINE, ACSUPPLY, GUESS);
+
+
 
 // To match matlab case
 FP.sg = 0.79;
@@ -44,53 +78,62 @@ FP.dwdc = 102.6522;
 FP.avis = 1.4823e-7;
 FP.tvp_margin = -1e6;
 FP.tvp = 5;
-INIx.wf36 = 9060;
-INIx.pamb = 14.7;
-INIx.p1so = 1978.3;
-INIx.awfb = 1e-5;
+
+exec('./Callbacks/PreLoadFcn_simul.sce', -1);
+exec('./Callbacks/solve_VEN.sci', -1);
+exec('./Callbacks/solve_MAIN.sci', -1);
+exec('./Callbacks/solve_IFC.sci', -1);
+exec('./Callbacks/regwin_a.sci', -1);
+
+clear INI
+
+INI.wf36 = 9060;
+INI.pamb = 14.7;
+//INI.p1so = 1978.3;
+INI.awfb = 1e-5;
 
 
-
-INIx.ven.pamb =INIx.pamb;
-INIx.ven.fxven = 10000;
-INIx.ven.guess.fxven = INIx.ven.fxven;
-INIx.ven.guess.xn25 = lookup(INIx.ven.fxven, G.guess.xn25);
-INIx.ven.guess.x1_xehsv = lookup(INIx.ven.fxven, G.guess.xehsv);
-INIx.ven.guess.x2_prod = lookup(INIx.ven.fxven, G.guess.prod);
-INIx.ven.guess.x3_xbi  = lookup(INIx.ven.fxven, G.guess.xbias);
-INIx.ven.guess.x4_pd = lookup(INIx.ven.fxven, G.guess.pd);
-INIx.ven.guess.x5_disp = lookup(INIx.ven.fxven, G.guess.disp);
-INIx.ven.guess.x_xreg = lookup(INIx.ven.fxven, G.guess.xreg);
-INIx.ven.x1_xehsv = INIx.ven.guess.x1_xehsv;
-INIx.ven.x2_prod = INIx.ven.guess.x2_prod;
-INIx.ven.x3_xbi  = INIx.ven.guess.x3_xbi;
-INIx.ven.x4_pd = INIx.ven.guess.x4_pd;
-INIx.ven.x5_disp = INIx.ven.guess.x5_disp;
-INIx.ven.x_xreg = INIx.ven.guess.x_xreg;
+INI.ven.pamb =INI.pamb;
+INI.ven.fxven = 8000;
+INI.ven.guess.fxven = INI.ven.fxven;
+INI.ven.guess.xn25 = lookup(INI.ven.fxven, G.guess.xn25);
+INI.ven.guess.x1_xehsv = lookup(INI.ven.fxven, G.guess.xehsv);
+INI.ven.guess.x2_prod = lookup(INI.ven.fxven, G.guess.prod);
+INI.ven.guess.x3_xbi  = lookup(INI.ven.fxven, G.guess.xbias);
+INI.ven.guess.x4_pd = lookup(INI.ven.fxven, G.guess.pd);
+INI.ven.guess.x5_disp = lookup(INI.ven.fxven, G.guess.disp);
+INI.ven.guess.x_xreg = lookup(INI.ven.fxven, G.guess.xreg);
+INI.ven.x1_xehsv = INI.ven.guess.x1_xehsv;
+INI.ven.x2_prod = INI.ven.guess.x2_prod;
+INI.ven.x3_xbi  = INI.ven.guess.x3_xbi;
+INI.ven.x4_pd = INI.ven.guess.x4_pd;
+INI.ven.x5_disp = INI.ven.guess.x5_disp;
+INI.ven.x_xreg = INI.ven.guess.x_xreg;
  
-INIx.ven.pr = 276.9033;
-INIx.ven.ps = 276.8327;
-INIx.xn25 = INIx.ven.guess.xn25;
-INIx.ven.N = INIx.xn25/G.eng.xn25p*G.eng.xnvent;
+INI.ven.pr = 241.1401;
+INI.ven.ps = 241.0706;
+INI.xn25 = INI.ven.guess.xn25;
+INI.xn25 = 16005;
+INI.ven.N = INI.xn25/G.eng.xn25p*G.eng.xnvent;
 
 
 // Eng Boost
-INIx.sAC = 1;
-INIx.wfr = 0;
-INIx.wfs = 0;
-INIx.wf1cvg = 0;
-INIx.wf1fvg = 0;
-INIx.wf1v = 0;
-INIx.precx = INIx.pamb;
-INIx.eng.wf36 = INIx.wf36;
-INIx.verbose = 3;
-INIx.linearizing = 0;
-INIx.single_pass = 0;
+INI.sAC = 1;
+INI.wfr = 0;
+INI.wfs = 0;
+INI.wf1cvg = 0;
+INI.wf1fvg = 0;
+INI.wf1v = 0;
+INI.precx = INI.pamb;
+INI.eng.wf36 = INI.wf36;
+INI.verbose = 3;
+INI.linearizing = 0;
+INI.single_pass = 0;
 
-//INIx = solve_MAIN(INIx, G, FP);
+//INI = solve_MAIN(INI, G, FP);
 //
-//INIx.pr = INIx.pc;
+//INI.pr = INI.pc;
 //
 
-[INIx, Gx] = solve_VEN(INIx, G, FP);
-INIx = order_all_fields(INIx); 
+[INI, G] = solve_VEN(INI, G, FP);
+INI = order_all_fields(INI); 
