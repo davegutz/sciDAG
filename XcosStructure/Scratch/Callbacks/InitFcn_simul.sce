@@ -20,7 +20,8 @@
 // Jsn 1, 2019      DA Gutz     Created
 // 
 global LINCOS_OVERRIDE figs LIN time_tic time_toc
-global GEO INI FP mv_x mv_xa mv_xin Tf
+global GEO G INI FP mv_x mv_xa mv_xin Tf
+global INIx
 mprintf('In %s\n', sfilename())  
 try close(figs); end
 LINCOS_OVERRIDE = 0;
@@ -28,6 +29,9 @@ LINCOS_OVERRIDE = 0;
 GEO.ln_vs = lti_man_n_vm(GEO.ln_vs, FP.sg, FP.beta);
 GEO.ln_p3s = lti_man_n_vm(GEO.ln_p3s, FP.sg, FP.beta);
 GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
+G.mline.ln_vs = lti_man_n_vm(G.mline.ln_vs, FP.sg, FP.beta);
+G.ifc.ln_p3s = lti_man_n_vm(G.ifc.ln_p3s, FP.sg, FP.beta);
+G.mline.main_line = lti_man_n_mm(G.mline.main_line, FP.sg, FP.beta);
 
 if ~INI.batch then
     if INI.initialized & INI.skip_init then
@@ -76,23 +80,39 @@ mv_xin = struct('time', [0 0.00099 .00100 Tf]', 'values', [x0 x0 xE xE]');
 INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
 INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
 INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf3);
+INI.mline.ln_vs = ini_man_n_vm(G.mline.ln_vs, INI.p1so, INI.wf1v);
+INI.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, INI.p3s, 0);
+INI.mline.main_line = ini_man_n_mm(G.mline.main_line, INI.p3, INI.wf3);
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 INI.initialized = %t;
 time_tic = getdate();
 
 // placeholder for VEN Unit stuff
-INI.xnven = vdpp_rpm.values(1,1);
-INI.xn25 = xn25.values(1,1);
-INI.disp = vdpp_disp.values(1,1);
-INI.pdven = tri_ps.values(1,1);
-INI.psven = tri_pd.values(1,1);
-INI.pact.x = pact_x.values(1,1);
-INI.reg.x = tri_x.values(1,1);
-INI.pxven = tri_px.values(1,1);
-INI.rrv.x = rrv_x.values(1,1);
-INI.bias.x = bias_x.values(1,1);
+//INI.xnven = vdpp_rpm.values(1,1);
+//INI.xn25 = xn25.values(1,1);
+//INI.disp = vdpp_disp.values(1,1);
+//INI.pdven = tri_ps.values(1,1);
+//INI.psven = tri_pd.values(1,1);
+//INI.pact.x = pact_x.values(1,1);
+//INI.reg.x = tri_x.values(1,1);
+//INI.pxven = tri_px.values(1,1);
+//INI.rrv.x = rrv_x.values(1,1);
+//INI.bias.x = bias_x.values(1,1);
+INI.xnven = 3243.2;
+INI.xn25 = 6884.0;
+INI.disp = 0.28047000;
+INI.pdven = 1451.20000000;
+INI.psven = 73.59500000;
+INI.pact.x = 0.09052700;
+INI.reg.x =-0.00178570;
+INI.pxven = 728.50000000;
+INI.rrv.x = 0.00000001;
+INI.bias.x = -0.00000738;
 
 // Cleanup
 INI = order_all_fields(INI);
+
+// Temporary version of the final initialization method (newIni.sce) INIx
+load('init_00_08000_00000_16005_09060_147_79_13_sNoneINIx.dat');
 
 mprintf('Completed %s\n', sfilename())  

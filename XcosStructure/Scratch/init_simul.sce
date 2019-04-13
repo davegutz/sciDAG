@@ -59,9 +59,14 @@ global m k c
 global loaded_scratch root sys_f scs_m cpr
 global GEO G INI FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
+global INIx
 
 // Auto data overplot load
 stack_size = stacksize('max');
+[D, N, time] = load_csv_data('./Data/start04ss.ven.csv', 1);
+exec('./Data/load_decode_csv_data.sce', -1);
+[D, N, time] = load_csv_data('./Data/start04ss.ifc.csv', 1);
+exec('./Data/load_decode_csv_data.sce', -1);
 [D, N, time] = load_csv_data_row('./Data/FP_IRP.csv', 1);
 [n_names, m_names] = size(N);
 for i = 1:m_names
@@ -200,6 +205,7 @@ exec('../Lib/init_libScratch.sce', -1);
 chdir(this_path);
 
 mprintf('Executed ' + this + ' up to importXcosDiagram*********\n');
+mprintf('Ready to play...press the right arrow icon on %s diagram at top.\n', root);
 
 try
     importXcosDiagram("./"+this_xcos_file);
