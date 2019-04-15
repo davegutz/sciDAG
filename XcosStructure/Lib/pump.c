@@ -91,4 +91,79 @@ void vdp(scicos_block *blk, int flag)
     // gpm        = cis / 3.85;
     wf         = cis * dwdc;
 }
-// **********end vdpp**********************************************
+// **********end vdp **********************************************
+#undef sg
+#undef avis
+#undef cf
+#undef cn
+#undef cs
+#undef ct
+#undef rpm
+#undef disp_
+#undef pd
+#undef ps
+#undef wf
+#undef mtdqp
+#undef eff_vol
+#undef pl
+#undef NOPAR
+#undef dP
+
+// Block parameters
+#define sg      (GetRparPtrs(blk)[0]) // Fluid specific gravity
+
+// Object parameters via lsx.  1st index is 1-based, 2nd index is 0-based.
+#define NOPAR   (blk->nopar)
+#define a       (*GetRealOparPtrs(blk,1)) // Pump head coefficient 0 - curve fit
+#define b       (*GetRealOparPtrs(blk,2)) // Pump head coefficient 1 - curve fit
+#define c       (*GetRealOparPtrs(blk,3)) // Pump head coefficient 2 - curve fit
+#define d       (*GetRealOparPtrs(blk,4)) // Pump head coefficient 3- curve fit
+#define w1      (*GetRealOparPtrs(blk,5)) // Inner disk width, in
+#define w2      (*GetRealOparPtrs(blk,6)) // Outer disk width, in
+#define r1      (*GetRealOparPtrs(blk,7)) // Inner radius, in
+#define r2      (*GetRealOparPtrs(blk,8)) // Outer radius, in
+#define tau     (*GetRealOparPtrs(blk,9)) // Time constant, sec
+
+// states
+#define dP      (GetState(blk)[0])      // Pressure rise state
+#define dPdot   (GetDerState(blk)[0])   // Derivative of pressure rise
+
+// inputs
+#define rpm     (r_IN(0,0))     // Pump speed, rpm
+#define ps      (r_IN(1,0))     // Supply pressure, psia
+#define Q       (r_IN(2,0))     // Supply flow, cis
+
+// outputs
+#define pd      (r_OUT(0,0))    // Discharge pressure, psia
+#define dPout   (r_OUT(1,0))    // Pressure rise, psid
+
+void cpmp(scicos_block *blk, int flag)
+{    
+    double fc;
+    double hc;
+    double gpm;
+    double dP_dmd;
+    double r22;
+
+    // compute info needed for all passes
+    gpm = Q / 3.85;
+    r22 = r2*r2;
+    fc = 5.851 * gpm / max(w2 * (r22) * rpm, 1e-12);
+    hc = a + (b + (c + d*fc)*fc)*fc;
+    dP_dmd = 1.022e-6 * hc * sg * (r22 - r1*r1) * rpm*rpm;
+
+    switch (flag)
+    {
+        case 0:  // derivatives
+            dPdot = (dP_dmd - dP) / max(tau, 1e-6);
+            break;
+        case 1:  // outputs
+            pd = ps + dP;
+            dPout = dP;
+            break;
+        case 4: // initialize
+            dP = dP_dmd;
+            break;
+    }
+}
+// **********end cpmp **********************************************

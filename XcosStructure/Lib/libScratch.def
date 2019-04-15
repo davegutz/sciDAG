@@ -11,6 +11,7 @@ EXPORTS
 	cor_awpdtops
 	cla_lrecptow
 	vdp
+	cpmp
 	binsearch
 	tab1
 	tab2

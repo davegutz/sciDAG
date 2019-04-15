@@ -1,3 +1,24 @@
+// Copyright (C) 2019 - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Apr 15, 2019    DA Gutz        Created
+// 
 // Copyright (C) 2019  - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -283,3 +304,80 @@ function [blkcall] = callblk_vdp(blk, rpm, disp_, pd, ps)
     blkcall.pl = blk.outptr(4);
 endfunction
 /////////********* end vdp ***************************************
+
+// Callback ******************************************** 
+function [x,y,typ] = CPMP(job, arg1, arg2)
+    x = [];
+    y = [];
+    typ = [];
+    //disp(job)
+    select job
+    case 'plot' then
+        standard_draw(arg1)
+    case 'getinputs' then
+        [x,y,typ] = standard_inputs(arg1)
+        //disp(sci2exp(x))
+    case 'getoutputs' then
+        [x,y,typ] = standard_outputs(arg1)
+        //disp(sci2exp(x))
+    case 'getorigin' then
+        [x,y] = standard_origin(arg1)
+        //disp(sci2exp(x))
+    case 'set' then
+        //message(sci2exp(arg1))
+        x = arg1
+        graphics = arg1.graphics
+        exprs = graphics.exprs
+        model = arg1.model
+        while %t do
+            [ok,GEO,SG,exprs] = getvalue('Set cpmp parameters',..
+            ['lsx_cpmp(cpmp)';'SG';],..
+            list('lis',-1,'vec',1),..
+            exprs)
+            if ~ok then break,end 
+            model.state = [0]
+            model.rpar = [SG]
+            model.opar = GEO
+            graphics.exprs = exprs
+            x.graphics = graphics
+            x.model = model
+            break
+        end
+    case 'define' then
+        //        message('in define')
+        model.opar=list(cpmp_default);
+        SG = 0.75
+        model = scicos_model()
+        model.sim = list('cpmp', 4)
+        model.in = [1;1;1]
+        model.out = [1;1]
+        model.state = [1]
+        model.dstate = [0]
+        model.rpar = [SG]
+        model.blocktype = 'c'
+        model.nmode = 0
+        model.nzcross = 0
+        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
+        exprs = ["lsx_cpmp(cpmp_default)"; 'FP.sg']
+        gr_i = [];
+        x = standard_define([8 8], model, exprs, gr_i) // size icon, etc..
+    end
+endfunction
+
+function [blkcall] = callblk_cpmp(blk, rpm, ps, Q)
+    // Call compiled funcion cpmp that is scicos_block blk
+    blk.inptr(1) = rpm;
+    blk.inptr(2) = ps;
+    blk.inptr(3) = Q;
+    blkcall.rpm = rpm;
+    blkcall.ps = ps;
+    blkcall.Q = Q;
+    blkcall.sg = blk.rpar(1);
+    //    blk = callblk(blk, 0, 0);
+    //    blk = callblk(blk, 1, 0);
+    //    blk = callblk(blk, 9, 0);
+    blk = callblk(blk, -1, 0);
+    blkcall.pd = blk.outptr(1);
+    blkcall.dP = blk.outptr(2);
+endfunction
+/////////********* end cpmp ***************************************
