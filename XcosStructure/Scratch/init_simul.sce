@@ -59,14 +59,14 @@ global m k c
 global loaded_scratch root sys_f scs_m cpr
 global GEO G INI FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
-global INIx
+global ic
 
 // Auto data overplot load
 stack_size = stacksize('max');
-[D, N, time] = load_csv_data('./Data/start04ss.ven.csv', 1);
-exec('./Data/load_decode_csv_data.sce', -1);
-[D, N, time] = load_csv_data('./Data/start04ss.ifc.csv', 1);
-exec('./Data/load_decode_csv_data.sce', -1);
+//[D, N, time] = load_csv_data('./Data/start04ss.ven.csv', 1);
+//exec('./Data/load_decode_csv_data.sce', -1);
+//[D, N, time] = load_csv_data('./Data/start04ss.ifc.csv', 1);
+//exec('./Data/load_decode_csv_data.sce', -1);
 [D, N, time] = load_csv_data_row('./Data/FP_IRP.csv', 1);
 [n_names, m_names] = size(N);
 for i = 1:m_names
@@ -77,6 +77,29 @@ exec('./Data/load_decode_csv_data.sce', -1);
 [D, N, time] = load_csv_data('./Data/DI_IRP.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
 clear D N n_names m_names
+xn25 = DI.eng.xn25;
+hs_x = DI.ifc.Calc.Comp.hs.Result.x;
+tri_ps = DV.reg.In.ps;
+tri_pd = DV.reg.In.pd;
+tri_px = DV.reg.In.px;
+tri_ped = DV.reg.In.ped;
+tri_pel = DV.reg.In.pel;
+tri_pes = DV.reg.In.pes;
+tri_pld = DV.reg.In.pld;
+tri_plr = DV.reg.In.plr;
+tri_fext = DV.reg.In.fext;
+tri_wfse = DV.reg.Result.wf.wfse;
+tri_wfs = DV.reg.Result.wf.wfs;
+vdpp_wf = DV.pump.Result.wf;
+vdpp_pd = DV.pump.In.pd;
+start_wfs = DV.pump.In.pd; start_wfs.values = start_wfs.values*0;
+vload_rline_ps = DV.rline_ps;
+pr_ven = DV.I.pr_psia;
+vload_ehsv_wfs = DV.ehsv.SPOOL.wfs;
+rrv_wfvx = DV.pump.In.pd; rrv_wfvx.values = rrv_wfvx.values*0;
+rrv_wfd = DV.pump.In.pd; rrv_wfd.values = rrv_wfd.values*0;
+vdpp_ps = DV.I.ps_psia;
+
 
 // Length of simulation
 Tf = time($);

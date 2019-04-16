@@ -21,7 +21,7 @@
 // 
 global LINCOS_OVERRIDE figs LIN time_tic time_toc
 global GEO G INI FP mv_x mv_xa mv_xin Tf
-global INIx
+global ic
 mprintf('In %s\n', sfilename())  
 try close(figs); end
 LINCOS_OVERRIDE = 0;
@@ -112,7 +112,7 @@ INI.bias.x = -0.00000738;
 // Cleanup
 INI = order_all_fields(INI);
 
-// Temporary version of the final initialization method (newIni.sce) INIx
-load('init_00_08000_00000_16005_09060_147_79_13_sNoneINIx.dat');
+// Temporary version of the final initialization method (newIni.sce) ic = INIx
+load('init_00_08000_00000_16005_09060_147_79_13_sNone_ic.dat');
 
 mprintf('Completed %s\n', sfilename())  

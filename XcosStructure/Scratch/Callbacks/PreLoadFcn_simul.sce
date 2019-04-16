@@ -22,7 +22,7 @@
 
 global LINCOS_OVERRIDE
 global loaded_scratch
-global GEO G INI FP
+global GEO G FP
 
 mprintf('In %s\n', sfilename()) 
 
