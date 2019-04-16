@@ -99,7 +99,7 @@ vload_ehsv_wfs = DV.ehsv.SPOOL.wfs;
 rrv_wfvx = DV.pump.In.pd; rrv_wfvx.values = rrv_wfvx.values*0;
 rrv_wfd = DV.pump.In.pd; rrv_wfd.values = rrv_wfd.values*0;
 vdpp_ps = DV.I.ps_psia;
-
+wfacbst = DI.ac.Mon_ABOOST.wfacbst;
 
 // Length of simulation
 Tf = time($);
