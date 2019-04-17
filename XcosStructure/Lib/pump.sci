@@ -330,12 +330,12 @@ function [x,y,typ] = CPMP(job, arg1, arg2)
         exprs = graphics.exprs
         model = arg1.model
         while %t do
-            [ok,GEO,SG,exprs] = getvalue('Set cpmp parameters',..
-            ['lsx_cpmp(cpmp)';'SG';],..
-            list('lis',-1,'vec',1),..
+            [ok,GEO,SG,dPinit,exprs] = getvalue('Set cpmp parameters',..
+            ['lsx_cpmp(cpmp)';'SG';'dPinit'],..
+            list('lis',-1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
-            model.state = [0]
+            model.state = [dPinit]
             model.rpar = [SG]
             model.opar = GEO
             graphics.exprs = exprs
@@ -347,18 +347,19 @@ function [x,y,typ] = CPMP(job, arg1, arg2)
         //        message('in define')
         model.opar=list(cpmp_default);
         SG = 0.75
+        dPinit = 0
         model = scicos_model()
         model.sim = list('cpmp', 4)
         model.in = [1;1;1]
         model.out = [1;1]
-        model.state = [1]
+        model.state = [dPinit]
         model.dstate = [0]
         model.rpar = [SG]
         model.blocktype = 'c'
         model.nmode = 0
         model.nzcross = 0
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx_cpmp(cpmp_default)"; 'FP.sg']
+        exprs = ["lsx_cpmp(G.acsupply.acbst)"; 'FP.sg';'ic.acbst_dP']
         gr_i = [];
         x = standard_define([8 8], model, exprs, gr_i) // size icon, etc..
     end

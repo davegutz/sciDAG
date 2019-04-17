@@ -32,6 +32,8 @@ GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
 G.mline.ln_vs = lti_man_n_vm(G.mline.ln_vs, FP.sg, FP.beta);
 G.ifc.ln_p3s = lti_man_n_vm(G.ifc.ln_p3s, FP.sg, FP.beta);
 G.mline.main_line = lti_man_n_mm(G.mline.main_line, FP.sg, FP.beta);
+G.acsupply.ltank = lti_man_n_mv(G.acsupply.ltank, FP.sg, FP.beta);
+G.acsupply.lengine = lti_man_n_mv(G.acsupply.lengine, FP.sg, FP.beta);
 
 if ~INI.batch then
     if INI.initialized & INI.skip_init then
@@ -114,5 +116,10 @@ INI = order_all_fields(INI);
 
 // Temporary version of the final initialization method (newIni.sce) ic = INIx
 load('init_00_08000_00000_16005_09060_147_79_13_sNone_ic.dat');
+ic.acbst_dP = ic.acsupply.acbst.dP_Pump;
+ic.acmbst_dP = ic.acsupply.acmbst.dP_Pump;
+ic.acsupply.ltank = ini_man_n_mv(G.acsupply.ltank, ic.acsupply.ltank.p, ic.acsupply.ltank.wf);
+ic.acsupply.lengine = ini_man_n_mv(G.acsupply.lengine, ic.acsupply.lengine.p, ic.acsupply.lengine.wf);
+
 
 mprintf('Completed %s\n', sfilename())  

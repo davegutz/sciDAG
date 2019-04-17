@@ -161,9 +161,9 @@ void cpmp(scicos_block *blk, int flag)
             pd = ps + dP;
             dPout = dP;
             break;
-        case 4: // initialize
-            dP = dP_dmd;
-            break;
+//        case 4: // initialize
+//            dP = dP_dmd;
+//            break;
     }
 }
 // **********end cpmp **********************************************

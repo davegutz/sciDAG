@@ -1,3 +1,24 @@
+// Copyright (C) 2019  - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Apr 16, 2019    DA Gutz     Created
+//
 // Copyright (C) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -494,14 +515,13 @@ G.acsupply.acmbst.w1 = 1;
 G.acsupply.acmbst.w2 = 1;
 G.acsupply.acmbst.r1 = 0;
 G.acsupply.acmbst.r2 = 2;
-G.acsupply.motor.wf = 4200; // flow at dp
-G.acsupply.motor.dp = 120; // dp at flow
-//G.acsupply.motor.cd = 0.61;
-//G.acsupply.motor.dpSize=120;
-//G.acsupply.motor.wfSize=4200;
-//G.acsupply.motor.sgSize=0.75; // 80F JP5 (0.7921 to match verification)
-//G.acsupply.motor.Ap = or_wptoa(G.acsupply.motor.wfSize, G.acsupply.motor.dpSize, 0, G.acsupply.motor.cd, G.acsupply.motor.sgSize);
-//G.acsupply.motor.Dp = sqrt(4/%pi*G.acsupply.motor.Ap);
+// ACsupply motor
+G.acsupply.motor.cd = 0.61;
+dpSize = 120;
+wfSize = 4200;
+sgSize = 0.75; // 80F JP5 (0.7921 to match verification)
+G.acsupply.motor.ao = or_wptoa(wfSize, dpSize, 0, G.acsupply.motor.cd, sgSize);
+clear dpSize wfSize sgSize
 
 // VEN actuator
 G.venload.act_c.arl = 0.000112; // B. Noyes 1/93.
@@ -656,5 +676,26 @@ G.guess.prod.tb = [xfx   [387.7     577.1     842.8     1374      2129      2547
 G.guess.px.tb = [xfx     [794.2     806.9     866.0     1086      1181      1366      1676      1693      1815      1840      1840]'];
 G.guess.phead.tb = [xfx  [1180      791.8     681.2     891.8     851.2     971.8     989.8     920       884.4     753.7     650.5]'];
 clear xfx
+
+// AC system
+//G.acsupply.acbst.tau = 0.00127;
+//G.acsupply.acbst.r1 = 0;
+//G.acsupply.acbst.w1 = 0;
+//G.acsupply.acbst.r2 = 2;
+//G.acsupply.acbst.w2 = 1;
+//G.acsupply.acbst.a = 0.075;
+//G.acsupply.acbst.b = -1.59;
+//G.acsupply.acbst.c = -102;
+//G.acsupply.acbst.d = 0;
+//G.acsupply.acmbst.tau = 0.00127;
+//G.acsupply.acmbst.a = .116;   // C:\SC5\DATA\F414\ACMBST1.CAL
+//G.acsupply.acmbst.b = 0;      // make it flat
+//G.acsupply.acmbst.c = 0;      // C:\SC5\DATA\F414\ACMBST1.CAL
+//G.acsupply.acmbst.d = 0;
+//G.acsupply.acmbst.w1 = 1;     // Assumed
+//G.acsupply.acmbst.w2 = 1;     // Assumed
+//G.acsupply.acmbst.r1 = 0;     // Assumed
+//G.acsupply.acmbst.r2 = 2;     // Assumed
+//
 
 mprintf('Completed %s\n', sfilename()) 
