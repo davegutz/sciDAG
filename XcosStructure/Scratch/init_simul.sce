@@ -72,9 +72,9 @@ stack_size = stacksize('max');
 for i = 1:m_names
     execstr(N(i) + "=D(" + string(i) + ",1);")
 end
-[D, N, time] = load_csv_data('./Data/DV_IRP.csv', 1);
+[D, N, time] = load_csv_data('./Data/DVS_IRP.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
-[D, N, time] = load_csv_data('./Data/DI_IRP.csv', 1);
+[D, N, time] = load_csv_data('./Data/DIS_IRP.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
 clear D N n_names m_names
 xn25 = DI.eng.xn25;

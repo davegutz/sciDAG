@@ -70,7 +70,7 @@ exec('./Callbacks/mvwin_b.sci', -1);
 [xb, ab] = mvwin_b(40);
 exec('./Callbacks/mvwin_a.sci', -1);
 [xa, aa] = mvwin_a(40);
-mv_x = DI.ifc.Calc.Comp.fmv.mv.Result.x;
+mv_x = DI.ifc.Calc.Comp.fmv.mv.In.x;
 if isempty(mv_xa), mv_xa = mv_x.values(:,1); end
 mv_aa = interp1(xa, aa, mv_xa, 'linear', aa(1));
 mv_xb = interp1(ab, xb, mv_aa);
@@ -90,26 +90,26 @@ INI.initialized = %t;
 time_tic = getdate();
 
 // placeholder for VEN Unit stuff
-//INI.xnven = vdpp_rpm.values(1,1);
-//INI.xn25 = xn25.values(1,1);
-//INI.disp = vdpp_disp.values(1,1);
-//INI.pdven = tri_ps.values(1,1);
-//INI.psven = tri_pd.values(1,1);
-//INI.pact.x = pact_x.values(1,1);
-//INI.reg.x = tri_x.values(1,1);
-//INI.pxven = tri_px.values(1,1);
-//INI.rrv.x = rrv_x.values(1,1);
-//INI.bias.x = bias_x.values(1,1);
-INI.xnven = 3243.2;
-INI.xn25 = 6884.0;
-INI.disp = 0.28047000;
-INI.pdven = 1451.20000000;
-INI.psven = 73.59500000;
-INI.pact.x = 0.09052700;
-INI.reg.x =-0.00178570;
-INI.pxven = 728.50000000;
-INI.rrv.x = 0.00000001;
-INI.bias.x = -0.00000738;
+INI.xnven = DV.pump.In.rpm.values(1,1);
+INI.xn25 = DV.I.xn25.values(1,1);
+INI.disp = DV.pump.In.disp.values(1,1);
+INI.pdven = DV.pd.values(1,1);
+INI.psven = DV.I.ps_psia.values(1,1);
+INI.pact.x = DV.pumpAct.x.values(1,1);
+INI.reg.x = DV.reg.Result.x.values(1,1);
+INI.pxven = DV.px.values(1,1);
+INI.rrv.x = DV.rrv.Result.x.values(1,1);
+INI.bias.x = DV.bias.Result.x.values(1,1);
+//INI.xnven = 3243.2;
+//INI.xn25 = 6884.0;
+//INI.disp = 0.28047000;
+//INI.pdven = 1451.20000000;
+//INI.psven = 73.59500000;
+//INI.pact.x = 0.09052700;
+//INI.reg.x =-0.00178570;
+//INI.pxven = 728.50000000;
+//INI.rrv.x = 0.00000001;
+//INI.bias.x = -0.00000738;
 
 // Cleanup
 INI = order_all_fields(INI);
