@@ -64,6 +64,8 @@ INI.ven_pd = 1451.2;
 INI.pamb = 14.696;
 INI.pr = 198.59;
 
+ic.wf1bias = 673.32808;
+
 // Initialize
 exec('./Callbacks/Solve_start04alone.sce', -1);
 exec('./Callbacks/mvwin_b.sci', -1);
@@ -120,6 +122,7 @@ ic.acbst_dP = ic.acsupply.acbst.dP_Pump;
 ic.acmbst_dP = ic.acsupply.acmbst.dP_Pump;
 ic.acsupply.ltank = ini_man_n_mv(G.acsupply.ltank, ic.acsupply.ltank.p, ic.acsupply.ltank.wf);
 ic.acsupply.lengine = ini_man_n_mv(G.acsupply.lengine, ic.acsupply.lengine.p, ic.acsupply.lengine.wf);
+ic.mline.main_line = ini_man_n_mm(G.mline.main_line, ic.ifc.pd, ic.ifc.wfmd);
 
 
 mprintf('Completed %s\n', sfilename())  
