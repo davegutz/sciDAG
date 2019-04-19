@@ -60,6 +60,7 @@ global loaded_scratch root sys_f scs_m cpr
 global GEO G INI FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 global ic
+global DI DV
 
 // Auto data overplot load
 stack_size = stacksize('max');

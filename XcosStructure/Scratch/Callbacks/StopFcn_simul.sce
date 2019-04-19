@@ -31,6 +31,7 @@ function overplot(st, c, %title)
 endfunction
 
 global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN  time_tic time_toc
+global DI DV
 mprintf('In %s\n', sfilename())  
 try cpr = %cpr; end
 
@@ -41,8 +42,8 @@ figs=[];
 time_toc = getdate();
 mprintf('Run took %8.3f seconds\n', etime(time_toc, time_tic));
 
-if 0  & Tf>1e-6 then
-    
+if 1  & Tf>1e-6 then
+
 tWALL = WALL.time(:,1);
 WFMD = struct('time', tWALL, 'values', WALL.values(:,1));
 WF36 = struct('time', tWALL, 'values', WALL.values(:,2));
@@ -68,10 +69,49 @@ tXALL = XALL.time(:,1);
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,1));
 clear tWALL tIDATA tPALL tXALL
 
-
-vload_wfload = vload_wfl;
+vload_wfload = DV.wfload;
 vload_wfload.values = vload_wfload.values + start_wfs.values;
-
+wf1v = DI.ifc.In.wf1v;
+wf1mv = DI.ifc.Calc.Flow.wf1mv;
+wf1s = DI.ifc.Calc.Flow.wf1s;
+mv_wfd = DI.ifc.Calc.Flow.wfmv;
+wf3 = DI.ifc.Calc.Flow.wf3;
+wfmd = wf3;
+wf36 = DI.eng.wf36;
+p1c = DI.ifc.Calc.Press.p1c;
+ifc_px = DI.ifc.Calc.Press.px;
+p2 = DI.ifc.Calc.Press.p2;
+p3 = DI.ifc.Calc.Press.p3;
+pnozin = DI.eng.pnozin;
+mv_xin = DI.ifc.Calc.Comp.fmv.mv.In.x;
+hs_x = DI.ifc.Calc.Comp.hs.Result.x;
+mvtv_x = DI.ifc.Calc.Comp.mvtv.Result.x;
+start_x = mvtv_x;start_x.values = start_x.values*G.ven.vsv.xmax;
+vdpp_rpm = DV.pump.In.rpm;
+vdpp_pd = DV.pd;
+vdpp_ps = DV.I.ps_psia;
+vdpp_disp = DV.pump.In.disp;
+vdpp_wf = DV.pump.Result.wf;
+pact_x = DV.pumpAct.x;
+pact_v = DV.pumpAct.dxdt;
+vlink_ftpa = DV.pumpAct.ftpa;
+pact_fexth = DV.pumpAct.pa_fexth;
+pact_wfr = DV.pumpAct.wfr;
+tri_x = DV.reg.Result.x;
+vlink_wflkout = DV.wflkout;
+tri_px = DV.reg.In.px;
+vload_wfload = DV.wfload;
+tri_wfx = DV.reg.Result.wf.wfx;
+rrv_wfs = DV.rrv.Result.wf.wfs;
+rrv_wfd = DV.rrv.Result.wf.wfd;
+rrv_wfvx = DV.rrv.Result.wf.wfvx;
+rrv_x = DV.rrv.Result.x;
+bias_fext = DV.bias.In.fexth;
+bias_wfve = DV.bias.Result.wf.wfve;
+bias_x = DV.bias.Result.x;
+tri_wfse = DV.reg.Result.wf.wfse;
+tri_wfs = DV.reg.Result.wf.wfs;
+start_wfs = DV.reg.Result.wf.wfs; start_wfs.values = start_wfs.values*0;
 
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
 subplot(221)
@@ -93,7 +133,7 @@ overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
 
 figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [40,70,610,460]);
 subplot(321)
-overplot(['P1SO', 'p1so'], ['r-', 'b--'], 'MV Supply Pressure')
+overplot(['P1SO', 'p1c'], ['r-', 'b--'], 'MV Supply Pressure')
 subplot(322)
 overplot(['P2', 'p2'], ['r-', 'b--'], 'MV Discharge Pressure')
 subplot(323)
@@ -101,7 +141,7 @@ overplot(['P_3', 'p3'], ['r-', 'b--'], 'TV Discharge Pressure')
 subplot(324)
 overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
 subplot(325)
-overplot(['PX', 'px'], ['r-', 'b--'], 'MVTV Control Pressure')
+overplot(['PX', 'ifc_px'], ['r-', 'b--'], 'MVTV Control Pressure')
 
 figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [40,90,610,600]);
 subplot(321)
@@ -115,9 +155,9 @@ overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
 figs($+1) = figure("Figure_name", 'VDPP', "Position", [40,90,610,600]);
 subplot(321)
-overplot(['VDPP_RPM', 'vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['r-', 'b--', 'k--', 'o-'], 'VDPP')
+overplot(['VDPP_RPM', 'vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['r-', 'b--', 'k--', 'm-'], 'VDPP')
 subplot(322)
-overplot(['vdpp_ps'], ['o--'], 'VDPP')
+overplot(['vdpp_ps'], ['b--'], 'VDPP')
 subplot(323)
 overplot(['VDPP_DISP', 'vdpp_disp'], ['r-', 'b--'], 'VDPP')
 subplot(324)
@@ -190,7 +230,6 @@ subplot(336)
 overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
 subplot(337)
 overplot(['START_WFS', 'start_wfs'], ['r-',  'b--'], 'Start Valve Flow')
-
 
 end
 
