@@ -120,6 +120,7 @@ ic.acbst_dP = ic.acsupply.acbst.dP_Pump;
 ic.acmbst_dP = ic.acsupply.acmbst.dP_Pump;
 ic.acsupply.ltank = ini_man_n_mv(G.acsupply.ltank, ic.acsupply.ltank.p, ic.acsupply.ltank.wf);
 ic.acsupply.lengine = ini_man_n_mv(G.acsupply.lengine, ic.acsupply.lengine.p, ic.acsupply.lengine.wf);
+ic.mline.main_line = ini_man_n_mm(G.mline.main_line, ic.pd, ic.wfmd);
 
 
 mprintf('Completed %s\n', sfilename())  
