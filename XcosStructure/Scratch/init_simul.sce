@@ -240,7 +240,6 @@ exec('../Lib/init_libScratch.sce', -1);
 chdir(this_path);
 
 mprintf('Executed ' + this + ' up to importXcosDiagram*********\n');
-mprintf('Ready to play...press the right arrow icon on %s diagram at top.\n', root);
 
 try
     importXcosDiagram("./"+this_xcos_file);
@@ -249,6 +248,10 @@ catch
     importXcosDiagram("./"+this_zcos_file);
     xcos('./'+this_zcos_file);
 end
+
+
+mprintf('Ready to play...press the right arrow icon on %s diagram at top.\n', root);
+
 //scicos_simulate(scs_m);
 //scs_m.props.context
 

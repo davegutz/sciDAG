@@ -83,7 +83,7 @@ ifc_px = DI.ifc.Calc.Press.px;
 p2 = DI.ifc.Calc.Press.p2;
 p3 = DI.ifc.Calc.Press.p3;
 pnozin = DI.eng.pnozin;
-mv_xin = DI.ifc.Calc.Comp.fmv.mv.In.x;
+mv_xin = DI.ifc.Calc.Comp.fmv.mv.Result.x;
 hs_x = DI.ifc.Calc.Comp.hs.Result.x;
 mvtv_x = DI.ifc.Calc.Comp.mvtv.Result.x;
 start_x = mvtv_x;start_x.values = start_x.values*G.ven.vsv.xmax;
