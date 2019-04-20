@@ -127,5 +127,6 @@ ic.mline.ln_vs = ini_man_n_vm(G.mline.ln_vs, ic.ifc.p1so, ic.wf1v);
 ic.wf1bias = 0;
 ic.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, ic.ifc.p3, ic.ifc.wf3s);
 ic.ven.vsv.x = G.ven.vsv.xmax;
+ic.ven.rrv.x = G.ven.rrv.xmin;
 
 mprintf('Completed %s\n', sfilename())  
