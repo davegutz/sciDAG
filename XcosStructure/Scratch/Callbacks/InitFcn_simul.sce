@@ -35,7 +35,7 @@ G.mline.main_line = lti_man_n_mm(G.mline.main_line, FP.sg, FP.beta);
 G.acsupply.ltank = lti_man_n_mv(G.acsupply.ltank, FP.sg, FP.beta);
 G.acsupply.lengine = lti_man_n_mv(G.acsupply.lengine, FP.sg, FP.beta);
 
-if ~INI.batch then
+if 0 & ~INI.batch then
     if INI.initialized & INI.skip_init then
         btn = messagebox('Reinitialization needed?', 'Query Re-Init', 'question', ['yes', 'no'], 'modal');
         mprintf("Skipping init\n");
@@ -46,12 +46,13 @@ if ~INI.batch then
         end
     end
 else
-    if INI.initialized then
+    if 0 & INI.initialized then
         mprintf("Skipping init\n");
         time_tic = getdate();
         return;
     end
 end
+load('INI_IRP.dat')
 
 // Inputs
 INI.wf36 = 107.08;
@@ -65,7 +66,8 @@ INI.pamb = 14.696;
 INI.pr = 198.59;
 
 // Initialize
-exec('./Callbacks/Solve_start04alone.sce', -1);
+//exec('./Callbacks/Solve_start04alone.sce', -1);
+
 exec('./Callbacks/mvwin_b.sci', -1);
 [xb, ab] = mvwin_b(40);
 exec('./Callbacks/mvwin_a.sci', -1);
