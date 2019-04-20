@@ -124,5 +124,6 @@ ic.acsupply.ltank = ini_man_n_mv(G.acsupply.ltank, ic.acsupply.ltank.p, ic.acsup
 ic.acsupply.lengine = ini_man_n_mv(G.acsupply.lengine, ic.acsupply.lengine.p, ic.acsupply.lengine.wf);
 ic.mline.main_line = ini_man_n_mm(G.mline.main_line, ic.pd, ic.wfmd);
 ic.wf1bias = 0;
+ic.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, ic.ifc.p3, ic.ifc.wf3s);
 
 mprintf('Completed %s\n', sfilename())  

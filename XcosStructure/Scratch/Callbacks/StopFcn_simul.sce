@@ -50,8 +50,8 @@ WF36 = struct('time', tWALL, 'values', WALL.values(:,2));
 WF1V = struct('time', tWALL, 'values', WALL.values(:,4));
 tIDATA = IDATA.time(:,1);
 P1SO = struct('time', tIDATA, 'values', IDATA.values(:,1));
-P2 = struct('time', tIDATA, 'values', IDATA.values(:,2));
-P_3 = struct('time', tIDATA, 'values', IDATA.values(:,3));
+P3 = struct('time', tIDATA, 'values', IDATA.values(:,2));
+PD = struct('time', tIDATA, 'values', IDATA.values(:,3));
 PX = struct('time', tIDATA, 'values', IDATA.values(:,4));
 WFAREA = struct('time', tIDATA, 'values', IDATA.values(:,5));
 WFMV = struct('time', tIDATA, 'values', IDATA.values(:,6));
@@ -82,6 +82,7 @@ p1c = DI.ifc.Calc.Press.p1c;
 ifc_px = DI.ifc.Calc.Press.px;
 p2 = DI.ifc.Calc.Press.p2;
 p3 = DI.ifc.Calc.Press.p3;
+pd = DI.ifc.PD;
 pnozin = DI.eng.pnozin;
 mv_xin = DI.ifc.Calc.Comp.fmv.mv.Result.x;
 hs_x = DI.ifc.Calc.Comp.hs.Result.x;
@@ -135,9 +136,9 @@ figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [40,70,610,460]);
 subplot(321)
 overplot(['P1SO', 'p1c'], ['r-', 'b--'], 'MV Supply Pressure')
 subplot(322)
-overplot(['P2', 'p2'], ['r-', 'b--'], 'MV Discharge Pressure')
+overplot(['P3', 'p3'], ['r-', 'b--'], 'MV Discharge Pressure')
 subplot(323)
-overplot(['P_3', 'p3'], ['r-', 'b--'], 'TV Discharge Pressure')
+overplot(['PD', 'pd'], ['r-', 'b--'], 'TV Discharge Pressure')
 subplot(324)
 overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
 subplot(325)
