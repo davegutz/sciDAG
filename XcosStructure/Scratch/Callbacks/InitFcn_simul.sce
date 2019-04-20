@@ -70,7 +70,7 @@ exec('./Callbacks/mvwin_b.sci', -1);
 [xb, ab] = mvwin_b(40);
 exec('./Callbacks/mvwin_a.sci', -1);
 [xa, aa] = mvwin_a(40);
-mv_x = DI.ifc.Calc.Comp.fmv.mv.In.x;
+mv_x = DI.ifc.Calc.Comp.fmv.mv.In.x; 
 if isempty(mv_xa), mv_xa = mv_x.values(:,1); end
 mv_aa = interp1(xa, aa, mv_xa, 'linear', aa(1));
 mv_xb = interp1(ab, xb, mv_aa);
