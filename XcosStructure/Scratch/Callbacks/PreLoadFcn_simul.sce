@@ -316,6 +316,7 @@ vo_p1c_so = 6.6;
 G.ifc.vo_p1so.vol = vo_p1c_on;
 G.ifc.vo_pd.vol = 9.6;
 G.ifc.vo_p3.vol = 5.61;
+G.ifc.vo_px.vol = 1.6;
 G.ifc.a_tvb = G.ifc.a_tvb;
 G.ifc.k1leak = 0.3098;
 G.ifc.a1leak = 6.1783e-4;
