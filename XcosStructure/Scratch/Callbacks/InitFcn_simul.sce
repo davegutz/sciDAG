@@ -20,7 +20,7 @@
 // Jsn 1, 2019      DA Gutz     Created
 // 
 global LINCOS_OVERRIDE figs LIN time_tic time_toc
-global G INI ic FP mv_x mv_xa mv_xin Tf
+global G MOD ic FP mv_x mv_xa mv_xin Tf
 mprintf('In %s\n', sfilename())  
 try close(figs); end
 LINCOS_OVERRIDE = 0;
@@ -31,8 +31,8 @@ G.mline.main_line = lti_man_n_mm(G.mline.main_line, FP.sg, FP.beta);
 G.acsupply.ltank = lti_man_n_mv(G.acsupply.ltank, FP.sg, FP.beta);
 G.acsupply.lengine = lti_man_n_mv(G.acsupply.lengine, FP.sg, FP.beta);
 
-if 0 & ~INI.batch then
-    if INI.initialized & INI.skip_init then
+if 0 & ~MOD.batch then
+    if MOD.initialized & MOD.skip_init then
         btn = messagebox('Reinitialization needed?', 'Query Re-Init', 'question', ['yes', 'no'], 'modal');
         mprintf("Skipping init\n");
         if btn~=1 then
@@ -42,17 +42,16 @@ if 0 & ~INI.batch then
         end
     end
 else
-    if 0 & INI.initialized then
+    if 0 & MOD.initialized then
         mprintf("Skipping init\n");
         time_tic = getdate();
         return;
     end
 end
-load('INI_IRP.dat')
 
-// Inputs
-INI.wf36 = 107.08;
-INI.ps3 = 15;
+// Inputs  TODO:  need better logic
+//MOD.wf36 = 107.08;
+//MOD.ps3 = 15;
 
 // Boundary conditions 
 // Initialize TODO:  need better logic
@@ -72,15 +71,15 @@ xE = mv_x.values($,1);
 mv_xin = struct('time', [0 0.00099 .00100 Tf]', 'values', [x0 x0 xE xE]');
 //mv_x.values(:,1) = mv_xb*0+mv_xb(1);
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
-INI.initialized = %t;
+MOD.initialized = %t;
 time_tic = getdate();
 
 // placeholder for VEN Unit stuff TODO:  need better logic here
 
 // Cleanup
-INI = order_all_fields(INI);
+MOD = order_all_fields(MOD);
 
-// Temporary version of the final initialization method (newIni.sce) ic = INIx
+// Temporary version of the final initialization method (newIni.sce) ic = MODx
 load('init_00_08000_00000_16005_09060_147_79_13_sNone_ic.dat');
 ic.acbst_dP = ic.acsupply.acbst.dP_Pump;
 ic.acmbst_dP = ic.acsupply.acmbst.dP_Pump;

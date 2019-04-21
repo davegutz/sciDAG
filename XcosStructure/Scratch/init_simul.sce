@@ -57,7 +57,7 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch root sys_f scs_m cpr
-global G INI ic FP LIN mv_x mv_xa mv_xin Tf
+global G MOD ic FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 global DI DV
 
@@ -73,6 +73,8 @@ exec('./Data/load_decode_csv_data.sce', -1);
 [D, N, time] = load_csv_data('./Data/DIS_IRP.csv', 1);
 exec('./Data/load_decode_csv_data.sce', -1);
 clear D N n_names m_names
+
+// Driven inputs  TODO: standalone model should not have any driven
 xn25 = DI.eng.xn25;
 hs_x = DI.ifc.Calc.Comp.hs.Result.x;
 tri_ps = DV.reg.In.ps;
@@ -122,10 +124,10 @@ NBUF = ceil(Tf/TBUF);
 clear D N time
 
 // Memory of setup
-INI.initialized = %f;
-INI.skip_init = %t;
-INI.batch = %f;
-INI.tPumpFail = %inf;
+MOD.initialized = %f;
+MOD.skip_init = %t;
+MOD.batch = %f;
+MOD.tPumpFail = %inf;
 LIN.open_tv = 0;
 
 // Fuel properties
