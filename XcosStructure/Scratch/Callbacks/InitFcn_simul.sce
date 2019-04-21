@@ -20,15 +20,12 @@
 // Jsn 1, 2019      DA Gutz     Created
 // 
 global LINCOS_OVERRIDE figs LIN time_tic time_toc
-global GEO G INI FP mv_x mv_xa mv_xin Tf
+global G INI FP mv_x mv_xa mv_xin Tf
 global ic
 mprintf('In %s\n', sfilename())  
 try close(figs); end
 LINCOS_OVERRIDE = 0;
 
-GEO.ln_vs = lti_man_n_vm(GEO.ln_vs, FP.sg, FP.beta);
-GEO.ln_p3s = lti_man_n_vm(GEO.ln_p3s, FP.sg, FP.beta);
-GEO.main_line = lti_man_n_mm(GEO.main_line, FP.sg, FP.beta);
 G.mline.ln_vs = lti_man_n_vm(G.mline.ln_vs, FP.sg, FP.beta);
 G.ifc.ln_p3s = lti_man_n_vm(G.ifc.ln_p3s, FP.sg, FP.beta);
 G.mline.main_line = lti_man_n_mm(G.mline.main_line, FP.sg, FP.beta);
@@ -81,9 +78,6 @@ x0 = mv_x.values(1,1);
 xE = mv_x.values($,1);
 mv_xin = struct('time', [0 0.00099 .00100 Tf]', 'values', [x0 x0 xE xE]');
 //mv_x.values(:,1) = mv_xb*0+mv_xb(1);
-INI.ln_vs = ini_man_n_vm(GEO.ln_vs, INI.p1so, INI.wf1v);
-INI.ln_p3s = ini_man_n_vm(GEO.ln_p3s, INI.p3s, 0);
-INI.main_line = ini_man_n_mm(GEO.main_line, INI.p3, INI.wf3);
 INI.mline.ln_vs = ini_man_n_vm(G.mline.ln_vs, INI.p1so, INI.wf1v);
 INI.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, INI.p3s, 0);
 INI.mline.main_line = ini_man_n_mm(G.mline.main_line, INI.p3, INI.wf3);

@@ -43,7 +43,7 @@
 
 global LINCOS_OVERRIDE
 global loaded_scratch
-global GEO G FP
+global G FP
 
 mprintf('In %s\n', sfilename()) 
 
@@ -51,102 +51,95 @@ mprintf('In %s\n', sfilename())
 
 // Define valve vsv start valve geometry
 d = 0.2657;
-GEO.vsv.ax1 = d^2*%pi/4;
+G.ven.vsv.ax1 = d^2*%pi/4;
 clear d
-GEO.vsv.ax2 = GEO.vsv.ax1;
-GEO.vsv.ax3 = 0;
-GEO.vsv.ax4 = GEO.vsv.ax1;
-GEO.vsv.c = 0;
-GEO.vsv.clin = 0.24;
-GEO.vsv.cd = 0.7;
-GEO.vsv.cdo = 0.61;
-GEO.vsv.cp = 0.43;
+G.ven.vsv.ax2 = G.ven.vsv.ax1;
+G.ven.vsv.ax3 = 0;
+G.ven.vsv.ax4 = G.ven.vsv.ax1;
+G.ven.vsv.c = 0;
+G.ven.vsv.clin = 0.24;
+G.ven.vsv.cd = 0.7;
+G.ven.vsv.cdo = 0.61;
+G.ven.vsv.cp = 0.43;
 d = 0.016;
-GEO.vsv.ao = d^2*%pi/4;
+G.ven.vsv.ao = d^2*%pi/4;
 clear d
-GEO.vsv.fdyf = 0;
-GEO.vsv.fstf = 0;
-GEO.vsv.fs = 15.8;
-GEO.vsv.ks = 50;
-GEO.vsv.ld = 0;
-GEO.vsv.lh = 0;
+G.ven.vsv.fdyf = 0;
+G.ven.vsv.fstf = 0;
+G.ven.vsv.fs = 15.8;
+G.ven.vsv.ks = 50;
+G.ven.vsv.ld = 0;
+G.ven.vsv.lh = 0;
 mv = 8e-5*386.4;
 ms = 0.15;
-GEO.vsv.m = mv + ms/2;
+G.ven.vsv.m = mv + ms/2;
 clear mv ms
-GEO.vsv.xmax = 0.125;
-GEO.vsv.xmin = 0;
+G.ven.vsv.xmax = 0.125;
+G.ven.vsv.xmin = 0;
 exec('./Callbacks/vsvwin_a.sci', -1);
-GEO.vsv.ad.tb = [-1 0; 1 0];
+G.ven.vsv.ad.tb = [-1 0; 1 0];
 [xh, ah, wvh] = vsvwin_a(40);
-GEO.vsv.ah.tb = [xh ah];
+G.ven.vsv.ah.tb = [xh ah];
 clear xh ah wvh
 
-G.ven.vsv = GEO.vsv;
 
 // Define trivalve reg geometry
 dh = .190; dlh = 0.; dlr = 0.; dld = 0.; dr = .125; 
-GEO.reg.adl = 0;
-GEO.reg.ahd = max((sqr(dh) - sqr(dlr)) * %pi / 4., 0.);
-GEO.reg.ahs = sqr(dh) * %pi / 4.;
-GEO.reg.ald = max((sqr(dlh) - sqr(dld)) * %pi / 4., 0.);
-GEO.reg.ale = sqr(dld) * %pi / 4.;
-GEO.reg.alr = max((sqr(dlh) - sqr(dlr)) * %pi / 4., 0.);
-GEO.reg.ar = max((sqr(dh) - sqr(dr)) * %pi / 4., 0.);
-GEO.reg.asl = 0;
+G.ven.reg.adl = 0;
+G.ven.reg.ahd = max((sqr(dh) - sqr(dlr)) * %pi / 4., 0.);
+G.ven.reg.ahs = sqr(dh) * %pi / 4.;
+G.ven.reg.ald = max((sqr(dlh) - sqr(dld)) * %pi / 4., 0.);
+G.ven.reg.ale = sqr(dld) * %pi / 4.;
+G.ven.reg.alr = max((sqr(dlh) - sqr(dlr)) * %pi / 4., 0.);
+G.ven.reg.ar = max((sqr(dh) - sqr(dr)) * %pi / 4., 0.);
+G.ven.reg.asl = 0;
 clear dh dlh dlr dld dr
-GEO.reg.c = 0.75;
-GEO.reg.cd = 0.61;
-GEO.reg.cp = 0;
-GEO.reg.fs = -15.9-12.;
-GEO.reg.fdyf = 2;
-GEO.reg.fstf = 2;
-GEO.reg.ks = 120.;
-GEO.reg.ld = 0;
-GEO.reg.ls = 0;
-GEO.reg.m = 0.055;
-GEO.reg.xmax = 0.125;
-GEO.reg.xmin = -0.011;
+G.ven.reg.c = 0.75;
+G.ven.reg.cd = 0.61;
+G.ven.reg.cp = 0;
+G.ven.reg.fs = -15.9-12.;
+G.ven.reg.fdyf = 2;
+G.ven.reg.fstf = 2;
+G.ven.reg.ks = 120.;
+G.ven.reg.ld = 0;
+G.ven.reg.ls = 0;
+G.ven.reg.m = 0.055;
+G.ven.reg.xmax = 0.125;
+G.ven.reg.xmin = -0.011;
 exec('./Callbacks/regwin_a.sci', -1);
 [xh, as, ad] = regwin_a(40);
-GEO.reg.as.tb = [xh as];
-GEO.reg.ad.tb = [xh ad];
+G.ven.reg.as.tb = [xh as];
+G.ven.reg.ad.tb = [xh ad];
 clear xh as ad
 
-G.ven.reg = GEO.reg;
-
 // Pump actuator
-GEO.pact.c_ = 100.;
-GEO.pact.cd_ = .61;
-GEO.pact.ab = 0.;
-GEO.pact.ah = (.85)^2*%pi/4;
-GEO.pact.ahl = 0.;
-GEO.pact.ar = GEO.pact.ah;
-GEO.pact.arl = 0.;
-GEO.pact.fdyf = 10.;
-GEO.pact.fstf = 10.;
-GEO.pact.mext = .04834 * 386.4;
-GEO.pact.xmax = .287;
-GEO.pact.xmin = .00873;
-
-G.ven.pact = GEO.pact;
+G.ven.pact.c_ = 100.;
+G.ven.pact.cd_ = .61;
+G.ven.pact.ab = 0.;
+G.ven.pact.ah = (.85)^2*%pi/4;
+G.ven.pact.ahl = 0.;
+G.ven.pact.ar = G.ven.pact.ah;
+G.ven.pact.arl = 0.;
+G.ven.pact.fdyf = 10.;
+G.ven.pact.fstf = 10.;
+G.ven.pact.mext = .04834 * 386.4;
+G.ven.pact.xmax = .287;
+G.ven.pact.xmin = .00873;
 
 // Pump actuator leakage
-GEO.pact_lk.l = 0.292;
-GEO.pact_lk.r = 0.190 / 2;
-GEO.pact_lk.ecc = 0;
-GEO.pact_lk.rad_clear = 0.0004;
+G.ven.pact_lk.l = 0.292;
+G.ven.pact_lk.r = 0.190 / 2;
+G.ven.pact_lk.ecc = 0;
+G.ven.pact_lk.rad_clear = 0.0004;
 
-G.ven.pact_lk = GEO.pact_lk;
+G.ven.pact_lk = G.ven.pact_lk;
 
 // Pump pos disp
-GEO.vdpp.cn = 0;
-GEO.vdpp.cs = 5.3e-10;
-GEO.vdpp.ct = 0.00096;
-GEO.vdpp.cf = -0.02;
-GEO.vdpp.cdv = 3.1024;
-
-G.ven.vdpp = GEO.vdpp;
+G.ven.vdpp.cn = 0;
+G.ven.vdpp.cs = 5.3e-10;
+G.ven.vdpp.ct = 0.00096;
+G.ven.vdpp.cf = -0.02;
+G.ven.vdpp.cdv = 3.1024;
 
 // VEN Unit Linkages
 // Degrees pump position
@@ -170,186 +163,160 @@ ytqa = [1.392, 1.386, 1.380,..
  1.176, 1.151, 1.125, 1.098, 1.070,..
  1.042, 1.012, 0.981, 0.949, 0.916,..
  0.892, 0.882, 0.847, 0.811, 0.774, 0.736};
-GEO.vlink.ctqpv = 0.4418;
-GEO.vlink.cva = 1.588;
-GEO.vlink.cftpa = 0.567*0.7;
-GEO.vlink.ytqa.tb = [yxpump' ytqa'];
-GEO.vlink.ytqrs.tb = [yxpump' ytqrs']; 
+G.ven.vlink.ctqpv = 0.4418;
+G.ven.vlink.cva = 1.588;
+G.ven.vlink.cftpa = 0.567*0.7;
+G.ven.vlink.ytqa.tb = [yxpump' ytqa'];
+G.ven.vlink.ytqrs.tb = [yxpump' ytqrs']; 
 clear ytqrs yxpump ytqa
 
-G.ven.vlink = GEO.vlink;
-
-GEO.ehsv_klk = 2.257e-6;
-GEO.ehsv_powlk = 0.8;
-
-G.ven.ehsv_klk = GEO.ehsv_klk;
-G.ven.ehsv_powlk = GEO.ehsv_powlk;
+G.ven.ehsv_klk = 2.257e-6;
+G.ven.ehsv_powlk = 0.8;
 
 // Rod relief valve
-GEO.rrv.ax1 = sqr(.15) * %pi / 4.;
-GEO.rrv.ax2 = GEO.rrv.ax1;
-GEO.rrv.ax3 = 0.;
-GEO.rrv.ax4 = 0.;
-GEO.rrv.c = 0.;
-GEO.rrv.cd = .70;
-GEO.rrv.cdo = .61;
-GEO.rrv.cp = 0.43;
+G.ven.rrv.ax1 = sqr(.15) * %pi / 4.;
+G.ven.rrv.ax2 = G.ven.rrv.ax1;
+G.ven.rrv.ax3 = 0.;
+G.ven.rrv.ax4 = 0.;
+G.ven.rrv.c = 0.;
+G.ven.rrv.cd = .70;
+G.ven.rrv.cdo = .61;
+G.ven.rrv.cp = 0.43;
 d = 0.100;
-GEO.rrv.ao = d^2*%pi/4;
+G.ven.rrv.ao = d^2*%pi/4;
 clear d
-GEO.rrv.fdyf = 0.0;
-GEO.rrv.fs = 0.09;
-GEO.rrv.fstf = 0.0;
-GEO.rrv.ks = 10.;
-GEO.rrv.ld = 0.;
-GEO.rrv.lh = 0.;
+G.ven.rrv.fdyf = 0.0;
+G.ven.rrv.fs = 0.09;
+G.ven.rrv.fstf = 0.0;
+G.ven.rrv.ks = 10.;
+G.ven.rrv.ld = 0.;
+G.ven.rrv.lh = 0.;
 ms = 0.0001;
 mv = .002;
-GEO.rrv.m = mv + ms/2;
+G.ven.rrv.m = mv + ms/2;
 clear mv ms
-GEO.rrv.xmax = .05;
-GEO.rrv.xmin = 0.;
+G.ven.rrv.xmax = .05;
+G.ven.rrv.xmin = 0.;
 exec('./Callbacks/rrvwin.sci', -1);
 [x, a] = rrvwin(40);
-GEO.rrv.ad.tb = [x a];
+G.ven.rrv.ad.tb = [x a];
 clear x a
-GEO.rrv.ah.tb = [0 0;1 0];
-
-G.ven.rrv = GEO.rrv;
+G.ven.rrv.ah.tb = [0 0;1 0];
 
 // VEN volumes
-//GEO.vo_pcham.vol = 3.2; // Match Simulink
-GEO.vo_pcham.vol = 1.6; // Match c-code
-GEO.vo_vpx.vol = 0.2;
-
-G.ven.vo_pcham = GEO.vo_pcham;
-G.ven.vo_px = GEO.vo_vpx;
+//G.ven.vo_pcham.vol = 3.2; // Match Simulink
+G.ven.vo_pcham.vol = 1.6; // Match c-code
+G.ven.vo_px.vol = 0.2;
 
 // Bias %piston
-GEO.bias.c_ = .7;
-GEO.bias.cd_ = .61;
-GEO.bias.ab = 0.;
-GEO.bias.ah = (.538)^2*%pi/4;
-GEO.bias.ahl = 0.;
-GEO.bias.ar = max(GEO.bias.ah - (.190)^2*%pi/4, 0);
-GEO.bias.arl = 0.;
-GEO.bias.fdyf = 0.;
-GEO.bias.fstf = 0.;
-GEO.bias.mact = .0383;
-GEO.bias.mext = 0.;
-GEO.bias.xmax = .1736;
-GEO.bias.xmin = 0.;
+G.ven.bias.c_ = .7;
+G.ven.bias.cd_ = .61;
+G.ven.bias.ab = 0.;
+G.ven.bias.ah = (.538)^2*%pi/4;
+G.ven.bias.ahl = 0.;
+G.ven.bias.ar = max(G.ven.bias.ah - (.190)^2*%pi/4, 0);
+G.ven.bias.arl = 0.;
+G.ven.bias.fdyf = 0.;
+G.ven.bias.fstf = 0.;
+G.ven.bias.mact = .0383;
+G.ven.bias.mext = 0.;
+G.ven.bias.xmax = .1736;
+G.ven.bias.xmin = 0.;
 
-G.ven.bias = GEO.bias;
 G.ven.ksb = 650;     // Sundstrand 7/14/92
 G.ven.fsb = 12.54;   // Sundstrand 7/14/92
 
 // Start line
-GEO.ln_vs.l = 23.7;
-GEO.ln_vs.vol = 3.42;
-GEO.ln_vs.a = GEO.ln_vs.vol/GEO.ln_vs.l;
-GEO.ln_vs.n = 8;
-GEO.ln_vs.c = 0.001; // For no ss oscillations. Set to 0 for normal.
-
-G.mline.ln_vs = GEO.ln_vs;
+G.mline.ln_vs.l = 23.7;
+G.mline.ln_vs.vol = 3.42;
+G.mline.ln_vs.a = G.mline.ln_vs.vol/G.mline.ln_vs.l;
+G.mline.ln_vs.n = 8;
+G.mline.ln_vs.c = 0.001; // For no ss oscillations. Set to 0 for normal.
 
 // Define head_b hs=mvhead geometry
-GEO.hs.f_cn = 0.75;
-GEO.hs.f_dn = 0.055;
-GEO.hs.f_ln = 0.003;
-GEO.hs.f_an = GEO.hs.f_dn^2*%pi/4;
-GEO.hs.ae = 0.307;
-GEO.hs.ao = 0.125^2*%pi/4;
-GEO.hs.cdo = 1;
-GEO.hs.fb = -2.4;
-GEO.hs.fs = 12.6;
-GEO.hs.kb = 0;
-GEO.hs.ks = 520;
-GEO.hs.m = 1.29e-4*386.4;
-GEO.hs.xmax = 0.0325;
-GEO.hs.xmin = 0;
-
-G.ifc.hs = GEO.hs;
+G.ifc.hs.f_cn = 0.75;
+G.ifc.hs.f_dn = 0.055;
+G.ifc.hs.f_ln = 0.003;
+G.ifc.hs.f_an = G.ifc.hs.f_dn^2*%pi/4;
+G.ifc.hs.ae = 0.307;
+G.ifc.hs.ao = 0.125^2*%pi/4;
+G.ifc.hs.cdo = 1;
+G.ifc.hs.fb = -2.4;
+G.ifc.hs.fs = 12.6;
+G.ifc.hs.kb = 0;
+G.ifc.hs.ks = 520;
+G.ifc.hs.m = 1.29e-4*386.4;
+G.ifc.hs.xmax = 0.0325;
+G.ifc.hs.xmin = 0;
 
 // Define hlfvalve mv geometry
-GEO.mv.ax1 = 1.227;
-GEO.mv.cd = 0.69;
-GEO.mv.m = 0.497;
-GEO.mv.xmax = 0.536;
-GEO.mv.xmin = -0.1;
+G.ifc.mv.ax1 = 1.227;
+G.ifc.mv.cd = 0.69;
+G.ifc.mv.m = 0.497;
+G.ifc.mv.xmax = 0.536;
+G.ifc.mv.xmin = -0.1;
 exec('./Callbacks/mvwin_b.sci', -1);
 [xt, at] = mvwin_b(40);
-GEO.mv.at.tb = [xt at];
+G.ifc.mv.at.tb = [xt at];
 clear xt at
 
-G.ifc.mv = GEO.mv;
-
 // Define valve mvtv geometry
-GEO.mvtv.ax1 = sqr(1)*%pi/4.;
-GEO.mvtv.ax2 = sqr(1.125)*%pi/4.;
-GEO.mvtv.ax3 = 0;
-GEO.mvtv.ax4 = 0;
-// GEO.mvtv.c = 0.1; linux c-code model acts like c=0 always
-GEO.mvtv.c = 0.;
-GEO.mvtv.clin = 0.1;
-GEO.mvtv.cd = 0.7;
-GEO.mvtv.cdo = 0.7;
-GEO.mvtv.cp = 0;
+G.ifc.mvtv.ax1 = sqr(1)*%pi/4.;
+G.ifc.mvtv.ax2 = sqr(1.125)*%pi/4.;
+G.ifc.mvtv.ax3 = 0;
+G.ifc.mvtv.ax4 = 0;
+// G.ifc.mvtv.c = 0.1; linux c-code model acts like c=0 always
+G.ifc.mvtv.c = 0.;
+G.ifc.mvtv.clin = 0.1;
+G.ifc.mvtv.cd = 0.7;
+G.ifc.mvtv.cdo = 0.7;
+G.ifc.mvtv.cp = 0;
 d = 0.5; // disable
-GEO.mvtv.ao = d^2*%pi/4;
+G.ifc.mvtv.ao = d^2*%pi/4;
 clear d
-GEO.mvtv.fdyf = 0;
-GEO.mvtv.fstf = 0;
-GEO.mvtv.fs = 25.2;
-GEO.mvtv.ks = 69;
-GEO.mvtv.ld = 0;
-GEO.mvtv.lh = 0;
+G.ifc.mvtv.fdyf = 0;
+G.ifc.mvtv.fstf = 0;
+G.ifc.mvtv.fs = 25.2;
+G.ifc.mvtv.ks = 69;
+G.ifc.mvtv.ld = 0;
+G.ifc.mvtv.lh = 0;
 mv = (6.87e-4) * 386.4;
 ms = 0;
-GEO.mvtv.m = mv + ms/2;
+G.ifc.mvtv.m = mv + ms/2;
 clear mv ms
-GEO.mvtv.xmax = 0.36;
-GEO.mvtv.xmin = -0.12;
-//GEO.mvtv.xmin = -0.05; // was -0.12 fix init
+G.ifc.mvtv.xmax = 0.36;
+G.ifc.mvtv.xmin = -0.12;
+//G.ifc.mvtv.xmin = -0.05; // was -0.12 fix init
 exec('./Callbacks/mvtvwin.sci', -1);
-GEO.mvtv.ah.tb = [-1 0; 1 0];
+G.ifc.mvtv.ah.tb = [-1 0; 1 0];
 [xd, ad] = mvtvwin(40);
-GEO.mvtv.ad.tb = [xd ad];
+G.ifc.mvtv.ad.tb = [xd ad];
 clear xd ad
 
-G.ifc.mvtv = GEO.mvtv;
+G.ifc.mvtv = G.ifc.mvtv;
 
 // IFC volumes
-GEO.mo_p3s.area = sqr(0.0135)*%pi/4;
-GEO.mo_p3s.length = 0.01; 
-GEO.vo_p3s.vol = 1.5;
-GEO.ln_p3s.l = 11.0;
-GEO.ln_p3s.a = sqr(0.1875)*%pi/4;
-GEO.ln_p3s.vol = GEO.ln_p3s.l*GEO.ln_p3s.a; 
-GEO.ln_p3s.n = 1;
+G.ifc.mo_p3s.area = sqr(0.0135)*%pi/4;
+G.ifc.mo_p3s.length = 0.01; 
+G.ifc.vo_p3s.vol = 1.5;
+G.ifc.ln_p3s.l = 11.0;
+G.ifc.ln_p3s.a = sqr(0.1875)*%pi/4;
+G.ifc.ln_p3s.vol = G.ifc.ln_p3s.l*G.ifc.ln_p3s.a; 
+G.ifc.ln_p3s.n = 1;
 vo_p1c_on = 14;
 vo_p1c_so = 6.6;
-//GEO.vo_p1so.vol = vo_p1c_on - vo_p1c_so;
-GEO.vo_p1so.vol = vo_p1c_on;
-GEO.vo_p2.vol = 5.61;
-GEO.vo_p3.vol = 9.6;
-GEO.vo_px.vol = 1.6;
-GEO.a_p3s.ao = sqr(.0135)*%pi/4;
-GEO.a_p3s.cd = 0.73;
-GEO.a_tvb.ao = sqr(.032)*%pi/4;
-GEO.a_tvb.cd = 0.73;
+G.ifc.a_p3s.ao = sqr(.0135)*%pi/4;
+G.ifc.a_p3s.cd = 0.73;
+G.ifc.a_tvb.ao = sqr(.032)*%pi/4;
+G.ifc.a_tvb.cd = 0.73;
 
-G.ifc.mo_p3s = GEO.mo_p3s;
-G.ifc.vo_p3s = GEO.vo_p3s;
-G.ifc.ln_p3s = GEO.ln_p3s;
 vo_p1c_on = 14;
 vo_p1c_so = 6.6;
-//GEO.vo_p1so.vol = vo_p1c_on - vo_p1c_so;
+//G.ifc.vo_p1so.vol = vo_p1c_on - vo_p1c_so;
 G.ifc.vo_p1so.vol = vo_p1c_on;
 G.ifc.vo_pd.vol = 9.6;
 G.ifc.vo_p3.vol = 5.61;
-G.ifc.a_p3s = GEO.a_p3s;
-G.ifc.a_tvb = GEO.a_tvb;
+G.ifc.a_tvb = G.ifc.a_tvb;
 G.ifc.k1leak = 0.3098;
 G.ifc.a1leak = 6.1783e-4;
 
@@ -358,25 +325,18 @@ G.ifc.prtv.fs = 24;
 G.ifc.prtv.ks = 70;
 G.ifc.prtv.ax1 = 0.076945;
 
-
-
 // Define main line 
-GEO.main_line.l = 48;
-GEO.main_line.a = 0.363;
-GEO.main_line.vol = GEO.main_line.l*GEO.main_line.a; 
-GEO.main_line.n = 5;
-GEO.vo_pnozin.vol = 20;
-
-G.mline.main_line = GEO.main_line;
-G.mline.vo_pnozin = GEO.vo_pnozin;
+G.mline.main_line.l = 48;
+G.mline.main_line.a = 0.363;
+G.mline.main_line.vol = G.mline.main_line.l*G.mline.main_line.a; 
+G.mline.main_line.n = 5;
+G.mline.vo_pnozin.vol = 20;
 
 // Nozzle pressure drop
 xdpnoz = [125, 130, 154, 265, 365, 450, 510, 573, 615, 735]';
 ywfnoz = [0, 540, 900, 6300, 10440, 13590, 15300, 16560, 17000, 18000]';
-GEO.noz.tb = [xdpnoz, ywfnoz];
+G.mline.noz.tb = [xdpnoz, ywfnoz];
 clear ywfnoz xdpnoz
-
-G.mline.noz = GEO.noz;
 
 // Engine model
 G.eng.N25100Pct = 17210;
@@ -679,26 +639,5 @@ G.guess.prod.tb = [xfx   [387.7     577.1     842.8     1374      2129      2547
 G.guess.px.tb = [xfx     [794.2     806.9     866.0     1086      1181      1366      1676      1693      1815      1840      1840]'];
 G.guess.phead.tb = [xfx  [1180      791.8     681.2     891.8     851.2     971.8     989.8     920       884.4     753.7     650.5]'];
 clear xfx
-
-// AC system
-//G.acsupply.acbst.tau = 0.00127;
-//G.acsupply.acbst.r1 = 0;
-//G.acsupply.acbst.w1 = 0;
-//G.acsupply.acbst.r2 = 2;
-//G.acsupply.acbst.w2 = 1;
-//G.acsupply.acbst.a = 0.075;
-//G.acsupply.acbst.b = -1.59;
-//G.acsupply.acbst.c = -102;
-//G.acsupply.acbst.d = 0;
-//G.acsupply.acmbst.tau = 0.00127;
-//G.acsupply.acmbst.a = .116;   // C:\SC5\DATA\F414\ACMBST1.CAL
-//G.acsupply.acmbst.b = 0;      // make it flat
-//G.acsupply.acmbst.c = 0;      // C:\SC5\DATA\F414\ACMBST1.CAL
-//G.acsupply.acmbst.d = 0;
-//G.acsupply.acmbst.w1 = 1;     // Assumed
-//G.acsupply.acmbst.w2 = 1;     // Assumed
-//G.acsupply.acmbst.r1 = 0;     // Assumed
-//G.acsupply.acmbst.r2 = 2;     // Assumed
-//
 
 mprintf('Completed %s\n', sfilename()) 
