@@ -57,17 +57,12 @@ xdel(winsid())
 
 global m k c
 global loaded_scratch root sys_f scs_m cpr
-global G INI FP LIN mv_x mv_xa mv_xin Tf
+global G INI ic FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
-global ic
 global DI DV
 
 // Auto data overplot load
 stack_size = stacksize('max');
-//[D, N, time] = load_csv_data('./Data/start04ss.ven.csv', 1);
-//exec('./Data/load_decode_csv_data.sce', -1);
-//[D, N, time] = load_csv_data('./Data/start04ss.ifc.csv', 1);
-//exec('./Data/load_decode_csv_data.sce', -1);
 [D, N, time] = load_csv_data_row('./Data/FP_IRP.csv', 1);
 [n_names, m_names] = size(N);
 for i = 1:m_names
@@ -174,6 +169,8 @@ VENLOAD = tlist(["sys_venload", "act_c", "ehsv", "ehsv_klk", "ehsv_powlk", "rlin
 GUESS = tlist(["v_guess", "xn25", "disp", "xehsv", "xreg", "xbias", "pd", "prod", "px", "phead"], ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
 
 G = tlist(['geo', 'ifc', 'ebp', 'ven', 'venload', 'eng', 'mline', 'acsupply', 'guess'], IFC, EPMP, VEN, VENLOAD, ENG, MLINE, ACSUPPLY, GUESS);
+
+clear IFC EPMP VEN VENLOAD ENG MLINE ACSUPPLY GUESS
 
 // Temporary.  TODO:  remove this line and use zcos diagram + pre_xcos...
 exec('./Callbacks/PreLoadFcn_simul.sce', -1);

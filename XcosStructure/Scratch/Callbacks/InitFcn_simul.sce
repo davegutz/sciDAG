@@ -20,8 +20,7 @@
 // Jsn 1, 2019      DA Gutz     Created
 // 
 global LINCOS_OVERRIDE figs LIN time_tic time_toc
-global G INI FP mv_x mv_xa mv_xin Tf
-global ic
+global G INI ic FP mv_x mv_xa mv_xin Tf
 mprintf('In %s\n', sfilename())  
 try close(figs); end
 LINCOS_OVERRIDE = 0;
@@ -55,14 +54,8 @@ load('INI_IRP.dat')
 INI.wf36 = 107.08;
 INI.ps3 = 15;
 
-// Boundary conditions TODO:  need better logic
-INI.wf1bias = 673.32808;
-INI.ven_ps = 73.595;
-INI.ven_pd = 1451.2;
-INI.pamb = 14.696;
-INI.pr = 198.59;
-
-// Initialize
+// Boundary conditions 
+// Initialize TODO:  need better logic
 //exec('./Callbacks/Solve_start04alone.sce', -1);
 
 exec('./Callbacks/mvwin_b.sci', -1);
@@ -78,34 +71,11 @@ x0 = mv_x.values(1,1);
 xE = mv_x.values($,1);
 mv_xin = struct('time', [0 0.00099 .00100 Tf]', 'values', [x0 x0 xE xE]');
 //mv_x.values(:,1) = mv_xb*0+mv_xb(1);
-INI.mline.ln_vs = ini_man_n_vm(G.mline.ln_vs, INI.p1so, INI.wf1v);
-INI.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, INI.p3s, 0);
-INI.mline.main_line = ini_man_n_mm(G.mline.main_line, INI.p3, INI.wf3);
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 INI.initialized = %t;
 time_tic = getdate();
 
-// placeholder for VEN Unit stuff
-INI.xnven = DV.pump.In.rpm.values(1,1);
-INI.xn25 = DV.I.xn25.values(1,1);
-INI.disp = DV.pump.In.disp.values(1,1);
-INI.pdven = DV.pd.values(1,1);
-INI.psven = DV.I.ps_psia.values(1,1);
-INI.pact.x = DV.pumpAct.x.values(1,1);
-INI.reg.x = DV.reg.Result.x.values(1,1);
-INI.pxven = DV.px.values(1,1);
-INI.rrv.x = DV.rrv.Result.x.values(1,1);
-INI.bias.x = DV.bias.Result.x.values(1,1);
-//INI.xnven = 3243.2;
-//INI.xn25 = 6884.0;
-//INI.disp = 0.28047000;
-//INI.pdven = 1451.20000000;
-//INI.psven = 73.59500000;
-//INI.pact.x = 0.09052700;
-//INI.reg.x =-0.00178570;
-//INI.pxven = 728.50000000;
-//INI.rrv.x = 0.00000001;
-//INI.bias.x = -0.00000738;
+// placeholder for VEN Unit stuff TODO:  need better logic here
 
 // Cleanup
 INI = order_all_fields(INI);
@@ -122,5 +92,6 @@ ic.wf1bias = 0;
 ic.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, ic.ifc.p3, ic.ifc.wf3s);
 ic.ven.vsv.x = G.ven.vsv.xmax;
 ic.ven.rrv.x = G.ven.rrv.xmin;
+ic = order_all_fields(ic);
 
 mprintf('Completed %s\n', sfilename())  
