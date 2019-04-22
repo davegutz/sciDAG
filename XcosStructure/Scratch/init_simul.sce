@@ -113,7 +113,6 @@ pacbmix = DI.ac.Mon_ABOOST.pacbmix;
 
 // Length of simulation
 Tf = time($);
-Tf = 0.01;
 
 // Real time plot buffer
 Tb = Tf;

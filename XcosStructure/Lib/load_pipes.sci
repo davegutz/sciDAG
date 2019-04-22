@@ -28,8 +28,8 @@ function [avis] = AVIS(sg, kvis)
     avis   = 9.312e-5 * .00155 * sg * kvis;
 endfunction
 
-vol_default = tlist(["vol", "beta", "dwdc", "vol", "tvp"], 135000, 129.93948*0.8, 0, 7);
-mom_default = tlist(["mom", "area", "length", "min_flow", "max_flow"], 0, 1, -1e6, 1e6);
+vol_default = tlist(["vol", "beta", "dwdc", "vol", "tvp"], 135000, 129.93948*0.8, 1e6, 7);
+mom_default = tlist(["mom", "area", "length", "min_flow", "max_flow"], 1e6, 1e6, -1e6, 1e6);
 pipeVV_default = tlist(["pVV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
         18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 0, 0, [], [], [], [], [], []);
 pipeMV_default = tlist(["pMV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..

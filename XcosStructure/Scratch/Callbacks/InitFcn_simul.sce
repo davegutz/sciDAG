@@ -57,19 +57,11 @@ end
 // Initialize TODO:  need better logic
 //exec('./Callbacks/Solve_start04alone.sce', -1);
 
-exec('./Callbacks/mvwin_b.sci', -1);
-[xb, ab] = mvwin_b(40);
-exec('./Callbacks/mvwin_a.sci', -1);
-[xa, aa] = mvwin_a(40);
 mv_x = DI.ifc.Calc.Comp.fmv.mv.Result.x; 
-if isempty(mv_xa), mv_xa = mv_x.values(:,1); end
-mv_aa = interp1(xa, aa, mv_xa, 'linear', aa(1));
-mv_xb = interp1(ab, xb, mv_aa);
-mv_x.values(:,1) = mv_xb;
 x0 = mv_x.values(1,1);
 xE = mv_x.values($,1);
-mv_xin = struct('time', [0 0.00099 .00100 Tf]', 'values', [x0 x0 xE xE]');
-//mv_x.values(:,1) = mv_xb*0+mv_xb(1);
+mv_xin = struct('time', [0 0.0100009 .0100010 Tf]', 'values', [x0 x0 xE xE]');
+mv_xin.values(:,1) = x0; // freeze
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 MOD.initialized = %t;
 time_tic = getdate();
@@ -87,7 +79,7 @@ ic.acsupply.ltank = ini_man_n_mv(G.acsupply.ltank, ic.acsupply.ltank.p, ic.acsup
 ic.acsupply.lengine = ini_man_n_mv(G.acsupply.lengine, ic.acsupply.lengine.p, ic.acsupply.lengine.wf);
 ic.mline.main_line = ini_man_n_mm(G.mline.main_line, ic.pd, ic.wfmd);
 ic.mline.ln_vs = ini_man_n_vm(G.mline.ln_vs, ic.ifc.p1so, ic.wf1v);
-ic.wf1bias = 0;
+ic.wf1bias = 40;
 ic.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, ic.ifc.p3, ic.ifc.wf3s);
 ic.ven.vsv.x = G.ven.vsv.xmax;
 ic.ven.rrv.x = G.ven.rrv.xmin;

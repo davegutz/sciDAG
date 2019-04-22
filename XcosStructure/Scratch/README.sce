@@ -86,6 +86,7 @@ exec('benchmark_valve_start04alone.sce', -1)
     //% sim('F414_Fuel.slx')
     //% save('IRP_datalog','-v7.3') 
     //% writeAllLogs('IRP')
+
     // copy *_IRP.csv to ./Data
     [D, N, time] = load_csv_data('./Data/DV_IRP.csv', 1);
     exec('./Data/load_decode_csv_data.sce', -1);
@@ -93,12 +94,22 @@ exec('benchmark_valve_start04alone.sce', -1)
     exec('./Data/load_decode_csv_data.sce', -1);
     clear D N
     save('DATA_00_08000_00000_16005_09060_147_79_13_sNone.dat', 'DV', 'DI');
-    exec('.\init_start04alone.sce',-1)
+
+    exec('.\init_simu.sce',-1)
     // run briefly to generate G
     exec('.\newIni.sce', -1) // 10 minutes run time
     save('./Data/init_00_08000_00000_16005_09060_147_79_13.dat', 'INI');
 // Load the simulation
 exec('.\init_simul.sce',-1)
+// Freeze mvtv and hs
+G.ifc.mvtv.fstf=1e6;
+G.ifc.hs.fstf=1e6;
+G.ifc.vo_p1so.vol = 1e12;
+G.ifc.vo_p3.vol = 1e12;
+G.ifc.vo_pd.vol = 1e12;
+G.ifc.vo_px.vol = 1e12;
+
+
 
 // Test pipes
 exec('init_pipe.sce', -1);

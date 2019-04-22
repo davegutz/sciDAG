@@ -138,7 +138,7 @@ function [INI] = solve_IFC(INI, GEOF, FP)
     // Assign
     icf.hs.x = INI.xhs;
     icf.mvtv.x = INI.xtv;
-    icf.wf2s = 0;
+    icf.wf2s = 0;  // TODO:  shouldn't this be wf1s?
     icf.wf3s = 0;
     icf.wfrt = icf.wftvb;
     icf.wfx = icf.wftvb;

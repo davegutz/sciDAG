@@ -51,6 +51,7 @@ WF1V = struct('time', tWALL, 'values', WALL.values(:,4));
 tIDATA = IDATA.time(:,1);
 P1SO = struct('time', tIDATA, 'values', IDATA.values(:,1));
 P3 = struct('time', tIDATA, 'values', IDATA.values(:,2));
+P2MP3 = P1SO; P2MP3.values = P1SO.values-P3.values;
 PD = struct('time', tIDATA, 'values', IDATA.values(:,3));
 PX = struct('time', tIDATA, 'values', IDATA.values(:,4));
 WFAREA = struct('time', tIDATA, 'values', IDATA.values(:,5));
@@ -66,7 +67,7 @@ PDVEN = struct('time', tPALL, 'values', PALL.values(:,1));
 P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,2));
 PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
 tXALL = XALL.time(:,1);
-SV_POS = struct('time', tXALL, 'values', XALL.values(:,1));
+SV_POS = struct('time', tXALL, 'values', XALL.values(:,4));
 clear tWALL tIDATA tPALL tXALL
 
 vload_wfload = DV.wfload;
@@ -82,6 +83,7 @@ p1c = DI.ifc.Calc.Press.p1c;
 ifc_px = DI.ifc.Calc.Press.px;
 p2 = DI.ifc.Calc.Press.p2;
 p3 = DI.ifc.Calc.Press.p3;
+p2mp3 = p2; p2mp3.values = p2.values-p3.values;
 pd = DI.ifc.PD;
 pnozin = DI.eng.pnozin;
 mv_xin = DI.ifc.Calc.Comp.fmv.mv.Result.x;
@@ -143,8 +145,10 @@ subplot(324)
 overplot(['P_NOZIN', 'pnozin'], ['r-', 'b--'], 'Nozzle Pressure')
 subplot(325)
 overplot(['PX', 'ifc_px'], ['r-', 'b--'], 'MVTV Control Pressure')
+subplot(326)
+overplot(['P2MP3', 'p2mp3'], ['r-', 'b--'], 'MV Delta Pressure')
 
-figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [40,90,610,600]);
+figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [40,80,610,600]);
 subplot(321)
 overplot(['MV_POS', 'mv_xin'], ['r-',  'b--'], 'MV Poaition')
 subplot(322)
