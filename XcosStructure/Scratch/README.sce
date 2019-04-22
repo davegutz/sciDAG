@@ -112,7 +112,8 @@ G.ifc.vo_px.vol = 1e12;
 save_file = './Results/ic_simul.csv';
 [fdo, err] = mopen(save_file, 'wt');write_struct_row(ic, 'ic', fdo,',');mclose(fdo);rotate_file(save_file, save_file);
 save_file = './Results/g_simul.csv';
-[fdo, err] = mopen(save_file, 'wt');write_struct_row(G, 'G', fdo,',');mclose(fdo);rotate_file(save_file, save_file);
+
+geo_write(save_file, G)
 
 
 // Test pipes

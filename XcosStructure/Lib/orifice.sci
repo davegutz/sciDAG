@@ -65,18 +65,24 @@
 or_default = tlist(["or", "ao", "cd"], 0, 0.61);
 la_default = tlist(["la", "l", "r", "ecc", "rad_clear"], 0, 0, 0, 0);
 function str = %or_string(o)
-    // Display head_b type
     str = msprintf('''%s'' type:  ao=%f, cd=%f',..
              typeof(o), o.ao, o.cd);
 endfunction
+function str = or_fstring(o)
+    str = msprintf('type,''%s'',\nao,%f,\ncd,%f,\n',..
+             typeof(o), o.ao, o.cd);
+endfunction
 function str = %or_p(o)
-    // Display vlink type
     str = string(o);
     disp(str)
 endfunction
 function str = %la_string(v)
     // Display head_b type
     str = msprintf('''%s'' type:  l=%f, r=%f, ecc=%f, rad_clear=%f',..
+             typeof(v), v.l, v.r, v.ecc, v.rad_clear);
+endfunction
+function str = la_fstring(v)
+    str = msprintf('type,''%s'',\nl,%f,\nr,%f,\necc,%f,\nrad_clear,%f,\n',..
              typeof(v), v.l, v.r, v.ecc, v.rad_clear);
 endfunction
 function str = %la_p(v)

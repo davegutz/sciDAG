@@ -55,6 +55,18 @@ function [ts] = xz_string(t)
     ts = ts + msprintf(']');
 endfunction
 
+function [ts] = xz_fstring(t)
+    ts = msprintf('[');
+    [nad, %mad] = size(t);
+    for i = 1:nad,
+        ts = ts + msprintf('%f %f', t(i,1:2));
+        if i<nad,
+            ts = ts + msprintf(';');
+        end
+    end
+    ts = ts + msprintf(']');
+endfunction
+
 tbl1_b_default = tlist(["tbl1_b", "tb"], [-1, -10; 1, 10; 2, 20;]);
 ctab1_default = tlist(["ctab1", "tb", "sx", "dx", "sz", "dz"], [-1, -10; 1, 10; 2, 20;], 1, 0, 1, 0);
 
@@ -69,10 +81,14 @@ function [ts] = %tbl1_b_string(t)
 endfunction
 
 function [ts] = %ctab1_string(t)
-    // Table string overload
     ts = msprintf('''%s'' type:  ', typeof(t));
     ts = ts + 'tb=' + xz_string(t.tb);
     ts = ts + msprintf(', sx=%f, dx=%f, sz=%f, dz=%f', t.sx, t.dx, t.sz, t.dz);
+endfunction
+
+function [ts] = ctab1_fstring(t)
+    ts = msprintf('tb,%s,sx,%f,dx,%f,sz,%f,dz,%f,\n',...
+        xz_fstring(t.tb), t.sx, t.dx, t.sz, t.dz);
 endfunction
 
 function lis = lsx_ctab1(t)

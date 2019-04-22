@@ -77,13 +77,19 @@ vlv_a_default = tlist(["vlv_a", "ao", "ax1", "ax2", "ax3", "ax4",..
          ctab1_default, ctab1_default);
 
 function [vs] = %vlv_a_string(v)
-    // Cast valve type to string
-    vs = msprintf('''%s'' type:  ao=%f, ax1=%f; ax2=%f; ax3=%f; ax4=%f; c=%f; clin=%f; cd=%f; cdo=%f; cp=%f; fdyf=%f; fs=%f; fstf=%f; ks=%f; ld=%f; lh=%f; m=%f; xmax=%f; xmin=%f;',..
+    vs = msprintf('''%s'' type:  ao,%f,\nax1,%f; ax2,%f; ax3,%f; ax4,%f; c,%f; clin,%f; cd,%f; cdo,%f; cp,%f; fdyf,%f; fs,%f; fstf,%f; ks,%f; ld,%f; lh,%f; m,%f; xmax,%f; xmin,%f;',..
        typeof(v), v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
        v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
        v.ld, v.lh, v.m, v.xmax, v.xmin);
     vs = vs + 'ad: ' + string(v.ad) + ';';
     vs = vs + 'ah: ' + string(v.ah) + ';';
+endfunction
+
+function [vs] = vlv_a_fstring(v)
+    vs = msprintf('type,''%s'',\nao,%f,\nax1,%f,\nax2,%f,\nax3,%f,\nax4,%f,\nc,%f,\nclin,%f,\ncd,%f,\ncdo,%f,\ncp,%f,\nfdyf,%f,\nfs,%f,\nfstf,%f,\nks,%f,\nld,%f,\nlh,%f,\nm,%f,\nxmax,%f,\nxmin,%f,\nad,%s,\nah,%s,\n',..
+       typeof(v), v.ao, v.ax1, v.ax2, v.ax3, v.ax4,..
+       v.c, v.clin, v.cd, v.cdo, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+       v.ld, v.lh, v.m, v.xmax, v.xmin, ctab1_fstring(v.ad),ctab1_fstring(v.ah));
 endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
@@ -140,7 +146,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         end
     case 'define' then
 //        message('in define')
-        model.opar=list(vlv_a_default);
+        model.opar,list(vlv_a_default);
         SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0
@@ -162,7 +168,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
 endfunction
 
 function [blkcall] = callblk_valve_a(blk, sim, ps, pd, ph, prs, pr, pxr, xol)
-    if sim~='valve_a' then
+    if sim ~= 'valve_a' then
         mprintf('ERROR:  %s is not valve_a', sim);
         error('wrong block type')
     end
@@ -206,7 +212,7 @@ function [blkcall] = callblk_valve_a(blk, sim, ps, pd, ph, prs, pr, pxr, xol)
     blkcall.surf3 = blk.g(4);
     blkcall.surf4 = blk.g(5);
 endfunction
-function [x,xp,count]=solve_valve_a(geo,ps,pd,ph,prs,pr,px,xp)
+function [x,xp,count] = solve_valve_a(geo,ps,pd,ph,prs,pr,px,xp)
     count = 0;
     x = xp;
     df = 0;xmax = geo.xmax;xmin = geo.xmin;
@@ -243,14 +249,20 @@ tv_a1_default = tlist(["tv_a1", "adl", "ahd", "ahs", "ald", "ale",..
          ctab1_default, ctab1_default);
 
 function [vs] = %tv_a1_string(v)
-    // Cast trivalve type to string
-    vs = msprintf('''%s'' type:  adl=%f, ahd=%f, ahs=%f, ald=%f, ale=%f, alr=%f, ar=%f, asl=%f, c=%f, cd=%f, cp=%f, fdyf=%f, fs=%f, fstf=%f, ks=%f, ld=%f, ls=%f, m=%f, xmax=%f, xmin=%f,',..
+    vs = msprintf('''%s'' type:  adl,%f,\nahd,%f,\nahs,%f,\nald,%f,\nale,%f,\nalr,%f,\nar,%f,\nasl,%f,\nc,%f,\ncd,%f,\ncp,%f,\nfdyf,%f,\nfs,%f,\nfstf,%f,\nks,%f,\nld,%f,\nls,%f,\nm,%f,\nxmax,%f,\nxmin,%f,',..
              typeof(v), v.adl, v.ahd, v.ahs, v.ald, v.ale,..
              v.alr, v.ar, v.asl, v.c, v.cd, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
              v.ld, v.ls, v.m, v.xmax, v.xmin);
     // Tables
     vs = vs + 'ad: ' + string(v.ad) + ',';
     vs = vs + 'as: '+ string(v.as);
+endfunction
+
+function [vs] = tv_a1_fstring(v)
+    vs = msprintf('type,''%s'',\nadl,%f,\nahd,%f,\nahs,%f,\nald,%f,\nale,%f,\nalr,%f,\nar,%f,\nasl,%f,\nc,%f,\ncd,%f,\ncp,%f,\nfdyf,%f,\nfs,%f,\nfstf,%f,\nks,%f,\nld,%f,\nls,%f,\nm,%f,\nxmax,%f,\nxmin,%f,\nad,%s,\nas,%s,\n',..
+             typeof(v), v.adl, v.ahd, v.ahs, v.ald, v.ale,..
+             v.alr, v.ar, v.asl, v.c, v.cd, v.cp, v.fdyf, v.fs, v.fstf, v.ks,..
+             v.ld, v.ls, v.m, v.xmax, v.xmin, ctab1_fstring(v.ad), ctab1_fstring(v.as));
 endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
@@ -307,7 +319,7 @@ function [x,y,typ] = TRIVALVE_A1(job, arg1, arg2)
         end
     case 'define' then
 //        message('in define')
-        model.opar=list(tv_a1_default);
+        model.opar,list(tv_a1_default);
         SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0
@@ -339,13 +351,20 @@ hlfvlv_a_default = tlist(["hlfvlv_a", "arc", "arx", "asr", "awd", "awx",..
          ctab1_default);
 
 function [vs] = %hlfvlv_a_string(v)
-    vs = msprintf('''%s'' type, arc=%f, arx=%f, asr=%f, awd=%f, awx=%f, ax1=%f, ax2=%f, ax3=%f, axa=%f, c=%f, cd=%f, cp=%f, fdyf=%f, fstf=%f, m=%f, xmax=%f, xmin=%f,',..
+    vs = msprintf('''%s'' type, arc,%f,\narx,%f,\nasr,%f,\nawd,%f,\nawx,%f,\nax1,%f,\nax2,%f,\nax3,%f,\naxa,%f,\nc,%f,\ncd,%f,\ncp,%f,\nfdyf,%f,\nfstf,%f,\nm,%f,\nxmax,%f,\nxmin,%f,',..
              typeof(v), v.arc, v.arx, v.asr, v.awd, v.awx,..
              v.ax1, v.ax2, v.ax3, v.axa, v.c, v.cd, v.cp, v.fdyf, v.fstf,..
              v.m, v.xmax, v.xmin);
 
     // Tables
     vs = vs + 'at: ' + string(v.at) + ';';
+endfunction
+
+function [vs] = hlfvlv_a_fstring(v)
+    vs = msprintf('type,''%s'',\narc,%f,\narx,%f,\nasr,%f,\nawd,%f,\nawx,%f,\nax1,%f,\nax2,%f,\nax3,%f,\naxa,%f,\nc,%f,\ncd,%f,\ncp,%f,\nfdyf,%f,\nfstf,%f,\nm,%f,\nxmax,%f,\nxmin,%f,\nat,%s,\n',..
+             typeof(v), v.arc, v.arx, v.asr, v.awd, v.awx,..
+             v.ax1, v.ax2, v.ax3, v.axa, v.c, v.cd, v.cp, v.fdyf, v.fstf,..
+             v.m, v.xmax, v.xmin, ctab1_fstring(v.at));
 endfunction
 
 // Arguments of C_Code cannot have nested lists; use vector (vec_) instead.
@@ -402,7 +421,7 @@ function [x,y,typ] = HLFVALVE_A(job, arg1, arg2)
         end
     case 'define' then
 //        message('in define')
-        model.opar=list(hlfvlv_a_default);
+        model.opar,list(hlfvlv_a_default);
         SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0
@@ -424,7 +443,7 @@ function [x,y,typ] = HLFVALVE_A(job, arg1, arg2)
 endfunction
 
 function [blkcall] = callblk_halfvalve_a(blk, sim, ps, px, pr, pc, pa, pw, pd, xol)
-    if sim~='hlfvalve_a' then
+    if sim ~= 'hlfvalve_a' then
         mprintf('ERROR:  %s is not valve_a', sim);
         error('wrong block type')
     end

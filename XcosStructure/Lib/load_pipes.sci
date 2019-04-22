@@ -44,14 +44,23 @@ FP_default = tlist(["FP", "sg", "beta", "dwdc", "tvp"],..
 function [vs] = %vol_string(v)
     vs = msprintf('''%s'' type:  vol=%f, beta=%f, dwdc=%f, tvp=%f', typeof(v), v.vol, v.beta, v.dwdc,  v.tvp);
 endfunction
+function [vs] = vol_fstring(v)
+    vs = msprintf('type,''%s'',\nvol,%f,\nbeta,%f,\ndwdc,%f,\ntvp,%f,\n', typeof(v), v.vol, v.beta, v.dwdc,  v.tvp);
+endfunction
 function [ms] = %mom_string(m)
     ms = msprintf('''%s'' type:  area=%f, length=%f, min_flow=%f, max_flow=%f', typeof(m), m.area, m.length, m.min_flow,  m.max_flow);
+endfunction
+function [ms] = mom_fstring(m)
+    ms = msprintf('type,''%s'',\narea,%f,\nlength,%f,\nmin_flow,%f,\nmax_flow,%f,\n', typeof(m), m.area, m.length, m.min_flow,  m.max_flow);
 endfunction
 function [fs] = %FP_string(fp)
     fs = msprintf('''%s'' type:  sg=%f, beta=%f, dwdc=%f, tvp=%f', typeof(fp), fp.sg, fp.beta, fp.dwdc, fp.tvp);
 endfunction
 function [ps] = pipe_string(p)
     ps = msprintf('''%s'' type:  l=%f, a=%f, vol=%f, n=%d, c=%f', typeof(p), p.l, p.a, p.vol, p.n, p.c);
+endfunction
+function [ps] = pipe_fstring(p)
+    ps = msprintf('type,''%s'',\nl,%f,\na,%f,\nvol,%f,\nn,%d,\nc,%f,\n', typeof(p), p.l, p.a, p.vol, p.n, p.c);
 endfunction
 function str = %pVV_string(p)
     // Display pipe type

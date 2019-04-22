@@ -155,6 +155,10 @@ function str = %wf1l_string(v)
     str = msprintf('''%s'' type:  Ao=%f, k=%f, Do=%f',..
              typeof(v), v.Ao, v.k, v.Do);
 endfunction
+function str = wf1l_fstring(v)
+    str = msprintf('type,''%s'',\nAo,%f,\nk,%f,\nDo,%f,\n',..
+             typeof(v), v.Ao, v.k, v.Do);
+endfunction
 function str = %wf1l_p(v)
     str = string(v);
     disp(str)
@@ -176,7 +180,82 @@ clear IFC EPMP VEN VENLOAD ENG MLINE ACSUPPLY GUESS
 // Temporary.  TODO:  remove this line and use zcos diagram + pre_xcos...
 exec('./Callbacks/PreLoadFcn_simul.sce', -1);
 
+     
+     "hs", "mfp", "boost", "vdpp",  , "pact", "pact_lk", "vlink", "vleak", "", "bias",  "acbst", "acmbst", "motor" "act_c", "ehsv", 
 
+
+function geo_write(file_name, g)
+    [fid, err] = mopen(file_name, 'wt');
+    if fid<0,
+        error(err)
+    end
+    mfprintf(fid, 'type,''%s'',\n', typeof(g));
+    mfprintf(fid, 'G.mline.vo_pnozin.%s\n', vol_fstring(g.mline.vo_pnozin));
+    mfprintf(fid, 'G.mline.ln_vs.%s\n', pipe_fstring(g.mline.ln_vs));
+    mfprintf(fid, 'G.mline.main_line.%s\n', pipe_fstring(g.mline.main_line));
+    mfprintf(fid, 'G.mline.noz.%s\n', ctab1_fstring(g.mline.noz));
+    mfprintf(fid, 'G.eng.ctstd,%f\n', g.eng.ctstd);
+    mfprintf(fid, 'G.eng.N25c100Pct,%f\n', g.eng.N25c100Pct);
+    mfprintf(fid, 'G.eng.N25100Pct,%f\n', g.eng.N25100Pct);
+    mfprintf(fid, 'G.eng.N2c100Pct,%f\n', g.eng.N2c100Pct);
+    mfprintf(fid, 'G.eng.xnmainpt,%f\n', g.eng.xnmainpt);
+    mfprintf(fid, 'G.eng.xn25p,%f\n', g.eng.xn25p);
+    mfprintf(fid, 'G.eng.xnvent,%f\n', g.eng.xnvent);
+    mfprintf(fid, 'G.eng.spcn25,[');mfprintf(fid, '%f ', g.eng.spcn25(:)); mfprintf(fid, '],\n');
+    mfprintf(fid, 'G.eng.sfxven,[');mfprintf(fid, '%f ', g.eng.sfxven(:)); mfprintf(fid, '],\n');
+    mfprintf(fid, 'G.eng.sawfb,[');mfprintf(fid, '%f ', g.eng.sawfb(:)); mfprintf(fid, '],\n');
+    mfprintf(fid, 'G.eng.swf,[');mfprintf(fid, '%f ', g.eng.swf(:)); mfprintf(fid, '],\n');
+    mfprintf(fid, 'G.eng.pcn25r.%s\n', ctab1_fstring(g.eng.pcn25r));
+    mfprintf(fid, 'G.eng.dps3dwt.%s\n', ctab1_fstring(g.eng.dps3dwt));
+    mfprintf(fid, 'G.eng.pcn2rt.%s\n', ctab1_fstring(g.eng.pcn2rt));
+    mfprintf(fid, 'G.eng.pcn25rt.%s\n', ctab1_fstring(g.eng.pcn25rt));
+    mfprintf(fid, 'G.eng.ps3t.%s\n', ctab1_fstring(g.eng.ps3t));
+    mfprintf(fid, 'G.eng.t25t.%s\n', ctab1_fstring(g.eng.t25t));
+//    mfprintf(fid, 'G.eng.fxvent.%s\n', ctab1_fstring(g.eng.fxvent));
+    mfprintf(fid, 'G.ifc.a1leak,%f\n', g.ifc.a1leak);
+    mfprintf(fid, 'G.ifc.k1leak,%f\n', g.ifc.k1leak);
+    mfprintf(fid, 'G.ifc.mv.%s\n', hlfvlv_a_fstring(g.ifc.mv));
+    mfprintf(fid, 'G.ifc.mvwin.%s\n', ctab1_fstring(g.ifc.mvwin));
+    mfprintf(fid, 'G.ifc.mvtv.%s\n', vlv_a_fstring(g.ifc.mvtv));
+    mfprintf(fid, 'G.ifc.prtv.%s\n', vlv_a_fstring(g.ifc.prtv));
+    mfprintf(fid, 'G.ifc.a_tvb.%s\n', or_fstring(g.ifc.a_tvb));
+    mfprintf(fid, 'G.ifc.check.%s\n', vlv_a_fstring(g.ifc.check));
+    mfprintf(fid, 'G.ifc.vo_p1so.%s\n', vol_fstring(g.ifc.vo_p1so));
+    mfprintf(fid, 'G.ifc.vo_pd.%s\n', vol_fstring(g.ifc.vo_pd));
+    mfprintf(fid, 'G.ifc.vo_p3.%s\n', vol_fstring(g.ifc.vo_p3));
+    mfprintf(fid, 'G.ifc.vo_px.%s\n', vol_fstring(g.ifc.vo_px));
+    mfprintf(fid, 'G.ifc.mo_p3s.%s\n', mom_fstring(g.ifc.mo_p3s));
+    mfprintf(fid, 'G.ifc.a_p3s.%s\n', or_fstring(g.ifc.a_p3s));
+    mfprintf(fid, 'G.ifc.vo_p3s.%s\n', vol_fstring(g.ifc.vo_p3s));
+    mfprintf(fid, 'G.ifc.ln_p3s.%s\n', pipe_fstring(g.ifc.ln_p3s));
+    mfprintf(fid, 'G.ven.fsb,%f\n', g.ven.fsb);
+    mfprintf(fid, 'G.ven.ksb,%f\n', g.ven.ksb);
+    mfprintf(fid, 'G.ven.leako.%s\n', la_fstring(g.ven.leako));
+    mfprintf(fid, 'G.ven.vsv.%s\n', vlv_a_fstring(g.ven.vsv));
+    mfprintf(fid, 'G.ven.rrv.%s\n', vlv_a_fstring(g.ven.rrv));
+    mfprintf(fid, 'G.ven.reg.%s\n', tv_a1_fstring(g.ven.reg));
+    mfprintf(fid, 'G.ven.vo_pcham.%s\n', vol_fstring(g.ven.vo_pcham));
+    mfprintf(fid, 'G.ven.vo_px.%s\n', vol_fstring(g.ven.vo_px));
+    mfprintf(fid, 'G.venload.ehsv_klk,%f\n', g.venload.ehsv_klk);
+    mfprintf(fid, 'G.venload.ehsv_powlk,%f\n', g.venload.ehsv_powlk);
+    mfprintf(fid, 'G.venload.vo_hcham.%s\n', vol_fstring(g.venload.vo_hcham));
+    mfprintf(fid, 'G.venload.vo_rcham.%s\n', vol_fstring(g.venload.vo_rcham));
+    mfprintf(fid, 'G.venload.rline.%s\n', pipe_fstring(g.venload.rline));
+    mfprintf(fid, 'G.acsupply.ltank.%s\n', pipe_fstring(g.acsupply.ltank));
+    mfprintf(fid, 'G.acsupply.lengine.%s\n', pipe_fstring(g.acsupply.lengine));
+    mfprintf(fid, 'G.ebp.inlet.%s\n', pipe_fstring(g.ebp.inlet));
+    mfprintf(fid, 'G.ebp.ocm1.%s\n', pipe_fstring(g.ebp.ocm1));
+    mfprintf(fid, 'G.ebp.ocm2.%s\n', pipe_fstring(g.ebp.ocm2));
+    mfprintf(fid, 'G.ebp.faboc.%s\n', pipe_fstring(g.ebp.faboc));
+    mfprintf(fid, 'G.ebp.vo_poc.%s\n', vol_fstring(g.ebp.vo_poc));
+    mfprintf(fid, 'G.ebp.focOr.%s\n', or_fstring(g.ebp.focOr));
+    mfprintf(fid, 'G.ebp.or_filt.%s\n', or_fstring(g.ebp.or_filt));
+    mfprintf(fid, 'G.ebp.mom_filt.%s\n', mom_fstring(g.ebp.mom_filt));
+    mfprintf(fid, 'G.ebp.vo_pb1.%s\n', vol_fstring(g.ebp.vo_pb1));
+    mfprintf(fid, 'G.ebp.vo_pb2.%s\n', vol_fstring(g.ebp.vo_pb2));
+    mfprintf(fid, 'G.ebp.wf1leak.%s\n', wf1l_fstring(g.ebp.wf1leak));
+    mclose(fid);
+endfunction
 
 function gstr = %ge_string(g)
     // string geo overload
