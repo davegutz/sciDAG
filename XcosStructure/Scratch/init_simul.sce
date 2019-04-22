@@ -181,7 +181,7 @@ clear IFC EPMP VEN VENLOAD ENG MLINE ACSUPPLY GUESS
 exec('./Callbacks/PreLoadFcn_simul.sce', -1);
 
      
-     "hs", "mfp", "boost", "vdpp",  , "pact", "pact_lk", "vlink", "vleak", "", "bias",  "acbst", "acmbst", "motor" "act_c", "ehsv", 
+     "vdpp",  "pact", "pact_lk", "vlink", "vleak", "bias",  "motor" "act_c", "ehsv", 
 
 
 function geo_write(file_name, g)
@@ -216,6 +216,7 @@ function geo_write(file_name, g)
     mfprintf(fid, 'G.ifc.k1leak,%f\n', g.ifc.k1leak);
     mfprintf(fid, 'G.ifc.mv.%s\n', hlfvlv_a_fstring(g.ifc.mv));
     mfprintf(fid, 'G.ifc.mvwin.%s\n', ctab1_fstring(g.ifc.mvwin));
+    mfprintf(fid, 'G.ifc.hs.%s\n', hdb_fstring(g.ifc.hs));
     mfprintf(fid, 'G.ifc.mvtv.%s\n', vlv_a_fstring(g.ifc.mvtv));
     mfprintf(fid, 'G.ifc.prtv.%s\n', vlv_a_fstring(g.ifc.prtv));
     mfprintf(fid, 'G.ifc.a_tvb.%s\n', or_fstring(g.ifc.a_tvb));
@@ -243,6 +244,8 @@ function geo_write(file_name, g)
     mfprintf(fid, 'G.venload.rline.%s\n', pipe_fstring(g.venload.rline));
     mfprintf(fid, 'G.acsupply.ltank.%s\n', pipe_fstring(g.acsupply.ltank));
     mfprintf(fid, 'G.acsupply.lengine.%s\n', pipe_fstring(g.acsupply.lengine));
+    mfprintf(fid, 'G.acsupply.acmbst.%s\n', cpmp_fstring(g.acsupply.acmbst));
+    mfprintf(fid, 'G.acsupply.acbst.%s\n', cpmp_fstring(g.acsupply.acbst));
     mfprintf(fid, 'G.ebp.inlet.%s\n', pipe_fstring(g.ebp.inlet));
     mfprintf(fid, 'G.ebp.ocm1.%s\n', pipe_fstring(g.ebp.ocm1));
     mfprintf(fid, 'G.ebp.ocm2.%s\n', pipe_fstring(g.ebp.ocm2));
@@ -254,6 +257,8 @@ function geo_write(file_name, g)
     mfprintf(fid, 'G.ebp.vo_pb1.%s\n', vol_fstring(g.ebp.vo_pb1));
     mfprintf(fid, 'G.ebp.vo_pb2.%s\n', vol_fstring(g.ebp.vo_pb2));
     mfprintf(fid, 'G.ebp.wf1leak.%s\n', wf1l_fstring(g.ebp.wf1leak));
+    mfprintf(fid, 'G.ebp.boost.%s\n', cpmp_fstring(g.ebp.boost));
+    mfprintf(fid, 'G.ebp.mfp.%s\n', cpmp_fstring(g.ebp.mfp));
     mclose(fid);
 endfunction
 

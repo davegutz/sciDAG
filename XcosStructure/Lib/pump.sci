@@ -96,6 +96,11 @@ function ps= %cpmp_string(p)
     typeof(p), p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
 endfunction
 
+function ps= cpmp_fstring(p)
+    ps = msprintf('type,''%s'',\na,%f,\nb,%f,\nc,%f,\nd,%f,\nw1,%f,\nw2,%f,\nr1,%f,\nr2,%f,\ntau,%f,\n',..
+    typeof(p), p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
+endfunction
+
 function str = %cpmp_p(p)
     str = string(p);
     disp(str)

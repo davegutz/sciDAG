@@ -81,15 +81,20 @@ function lis = lsx_hdb(h)
 endfunction
 
 function str = %hdb_string(h)
-    // Display head_b type
-    str = msprintf('''%s'' type:  f_an=%f; f_cn=%f; f_dn=%f; f_ln=%f; ae=%f; ao=%f; c=%f; cdo=%f; fb=%f; fdyf=%f; fs=%f; fstf=%f; kb=%f; ks=%f; m=%f; xmax=%f; xmin=%f;',..
+    str = msprintf('''%s'' type:  f_an=%f,\nf_cn=%f,\nf_dn=%f,\nf_ln=%f,\nae=%f,\nao=%f,\nc=%f,\ncdo=%f,\nfb=%f,\nfdyf=%f,\nfs=%f,\nfstf=%f,\nkb=%f,\nks=%f,\nm=%f,\nxmax=%f,\nxmin=%f;',..
+             typeof(h), h.f_an, h.f_cn, h.f_dn, h.f_ln,..
+             h.ae, h.ao, h.c, h.cdo, h.fb, h.fdyf, h.fs, h.fstf,..
+             h.kb, h.ks, h.m, h.xmax, h.xmin);
+endfunction
+
+function str = hdb_fstring(h)
+    str = msprintf('type,''%s'',\nf_an,%f,\nf_cn,%f,\nf_dn,%f,\nf_ln,%f,\nae,%f,\nao,%f,\nc,%f,\ncdo,%f,\nfb,%f,\nfdyf,%f,\nfs,%f,\nfstf,%f,\nkb,%f,\nks,%f,\nm,%f,\nxmax,%f,\nxmin,%f,\n',..
              typeof(h), h.f_an, h.f_cn, h.f_dn, h.f_ln,..
              h.ae, h.ao, h.c, h.cdo, h.fb, h.fdyf, h.fs, h.fstf,..
              h.kb, h.ks, h.m, h.xmax, h.xmin);
 endfunction
 
 function str = %hdb_p(h)
-    // Display half-area valve type
     str = string(h);
     disp(str)
 endfunction
@@ -211,7 +216,7 @@ endfunction
 
 function str = %aab_string(a)
     // Display actuator_a_b type
-    str = msprintf('''%s'' type:  ab=%f; ah=%f; ahl=%f; ar=%f; arl=%f; c_=%f; cd_=%f; fdyf=%f; fstf=%f;mact=%f; mext=%f; xmax=%f; xmin=%f;\n',..
+    str = msprintf('''%s'' type:  ab=%f,\nah=%f,\nahl=%f,\nar=%f,\narl=%f,\nc_=%f,\ncd_=%f,\nfdyf=%f,\nfstf=%f;mact=%f,\nmext=%f,\nxmax=%f,\nxmin=%f;\n',..
              typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
              a.c_, a.cd_, a.fdyf, a.fstf,..
              a.mact, a.mext, a.xmax, a.xmin);
@@ -347,7 +352,7 @@ function lis = lsx_aac(a)
 endfunction
 
 function str = %aac_string(a)
-    str = msprintf('''%s'' type:  ab=%f; ah=%f; ahl=%f; ar=%f; arl=%f; c_=%f; cd_=%f; fdyf=%f; fstf=%f;mact=%f; mext=%f; xmax=%f; xmin=%f;\n',..
+    str = msprintf('''%s'' type:  ab=%f,\nah=%f,\nahl=%f,\nar=%f,\narl=%f,\nc_=%f,\ncd_=%f,\nfdyf=%f,\nfstf=%f;mact=%f,\nmext=%f,\nxmax=%f,\nxmin=%f;\n',..
              typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
              a.c_, a.cd_, a.fdyf, a.fstf,..
              a.mact, a.mext, a.xmax, a.xmin);
@@ -481,7 +486,7 @@ fehsv2_default = tlist(["fehsv2", "tau_s", "wn_s", "zeta_s", "dp_s",..
          ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
 
 function str = %fehsv2_string(e)
-    str = msprintf('''%s'' type:  tau_s=%f; wn_s=%f; zeta_s=%f; dp_s=%f; ael=%f; kel=%f; cd_=%f; cdl=%f; kix=%f; mAnull=%f; ah=%f; ar=%f; vmax_s=%f; vmin_s=%f; underlap=%f; amn=%f; wdh=%f; wsr=%f; wsh=%f; wdr=%f; xmxc_s=%f; xmxc_rat=%f; minPressure=%f; xmax=%f; xmaxS=%f; xmin=%f;',..
+    str = msprintf('''%s'' type:  tau_s=%f,\nwn_s=%f,\nzeta_s=%f,\ndp_s=%f,\nael=%f,\nkel=%f,\ncd_=%f,\ncdl=%f,\nkix=%f,\nmAnull=%f,\nah=%f,\nar=%f,\nvmax_s=%f,\nvmin_s=%f,\nunderlap=%f,\namn=%f,\nwdh=%f,\nwsr=%f,\nwsh=%f,\nwdr=%f,\nxmxc_s=%f,\nxmxc_rat=%f,\nminPressure=%f,\nxmax=%f,\nxmaxS=%f,\nxmin=%f;',..
         typeof(e), e.tau_s, e.wn_s, e.zeta_s, e.dp_s,..
         e.ael, e.kel, e.cd_, e.cdl, e.kix, e.mAnull,..
         e.ah, e.ar, e.vmax_s, e.vmin_s,..
