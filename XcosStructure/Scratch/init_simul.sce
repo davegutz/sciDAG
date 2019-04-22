@@ -178,7 +178,7 @@ exec('./Callbacks/PreLoadFcn_simul.sce', -1);
 
 
 
-function gstr = %geo_string(g)
+function gstr = %ge_string(g)
     // string geo overload
     gstr = '';
     gstr = msprintf('''%s'' type:  \n', typeof(g));
@@ -213,7 +213,7 @@ function gstr = %geo_string(g)
     gstr = gstr + msprintf('mvwin = %s;\n', string(g.mvwin));
 endfunction
 
-function %geo_p(g)
+function %ge_p(g)
     disp(string(g));
 endfunction
 

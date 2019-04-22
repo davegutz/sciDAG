@@ -108,7 +108,11 @@ G.ifc.vo_p1so.vol = 1e12;
 G.ifc.vo_p3.vol = 1e12;
 G.ifc.vo_pd.vol = 1e12;
 G.ifc.vo_px.vol = 1e12;
-
+// Save off data
+save_file = './Results/ic_simul.csv';
+[fdo, err] = mopen(save_file, 'wt');write_struct_row(ic, 'ic', fdo,',');mclose(fdo);rotate_file(save_file, save_file);
+save_file = './Results/g_simul.csv';
+[fdo, err] = mopen(save_file, 'wt');write_struct_row(G, 'G', fdo,',');mclose(fdo);rotate_file(save_file, save_file);
 
 
 // Test pipes
