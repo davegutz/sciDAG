@@ -74,8 +74,15 @@ function [INI] = solve_IFC(INI, GEOF, FP)
 
         icf.wf1cx = icf.wfmd + icf.wf1vg - icf.wf1v + icf.wf1w + icf.wf1leak - icf.wftvb;
 
-        // Check Valve
-        INI.p1c = or_awpstopd(GEOF.check.ao, icf.wf1cx, icf.p1, GEOF.check.cd, FP.sg);
+        // Check Valve assume max open
+        if INI.wf36 > 900 then
+            acheck = GEOF.check.ad.tb(4,2);
+            INI.ifc.check.x = GEOF.check.xmax;
+        else
+            acheck = GEOF.check.ad.tb(4,3);
+            INI.ifc.check.x = GEOF.check.xmin;
+        end
+        INI.p1c = or_awpstopd(acheck, icf.wf1cx, icf.p1, GEOF.check.cd, FP.sg);
         icf.p2 = INI.p1c;
 
         // PRT regulator

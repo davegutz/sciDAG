@@ -293,8 +293,6 @@ G.ifc.mvtv.ah.tb = [-1 0; 1 0];
 G.ifc.mvtv.ad.tb = [xd ad];
 clear xd ad
 
-G.ifc.mvtv = G.ifc.mvtv;
-
 // IFC volumes
 G.ifc.mo_p3s.area = sqr(0.0135)*%pi/4;
 G.ifc.mo_p3s.length = 0.01; 
@@ -325,6 +323,44 @@ G.ifc.a1leak = 6.1783e-4;
 G.ifc.prtv.fs = 24;
 G.ifc.prtv.ks = 70;
 G.ifc.prtv.ax1 = 0.076945;
+
+// Check Valve
+G.ifc.check
+// Define valve check geometry
+G.ifc.check.ax1 = 0.99402;
+G.ifc.check.ax2 = 0.212372;
+G.ifc.check.ax3 = 0;
+G.ifc.check.ax4 = 0;
+G.ifc.check.c = 0.;
+G.ifc.check.clin = 0;
+G.ifc.check.cd = 0.68;
+G.ifc.check.cdo = 0.7;
+G.ifc.check.cp = 0;
+d = 0.5; // disable
+G.ifc.check.ao = d^2*%pi/4;
+clear d
+G.ifc.check.fdyf = 0;
+G.ifc.check.fstf = 0;
+G.ifc.check.fs = 19.01;
+G.ifc.check.ks = 40.7;
+G.ifc.check.ld = 0;
+G.ifc.check.lh = 0;
+G.ifc.check.m = 0.0386;   // mv only
+G.ifc.check.xmax = 0.31;
+G.ifc.check.xmin = 0.0;
+G.ifc.check.ah.tb = [-1 0; 1 0];
+G.ifc.check.ad.tb = zeros(4,2);
+G.ifc.check.ad.tb(1,1) = -G.ifc.check.xmax;
+G.ifc.check.ad.tb(2,1) = G.ifc.check.xmin - (G.ifc.check.xmax - G.ifc.check.xmin) / 1000;
+G.ifc.check.ad.tb(3,1) = G.ifc.check.xmin;
+G.ifc.check.ad.tb(4,1) = G.ifc.check.xmax;
+G.ifc.check.ad.tb(1,2) = 0;
+AMNCV = 1e-5;
+WCV = 2.375;
+G.ifc.check.ad.tb(2,2) = AMNCV - WCV * (G.ifc.check.ad.tb(3,1) - G.ifc.check.ad.tb(2,1));
+G.ifc.check.ad.tb(3,2) = AMNCV;
+G.ifc.check.ad.tb(4,2) = AMNCV + WCV * (G.ifc.check.ad.tb(4,1) - G.ifc.check.ad.tb(3,1));
+clear AMNCV WCV
 
 // Define main line 
 G.mline.main_line.l = 48;

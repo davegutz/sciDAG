@@ -85,4 +85,11 @@ ic.ven.vsv.x = G.ven.vsv.xmax;
 ic.ven.rrv.x = G.ven.rrv.xmin;
 ic = order_all_fields(ic);
 
+
+if ic.wf36 > 900 then
+    ic.ifc.check.a = G.ifc.check.ad.tb(4,2);
+else
+    ic.ifc.check.a = G.ifc.check.ad.tb(4,3);
+end
+
 mprintf('Completed %s\n', sfilename())  
