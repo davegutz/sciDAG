@@ -418,9 +418,9 @@ G.ebp.ocm2.l = 6;
 G.ebp.ocm2.a = G.ebp.ocm2.vol/G.ebp.ocm2.l;
 G.ebp.ocm2.c = 100;
 G.ebp.focOr.cd = 0.61;
-G.ebp.focOr.cd = 0.61;
-G.ebp.focOr.ao = or_wptoa(17000., 60., 0., G.ebp.focOr.cd, FP.sg);
+//G.ebp.focOr.ao = or_wptoa(17000., 60., 0., G.ebp.focOr.cd, FP.sg);
 //G.ebp.focOr.Do = sqrt(4/%pi*G.ebp.focOr.Ao);
+G.ebp.focOr.ao = or_wptoa(17000., 60., 0., G.ebp.focOr.cd, 0.74);
 G.ebp.vo_poc.vol = 36;
 G.ebp.boost.a = 0.520;
 G.ebp.boost.b = 6.60;
@@ -445,6 +445,7 @@ clear vol
 //G.ebp.mom_filt.c = 0;
 G.ebp.vo_pb1.vol = 77.9;
 G.ebp.vo_pb2.vol = 5;
+G.ebp.vo_p1.vol = 1e6;
 
 // Aircraft fuel supply
 // -400

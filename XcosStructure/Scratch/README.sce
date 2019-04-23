@@ -96,9 +96,11 @@ exec('benchmark_valve_start04alone.sce', -1)
     save('DATA_00_08000_00000_16005_09060_147_79_13_sNone.dat', 'DV', 'DI');
 
     exec('.\init_simu.sce',-1)
-    // run briefly to generate G
+    // run briefly to generate INI
     exec('.\newIni.sce', -1) // 10 minutes run time
     save('./Data/init_00_08000_00000_16005_09060_147_79_13.dat', 'INI');
+    ic = INI;
+    save('init_00_08000_00000_16005_09060_147_79_13_sNone_ic.dat', 'ic')
 // Load the simulation
 exec('.\init_simul.sce',-1)
 // Freeze mvtv and hs

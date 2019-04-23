@@ -169,7 +169,8 @@ function [INI, G] = solve_AC(INI, ptank, ps3, wf36, G, FP)
         clear fcx hcx
 
         // Orifice:(Q, Area) --> dP
-        imotor.dP = sign(Qac_init) * amotor.dp*(imotor.wf/amotor.wf)^2;
+        // imotor.dP = sign(Qac_init) * amotor.dp*(imotor.wf/amotor.wf)^2;
+        imotor.dP = iacmb.Pd_Pump - or_awpstopd(amotor.ao, imotor.wf, iacmb.Pd_Pump, amotor.cd, FP.sg);
 
         ilengine.p = iacmb.Pd_Pump - imotor.dP;
         Pac = iacb.Pd_Pump;

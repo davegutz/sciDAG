@@ -27,7 +27,6 @@ function [INI] = solve_IFC(INI, GEOF, FP)
 
     // Name changes
     icf.p1 = INI.p1;
-    icf.p1so = icf.p1;  // TODO: add check valve
     icf.wf1vg = INI.wf1cvg + INI.wf1fvg;
     icf.wf1f = INI.wf1v;
     icf.pc = INI.pc;
@@ -138,6 +137,7 @@ function [INI] = solve_IFC(INI, GEOF, FP)
     // Assign
     icf.hs.x = INI.xhs;
     icf.mvtv.x = INI.xtv;
+    icf.p1so = INI.p1c;  // TODO: add check valve
     icf.wf2s = 0;  // TODO:  shouldn't this be wf1s?
     icf.wf3s = 0;
     icf.wfrt = icf.wftvb;
@@ -167,8 +167,6 @@ function [INI] = solve_IFC(INI, GEOF, FP)
     icf.vo_px.p = icf.px;
     icf.mo_p3s.wf = 0;
     icf.mo_p3s.p = icf.vo_p3.p;
-
-
 
     // Re-assign
     INI.ifc = icf;
