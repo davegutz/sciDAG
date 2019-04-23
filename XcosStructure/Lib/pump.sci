@@ -119,6 +119,11 @@ function ps= %vdp_string(p)
     typeof(p), p.cf, p.cn, p.cs, p.ct);
 endfunction
 
+function ps= vdp_fstring(p)
+    ps = msprintf('type,''%s'',\ncf,%f,\ncn,%f,\ncs,%f,\nct,%f,\n',..
+    typeof(p), p.cf, p.cn, p.cs, p.ct);
+endfunction
+
 function str = %vdp_p(p)
     str = string(p);
     disp(str)

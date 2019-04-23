@@ -215,15 +215,20 @@ function lis = lsx_aab(a)
 endfunction
 
 function str = %aab_string(a)
-    // Display actuator_a_b type
     str = msprintf('''%s'' type:  ab=%f,\nah=%f,\nahl=%f,\nar=%f,\narl=%f,\nc_=%f,\ncd_=%f,\nfdyf=%f,\nfstf=%f;mact=%f,\nmext=%f,\nxmax=%f,\nxmin=%f;\n',..
              typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
              a.c_, a.cd_, a.fdyf, a.fstf,..
              a.mact, a.mext, a.xmax, a.xmin);
 endfunction
 
+function str = aab_fstring(a)
+    str = msprintf('type,''%s'',\nab,%f,\nah,%f,\nahl,%f,\nar,%f,\narl,%f,\nc_,%f,\ncd_,%f,\nfdyf,%f,\nfstf,%f,\nmact,%f,\nmext,%f,\nxmax,%f,\nxmin,%f,\n',..
+             typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
+             a.c_, a.cd_, a.fdyf, a.fstf,..
+             a.mact, a.mext, a.xmax, a.xmin);
+endfunction
+
 function str = %aab_p(a)
-    // Display actuator_a_b valve type
     str = string(a);
     disp(str)
 endfunction
@@ -352,7 +357,14 @@ function lis = lsx_aac(a)
 endfunction
 
 function str = %aac_string(a)
-    str = msprintf('''%s'' type:  ab=%f,\nah=%f,\nahl=%f,\nar=%f,\narl=%f,\nc_=%f,\ncd_=%f,\nfdyf=%f,\nfstf=%f;mact=%f,\nmext=%f,\nxmax=%f,\nxmin=%f;\n',..
+    str = msprintf('''%s'' type:  ab=%f,\nah=%f,\nahl=%f,\nar=%f,\narl=%f,\nc_=%f,\ncd_=%f,\nfdyf=%f,\nfstf=%f,\nmact=%f,\nmext=%f,\nxmax=%f,\nxmin=%f;\n',..
+             typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
+             a.c_, a.cd_, a.fdyf, a.fstf,..
+             a.mact, a.mext, a.xmax, a.xmin);
+endfunction
+
+function str = aac_fstring(a)
+    str = msprintf('type,''%s'',\nab,%f,\nah,%f,\nahl,%f,\nar,%f,\narl,%f,\nc_,%f,\ncd_,%f,\nfdyf,%f,\nfstf,%f,\nmact,%f,\nmext,%f,\nxmax,%f,\nxmin,%f,\n',..
              typeof(a), a.ab, a.ah, a.ahl, a.ar, a.arl,..
              a.c_, a.cd_, a.fdyf, a.fstf,..
              a.mact, a.mext, a.xmax, a.xmin);
@@ -498,6 +510,17 @@ function str = %fehsv2_string(e)
     str = str + 'awin_dr: ' + string(e.awin_dr) + ';';
     str = str + 'awin_sh: ' + string(e.awin_sh) + ';';
     str = str + 'awin_sr: ' + string(e.awin_sr) + ';';
+endfunction
+
+function str = fehsv2_fstring(e)
+    str = msprintf('type,''%s'',\ntau_s,%f,\nwn_s,%f,\nzeta_s,%f,\ndp_s,%f,\nael,%f,\nkel,%f,\ncd_,%f,\ncdl,%f,\nkix,%f,\nmAnull,%f,\nah,%f,\nar,%f,\nvmax_s,%f,\nvmin_s,%f,\nunderlap,%f,\namn,%f,\nwdh,%f,\nwsr,%f,\nwsh,%f,\nwdr,%f,\nxmxc_s,%f,\nxmxc_rat,%f,\nminPressure,%f,\nxmax,%f,\nxmaxS,%f,\nxmin,%f,\nmA_x,%s\nmA_x0,%s\nawin_dh,%s\nawin_dr,%s\nawin_sh,%s\nawin_sr,%s\n',..
+        typeof(e), e.tau_s, e.wn_s, e.zeta_s, e.dp_s,..
+        e.ael, e.kel, e.cd_, e.cdl, e.kix, e.mAnull,..
+        e.ah, e.ar, e.vmax_s, e.vmin_s,..
+        e.underlap, e.amn, e.wdh, e.wsr, e.wsh, e.wdr, e.xmxc_s, e.xmxc_rat,..
+        e.minPressure, e.xmax, e.xmaxS, e.xmin,..
+        ctab1_fstring(e.mA_x), ctab1_fstring(e.mA_x0), ctab1_fstring(e.awin_dh), ctab1_fstring(e.awin_dr),..
+        ctab1_fstring(e.awin_sh), ctab1_fstring(e.awin_sr));
 endfunction
 
 function str = %fehsv2_p(e)

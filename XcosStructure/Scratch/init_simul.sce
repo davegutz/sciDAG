@@ -146,6 +146,10 @@ function str = %vlk_string(v)
     str = str + 'ytqa: ' + string(v.ytqa) + ',';
     str = str + 'ytqrs: '+ string(v.ytqrs);
 endfunction
+function str = vlk_fstring(v)
+    str = msprintf('type,''%s'',\nctqpv,%f,\ncva,%f,\ncdv,%f,\ncftpa,%f,\nytqa,%s\nytqrs,%s\n',..
+             typeof(v), v.ctqpv, v.cva, v.cdv, v.cftpa, ctab1_fstring(v.ytqa), ctab1_fstring(v.ytqrs));
+endfunction
 function str = %vlk_p(v)
     str = string(v);
     disp(str)
@@ -179,10 +183,6 @@ clear IFC EPMP VEN VENLOAD ENG MLINE ACSUPPLY GUESS
 
 // Temporary.  TODO:  remove this line and use zcos diagram + pre_xcos...
 exec('./Callbacks/PreLoadFcn_simul.sce', -1);
-
-     
-     "vdpp",  "pact", "pact_lk", "vlink", "vleak", "bias",  "motor" "act_c", "ehsv", 
-
 
 function geo_write(file_name, g)
     [fid, err] = mopen(file_name, 'wt');
@@ -231,14 +231,22 @@ function geo_write(file_name, g)
     mfprintf(fid, 'G.ifc.ln_p3s.%s\n', pipe_fstring(g.ifc.ln_p3s));
     mfprintf(fid, 'G.ven.fsb,%f\n', g.ven.fsb);
     mfprintf(fid, 'G.ven.ksb,%f\n', g.ven.ksb);
+    mfprintf(fid, 'G.ven.pact_lk.%s\n', la_fstring(g.ven.pact_lk));
     mfprintf(fid, 'G.ven.leako.%s\n', la_fstring(g.ven.leako));
+    mfprintf(fid, 'G.ven.vleak.%s\n', la_fstring(g.ven.vleak));
+    mfprintf(fid, 'G.ven.pact.%s\n', aab_fstring(g.ven.pact));
+    mfprintf(fid, 'G.ven.bias.%s\n', aab_fstring(g.ven.bias));
     mfprintf(fid, 'G.ven.vsv.%s\n', vlv_a_fstring(g.ven.vsv));
     mfprintf(fid, 'G.ven.rrv.%s\n', vlv_a_fstring(g.ven.rrv));
+    mfprintf(fid, 'G.ven.vdpp.%s\n', vdp_fstring(g.ven.vdpp));
     mfprintf(fid, 'G.ven.reg.%s\n', tv_a1_fstring(g.ven.reg));
+    mfprintf(fid, 'G.ven.vlink.%s\n', vlk_fstring(g.ven.vlink));
     mfprintf(fid, 'G.ven.vo_pcham.%s\n', vol_fstring(g.ven.vo_pcham));
     mfprintf(fid, 'G.ven.vo_px.%s\n', vol_fstring(g.ven.vo_px));
+    mfprintf(fid, 'G.venload.ehsv.%s\n', fehsv2_fstring(g.venload.ehsv));
     mfprintf(fid, 'G.venload.ehsv_klk,%f\n', g.venload.ehsv_klk);
     mfprintf(fid, 'G.venload.ehsv_powlk,%f\n', g.venload.ehsv_powlk);
+    mfprintf(fid, 'G.venload.act_c.%s\n', aac_fstring(g.venload.act_c));
     mfprintf(fid, 'G.venload.vo_hcham.%s\n', vol_fstring(g.venload.vo_hcham));
     mfprintf(fid, 'G.venload.vo_rcham.%s\n', vol_fstring(g.venload.vo_rcham));
     mfprintf(fid, 'G.venload.rline.%s\n', pipe_fstring(g.venload.rline));
@@ -246,6 +254,7 @@ function geo_write(file_name, g)
     mfprintf(fid, 'G.acsupply.lengine.%s\n', pipe_fstring(g.acsupply.lengine));
     mfprintf(fid, 'G.acsupply.acmbst.%s\n', cpmp_fstring(g.acsupply.acmbst));
     mfprintf(fid, 'G.acsupply.acbst.%s\n', cpmp_fstring(g.acsupply.acbst));
+    mfprintf(fid, 'G.acsupply.motor.%s\n', or_fstring(g.acsupply.motor));
     mfprintf(fid, 'G.ebp.inlet.%s\n', pipe_fstring(g.ebp.inlet));
     mfprintf(fid, 'G.ebp.ocm1.%s\n', pipe_fstring(g.ebp.ocm1));
     mfprintf(fid, 'G.ebp.ocm2.%s\n', pipe_fstring(g.ebp.ocm2));

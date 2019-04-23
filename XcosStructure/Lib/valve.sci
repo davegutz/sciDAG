@@ -146,7 +146,7 @@ function [x,y,typ] = VALVE_A(job, arg1, arg2)
         end
     case 'define' then
 //        message('in define')
-        model.opar,list(vlv_a_default);
+        model.opar = list(vlv_a_default);
         SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0
@@ -319,7 +319,7 @@ function [x,y,typ] = TRIVALVE_A1(job, arg1, arg2)
         end
     case 'define' then
 //        message('in define')
-        model.opar,list(tv_a1_default);
+        model.opar = list(tv_a1_default);
         SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0
@@ -421,7 +421,7 @@ function [x,y,typ] = HLFVALVE_A(job, arg1, arg2)
         end
     case 'define' then
 //        message('in define')
-        model.opar,list(hlfvlv_a_default);
+        model.opar = list(hlfvlv_a_default);
         SG = 0.8
         LINCOS_OVERRIDE = 0
         Xinit = 0
