@@ -110,6 +110,17 @@ wfengine = DI.ac.Mon_ABOOST.wfengine;
 ACmotivepull = DI.ac.Mon_ABOOST.ACmotivepull;
 wfbypass = DI.ac.Mon_ABOOST.wfbypass;
 pacbmix = DI.ac.Mon_ABOOST.pacbmix;
+hs_pos = DI.ifc.Calc.Comp.hs.Result.x;
+hs_dxdt = DI.ifc.Calc.Comp.hs.Result.dxdt;
+hs_ufmod = DI.ifc.Calc.Comp.hs.Result.uf_mod;
+hs_plx = DI.ifc.Calc.Comp.hs.plx;
+hs_wff = DI.ifc.Calc.Comp.hs.Result.wf.wff;
+hs_wfh = DI.ifc.Calc.Comp.hs.Result.wf.wfh;
+hs_wfl = DI.ifc.Calc.Comp.hs.Result.wf.wfl;
+hs_cf = DI.ifc.Calc.Comp.hs.Result.wf.cf;
+hs_pl = DI.ifc.Calc.Comp.hs.In.pl;
+hs_ph = DI.ifc.Calc.Comp.hs.In.ph;
+hs_pf = DI.ifc.Calc.Comp.hs.In.pf;
 
 // Length of simulation
 Tf = time($);
