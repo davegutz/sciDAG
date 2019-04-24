@@ -174,6 +174,7 @@ function [INI] = solve_IFC(INI, GEOF, FP)
     icf.vo_px.p = icf.px;
     icf.mo_p3s.wf = 0;
     icf.mo_p3s.p = icf.vo_p3.p;
+    icf.dprt = INI.p1c - icf.prt;
 
     // Re-assign
     INI.ifc = icf;

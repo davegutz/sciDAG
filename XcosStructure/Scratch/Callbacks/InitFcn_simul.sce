@@ -60,8 +60,8 @@ end
 mv_x = DI.ifc.Calc.Comp.fmv.mv.Result.x; 
 x0 = mv_x.values(1,1);
 xE = mv_x.values($,1);
-mv_xin = struct('time', [0 0.0100009 .0100010 Tf]', 'values', [x0 x0 xE xE]');
-mv_xin.values(:,1) = x0; // freeze
+mv_xin = struct('time', [0 0.011000 .011001 Tf]', 'values', [x0 x0 xE xE]');
+//mv_xin.values(:,1) = x0; // freeze
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 MOD.initialized = %t;
 time_tic = getdate();

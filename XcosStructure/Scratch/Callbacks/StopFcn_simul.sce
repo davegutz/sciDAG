@@ -158,6 +158,8 @@ overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
 subplot(325)
 overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
+if 0 then
+
 figs($+1) = figure("Figure_name", 'VDPP', "Position", [40,90,610,600]);
 subplot(321)
 overplot(['VDPP_RPM', 'vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['r-', 'b--', 'k--', 'm-'], 'VDPP')
@@ -235,6 +237,8 @@ subplot(336)
 overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
 subplot(337)
 overplot(['START_WFS', 'start_wfs'], ['r-',  'b--'], 'Start Valve Flow')
+
+end
 
 end
 

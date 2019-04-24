@@ -255,8 +255,8 @@ G.ifc.mv.cd = 0.69;
 G.ifc.mv.m = 0.497;
 G.ifc.mv.xmax = 0.536;
 G.ifc.mv.xmin = -0.1;
-exec('./Callbacks/mvwin_b.sci', -1);
-[xt, at] = mvwin_b(40);
+exec('./Callbacks/mvwin_c.sci', -1);
+[xt, at] = mvwin_c();
 G.ifc.mv.at.tb = [xt at];
 clear xt at
 

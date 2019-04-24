@@ -101,18 +101,23 @@ exec('benchmark_valve_start04alone.sce', -1)
     save('./Data/init_00_08000_00000_16005_09060_147_79_13.dat', 'INI');
     ic = INI;
     save('init_00_08000_00000_16005_09060_147_79_13_sNone_ic.dat', 'ic')
+    save_file = './Results/ic_simul.csv';
+    [fdo, err] = mopen(save_file, 'wt');write_struct_row(ic, 'ic', fdo,',');mclose(fdo);rotate_file(save_file, save_file);
 // Load the simulation
 exec('.\init_simul.sce',-1)
-// Freeze mvtv and hs
-G.ifc.mvtv.fstf=1e6;
-G.ifc.hs.fstf=1e6;
+// Freeze stuff
+G.ifc.mvtv.fstf=1e12;
+G.ifc.hs.fstf=1e12;
 G.ifc.vo_p1so.vol = 1e12;
-G.ifc.vo_p3.vol = 1e12;
-G.ifc.vo_pd.vol = 1e12;
-G.ifc.vo_px.vol = 1e12;
+G.ifc.vo_p3.vol = 1e24;
+G.ifc.vo_pd.vol = 1e24;
+G.ifc.vo_px.vol = 1e24;
+G.mline.vo_pnozin.vol = 1e24;
+G.mline.main_line.l = 1e26;
+G.mline.main_line.a = 1e24;
+
+
 // Save off data
-save_file = './Results/ic_simul.csv';
-[fdo, err] = mopen(save_file, 'wt');write_struct_row(ic, 'ic', fdo,',');mclose(fdo);rotate_file(save_file, save_file);
 save_file = './Results/g_simul.csv';
 geo_write(save_file, G)
 
