@@ -28,7 +28,7 @@ function [avis] = AVIS(sg, kvis)
     avis   = 9.312e-5 * .00155 * sg * kvis;
 endfunction
 
-vol_default = tlist(["vol", "beta", "dwdc", "vol", "tvp"], 135000, 129.93948*0.8, 1e6, 7);
+vol_default = tlist(["vol", "vol"], 1e6);
 mom_default = tlist(["mom", "area", "length", "min_flow", "max_flow"], 1e6, 1e6, -1e6, 1e6);
 pipeVV_default = tlist(["pVV", "l", "a", "vol", "n", "c", "lti", "A", "B", "C", "D", "ltis"],..
         18, 0.3^2*%pi/4, 18*0.3^2*%pi/4, 0, 0, [], [], [], [], [], []);
@@ -42,10 +42,10 @@ FP_default = tlist(["FP", "sg", "beta", "dwdc", "tvp"],..
         0.8, 135000, DWDC(0.8), 7);
         
 function [vs] = %vol_string(v)
-    vs = msprintf('''%s'' type:  vol=%f, beta=%f, dwdc=%f, tvp=%f', typeof(v), v.vol, v.beta, v.dwdc,  v.tvp);
+    vs = msprintf('type,''%s'',vol=%f', typeof(v), v.vol);
 endfunction
 function [vs] = vol_fstring(v)
-    vs = msprintf('type,''%s'',\nvol,%f,\nbeta,%f,\ndwdc,%f,\ntvp,%f,\n', typeof(v), v.vol, v.beta, v.dwdc,  v.tvp);
+    vs = msprintf('type,''%s'',\nvol,%f,\n', typeof(v), v.vol);
 endfunction
 function [ms] = %mom_string(m)
     ms = msprintf('''%s'' type:  area=%f, length=%f, min_flow=%f, max_flow=%f', typeof(m), m.area, m.length, m.min_flow,  m.max_flow);
