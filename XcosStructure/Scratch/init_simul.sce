@@ -121,11 +121,10 @@ hs_cf = DI.ifc.Calc.Comp.hs.Result.wf.cf;
 hs_pl = DI.ifc.Calc.Comp.hs.In.pl;
 hs_ph = DI.ifc.Calc.Comp.hs.In.ph;
 hs_pf = DI.ifc.Calc.Comp.hs.In.pf;
-p3 =  = DI.ifc.Calc.Press.p3;
+p3 = DI.ifc.Calc.Press.p3;
 wf3s = DI.ifc.Calc.Flow.wf3s;
-p3s =  = DI.ifc.Calc.Press.p3s;
-wf3sx = DI.ifc.Calc.Flow.wf3s;  // ************
-
+p3s = DI.ifc.Calc.Press.p3s;
+wf3sx = DI.ifc.Calc.Flow.wf3sx;
 
 // Length of simulation
 Tf = time($);

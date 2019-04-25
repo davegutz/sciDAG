@@ -248,7 +248,8 @@ G.ifc.hs.ks = 520;
 G.ifc.hs.m = 1.29e-4*386.4;
 G.ifc.hs.xmax = 0.0325;
 G.ifc.hs.xmin = 0;
-G.ifc.hs.c = 0.1;  // tuned in scilab to match simulink
+//G.ifc.hs.c = 0.1;  // tuned in scilab to match simulink
+G.ifc.hs.c = 0.0005;
 
 // Define hlfvalve mv geometry
 G.ifc.mv.ax1 = 1.227;
