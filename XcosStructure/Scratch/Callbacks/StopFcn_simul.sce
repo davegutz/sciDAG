@@ -59,9 +59,10 @@ WFMV = struct('time', tIDATA, 'values', IDATA.values(:,6));
 WF3 = struct('time', tIDATA, 'values', IDATA.values(:,9));
 WF1MV = struct('time', tIDATA, 'values', IDATA.values(:,10));
 WF1S = struct('time', tIDATA, 'values', IDATA.values(:,11));
-MV_POS = struct('time', tIDATA, 'values', IDATA.values(:,12));
-TV_POS = struct('time', tIDATA, 'values', IDATA.values(:,13));
-HS_POS = struct('time', tIDATA, 'values', IDATA.values(:,14));
+WF3S = struct('time', tIDATA, 'values', IDATA.values(:,12));
+MV_POS = struct('time', tIDATA, 'values', IDATA.values(:,13));
+TV_POS = struct('time', tIDATA, 'values', IDATA.values(:,14));
+HS_POS = struct('time', tIDATA, 'values', IDATA.values(:,15));
 tPALL = PALL.time(:,1);
 PDVEN = struct('time', tPALL, 'values', PALL.values(:,1));
 P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,2));
@@ -77,6 +78,7 @@ wf1mv = DI.ifc.Calc.Flow.wf1mv;
 wf1s = DI.ifc.Calc.Flow.wf1s;
 mv_wfd = DI.ifc.Calc.Flow.wfmv;
 wf3 = DI.ifc.Calc.Flow.wf3;
+wf3s = DI.ifc.Calc.Flow.wf3s;
 wfmd = wf3;
 wf36 = DI.eng.wf36;
 p1c = DI.ifc.Calc.Press.p1c;
@@ -131,6 +133,8 @@ subplot(221)
 overplot(['WF3', 'wf3'], ['r-', 'b--'], 'Throttle Valve Discharge Flow')
 subplot(222)
 overplot(['WFMD', 'wfmd'], ['r-', 'b--'], 'Main Discharge Flow')
+subplot(223)
+overplot(['WF3S', 'wf3s'], ['r-', 'b--'], 'Flow MV Discharge to Head Sense')
 subplot(224)
 overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
 
