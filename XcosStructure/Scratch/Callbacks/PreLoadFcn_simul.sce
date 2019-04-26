@@ -304,6 +304,9 @@ G.ifc.ln_p3s.a = sqr(0.1875)*%pi/4;
 G.ifc.ln_p3s.vol = G.ifc.ln_p3s.l*G.ifc.ln_p3s.a; 
 G.ifc.ln_p3s.n = 1;
 G.ifc.ln_p3s.c = 3000;
+if MOD.zeroP3lineDamp then
+    G.ifc.ln_p3s.c = 0;
+end
 vo_p1c_on = 14;
 vo_p1c_so = 6.6;
 G.ifc.a_p3s.ao = sqr(.0135)*%pi/4;

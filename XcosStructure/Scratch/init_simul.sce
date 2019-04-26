@@ -61,18 +61,38 @@ global G MOD ic FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 global DI DV
 
+// Memory of setup
 // Auto data overplot load
 stack_size = stacksize('max');
-[D, N, time] = load_csv_data_row('./Data/FP_IRP.csv', 1);
-[n_names, m_names] = size(N);
-for i = 1:m_names
-    execstr(N(i) + "=D(" + string(i) + ",1);")
+MOD = tlist(["mod_ctrl", "initialized", "skip_init", "batch", "tPumpFail",...
+             "zeroP3lineDamp"], %f, %f, %f, %inf, %f);
+MOD.skip_init = %t;         // Load in pre-solved initial condition
+MOD.zeroP3lineDamp = %t;   //  Special switch to match simulink model (not intended for final model) 
+
+// Load external reference data
+if MOD.zeroP3lineDamp then
+    [D, N, time] = load_csv_data_row('./Data/FP_IRP_0d.csv', 1);
+    [n_names, m_names] = size(N);
+    for i = 1:m_names
+        execstr(N(i) + "=D(" + string(i) + ",1);")
+    end
+    [D, N, time] = load_csv_data('./Data/DVS_IRP_0d.csv', 1);
+    exec('./Data/load_decode_csv_data.sce', -1);
+    [D, N, time] = load_csv_data('./Data/DIS_IRP_0d.csv', 1);
+    exec('./Data/load_decode_csv_data.sce', -1);
+    clear D N n_names m_names
+else
+    [D, N, time] = load_csv_data_row('./Data/FP_IRP.csv', 1);
+    [n_names, m_names] = size(N);
+    for i = 1:m_names
+        execstr(N(i) + "=D(" + string(i) + ",1);")
+    end
+    [D, N, time] = load_csv_data('./Data/DVS_IRP.csv', 1);
+    exec('./Data/load_decode_csv_data.sce', -1);
+    [D, N, time] = load_csv_data('./Data/DIS_IRP.csv', 1);
+    exec('./Data/load_decode_csv_data.sce', -1);
+    clear D N n_names m_names
 end
-[D, N, time] = load_csv_data('./Data/DVS_IRP.csv', 1);
-exec('./Data/load_decode_csv_data.sce', -1);
-[D, N, time] = load_csv_data('./Data/DIS_IRP.csv', 1);
-exec('./Data/load_decode_csv_data.sce', -1);
-clear D N n_names m_names
 
 // Driven inputs  TODO: standalone model should not have any driven
 xn25 = DI.eng.xn25;
@@ -139,11 +159,7 @@ TBUF = 0.0001;
 NBUF = ceil(Tf/TBUF);
 clear D N time
 
-// Memory of setup
-MOD.initialized = %f;
-MOD.skip_init = %t;
-MOD.batch = %f;
-MOD.tPumpFail = %inf;
+
 LIN.open_tv = 0;
 
 // Fuel properties

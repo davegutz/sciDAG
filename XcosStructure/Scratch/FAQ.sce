@@ -20,6 +20,13 @@
 // Mar 2, 2019    DA Gutz        Created
 // 
 
-Linearization of SCICOS model scs_m - 
+o  Linearization of SCICOS model scs_m - 
     - sqrt will not linearize unless it's block properties are set to 'complex'
     
+o  Save to Workspace blocks appear to stop working
+    "Error in post_xcos_simulate: ending simulation"
+    and when run StopFcn:
+    "tWALL = WALL.time(:,1);
+                       !--error 250 
+    Recursive extraction is not valid in this context."
+    -  solver is DP45.  Has it always been?

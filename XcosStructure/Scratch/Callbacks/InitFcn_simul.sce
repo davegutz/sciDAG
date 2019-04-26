@@ -69,7 +69,7 @@ time_tic = getdate();
 // placeholder for VEN Unit stuff TODO:  need better logic here
 
 // Cleanup
-MOD = order_all_fields(MOD);
+// placeholder for cleanup
 
 // Temporary version of the final initialization method (newIni.sce) ic = MODx
 load('init_00_08000_00000_16005_09060_147_79_13_sNone_ic.dat');
