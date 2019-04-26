@@ -80,7 +80,7 @@ wf1s = DI.ifc.Calc.Flow.wf1s;
 mv_wfd = DI.ifc.Calc.Flow.wfmv;
 wf3 = DI.ifc.Calc.Flow.wf3;
 wf3s = DI.ifc.Calc.Flow.wf3s;
-wf3sx = DI.ifc.Calc.Flow.wf3sx;
+wf3sx = DI.ifc.Calc.Flow.lnp3s.wf3sx;
 wfmd = wf3;
 wf36 = DI.eng.wf36;
 p1c = DI.ifc.Calc.Press.p1c;
@@ -159,6 +159,8 @@ subplot(321)
 overplot(['MV_POS', 'mv_xin'], ['r-',  'b--'], 'MV Poaition')
 subplot(322)
 overplot(['HS_POS', 'hs_x'], ['r-',  'b--'], 'Head Sensor Position')
+subplot(324)
+overplot(['P2MP3', 'p2mp3'], ['r-', 'b--'], 'MV Delta Pressure')
 subplot(323)
 overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
 subplot(325)
