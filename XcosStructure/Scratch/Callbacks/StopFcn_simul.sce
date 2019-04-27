@@ -121,6 +121,19 @@ tri_wfse = DV.reg.Result.wf.wfse;
 tri_wfs = DV.reg.Result.wf.wfs;
 start_wfs = DV.reg.Result.wf.wfs; start_wfs.values = start_wfs.values*0;
 
+ACmotivepull = DI.ac.Mon_ABOOST.ACmotivepull;
+pacbmix = DI.ac.Mon_ABOOST.pacbmix;
+pdacbst = DI.ac.Mon_ABOOST.pdacbst;
+pdacmbst = DI.ac.Mon_ABOOST.pdacmbst;
+pengine = DI.ac.Mon_ABOOST.pengine;
+psacbst = DI.ac.Mon_ABOOST.psacbst;
+wfacbst = DI.ac.Mon_ABOOST.wfacbst;
+wfacmbst = DI.ac.Mon_ABOOST.wfacmbst;
+wfbypass = DI.ac.Mon_ABOOST.wfbypass;
+wfengine = DI.ac.Mon_ABOOST.wfengine;
+wftank = DI.ac.Mon_ABOOST.wftank;
+
+
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
 subplot(221)
 overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
