@@ -23,6 +23,6 @@ function post_xcos_simulate(%cpr, scs_m, needcompile)
     global root
     StopFileName = 'Callbacks\StopFcn_' + root + '.sce';
     mprintf('Started post_xcos_simulate\n')  
-    exec(StopFileName, -1);
+    //exec(StopFileName, -1);
     mprintf('Completed post_xcos_simulate\n')  
 endfunction
