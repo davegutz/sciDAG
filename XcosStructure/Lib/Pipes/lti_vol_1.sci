@@ -57,11 +57,13 @@ function [sys] = lti_vol_1(vol, %beta, spgr, %c)
     // Derivative
     dv = ((%beta/129.93948)/vol)/spgr;// Derivative, psi/sec.
     cv = %c*dv;
-    a = 0;
+//    a = 0;
+    a = -cv;
     b = [dv, -dv];
     c = 1;
-    e = [cv, -cv];
-
+//    e = [cv, -cv];
+    e = [0 0];
+    
     // Form the system.
     sys = pack_ss(a, b, c, e);
 

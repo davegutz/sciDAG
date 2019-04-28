@@ -135,6 +135,17 @@ p3s = DI.ifc.Calc.Press.p3s;
 wf3sx = DI.ifc.Calc.Flow.lnp3s.wf3sx;
 p3sx = DI.ifc.Calc.Flow.lnp3s.p3sx;
 p3sxm = DI.ifc.Calc.Flow.lnp3s.p3sxm;
+ACmotivepull = DI.ac.Mon_ABOOST.ACmotivepull;
+pacbmix = DI.ac.Mon_ABOOST.pacbmix;
+pdacbst = DI.ac.Mon_ABOOST.pdacbst;
+pdacmbst = DI.ac.Mon_ABOOST.pdacmbst;
+pengine = DI.ac.Mon_ABOOST.pengine;
+psacbst = DI.ac.Mon_ABOOST.psacbst;
+wfacbst = DI.ac.Mon_ABOOST.wfacbst;
+wfacmbst = DI.ac.Mon_ABOOST.wfacmbst;
+wfbypass = DI.ac.Mon_ABOOST.wfbypass;
+wfengine = DI.ac.Mon_ABOOST.wfengine;
+wftank = DI.ac.Mon_ABOOST.wftank;
 
 // Length of simulation
 Tf = time($);
