@@ -71,7 +71,11 @@ P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,2));
 PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
 tXALL = XALL.time(:,1);
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,4));
-clear tWALL tIDATA tPALL tXALL
+tADATA = ADATA.time(:,1);
+PENGINE = struct('time', tADATA, 'values', ADATA.values(:,3));
+WFACBST = struct('time', tADATA, 'values', ADATA.values(:,6));
+WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,9));
+clear tWALL tIDATA tPALL tXALL tADATA
 
 vload_wfload = DV.wfload;
 vload_wfload.values = vload_wfload.values + start_wfs.values;
@@ -121,6 +125,19 @@ tri_wfse = DV.reg.Result.wf.wfse;
 tri_wfs = DV.reg.Result.wf.wfs;
 start_wfs = DV.reg.Result.wf.wfs; start_wfs.values = start_wfs.values*0;
 
+ACmotivepull = DI.ac.Mon_ABOOST.ACmotivepull;
+pacbmix = DI.ac.Mon_ABOOST.pacbmix;
+pdacbst = DI.ac.Mon_ABOOST.pdacbst;
+pdacmbst = DI.ac.Mon_ABOOST.pdacmbst;
+pengine = DI.ac.Mon_ABOOST.pengine;
+psacbst = DI.ac.Mon_ABOOST.psacbst;
+wfacbst = DI.ac.Mon_ABOOST.wfacbst;
+wfacmbst = DI.ac.Mon_ABOOST.wfacmbst;
+wfbypass = DI.ac.Mon_ABOOST.wfbypass;
+wfengine = DI.ac.Mon_ABOOST.wfengine;
+wftank = DI.ac.Mon_ABOOST.wftank;
+
+
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
 subplot(221)
 overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
@@ -166,6 +183,15 @@ subplot(323)
 overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
 subplot(325)
 overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
+
+figs($+1) = figure("Figure_name", 'AC Supply', "Position", [40,90,610,600]);
+subplot(221)
+overplot(['WFENGINE', 'wfengine'], ['r-',  'b--'], 'Engine Supply Flow')
+subplot(222)
+overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
+subplot(223)
+overplot(['WFACBST', 'wfacbst'], ['r-', 'b--'], 'Aircraft Boost Flow')
+
 
 if 0 then
 

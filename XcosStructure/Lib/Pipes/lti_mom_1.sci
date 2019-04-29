@@ -59,10 +59,12 @@ function [sys] = lti_mom_1(l, a, %c)
     // Derivatives.   Damping must not be passed through to dc gain
     dm = ((3600*386.4)*a)/l;// Derivative, pph/sec.
     cm = %c*dm;
-    a = 0;
+//    a = 0;
+    a = -cm;
     b = [dm, -dm];
     c = 1;
-    e = [cm, -cm];  // Proporttional gain is %c to add damping
+//    e = [cm, -cm];  // Proporttional gain is %c to add damping
+    e = [0 0];
 
     // Form the system.
     sys = pack_ss(a, b, c, e);
