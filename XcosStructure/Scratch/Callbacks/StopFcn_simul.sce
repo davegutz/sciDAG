@@ -72,6 +72,7 @@ PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
 tXALL = XALL.time(:,1);
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,4));
 tADATA = ADATA.time(:,1);
+PACBMIX = struct('time', tADATA, 'values', ADATA.values(:,2));
 PENGINE = struct('time', tADATA, 'values', ADATA.values(:,3));
 WFACBST = struct('time', tADATA, 'values', ADATA.values(:,6));
 WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,9));
@@ -188,9 +189,11 @@ figs($+1) = figure("Figure_name", 'AC Supply', "Position", [40,90,610,600]);
 subplot(221)
 overplot(['WFENGINE', 'wfengine'], ['r-',  'b--'], 'Engine Supply Flow')
 subplot(222)
-overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
+overplot(['PACBMIX', 'pacbmix'], ['r-',  'b--'], 'Mix Pressure')
 subplot(223)
 overplot(['WFACBST', 'wfacbst'], ['r-', 'b--'], 'Aircraft Boost Flow')
+subplot(224)
+overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
 
 
 if 0 then

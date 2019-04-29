@@ -364,11 +364,11 @@ chdir(this_path);
 mprintf('Executed ' + this + ' up to importXcosDiagram*********\n');
 
 try
-    importXcosDiagram("./"+this_xcos_file);
-    xcos('./'+this_xcos_file);
-catch
     importXcosDiagram("./"+this_zcos_file);
     xcos('./'+this_zcos_file);
+catch
+    importXcosDiagram("./"+this_xcos_file);
+    xcos('./'+this_xcos_file);
 end
 
 

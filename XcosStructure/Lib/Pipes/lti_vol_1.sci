@@ -39,7 +39,7 @@
 // SOFTWARE.
 // Oct 10, 2018 	DA Gutz		Created
 // ******************************************************************************
-function [sys] = lti_vol_1(vol, %beta, spgr, %c)
+function [sys] = lti_vol_1(vol, %beta, spgr, %e)
 
     // Output variables initialisation (not found in input variables)
     sys=[];
@@ -51,20 +51,18 @@ function [sys] = lti_vol_1(vol, %beta, spgr, %c)
     ieee(1);
 
     if %nargin<4 then
-        %c = 0;
+        %e = 0;
     end
 
     // Derivative
     dv = ((%beta/129.93948)/vol)/spgr;// Derivative, psi/sec.
-    cv = %c*dv;
-//    a = 0;
-    a = -cv;
-    b = [dv, -dv];
+    C = 1/dv;
+    a = 0;
+    b = [1/C -1/C];  // ignore %e; on mass only
     c = 1;
-//    e = [cv, -cv];
-    e = [0 0];
+    d = [0 0];
     
     // Form the system.
-    sys = pack_ss(a, b, c, e);
+    sys = pack_ss(a, b, c, d);
 
 endfunction
