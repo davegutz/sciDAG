@@ -72,10 +72,18 @@ PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
 tXALL = XALL.time(:,1);
 SV_POS = struct('time', tXALL, 'values', XALL.values(:,4));
 tADATA = ADATA.time(:,1);
+ACMOTIVEPULL = struct('time', tADATA, 'values', ADATA.values(:,1));
 PACBMIX = struct('time', tADATA, 'values', ADATA.values(:,2));
 PENGINE = struct('time', tADATA, 'values', ADATA.values(:,3));
-WFACBST = struct('time', tADATA, 'values', ADATA.values(:,6));
-WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,9));
+PDACBST = struct('time', tADATA, 'values', ADATA.values(:,4));
+PDACMBST = struct('time', tADATA, 'values', ADATA.values(:,5));
+PSACMBST = PDACBST;
+PSACBST = struct('time', tADATA, 'values', ADATA.values(:,6));
+WFACBST = struct('time', tADATA, 'values', ADATA.values(:,7));
+WFACMBST = struct('time', tADATA, 'values', ADATA.values(:,8));
+WFBYPASS = struct('time', tADATA, 'values', ADATA.values(:,9));
+WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,10));
+WFTANK = struct('time', tADATA, 'values', ADATA.values(:,11));
 clear tWALL tIDATA tPALL tXALL tADATA
 
 vload_wfload = DV.wfload;
@@ -132,6 +140,7 @@ pdacbst = DI.ac.Mon_ABOOST.pdacbst;
 pdacmbst = DI.ac.Mon_ABOOST.pdacmbst;
 pengine = DI.ac.Mon_ABOOST.pengine;
 psacbst = DI.ac.Mon_ABOOST.psacbst;
+psacmbst = pdacbst;
 wfacbst = DI.ac.Mon_ABOOST.wfacbst;
 wfacmbst = DI.ac.Mon_ABOOST.wfacmbst;
 wfbypass = DI.ac.Mon_ABOOST.wfbypass;
@@ -185,14 +194,22 @@ overplot(['TV_POS', 'mvtv_x'], ['r-',  'b--'], 'Throttle Valve Position')
 subplot(325)
 overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
-figs($+1) = figure("Figure_name", 'AC Supply', "Position", [40,90,610,600]);
-subplot(221)
+figs($+1) = figure("Figure_name", 'AC Supply', "Position", [40,90,810,600]);
+subplot(331)
 overplot(['WFENGINE', 'wfengine'], ['r-',  'b--'], 'Engine Supply Flow')
-subplot(222)
+subplot(332)
 overplot(['PACBMIX', 'pacbmix'], ['r-',  'b--'], 'Mix Pressure')
-subplot(223)
+subplot(333)
 overplot(['WFACBST', 'wfacbst'], ['r-', 'b--'], 'Aircraft Boost Flow')
-subplot(224)
+subplot(334)
+overplot(['PSACBST', 'psacbst', 'PDACBST', 'pdacbst'], ['r-', 'b--', 'k-', 'c--'], 'Aircraft Boost Pressures')
+subplot(335)
+overplot(['WFACMBST', 'wfacmbst'], ['r-', 'b--'], 'Aircraft Motive Boost Flow')
+subplot(336)
+overplot(['PSACMBST', 'psacmbst', 'PDACMBST', 'pdacmbst'], ['r-', 'b--', 'k-', 'c--'], 'Aircraft Motive Boost Pressures')
+subplot(337)
+overplot(['WFTANK', 'wftank'], ['r-', 'b--'], 'Aircraft Tank Flow')
+subplot(339)
 overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
 
 

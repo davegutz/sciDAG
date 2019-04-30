@@ -63,14 +63,23 @@ function [sys] = lti_man_1_mv(l, a, vol, spgr, %beta, %c)
         %c = 0;
     end
 
-    // Momentum slice.
-    m_1 = lti_mom_1(l, a, %c);
+    // Momentum slice #1
+    m_1 = lti_mom_1(l, a);
 
-    // Volume.
-    v_1 = lti_vol_1(vol, %beta, spgr, %c);
-
+    // Volume #2
+    v_1 = lti_vol_1(vol, %beta, spgr);
+    
+    // Damping flow difference #3
+    flow_diff = summer(1, -1, 0, 0);
+    
+    // Damping #4
+    damper = gain(%c);
+    
+    // Damped feedback #5
+    damp_diff = summer(1, 1, 0, 0);
+    
     // Put system into block diagonal form.
-    temp = adjoin(m_1, v_1);
+    temp = adjoin(m_1, v_1, flow_diff, damper, damp_diff);
 
     // Inputs are ps and wfd.
     u = [1, 4];
