@@ -77,6 +77,9 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
     // Single manifold slice.
     man = lti_man_1_mv(l/(n+1), a, vol/n, spgr, %beta, %c);
 
+    // Damping flow difference #2
+    flow_diff = lti_summer(1, -%c, %c, 0);
+
     // Single momentum slice.
     endmom = lti_mom_1(l/(n+1), a, %c);
 

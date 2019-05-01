@@ -64,23 +64,38 @@ function [sys] = lti_man_1_vm(l, a, vol, spgr, %beta, %c)
         %c = 0;
     end
 
-    // Volume.
+    // Calculate damping
+    dm = ((3600*386.4)*a)/l;// Derivative, pph/sec.
+    M = 1/dm;
+    dv = ((%beta/129.93948)/vol)/spgr;// Derivative, psi/sec.
+    K = dv;
+    Z = %c/2/sqrt(K*M);
+    FN = sqrt(K/M)/2/%pi;
+    mprintf('a=%f, vol=%f, l=%f, beta=%f, c=%f, FN=%f Hz, ZETA=%f\n', a, vol, l, %beta, %c, FN, Z);
+
+    // Splitter #1
+    split = lti_splitter(1, 1, 0, 0);
+
+    // Volume #2
     v_1 = lti_vol_1(vol, %beta, spgr, %c);
 
-    // Momentum slice.
+    // Damping flow difference #3
+    flow_damp = lti_summer(-%c, %c, 1, 0);
+
+    // Momentum slice #4
     m_1 = lti_mom_1(l, a, %c);
 
     // Put system into block diagonal form.
-    temp = adjoin(v_1, m_1);
+    temp = adjoin(split, v_1, flow_damp, m_1);
 
     // Inputs are wfs and pd.
-    u = [1, 4];
+    u = [1  6];
 
     // Outputs are ps and wfd.
-    y = [1, 2];
+    y = [5  7];
 
     // Connections.
-    q = [2,2; 3,1];
+    q = [2 1; 3 7; 4 2; 5 7; 8 5; 9 6];
 
     // Form the system.
     sys = connect_ss(temp,q,u,y);
