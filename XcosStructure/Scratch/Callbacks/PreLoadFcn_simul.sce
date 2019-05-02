@@ -231,7 +231,7 @@ G.mline.ln_vs.l = 23.7;
 G.mline.ln_vs.vol = 3.42;
 G.mline.ln_vs.a = G.mline.ln_vs.vol/G.mline.ln_vs.l;
 G.mline.ln_vs.n = 8;
-G.mline.ln_vs.c = 0.001; // For no ss oscillations. Set to 0 for normal.
+G.mline.ln_vs.c = 0.01; // For no ss oscillations. Set to 0 for normal.
 
 // Define head_b hs=mvhead geometry
 G.ifc.hs.f_cn = 0.75;
@@ -303,7 +303,7 @@ G.ifc.ln_p3s.l = 11.0;
 G.ifc.ln_p3s.a = sqr(0.1875)*%pi/4;
 G.ifc.ln_p3s.vol = G.ifc.ln_p3s.l*G.ifc.ln_p3s.a; 
 G.ifc.ln_p3s.n = 1;
-G.ifc.ln_p3s.c = 3000;
+G.ifc.ln_p3s.c = .06;
 if MOD.zeroP3lineDamp then
     G.ifc.ln_p3s.c = 0;
 end
@@ -373,6 +373,8 @@ G.mline.main_line.l = 48;
 G.mline.main_line.a = 0.363;
 G.mline.main_line.vol = G.mline.main_line.l*G.mline.main_line.a; 
 G.mline.main_line.n = 5;
+G.mline.main_line.c = 0.004; // 2% damping
+G.mline.main_line.c = 0.0; // quiet
 G.mline.vo_pnozin.vol = 20;
 
 // Nozzle pressure drop
@@ -491,16 +493,17 @@ G.ebp.vo_p1.vol = 1e6;
 
 // Aircraft fuel supply
 // -400
-G.acsupply.ltank.l = 0.1;
+//G.acsupply.ltank.l = 0.1;   Force fidelity to be 6" line
+G.acsupply.ltank.l = 6;
 G.acsupply.ltank.a = 2.805521;
-G.acsupply.ltank.vol = 0.280552;
+G.acsupply.ltank.vol = G.acsupply.ltank.l*G.acsupply.ltank.a;
 G.acsupply.ltank.n = 1;
-G.acsupply.ltank.c = 0.0005;  // 100
+G.acsupply.ltank.c = 0.001;  // 2% damping
 G.acsupply.lengine.l = 49.213;
 G.acsupply.lengine.a = %pi*(1.929/2)^2;
 G.acsupply.lengine.vol = G.acsupply.lengine.l * G.acsupply.lengine.a;
 G.acsupply.lengine.n = 9;
-G.acsupply.lengine.c = 0.0005; // 100
+G.acsupply.lengine.c = 0.0005; // 2% damping
 // G.acsupply.a_drop.Do = ; // see InitFcn
 //G.acsupply.a_drop.cd = 0.999;
 //G.acsupply.acbst.Npump = -999; // not applicable

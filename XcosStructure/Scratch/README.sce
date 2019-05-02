@@ -115,17 +115,29 @@ G.ifc.vo_px.vol = 1e24;
 G.mline.vo_pnozin.vol = 1e24;
 G.mline.main_line.l = 1e26;
 G.mline.main_line.a = 1e24;
-
-
 // Save off data
 save_file = './Results/g_simul.csv';
 geo_write(save_file, G)
-
+// check lines
+s=1;
+// mv
+pipeMV=pipeMV_default;pipeMV.c=0.01*s;pipeMV.n=8;pipeMV.l=G.mline.ln_vs.l;pipeMV.a=G.mline.ln_vs.a;pipeMV.vol=G.mline.ln_vs.vol;pipeMV = lti_man_n_mv(pipeMV, FP.sg, FP.beta);lMV=syslin('c',pipeMV.A,pipeMV.B,pipeMV.C,pipeMV.D);lmvtf=ss2tf(lMV);
+figure('Figure_name', 'MV');subplot(2,2,1);bode(lmvtf(1,1));subplot(2,2,2);bode(lmvtf(1,2));subplot(2,2,3);bode(lmvtf(2,1));subplot(2,2,4);bode(lmvtf(2,2));
+// mm
+pipeMM=pipeMM_default;pipeMM.c=0.01*s;pipeMM.n=8;pipeMM.l=G.mline.ln_vs.l;pipeMM.a=G.mline.ln_vs.a;pipeMM.vol=G.mline.ln_vs.vol;pipeMM = lti_man_n_mm(pipeMM, FP.sg, FP.beta);lMM=syslin('c',pipeMM.A,pipeMM.B,pipeMM.C,pipeMM.D);lmmtf=ss2tf(lMM);
+figure('Figure_name', 'MM');subplot(2,2,1);bode(lmmtf(1,1));subplot(2,2,2);bode(lmmtf(1,2));subplot(2,2,3);bode(lmmtf(2,1));subplot(2,2,4);bode(lmmtf(2,2));
+// vm
+pipeVM=pipeVM_default;pipeVM.c=0.01*s;pipeVM.n=8;pipeVM.l=G.mline.ln_vs.l;pipeVM.a=G.mline.ln_vs.a;pipeVM.vol=G.mline.ln_vs.vol;pipeVM = lti_man_n_vm(pipeVM, FP.sg, FP.beta);lVM=syslin('c',pipeVM.A,pipeVM.B,pipeVM.C,pipeVM.D);lvmtf=ss2tf(lVM);
+figure('Figure_name', 'VM');subplot(2,2,1);bode(lvmtf(1,1));subplot(2,2,2);bode(lvmtf(1,2));subplot(2,2,3);bode(lvmtf(2,1));subplot(2,2,4);bode(lvmtf(2,2));
+// vv
+pipeVV=pipeVV_default;pipeVV.c=0.01*s;pipeVV.n=8;pipeVV.l=G.mline.ln_vs.l;pipeVV.a=G.mline.ln_vs.a;pipeVV.vol=G.mline.ln_vs.vol;pipeVV = lti_man_n_vv(pipeVV, FP.sg, FP.beta);lVV=syslin('c',pipeVV.A,pipeVV.B,pipeVV.C,pipeVV.D);lvvtf=ss2tf(lVV);
+figure('Figure_name', 'VV');subplot(2,2,1);bode(lvvtf(1,1));subplot(2,2,2);bode(lvvtf(1,2));subplot(2,2,3);bode(lvvtf(2,1));subplot(2,2,4);bode(lvvtf(2,2));
 
 // Test pipes
 exec('init_pipe.sce', -1);
 // press play
 // expected result in Results/expected_pipe.png
+
 
 // Test orifices
 exec('init_orifice.sce', -1);
