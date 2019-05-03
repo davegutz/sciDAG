@@ -81,27 +81,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 // Jan 27, 2019     DA Gutz     Created
-// Mar 24, 2019     DA Gutz     Add cpmp
+// Mar 24, 2019     DA Gutz     Add cpmps
+// May 5, 2019     DA Gutz     Add cpmpd
 
 //// Default c-pump prototype *****************************************
-cpmp_default = tlist(["cpmp", "a", "b", "c", "d", "w1", "w2", "r1", "r2", "tau"],..
+cpmps_default = tlist(["cpmps", "a", "b", "c", "d", "w1", "w2", "r1", "r2", "tau"],..
 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-function lis = lsx_cpmp(p)
+cpmpd_default = tlist(["cpmpd", "a", "b", "c", "d", "w1", "w2", "r1", "r2", "tau"],..
+0, 0, 0, 0, 0, 0, 0, 0, 0);
+function lis = lsx_cpmps(p)
     lis = list(p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
 endfunction
-
-function ps= %cpmp_string(p)
-    ps = msprintf('''%s'' type:  a=%f, b=%f, c=%f, d=%f, w1=%f, w2=%f, r1=%f, r2=%f, tau=%f;\n',..
+function lis = lsx_cpmpd(p)
+    lis = list(p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
+endfunction
+function pstr = %cpmps_string(p)
+    pstr = msprintf('''%s'' type:  a=%f, b=%f, c=%f, d=%f, w1=%f, w2=%f, r1=%f, r2=%f, tau=%f;\n',..
     typeof(p), p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
 endfunction
-
-function ps= cpmp_fstring(p)
-    ps = msprintf('type,''%s'',\na,%f,\nb,%f,\nc,%f,\nd,%f,\nw1,%f,\nw2,%f,\nr1,%f,\nr2,%f,\ntau,%f,\n',..
+function pstr = %cpmpd_string(p)
+    pstr = msprintf('''%s'' type:  a=%f, b=%f, c=%f, d=%f, w1=%f, w2=%f, r1=%f, r2=%f, tau=%f;\n',..
     typeof(p), p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
 endfunction
-
-function str = %cpmp_p(p)
+function pstr = cpmps_fstring(p)
+    pstr = msprintf('type,''%s'',\na,%f,\nb,%f,\nc,%f,\nd,%f,\nw1,%f,\nw2,%f,\nr1,%f,\nr2,%f,\ntau,%f,\n',..
+    typeof(p), p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
+endfunction
+function pstr = cpmpd_fstring(p)
+    pstr = msprintf('type,''%s'',\na,%f,\nb,%f,\nc,%f,\nd,%f,\nw1,%f,\nw2,%f,\nr1,%f,\nr2,%f,\ntau,%f,\n',..
+    typeof(p), p.a, p.b, p.c, p.d, p.w1, p.w2, p.r1, p.r2, p.tau);
+endfunction
+function str = %cpmps_p(p)
+    str = string(p);
+    disp(str)
+endfunction
+function str = %cpmpd_p(p)
     str = string(p);
     disp(str)
 endfunction
@@ -316,7 +330,7 @@ endfunction
 /////////********* end vdp ***************************************
 
 // Callback ******************************************** 
-function [x,y,typ] = CPMP(job, arg1, arg2)
+function [x,y,typ] = CPMPS(job, arg1, arg2)
     x = [];
     y = [];
     typ = [];
@@ -340,8 +354,8 @@ function [x,y,typ] = CPMP(job, arg1, arg2)
         exprs = graphics.exprs
         model = arg1.model
         while %t do
-            [ok,GEO,SG,dPinit,exprs] = getvalue('Set cpmp parameters',..
-            ['lsx_cpmp(cpmp)';'SG';'dPinit'],..
+            [ok,GEO,SG,dPinit,exprs] = getvalue('Set cpmps parameters',..
+            ['lsx_cpmps(cpmps)';'SG';'dPinit'],..
             list('lis',-1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
@@ -355,11 +369,11 @@ function [x,y,typ] = CPMP(job, arg1, arg2)
         end
     case 'define' then
         //        message('in define')
-        model.opar=list(cpmp_default);
+        model.opar=list(cpmps_default);
         SG = 0.75
         dPinit = 0
         model = scicos_model()
-        model.sim = list('cpmp', 4)
+        model.sim = list('cpmps', 4)
         model.in = [1;1;1]
         model.out = [1;1]
         model.state = [dPinit]
@@ -369,14 +383,72 @@ function [x,y,typ] = CPMP(job, arg1, arg2)
         model.nmode = 0
         model.nzcross = 0
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
-        exprs = ["lsx_cpmp(G.acsupply.acbst)"; 'FP.sg';'ic.acbst_dP']
+        exprs = ["lsx_cpmps(G.acsupply.acbst)"; 'FP.sg';'ic.acbst_dP']
+        gr_i = [];
+        x = standard_define([8 8], model, exprs, gr_i) // size icon, etc..
+    end
+endfunction
+function [x,y,typ] = CPMPD(job, arg1, arg2)
+    x = [];
+    y = [];
+    typ = [];
+    //disp(job)
+    select job
+    case 'plot' then
+        standard_draw(arg1)
+    case 'getinputs' then
+        [x,y,typ] = standard_inputs(arg1)
+        //disp(sci2exp(x))
+    case 'getoutputs' then
+        [x,y,typ] = standard_outputs(arg1)
+        //disp(sci2exp(x))
+    case 'getorigin' then
+        [x,y] = standard_origin(arg1)
+        //disp(sci2exp(x))
+    case 'set' then
+        //message(sci2exp(arg1))
+        x = arg1
+        graphics = arg1.graphics
+        exprs = graphics.exprs
+        model = arg1.model
+        while %t do
+            [ok,GEO,SG,dPinit,exprs] = getvalue('Set cpmpd parameters',..
+            ['lsx_cpmpd(cpmpd)';'SG';'dPinit'],..
+            list('lis',-1,'vec',1,'vec',1),..
+            exprs)
+            if ~ok then break,end 
+            model.state = [dPinit]
+            model.rpar = [SG]
+            model.opar = GEO
+            graphics.exprs = exprs
+            x.graphics = graphics
+            x.model = model
+            break
+        end
+    case 'define' then
+        //        message('in define')
+        model.opar=list(cpmpd_default);
+        SG = 0.75
+        dPinit = 0
+        model = scicos_model()
+        model.sim = list('cpmpd', 4)
+        model.in = [1;1;1]
+        model.out = [1;1]
+        model.state = [dPinit]
+        model.dstate = [0]
+        model.rpar = [SG]
+        model.blocktype = 'c'
+        model.nmode = 0
+        model.nzcross = 0
+        model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
+        exprs = ["lsx_cpmpd(G.ebp.boost)"; 'FP.sg';'ic.ebp.boost._dP']
         gr_i = [];
         x = standard_define([8 8], model, exprs, gr_i) // size icon, etc..
     end
 endfunction
 
-function [blkcall] = callblk_cpmp(blk, rpm, ps, Q)
-    // Call compiled funcion cpmp that is scicos_block blk
+function [blkcall] = callblk_cpmps(blk, rpm, ps, Q)
+    // Call compiled funcion cpmps that is scicos_block blk
     blk.inptr(1) = rpm;
     blk.inptr(2) = ps;
     blk.inptr(3) = Q;
@@ -391,4 +463,20 @@ function [blkcall] = callblk_cpmp(blk, rpm, ps, Q)
     blkcall.pd = blk.outptr(1);
     blkcall.dP = blk.outptr(2);
 endfunction
-/////////********* end cpmp ***************************************
+function [blkcall] = callblk_cpmpd(blk, rpm, pd, Q)
+    // Call compiled funcion cpmps that is scicos_block blk
+    blk.inptr(1) = rpm;
+    blk.inptr(2) = pd;
+    blk.inptr(3) = Q;
+    blkcall.rpm = rpm;
+    blkcall.ps = pd;
+    blkcall.Q = Q;
+    blkcall.sg = blk.rpar(1);
+    //    blk = callblk(blk, 0, 0);
+    //    blk = callblk(blk, 1, 0);
+    //    blk = callblk(blk, 9, 0);
+    blk = callblk(blk, -1, 0);
+    blkcall.ps = blk.outptr(1);
+    blkcall.dP = blk.outptr(2);
+endfunction
+/////////********* end cpmps ***************************************

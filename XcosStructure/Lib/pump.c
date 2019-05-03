@@ -137,7 +137,7 @@ void vdp(scicos_block *blk, int flag)
 #define pd      (r_OUT(0,0))    // Discharge pressure, psia
 #define dPout   (r_OUT(1,0))    // Pressure rise, psid
 
-void cpmp(scicos_block *blk, int flag)
+void cpmps(scicos_block *blk, int flag)
 {    
     double fc;
     double hc;
@@ -161,9 +161,39 @@ void cpmp(scicos_block *blk, int flag)
             pd = ps + dP;
             dPout = dP;
             break;
-//        case 4: // initialize
-//            dP = dP_dmd;
-//            break;
     }
 }
+#undef pd
+#undef ps
+// inputs
+#define pd      (r_IN(1,0))     // Discharge pressure, psia
+// outputs
+#define ps      (r_OUT(0,0))    // Supply pressure, psia
+void cpmpd(scicos_block *blk, int flag)
+{    
+    double fc;
+    double hc;
+    double gpm;
+    double dP_dmd;
+    double r22;
+
+    // compute info needed for all passes
+    gpm = Q / 3.85;
+    r22 = r2*r2;
+    fc = 5.851 * gpm / max(w2 * (r22) * rpm, 1e-12);
+    hc = a + (b + (c + d*fc)*fc)*fc;
+    dP_dmd = 1.022e-6 * hc * sg * (r22 - r1*r1) * rpm*rpm;
+
+    switch (flag)
+    {
+        case 0:  // derivatives
+            dPdot = (dP_dmd - dP) / max(tau, 1e-6);
+            break;
+        case 1:  // outputs
+            ps = pd - dP;
+            dPout = dP;
+            break;
+    }
+}
+
 // **********end cpmp **********************************************

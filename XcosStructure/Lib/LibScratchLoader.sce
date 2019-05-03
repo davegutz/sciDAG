@@ -105,13 +105,18 @@ if bOK then
   ulink(ilib);
 end
 //
-[bOK, ilib] = c_link('cpmp');
+[bOK, ilib] = c_link('cpmps');
+if bOK then
+  ulink(ilib);
+end
+//
+[bOK, ilib] = c_link('cpmpd');
 if bOK then
   ulink(ilib);
 end
 //
 link('C:/PROGRA~1/SCILAB~1.2\bin\scicos' + getdynlibext());
-link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int','friction','valve_a','trivalve_a1','hlfvalve_a','table1_a','head_b','actuator_a_b','binsearch','tab1','tab2','hole','cor_aptow','cor_awpstopd','cor_awpdtops','ctab1','vdp','cla_lrecptow','actuator_a_c','cpmp'],'c');
+link(Scratch_path + 'libScratch' + getdynlibext(), ['lim_int','friction','valve_a','trivalve_a1','hlfvalve_a','table1_a','head_b','actuator_a_b','binsearch','tab1','tab2','hole','cor_aptow','cor_awpstopd','cor_awpdtops','ctab1','vdp','cla_lrecptow','actuator_a_c','cpmps','cpmpd'],'c');
 // remove temp. variables on stack
 clear Scratch_path;
 clear bOK;

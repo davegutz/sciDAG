@@ -30,6 +30,10 @@ G.ifc.ln_p3s = lti_man_n_vm(G.ifc.ln_p3s, FP.sg, FP.beta);
 G.mline.main_line = lti_man_n_mm(G.mline.main_line, FP.sg, FP.beta);
 G.acsupply.ltank = lti_man_n_mv(G.acsupply.ltank, FP.sg, FP.beta);
 G.acsupply.lengine = lti_man_n_mv(G.acsupply.lengine, FP.sg, FP.beta);
+G.ebp.inlet = lti_man_n_mm(G.ebp.inlet, FP.sg, FP.beta);
+G.ebp.faboc = lti_man_n_mm(G.ebp.faboc, FP.sg, FP.beta);
+G.ebp.ocm1 = lti_man_n_mm(G.ebp.ocm1, FP.sg, FP.beta);
+G.ebp.ocm2 = lti_man_n_vm(G.ebp.ocm2, FP.sg, FP.beta);
 
 if 0 & ~MOD.batch then
     if MOD.initialized & MOD.skip_init then
@@ -77,6 +81,10 @@ ic.acbst_dP = ic.acsupply.acbst.dP_Pump;
 ic.acmbst_dP = ic.acsupply.acmbst.dP_Pump;
 ic.acsupply.ltank = ini_man_n_mv(G.acsupply.ltank, ic.acsupply.ltank.p, ic.acsupply.ltank.wf);
 ic.acsupply.lengine = ini_man_n_mv(G.acsupply.lengine, ic.acsupply.lengine.p, ic.acsupply.lengine.wf);
+ic.ebp.inlet = ini_man_n_mm(G.ebp.inlet, ic.ebp.inlet.p, ic.ebp.inlet.wf);
+ic.ebp.faboc = ini_man_n_mm(G.ebp.faboc, ic.ebp.faboc.p, ic.ebp.faboc.wf);
+ic.ebp.ocm1 = ini_man_n_mm(G.ebp.ocm1, ic.ebp.ocm1.p, ic.ebp.ocm1.wf);
+ic.ebp.ocm2 = ini_man_n_vm(G.ebp.ocm2, ic.ebp.ocm2.p, ic.ebp.ocm2.wf);
 ic.mline.main_line = ini_man_n_mm(G.mline.main_line, ic.pd, ic.wfmd);
 ic.mline.ln_vs = ini_man_n_vm(G.mline.ln_vs, ic.ifc.p1so, ic.wf1v);
 ic.wf1bias = 0;
