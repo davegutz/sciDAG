@@ -60,6 +60,7 @@ global loaded_scratch root sys_f scs_m cpr
 global G MOD ic FP LIN mv_x mv_xa mv_xin Tf
 global bl_start bl_mv bl_mvtv bl_hs bl_a_tvb
 global DI DV
+global dT
 
 // Memory of setup
 // Auto data overplot load
@@ -371,7 +372,7 @@ catch
     xcos('./'+this_xcos_file);
 end
 
-
+dT = scs_m.props.tol(4);
 mprintf('Ready to play...press the right arrow icon on %s diagram at top.\n', root);
 
 //scicos_simulate(scs_m);
