@@ -84,7 +84,14 @@ WFACMBST = struct('time', tADATA, 'values', ADATA.values(:,8));
 WFBYPASS = struct('time', tADATA, 'values', ADATA.values(:,9));
 WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,10));
 WFTANK = struct('time', tADATA, 'values', ADATA.values(:,11));
-clear tWALL tIDATA tPALL tXALL tADATA
+tVE = VE_WFS.time(:,1);
+VEWFS = struct('time', tVE, 'values', VE_WFS.values(:,1));
+VEWFD = struct('time', tVE, 'values', VE_WFD.values(:,1));
+VEWFH = struct('time', tVE, 'values', VE_WFH.values(:,1));
+VEWFR = struct('time', tVE, 'values', VE_WFR.values(:,1));
+VEX = struct('time', tVE, 'values', VEHSV_X.values(:,1));
+VEV = struct('time', tVE, 'values', VEHSV_V.values(:,1));
+clear tWALL tIDATA tPALL tXALL tADATA tVE
 
 vload_wfload = DV.wfload;
 vload_wfload.values = vload_wfload.values + start_wfs.values;
@@ -147,6 +154,13 @@ wfbypass = DI.ac.Mon_ABOOST.wfbypass;
 wfengine = DI.ac.Mon_ABOOST.wfengine;
 wftank = DI.ac.Mon_ABOOST.wftank;
 
+x_vehsv = DV.ehsv.SPOOL.x;
+wfs_vehsv = DV.ehsv.SPOOL.wfs;
+wfd_vehsv = DV.ehsv.SPOOL.wfd;
+wfj_vehsv = DV.ehsv.SPOOL.wfj;
+dxdt_vehsv = DV.ehsv.SPOOL.dxdt;
+wfh_vehsv = DV.actSys.wfh;
+wfr_vehsv = DV.actSys.wfr;
 
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
 subplot(221)
@@ -212,6 +226,22 @@ overplot(['WFTANK', 'wftank'], ['r-', 'b--'], 'Aircraft Tank Flow')
 subplot(339)
 overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
 
+
+figs($+1) = figure("Figure_name", 'VEN EHSV', "Position", [40,110,810,600]);
+subplot(331)
+overplot(['VEWFS', 'wfs_vehsv'], ['r-',  'b--'], 'VEN EHSV Supply Flow')
+subplot(332)
+overplot(['VEWFD', 'wfd_vehsv'], ['r-',  'b--'], 'VEN EHSV Return Flow')
+subplot(333)
+overplot(['VEWFH', 'wfh_vehsv'], ['r-', 'b--'], 'VEN EHSV Head Flow')
+subplot(334)
+overplot(['VEWFR', 'wfr_vehsv'], ['r-', 'b--', 'k-', 'c--'], 'VEN EHSV Rod Flow')
+subplot(335)
+overplot(['vmA'], ['r-'], 'mA')
+subplot(336)
+overplot(['VEX', 'x_vehsv'], ['r-', 'b--'], 'VEN EHSV Position')
+subplot(337)
+overplot(['VEV', 'dxdt_vehsv'], ['r-', 'b--'], 'VEN EHSV Velocity')
 
 if 0 then
 

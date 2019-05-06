@@ -490,26 +490,23 @@ fehsv2_default = tlist(["fehsv2", "tau_s", "wn_s", "zeta_s", "dp_s",..
         "underlap", "amn", "wdh", "wsr", "wsh", "wdr", "xmxc_s", "xmxc_rat",..
         "minPressure", "xmax", "xmaxS", "xmin",..
         "mA_x", "mA_x0", "awin_dh", "awin_dr", "awin_sh", "awin_sr"],..
-         0, 0, 0, 0,..
-         0, 0, 0.61, 0.61, 0, 0,..
-         0, 0, %inf, -%inf,..
-         0, 0, 0, 0, 0, 0,..
-         0, 0, 0, 1, %inf, -1,..
+         0.00637, 157.07963, 0.5, 1000,..
+         0.0003176, 0, 0.61, 0.61, -0.0010667, 25,..
+         0.2091170, 0.1777010, 1.2433233, -1.2433233,..
+         -0.0010675, 1e-7, 0.636, 0.636, 0.636, 0.636, 0.085, 1.785,.. 
+         10, 0.0427, 0.085, -0.0373,..
          ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
 
 function str = %fehsv2_string(e)
-    str = msprintf('''%s'' type:  tau_s=%f,\nwn_s=%f,\nzeta_s=%f,\ndp_s=%f,\nael=%f,\nkel=%f,\ncd_=%f,\ncdl=%f,\nkix=%f,\nmAnull=%f,\nah=%f,\nar=%f,\nvmax_s=%f,\nvmin_s=%f,\nunderlap=%f,\namn=%f,\nwdh=%f,\nwsr=%f,\nwsh=%f,\nwdr=%f,\nxmxc_s=%f,\nxmxc_rat=%f,\nminPressure=%f,\nxmax=%f,\nxmaxS=%f,\nxmin=%f;',..
+    str = msprintf('''%s'' type:  tau_s=%f,\nwn_s=%f,\nzeta_s=%f,\ndp_s=%f,\nael=%f,\nkel=%f,\ncd_=%f,\ncdl=%f,\nkix=%f,\nmAnull=%f,\nah=%f,\nar=%f,\nvmax_s=%f,\nvmin_s=%f,\nunderlap=%f,\namn=%f,\nwdh=%f,\nwsr=%f,\nwsh=%f,\nwdr=%f,\nxmxc_s=%f,\nxmxc_rat=%f,\nminPressure=%f,\nxmax=%f,\nxmaxS=%f,\nxmin=%f\nmA_x=%s\nmA_x0=%s\nawin_dh=%s\nawin_dr=%s\nawin_sh=%s\nawin_sr=%s\n',..
         typeof(e), e.tau_s, e.wn_s, e.zeta_s, e.dp_s,..
         e.ael, e.kel, e.cd_, e.cdl, e.kix, e.mAnull,..
         e.ah, e.ar, e.vmax_s, e.vmin_s,..
         e.underlap, e.amn, e.wdh, e.wsr, e.wsh, e.wdr, e.xmxc_s, e.xmxc_rat,..
-        e.minPressure, e.xmax, e.xmaxS, e.xmin);
-    str = str + 'mA_x: ' + string(e.mA_x) + ';';
-    str = str + 'mA_x0: ' + string(e.mA_x0) + ';';
-    str = str + 'awin_dh: ' + string(e.awin_dh) + ';';
-    str = str + 'awin_dr: ' + string(e.awin_dr) + ';';
-    str = str + 'awin_sh: ' + string(e.awin_sh) + ';';
-    str = str + 'awin_sr: ' + string(e.awin_sr) + ';';
+        e.minPressure, e.xmax, e.xmaxS, e.xmin,..
+        ctab1_fstring(e.mA_x), ctab1_fstring(e.mA_x0),..
+        ctab1_fstring(e.awin_dh), ctab1_fstring(e.awin_dr),..
+        ctab1_fstring(e.awin_sh), ctab1_fstring(e.awin_sr));
 endfunction
 
 function str = fehsv2_fstring(e)

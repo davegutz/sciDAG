@@ -147,6 +147,9 @@ wfacmbst = DI.ac.Mon_ABOOST.wfacmbst;
 wfbypass = DI.ac.Mon_ABOOST.wfbypass;
 wfengine = DI.ac.Mon_ABOOST.wfengine;
 wftank = DI.ac.Mon_ABOOST.wftank;
+vmA = DV.ehsv.In.mA;
+rlineps = DV.rline_ps;
+hlineps = DV.rline_ps;
 
 // Length of simulation
 Tf = time($);
