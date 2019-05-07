@@ -62,6 +62,7 @@ pal = init_add_struct('CPMPD', 'blue', lib_path+'/images/blocks/CPMPD.PNG', pal)
 pal = init_add_struct('FRICTION', 'blue', lib_path+'/images/blocks/FRICTION.png', pal);
 pal = init_add_struct('LIMINT', 'red', SCI + '/modules/xcos/images/blocks/RAMP.svg', pal);
 pal = init_add_struct('CLA_LRECPTOW', 'gray', lib_path+'/images/blocks/CLA_LRECPTOW.PNG', pal);
+pal = init_add_struct('INTGL', 'gray', lib_path+'/images/blocks/INTGL.PNG', pal);
 
 // Finalize the palette
 xcosPalAdd(pal);

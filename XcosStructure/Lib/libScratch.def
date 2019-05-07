@@ -3,6 +3,7 @@ EXPORTS
 	head_b
 	actuator_a_b
 	actuator_a_c
+	intgl
 	friction
 	hole
 	lim_int

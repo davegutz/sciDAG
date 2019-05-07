@@ -242,6 +242,8 @@ subplot(336)
 overplot(['VEX', 'x_vehsv'], ['r-', 'b--'], 'VEN EHSV Position')
 subplot(337)
 overplot(['VEV', 'dxdt_vehsv'], ['r-', 'b--'], 'VEN EHSV Velocity')
+subplot(338)
+overplot(['rlineps', 'hlineps', 'vdpp_pd', 'vdpp_ps'], ['m-', 'c--', 'k-', 'b-'], 'VEN EHSV Pressures')
 
 if 0 then
 

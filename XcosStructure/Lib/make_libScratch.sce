@@ -31,9 +31,10 @@ entries = ['lim_int',   'friction',     'valve_a',      'trivalve_a1',  'hlfvalv
            'table1_a',  'head_b',       'actuator_a_b', 'binsearch',    'tab1',..
            'tab2',      'hole',         'cor_aptow',    'cor_awpstopd', 'cor_awpdtops',..
            'ctab1',     'vdp',          'cla_lrecptow', 'actuator_a_c',...
-           'cpmps',     'cpmpd'];
+           'cpmps',     'cpmpd',        'intgl'];
 sources = ['lim_int_comp.c',    'friction_comp.c',  'valve.c',      'table.c',..
-           'orifice.c',         'hyd_mod.c',        'device.c',     'pump.c'];
+           'orifice.c',         'hyd_mod.c',        'device.c',     'pump.c',..
+           'dyn.c'];
 ilib_for_link(entries, sources, libs, 'c', '', 'LibScratchLoader.sce', 'Scratch', '','-I'+incs1, '', '');
 
 // Have to re-init any simulations after re-make

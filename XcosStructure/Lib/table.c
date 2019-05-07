@@ -153,7 +153,7 @@ double tab2(double x1, double x2, double *v1, double *v2, double *y, int n1,
 }   /* End tab2 */
 
 
-// Object parameters.  1st index is 1-based, 2nd index is 0-based.
+// Object parameters.  1st index is 1-based, 2nd index is 0-based
 #define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 #define TB      (GetRealOparPtrs(blk,1))  // Table
