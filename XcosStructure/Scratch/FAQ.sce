@@ -30,3 +30,12 @@ o  Save to Workspace blocks appear to stop working
                        !--error 250 
     Recursive extraction is not valid in this context."
     -  solver is DP45.  Has it always been?
+
+o "Undefined variable: Resume_line_args"
+    Caused by leaving a masked subsystem unmasked.   Right click
+    on the block and select "Superblock Mask - Create mask"
+    
+    Also, if you have been messing with a masked block then
+    you may need to completely restart scilab to clear messages of the 
+    order "unable to compile block"
+ 

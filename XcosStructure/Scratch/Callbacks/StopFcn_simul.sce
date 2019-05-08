@@ -231,6 +231,16 @@ overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
 end
 
 figs($+1) = figure("Figure_name", 'VEN EHSV', "Position", [40,110,810,600]);
+subplot(221)
+overplot(['rlineps'], ['m-'], 'VEN EHSV Pressures')
+subplot(222)
+overplot(['hlineps'], ['c--'], 'VEN EHSV Pressures')
+subplot(223)
+overplot(['vdpp_pd'], ['k-'], 'VEN EHSV Pressures')
+subplot(224)
+overplot(['vdpp_ps'], ['b-'], 'VEN EHSV Pressures')
+
+figs($+1) = figure("Figure_name", 'VEN EHSV', "Position", [40,110,810,600]);
 subplot(331)
 overplot(['VEWFS', 'wfs_vehsv'], ['r-',  'b--'], 'VEN EHSV Supply Flow')
 subplot(332)
