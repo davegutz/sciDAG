@@ -90,7 +90,9 @@ VEWFD = struct('time', tVE, 'values', VE_WFD.values(:,1));
 VEWFH = struct('time', tVE, 'values', VE_WFH.values(:,1));
 VEWFR = struct('time', tVE, 'values', VE_WFR.values(:,1));
 VEX = struct('time', tVE, 'values', VEHSV_X.values(:,1));
+VEXD = struct('time', tVE, 'values', VEHSV_XD.values(:,1));
 VEV = struct('time', tVE, 'values', VEHSV_V.values(:,1));
+VEMA = struct('time', tVE, 'values', VEHSV_MA.values(:,1));
 clear tWALL tIDATA tPALL tXALL tADATA tVE
 
 vload_wfload = DV.wfload;
@@ -162,6 +164,7 @@ dxdt_vehsv = DV.ehsv.SPOOL.dxdt;
 wfh_vehsv = DV.actSys.wfh;
 wfr_vehsv = DV.actSys.wfr;
 
+if 0 then
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
 subplot(221)
 overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
@@ -225,7 +228,7 @@ subplot(337)
 overplot(['WFTANK', 'wftank'], ['r-', 'b--'], 'Aircraft Tank Flow')
 subplot(339)
 overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
-
+end
 
 figs($+1) = figure("Figure_name", 'VEN EHSV', "Position", [40,110,810,600]);
 subplot(331)
@@ -237,13 +240,15 @@ overplot(['VEWFH', 'wfh_vehsv'], ['r-', 'b--'], 'VEN EHSV Head Flow')
 subplot(334)
 overplot(['VEWFR', 'wfr_vehsv'], ['r-', 'b--', 'k-', 'c--'], 'VEN EHSV Rod Flow')
 subplot(335)
-overplot(['vmA'], ['r-'], 'mA')
+overplot(['VEMA', 'vmA'], ['r-', 'c--'], 'mA')
 subplot(336)
 overplot(['VEX', 'x_vehsv'], ['r-', 'b--'], 'VEN EHSV Position')
 subplot(337)
 overplot(['VEV', 'dxdt_vehsv'], ['r-', 'b--'], 'VEN EHSV Velocity')
 subplot(338)
 overplot(['rlineps', 'hlineps', 'vdpp_pd', 'vdpp_ps'], ['m-', 'c--', 'k-', 'b-'], 'VEN EHSV Pressures')
+subplot(339)
+overplot(['VEXD', 'VEX'], ['r-', 'c--'], 'VEN EHSV Position')
 
 if 0 then
 

@@ -149,7 +149,7 @@ wfengine = DI.ac.Mon_ABOOST.wfengine;
 wftank = DI.ac.Mon_ABOOST.wftank;
 vmA = DV.ehsv.In.mA;
 rlineps = DV.rline_ps;
-hlineps = DV.rline_ps;
+hlineps = DV.phead;
 
 // Length of simulation
 Tf = time($);

@@ -80,7 +80,7 @@ function [x,y,typ] = INTGL(job, arg1, arg2)
         model.blocktype = 'c'
         model.nmode = 1
         model.nzcross = 3
-        model.dep_ut = [%t %t]
+        model.dep_ut = [%f %t]  // [direct feedthrough,   time dependence]
 
         exprs = [string([ymax;ymin;Xinitial])]
         gr_i = [];

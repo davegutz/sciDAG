@@ -615,8 +615,8 @@ G.venload.ehsv.minPressure = 10;            // DAG 3/9/2018 estimate of minimum 
 null = G.venload.ehsv.mAnull;
 kix = G.venload.ehsv.kix;
 xmaxS = G.venload.ehsv.xmaxS;
-G.venload.ehsv.mA_x.tb =  [ -100     null-50  null    null+50; xmaxS   -50*kix  0        50*kix];
-G.venload.ehsv.mA_x0.tb = [ null-50  null     null+50 100;     50*kix  0        -50*kix  xmaxS];
+G.venload.ehsv.mA_x.tb =  [ -100     null-50  null    null+50; xmaxS   -50*kix  0        50*kix]';
+G.venload.ehsv.mA_x0.tb = [ null-50  null     null+50 100;     50*kix  0        -50*kix  xmaxS]';
 clear null kix xmaxS
 // VEN servovalve windows
 G.venload.ehsv.awin_dh.tb(1,1) = G.venload.ehsv.xmin;
