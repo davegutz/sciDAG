@@ -93,6 +93,8 @@ VEX = struct('time', tVE, 'values', VEHSV_X.values(:,1));
 VEXD = struct('time', tVE, 'values', VEHSV_XD.values(:,1));
 VEV = struct('time', tVE, 'values', VEHSV_V.values(:,1));
 VEMA = struct('time', tVE, 'values', VEHSV_MA.values(:,1));
+XVEN = struct('time', tVE, 'values', VX.values(:,1));
+VVEN = struct('time', tVE, 'values', VV.values(:,1));
 clear tWALL tIDATA tPALL tXALL tADATA tVE
 
 vload_wfload = DV.wfload;
@@ -163,6 +165,12 @@ wfj_vehsv = DV.ehsv.SPOOL.wfj;
 dxdt_vehsv = DV.ehsv.SPOOL.dxdt;
 wfh_vehsv = DV.actSys.wfh;
 wfr_vehsv = DV.actSys.wfr;
+
+x_ven = DV.actSys.O_4.Result.x;
+v_ven = DV.actSys.O_4.Result.dxdt;
+phead = DV.actSys.O_4.In.ph;
+prod_ = DV.actSys.O_4.In.pr;
+
 
 if 0 then
 figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
@@ -259,6 +267,16 @@ subplot(338)
 overplot(['rlineps', 'hlineps', 'vdpp_pd', 'vdpp_ps'], ['m-', 'c--', 'k-', 'b-'], 'VEN EHSV Pressures')
 subplot(339)
 overplot(['VEXD', 'VEX'], ['r-', 'c--'], 'VEN EHSV Position')
+
+figs($+1) = figure("Figure_name", 'VEN ACT', "Position", [40,120,610,600]);
+subplot(221)
+overplot(['VV', 'v_ven'], ['r-',  'b--'], 'VEN Act Velocity')
+subplot(222)
+overplot(['VX', 'x_ven'], ['r-',  'b--'], 'VEN Act Position')
+subplot(223)
+overplot(['PHEAD', 'phead'], ['r-',  'b--'], 'VEN Act Head')
+subplot(224)
+overplot(['PROD', 'prod_'], ['r-',  'b--'], 'VEN Act Rod')
 
 if 0 then
 

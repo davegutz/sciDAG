@@ -34,6 +34,8 @@ G.ebp.inlet = lti_man_n_mm(G.ebp.inlet, FP.sg, FP.beta);
 G.ebp.faboc = lti_man_n_mm(G.ebp.faboc, FP.sg, FP.beta);
 G.ebp.ocm1 = lti_man_n_mm(G.ebp.ocm1, FP.sg, FP.beta);
 G.ebp.ocm2 = lti_man_n_vm(G.ebp.ocm2, FP.sg, FP.beta);
+G.venload.rline = lti_man_n_vm(G.venload.rline, FP.sg, FP.beta);
+G.venload.hline = lti_man_n_vm(G.venload.hline, FP.sg, FP.beta);
 
 if 0 & ~MOD.batch then
     if MOD.initialized & MOD.skip_init then
@@ -87,10 +89,13 @@ ic.ebp.ocm1 = ini_man_n_mm(G.ebp.ocm1, ic.ebp.ocm1.p, ic.ebp.ocm1.wf);
 ic.ebp.ocm2 = ini_man_n_vm(G.ebp.ocm2, ic.ebp.ocm2.p, ic.ebp.ocm2.wf);
 ic.mline.main_line = ini_man_n_mm(G.mline.main_line, ic.pd, ic.wfmd);
 ic.mline.ln_vs = ini_man_n_vm(G.mline.ln_vs, ic.ifc.p1so, ic.wf1v);
+ic.ven.load.rline = ini_man_n_vm(G.venload.rline, ic.ven.load.rline.p, ic.ven.load.rline.wf);
+ic.ven.load.hline = ini_man_n_vm(G.venload.hline, ic.ven.load.hline.p, ic.ven.load.hline.wf);
 ic.wf1bias = 0;
 ic.ifc.ln_p3s = ini_man_n_vm(G.ifc.ln_p3s, ic.ifc.p3, ic.ifc.wf3s);
 ic.ven.vsv.x = G.ven.vsv.xmax;
 ic.ven.rrv.x = G.ven.rrv.xmin;
+ic.ven.load.act_c.x = 4.5;
 ic = order_all_fields(ic);
 
 
