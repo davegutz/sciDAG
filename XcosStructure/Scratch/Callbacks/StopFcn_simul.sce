@@ -69,8 +69,6 @@ tPALL = PALL.time(:,1);
 PDVEN = struct('time', tPALL, 'values', PALL.values(:,1));
 P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,2));
 PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
-tXALL = XALL.time(:,1);
-SV_POS = struct('time', tXALL, 'values', XALL.values(:,4));
 tADATA = ADATA.time(:,1);
 ACMOTIVEPULL = struct('time', tADATA, 'values', ADATA.values(:,1));
 PACBMIX = struct('time', tADATA, 'values', ADATA.values(:,2));
@@ -84,6 +82,13 @@ WFACMBST = struct('time', tADATA, 'values', ADATA.values(:,8));
 WFBYPASS = struct('time', tADATA, 'values', ADATA.values(:,9));
 WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,10));
 WFTANK = struct('time', tADATA, 'values', ADATA.values(:,11));
+
+tVDATA = VDATA.time(:,1);
+SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,4));
+
+tLDATA = LDATA.time(:,1);
+
+
 tVE = VE_WFS.time(:,1);
 VEWFS = struct('time', tVE, 'values', VE_WFS.values(:,1));
 VEWFD = struct('time', tVE, 'values', VE_WFD.values(:,1));
@@ -95,7 +100,11 @@ VEV = struct('time', tVE, 'values', VEHSV_V.values(:,1));
 VEMA = struct('time', tVE, 'values', VEHSV_MA.values(:,1));
 XVEN = struct('time', tVE, 'values', VX.values(:,1));
 VVEN = struct('time', tVE, 'values', VV.values(:,1));
-clear tWALL tIDATA tPALL tXALL tADATA tVE
+//tBDATA = BDATA.time(:,1);
+//DP_BOOST = struct('time', tBDATA, 'values', BDATA.values(:,1));
+//DP_MFP = struct('time', tBDATA, 'values', BDATA.values(:,2));
+
+clear tWALL tIDATA tPALL tVDATA tADATA tVE tBDATA tLDATA
 
 vload_wfload = DV.wfload;
 vload_wfload.values = vload_wfload.values + start_wfs.values;
@@ -277,6 +286,15 @@ subplot(223)
 overplot(['PHEAD', 'phead'], ['r-',  'b--'], 'VEN Act Head')
 subplot(224)
 overplot(['PROD', 'prod_'], ['r-',  'b--'], 'VEN Act Rod')
+
+if 0 then
+
+figs($+1) = figure("Figure_name", 'BOOST System', "Position", [40,140,610,600]);
+subplot(221)
+overplot(['DP_BOOST', 'prod_'], ['r-',  'b--'], 'VEN Act Rod')
+
+end
+
 
 if 0 then
 
