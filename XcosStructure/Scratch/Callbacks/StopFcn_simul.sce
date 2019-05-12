@@ -84,27 +84,26 @@ WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,10));
 WFTANK = struct('time', tADATA, 'values', ADATA.values(:,11));
 
 tVDATA = VDATA.time(:,1);
-SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,4));
+PROD = struct('time', tVDATA, 'values', VDATA.values(:,4));
+PHEAD = struct('time', tVDATA, 'values', VDATA.values(:,5));
+WFS_START = struct('time', tVDATA, 'values', VDATA.values(:,8));
+VLOAD_WFLLK = struct('time', tVDATA, 'values', VDATA.values(:,9));
+VLOAD_WFLOAD = struct('time', tVDATA, 'values', VDATA.values(:,10));
+SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,14));
+XVEN = struct('time', tVDATA, 'values', VDATA.values(:,21));
+VVEN = struct('time', tVDATA, 'values', VDATA.values(:,22));
 
 tLDATA = LDATA.time(:,1);
+VEV = struct('time', tLDATA, 'values', LDATA.values(:,16));
+VEMA = struct('time', tLDATA, 'values', LDATA.values(:,17));
+VEX = struct('time', tLDATA, 'values', LDATA.values(:,18));
+VEXD = struct('time', tLDATA, 'values', LDATA.values(:,19));
+VEWFH = struct('time', tLDATA, 'values', LDATA.values(:,20));
+VEWFR = struct('time', tLDATA, 'values', LDATA.values(:,21));
+VEWFS = struct('time', tLDATA, 'values', LDATA.values(:,22));
+VEWFD = struct('time', tLDATA, 'values', LDATA.values(:,23));
 
-
-tVE = VE_WFS.time(:,1);
-VEWFS = struct('time', tVE, 'values', VE_WFS.values(:,1));
-VEWFD = struct('time', tVE, 'values', VE_WFD.values(:,1));
-VEWFH = struct('time', tVE, 'values', VE_WFH.values(:,1));
-VEWFR = struct('time', tVE, 'values', VE_WFR.values(:,1));
-VEX = struct('time', tVE, 'values', VEHSV_X.values(:,1));
-VEXD = struct('time', tVE, 'values', VEHSV_XD.values(:,1));
-VEV = struct('time', tVE, 'values', VEHSV_V.values(:,1));
-VEMA = struct('time', tVE, 'values', VEHSV_MA.values(:,1));
-XVEN = struct('time', tVE, 'values', VX.values(:,1));
-VVEN = struct('time', tVE, 'values', VV.values(:,1));
-//tBDATA = BDATA.time(:,1);
-//DP_BOOST = struct('time', tBDATA, 'values', BDATA.values(:,1));
-//DP_MFP = struct('time', tBDATA, 'values', BDATA.values(:,2));
-
-clear tWALL tIDATA tPALL tVDATA tADATA tVE tBDATA tLDATA
+clear tWALL tIDATA tPALL tVDATA tADATA tBDATA tLDATA
 
 vload_wfload = DV.wfload;
 vload_wfload.values = vload_wfload.values + start_wfs.values;
@@ -204,6 +203,7 @@ overplot(['WF36', 'wf36'], ['r-', 'b--'], 'Engine Flow')
 
 figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [40,70,610,460]);
 subplot(321)
+
 overplot(['P1SO', 'p1c'], ['r-', 'b--'], 'MV Supply Pressure')
 subplot(322)
 overplot(['P3', 'p3'], ['r-', 'b--'], 'MV Discharge Pressure')
@@ -279,9 +279,9 @@ overplot(['VEXD', 'VEX'], ['r-', 'c--'], 'VEN EHSV Position')
 
 figs($+1) = figure("Figure_name", 'VEN ACT', "Position", [40,120,610,600]);
 subplot(221)
-overplot(['VV', 'v_ven'], ['r-',  'b--'], 'VEN Act Velocity')
+overplot(['VVEN', 'v_ven'], ['r-',  'b--'], 'VEN Act Velocity')
 subplot(222)
-overplot(['VX', 'x_ven'], ['r-',  'b--'], 'VEN Act Position')
+overplot(['XVEN', 'x_ven'], ['r-',  'b--'], 'VEN Act Position')
 subplot(223)
 overplot(['PHEAD', 'phead'], ['r-',  'b--'], 'VEN Act Head')
 subplot(224)
@@ -296,7 +296,7 @@ overplot(['DP_BOOST', 'prod_'], ['r-',  'b--'], 'VEN Act Rod')
 end
 
 
-if 0 then
+if 1 then
 
 figs($+1) = figure("Figure_name", 'VDPP', "Position", [40,90,610,600]);
 subplot(321)
@@ -374,7 +374,7 @@ overplot(['RRV_WFVX', 'rrv_wfvx'], ['r-',  'b--'], 'Rod Relief Motion Flow')
 subplot(336)
 overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
 subplot(337)
-overplot(['START_WFS', 'start_wfs'], ['r-',  'b--'], 'Start Valve Flow')
+overplot(['WFS_START', 'start_wfs'], ['r-',  'b--'], 'Start Valve Flow')
 
 end
 
