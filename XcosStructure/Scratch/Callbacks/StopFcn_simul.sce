@@ -84,14 +84,25 @@ WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,10));
 WFTANK = struct('time', tADATA, 'values', ADATA.values(:,11));
 
 tVDATA = VDATA.time(:,1);
+PD_VEN = struct('time', tVDATA, 'values', VDATA.values(:,2));
 PROD = struct('time', tVDATA, 'values', VDATA.values(:,4));
 PHEAD = struct('time', tVDATA, 'values', VDATA.values(:,5));
+PX_V = struct('time', tVDATA, 'values', VDATA.values(:,6));
 WFS_START = struct('time', tVDATA, 'values', VDATA.values(:,8));
 VLOAD_WFLLK = struct('time', tVDATA, 'values', VDATA.values(:,9));
 VLOAD_WFLOAD = struct('time', tVDATA, 'values', VDATA.values(:,10));
-SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,14));
-XVEN = struct('time', tVDATA, 'values', VDATA.values(:,21));
-VVEN = struct('time', tVDATA, 'values', VDATA.values(:,22));
+BIAS_WFVE = struct('time', tVDATA, 'values', VDATA.values(:,13));
+WFS_R =  struct('time', tVDATA, 'values', VDATA.values(:,14));
+WFD_R =  struct('time', tVDATA, 'values', VDATA.values(:,15));
+WFX_R =  struct('time', tVDATA, 'values', VDATA.values(:,16));
+WFSE_R =  struct('time', tVDATA, 'values', VDATA.values(:,17));
+SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,18));
+TRI_X = struct('time', tVDATA, 'values', VDATA.values(:,19));
+BIAS_X = struct('time', tVDATA, 'values', VDATA.values(:,20));
+BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,21));
+XVEN = struct('time', tVDATA, 'values', VDATA.values(:,22));
+VVEN = struct('time', tVDATA, 'values', VDATA.values(:,23));
+
 
 tLDATA = LDATA.time(:,1);
 VEV = struct('time', tLDATA, 'values', LDATA.values(:,16));
@@ -332,13 +343,13 @@ overplot(['PACT_WFLKOUT', 'vlink_wflkout'], ['r-',  'b--'], 'Pump Act Leakage')
 subplot(322)
 overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Leakage')
 subplot(323)
-overplot(['VEN_PD', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
+overplot(['PD_VEN', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
 subplot(324)
-overplot(['VEN_PX', 'tri_px'], ['r-',  'b--'], 'Pump Control Pressure')
+overplot(['PX_V', 'tri_px'], ['r-',  'b--'], 'Pump Control Pressure')
 subplot(325)
 overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
 subplot(326)
-overplot(['TRI_WFX', 'tri_wfx'], ['r-',  'b--'], 'Regulator Control Flow')
+overplot(['WFX_R', 'tri_wfx'], ['r-',  'b--'], 'Regulator Control Flow')
 
 figs($+1) = figure("Figure_name", 'Rod Relief Valve', "Position", [40,150,610,600]);
 subplot(221)
@@ -360,15 +371,15 @@ overplot(['BIAS_X', 'bias_x'], ['r-',  'b--'], 'Position')
 
 figs($+1) = figure("Figure_name", 'pcham Volume', "Position", [40,190,610,600]);
 subplot(339)
-overplot(['VEN_PD', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
+overplot(['PD_VEN', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
 subplot(331)
 overplot(['RRV_WFD', 'rrv_wfd'], ['r-',  'b--'], 'Rod Relief Discharge Flow')
 subplot(332)
 overplot(['VDPP_WF', 'vdpp_wf'], ['r-',  'b--'], 'Pump Discharge Flow')
 subplot(333)
-overplot(['TRI_WFSE', 'tri_wfse'], ['r-',  'b--'], 'Regulator Motion Flow')
+overplot(['WFSE_R', 'tri_wfse'], ['r-',  'b--'], 'Regulator Motion Flow')
 subplot(334)
-overplot(['TRI_WFS', 'tri_wfs'], ['r-',  'b--'], 'Regulator Supply Flow')
+overplot(['WFS_R', 'tri_wfs'], ['r-',  'b--'], 'Regulator Supply Flow')
 subplot(335)
 overplot(['RRV_WFVX', 'rrv_wfvx'], ['r-',  'b--'], 'Rod Relief Motion Flow')
 subplot(336)
