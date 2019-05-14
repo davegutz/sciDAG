@@ -20,7 +20,7 @@
 // Jan 1, 2019  DA Gutz     Created
 // 
 function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
-    global loaded_scratch root
+    global loaded_scratch root time_toc time_tic
     mprintf('\nIn pre_xcos_simulate\n')  
     PreLoadFileName = 'Callbacks\PreLoadFcn_' + root + '.sce';
     InitFileName = 'Callbacks\InitFcn_' + root + '.sce';
@@ -29,6 +29,7 @@ function continueSimulation=pre_xcos_simulate(scs_m, needcompile)
         loaded_scratch = %t;
     end
     exec(InitFileName, -1);
-    mprintf('Completed pre_xcos_simulate\n')  
+    mprintf('Completed pre_xcos_simulate\n')
+    time_tic = getdate();
     continueSimulation = %t;
 endfunction

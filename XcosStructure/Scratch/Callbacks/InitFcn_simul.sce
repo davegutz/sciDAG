@@ -70,7 +70,6 @@ mv_xin = struct('time', [0 0.011000 .011001 Tf]', 'values', [x0 x0 xE xE]');
 //mv_xin.values(:,1) = x0; // freeze
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 MOD.initialized = %t;
-time_tic = getdate();
 
 // placeholder for VEN Unit stuff TODO:  need better logic here
 
@@ -104,5 +103,8 @@ if ic.wf36 > 900 then
 else
     ic.ifc.check.a = G.ifc.check.ad.tb(4,3);
 end
+
+// Clear save data so not fooled by plots if MOD.logAll=%f
+clear VDATA IDATA MDATA ADATA LDATA PALL XALL WALL
 
 mprintf('Completed %s\n', sfilename())  

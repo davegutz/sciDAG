@@ -66,9 +66,11 @@ global dT
 // Auto data overplot load
 stack_size = stacksize('max');
 MOD = tlist(["mod_ctrl", "initialized", "skip_init", "batch", "tPumpFail",...
-             "zeroP3lineDamp"], %f, %f, %f, %inf, %f);
+             "zeroP3lineDamp", 'plotMAIN', "plotAC", 'plotHSp', 'plotHS', 'logAll'], %f, %f, %f, %inf, %f, %f, %f, %f, %f, %f);
+MOD.plotMAIN = %t;          // Main plot for monitor
+MOD.logAll = %t;            // Log data for plotting
 MOD.skip_init = %t;         // Load in pre-solved initial condition
-MOD.zeroP3lineDamp = %t;   //  Special switch to match simulink model (not intended for final model) 
+MOD.zeroP3lineDamp = %t;    //  Special switch to match simulink model (not intended for final model) 
 
 // Load external reference data
 if MOD.zeroP3lineDamp then

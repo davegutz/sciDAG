@@ -20,9 +20,12 @@
 // Jan 1, 2019 	DA Gutz		Created
 // 
 function post_xcos_simulate(%cpr, scs_m, needcompile)
-    global root
+    global root time_toc time_tic
     StopFileName = 'Callbacks\StopFcn_' + root + '.sce';
     mprintf('Started post_xcos_simulate\n')  
     //exec(StopFileName, -1);
+    // Calculate run time.   tic is in InitFcn
+    time_toc = getdate();
+    mprintf('Run took %8.3f seconds\n', etime(time_toc, time_tic));
     mprintf('Completed post_xcos_simulate\n')  
 endfunction

@@ -30,17 +30,19 @@ function overplot(st, c, %title)
     legend(st);
 endfunction
 
-global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN  time_tic time_toc
+global LINCOS_OVERRIDE figs sys_f cpr scs_m LIN MOD
 global DI DV
-mprintf('In %s\n', sfilename())  
-try cpr = %cpr; end
+mprintf('In %s\n', sfilename())
 
+if ~MOD.logAll then
+    mprintf("Data not logged.  Set MOD.logAll=''t'' to do so and re-run.\n")
+    mprintf('Completed %s\n', sfilename())  
+    return
+end
+
+try cpr = %cpr; end
 try close(figs); end
 figs=[];
-
-// Calculate run time.   tic is in InitFcn
-time_toc = getdate();
-mprintf('Run took %8.3f seconds\n', etime(time_toc, time_tic));
 
 if 1  & Tf>1e-6 then
 
