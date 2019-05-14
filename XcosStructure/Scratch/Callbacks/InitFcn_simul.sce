@@ -105,6 +105,6 @@ else
 end
 
 // Clear save data so not fooled by plots if MOD.logAll=%f
-clear VDATA IDATA MDATA ADATA LDATA PALL XALL WALL
+clear VDATA IDATA MDATA ADATA LDATA PALL XALL WALL YDATA
 
 mprintf('Completed %s\n', sfilename())  
