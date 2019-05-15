@@ -117,11 +117,21 @@ if MOD.plotEnable  & Tf>1e-6 then
     XVEN = struct('time', tVDATA, 'values', VDATA.values(:,30));
     VVEN = struct('time', tVDATA, 'values', VDATA.values(:,31));
 
+    // EBOOST
     tBDATA = BDATA.time(:,1);
+    DPBOOST = struct('time', tBDATA, 'values', BDATA.values(:,1));
+    DPMFP = struct('time', tBDATA, 'values', BDATA.values(:,2));
+    PB1 = struct('time', tBDATA, 'values', BDATA.values(:,4));
+    PB2 = struct('time', tBDATA, 'values', BDATA.values(:,5));
+    PMAINP = struct('time', tBDATA, 'values', BDATA.values(:,7));
+    POC = struct('time', tBDATA, 'values', BDATA.values(:,8));
+    WF1P = struct('time', tBDATA, 'values', BDATA.values(:,9));
+    WFB2 = struct('time', tBDATA, 'values', BDATA.values(:,10));
     WFOC = struct('time', tBDATA, 'values', BDATA.values(:,13));
-   
-    
+    XNMAIN = struct('time', tBDATA, 'values', BDATA.values(:,15));
+    XNVEN = struct('time', tBDATA, 'values', BDATA.values(:,16));
 
+    // VEN Load
     tLDATA = LDATA.time(:,1);
     VEV = struct('time', tLDATA, 'values', LDATA.values(:,16));
     VEMA = struct('time', tLDATA, 'values', LDATA.values(:,17));
@@ -193,8 +203,18 @@ if MOD.plotEnable  & Tf>1e-6 then
     tri_wfs = DV.reg.Result.wf.wfs;
     start_wfs = DV.reg.Result.wf.wfs; start_wfs.values = start_wfs.values*0;
 
+    // EBOOST
+    pb1 = DV.I.ps_psia;
+    pb2 =  DV.I.pr_psia;
+    pmainp = DI.supply.Calc.PMAINP;
+    poc = DI.supply.Calc.POC;
+    wf1p = DI.supply.WF1P;
+    wfb2 = DI.supply.Calc.WFB2;
     wfoc = DI.supply.Calc.WFOC;
+    xnven = DI.supply.In.XN25; xnven.values = xnven.values/G.eng.N25100Pct*G.eng.xnvent;
+    xnmain = DI.supply.In.XN25; xnmain.values = xnmain.values/G.eng.N25100Pct*G.eng.xnmainpt;
 
+    // ACBOOST
     ACmotivepull = DI.ac.Mon_ABOOST.ACmotivepull;
     pacbmix = DI.ac.Mon_ABOOST.pacbmix;
     pdacbst = DI.ac.Mon_ABOOST.pdacbst;
@@ -344,18 +364,20 @@ if MOD.plotEnable  & Tf>1e-6 then
 
 
         figs($+1) = figure("Figure_name", 'VEN Misc', "Position", [40,130,610,600]);
-        subplot(321)
+        subplot(331)
         overplot(['PACT_WFLKOUT', 'vlink_wflkout'], ['r-',  'b--'], 'Pump Act Leakage')
-        subplot(322)
+        subplot(332)
         overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Leakage')
-        subplot(323)
+        subplot(333)
         overplot(['PD_VEN', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
-        subplot(324)
+        subplot(334)
         overplot(['PX_V', 'tri_px'], ['r-',  'b--'], 'Pump Control Pressure')
-        subplot(325)
+        subplot(335)
         overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
-        subplot(326)
+        subplot(336)
         overplot(['WFX_R', 'tri_wfx'], ['r-',  'b--'], 'Regulator Control Flow')
+        subplot(337)
+        overplot(['WFS_VEN', 'WFR_VEN'], ['r-',  'k-'], 'VEN Interface Flows')
 
         figs($+1) = figure("Figure_name", 'Rod Relief Valve', "Position", [40,150,610,600]);
         subplot(221)
@@ -433,6 +455,26 @@ if MOD.plotEnable  & Tf>1e-6 then
         figs($+1) = figure("Figure_name", 'EBOOST', "Position", [40,130,610,600]);
         subplot(321)
         overplot(['WFOC', 'wfoc'], ['r-',  'b--'], 'Oil Cooler Flow')
+        subplot(322)
+        overplot(['WF1P', 'wf1p'], ['r-',  'b--'], 'Main Pump Flow')
+        subplot(323)
+        overplot(['WFB2', 'wfb2'], ['r-',  'b--'], 'Boost Pump Flow')
+        subplot(324)
+        overplot(['PB1', 'pb1'], ['r-',  'b--'], 'Boost Pump Discharge Pressure')
+        subplot(325)
+        overplot(['PB2', 'pb2', 'POC', 'poc'], ['r-',  'b--', 'k-', 'c--'], 'Filter Discharge and Oil Cooler Discharge Pressures')
+        subplot(326)
+        overplot(['PMAINP', 'pmainp'], ['r-',  'b--'], 'Main Pump Supply Pressure')
+ 
+        figs($+1) = figure("Figure_name", 'EBOOST Pump', "Position", [40,130,610,600]);
+        subplot(221)
+        overplot(['DPBOOST', 'DPMFP'], ['r-',  'k-'], 'Pump Pressure Rises')
+        subplot(222)
+        overplot(['XNVEN', 'xnven'], ['r-',  'b--'], 'Boost Pump RPM')
+        subplot(223)
+        overplot(['XNMAIN', 'xnmain'], ['r-',  'b--'], 'Main Fuel Pump RPM')
+        subplot(224)
+        overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
 
     end // plotEBOOST
 

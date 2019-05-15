@@ -75,9 +75,9 @@ MOD.logAll = %t;            // Log data for plotting
 MOD.skip_init = %t;         // Load in pre-solved initial condition
 MOD.zeroP3lineDamp = %t;    // Special switch to match simulink model (not intended for final model) 
 MOD.plotEnable = %t;        // Plotting with StopFcn
-MOD.plotMain = %t;          // Main plot for StopFcn
-MOD.plotVEN = %t;           // VEN plot for StopFcn
-MOD.plotVENpump = %t;       // VEN pump plot for StopFdn
+MOD.plotMain = %f;          // Main plot for StopFcn
+MOD.plotVEN = %f;           // VEN plot for StopFcn
+MOD.plotVENpump = %f;       // VEN pump plot for StopFdn
 MOD.plotEBOOST = %t;        // Engine boost system plot for StopFdn
 
 
@@ -205,6 +205,7 @@ wf1leak_default = tlist(["wf1leak", "Ao", "k", "Do"], 0, 0, 0);
 function str = %wf1l_string(v)
     str = msprintf('''%s'' type:  Ao=%f, k=%f, Do=%f',..
              typeof(v), v.Ao, v.k, v.Do);
+
 endfunction
 function str = wf1l_fstring(v)
     str = msprintf('type,''%s'',\nAo,%f,\nk,%f,\nDo,%f,\n',..

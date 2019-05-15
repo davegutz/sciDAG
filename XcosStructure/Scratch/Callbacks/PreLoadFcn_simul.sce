@@ -169,6 +169,9 @@ G.ven.vlink.cftpa = 0.567*0.7;
 G.ven.vlink.ytqa.tb = [yxpump' ytqa'];
 G.ven.vlink.ytqrs.tb = [yxpump' ytqrs']; 
 clear ytqrs yxpump ytqa
+G.ven.ksb = 650;     // Sundstrand 7/14/92
+G.ven.fsb = 12.54;   // Sundstrand 7/14/92
+G.ven.vlink.cdabdamp = 0.1;
 
 G.ven.ehsv_klk = 2.257e-6;
 G.ven.ehsv_powlk = 0.8;
@@ -222,9 +225,6 @@ G.ven.bias.mact = .0383;
 G.ven.bias.mext = 0.;
 G.ven.bias.xmax = .1736;
 G.ven.bias.xmin = 0.;
-
-G.ven.ksb = 650;     // Sundstrand 7/14/92
-G.ven.fsb = 12.54;   // Sundstrand 7/14/92
 
 // Start line
 G.mline.ln_vs.l = 23.7;
@@ -449,18 +449,18 @@ G.ebp.faboc.n = 3;
 G.ebp.faboc.vol = aboc.vol + fab.vol;
 G.ebp.faboc.l = aboc.l + fab.l;
 G.ebp.faboc.a = aboc.vol/aboc.l;
-G.ebp.faboc.c = 100;
+G.ebp.faboc.c = 0.002;
 clear fab aboc
 G.ebp.ocm1.n = 3;
 G.ebp.ocm1.vol = 8.4;
 G.ebp.ocm1.l = 12;
 G.ebp.ocm1.a = G.ebp.ocm1.vol/G.ebp.ocm1.l;
-G.ebp.ocm1.c = 100;
+G.ebp.ocm1.c = 0.002;
 G.ebp.ocm2.n = 1;
 G.ebp.ocm2.vol = 4.2;
 G.ebp.ocm2.l = 6;
 G.ebp.ocm2.a = G.ebp.ocm2.vol/G.ebp.ocm2.l;
-G.ebp.ocm2.c = 100;
+G.ebp.ocm2.c = 0.002;
 G.ebp.focOr.cd = 0.61;
 //G.ebp.focOr.ao = or_wptoa(17000., 60., 0., G.ebp.focOr.cd, FP.sg);
 //G.ebp.focOr.Do = sqrt(4/%pi*G.ebp.focOr.Ao);
