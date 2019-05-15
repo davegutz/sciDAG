@@ -56,21 +56,25 @@ if MOD.plotEnable  & Tf>1e-6 then
     P2MP3 = P1SO; P2MP3.values = P1SO.values-P3.values;
     PD = struct('time', tIDATA, 'values', IDATA.values(:,3));
     PX = struct('time', tIDATA, 'values', IDATA.values(:,4));
-    WFAREA = struct('time', tIDATA, 'values', IDATA.values(:,5));
-    WFMV = struct('time', tIDATA, 'values', IDATA.values(:,6));
-    WF3 = struct('time', tIDATA, 'values', IDATA.values(:,9));
-    WF1MV = struct('time', tIDATA, 'values', IDATA.values(:,10));
-    WF1S = struct('time', tIDATA, 'values', IDATA.values(:,11));
-    WF3S = struct('time', tIDATA, 'values', IDATA.values(:,12));
-    WF3SX = struct('time', tIDATA, 'values', IDATA.values(:,13));
-    WFL3S = struct('time', tIDATA, 'values', IDATA.values(:,14));
-    MV_POS = struct('time', tIDATA, 'values', IDATA.values(:,15));
-    TV_POS = struct('time', tIDATA, 'values', IDATA.values(:,16));
-    HS_POS = struct('time', tIDATA, 'values', IDATA.values(:,17));
+    P1 = struct('time', tIDATA, 'values', IDATA.values(:,5));
+    WFAREA = struct('time', tIDATA, 'values', IDATA.values(:,6));
+    WFMV = struct('time', tIDATA, 'values', IDATA.values(:,7));
+    WF3 = struct('time', tIDATA, 'values', IDATA.values(:,10));
+    WF1MV = struct('time', tIDATA, 'values', IDATA.values(:,11));
+    WF1S = struct('time', tIDATA, 'values', IDATA.values(:,12));
+    WF3S = struct('time', tIDATA, 'values', IDATA.values(:,13));
+    WF3SX = struct('time', tIDATA, 'values', IDATA.values(:,14));
+    WFL3S = struct('time', tIDATA, 'values', IDATA.values(:,15));
+    WFC = struct('time', tIDATA, 'values', IDATA.values(:,16));
+    MV_POS = struct('time', tIDATA, 'values', IDATA.values(:,17));
+    TV_POS = struct('time', tIDATA, 'values', IDATA.values(:,18));
+    HS_POS = struct('time', tIDATA, 'values', IDATA.values(:,19));
+
     tPALL = PALL.time(:,1);
     PDVEN = struct('time', tPALL, 'values', PALL.values(:,1));
     P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,2));
     PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
+
     tADATA = ADATA.time(:,1);
     ACMOTIVEPULL = struct('time', tADATA, 'values', ADATA.values(:,1));
     PACBMIX = struct('time', tADATA, 'values', ADATA.values(:,2));
@@ -101,16 +105,22 @@ if MOD.plotEnable  & Tf>1e-6 then
     WFS_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,18));
     WFD_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,19));
     WFVX_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,20));
-    SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,21));
-    TRI_X = struct('time', tVDATA, 'values', VDATA.values(:,22));
-    BIAS_X = struct('time', tVDATA, 'values', VDATA.values(:,23));
-    X_PACT  = struct('time', tVDATA, 'values', VDATA.values(:,24));
-    X_RRV  = struct('time', tVDATA, 'values', VDATA.values(:,25));
-    X_VEHSV  = struct('time', tVDATA, 'values', VDATA.values(:,26));
-    BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,27));
-    XVEN = struct('time', tVDATA, 'values', VDATA.values(:,28));
-    VVEN = struct('time', tVDATA, 'values', VDATA.values(:,29));
+    WFR_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,21));
+    WFS_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,22));
+    SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,23));
+    TRI_X = struct('time', tVDATA, 'values', VDATA.values(:,24));
+    BIAS_X = struct('time', tVDATA, 'values', VDATA.values(:,25));
+    X_PACT  = struct('time', tVDATA, 'values', VDATA.values(:,26));
+    X_RRV  = struct('time', tVDATA, 'values', VDATA.values(:,27));
+    X_VEHSV  = struct('time', tVDATA, 'values', VDATA.values(:,28));
+    BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,29));
+    XVEN = struct('time', tVDATA, 'values', VDATA.values(:,30));
+    VVEN = struct('time', tVDATA, 'values', VDATA.values(:,31));
 
+    tBDATA = BDATA.time(:,1);
+    WFOC = struct('time', tBDATA, 'values', BDATA.values(:,13));
+   
+    
 
     tLDATA = LDATA.time(:,1);
     VEV = struct('time', tLDATA, 'values', LDATA.values(:,16));
@@ -182,6 +192,8 @@ if MOD.plotEnable  & Tf>1e-6 then
     tri_wfse = DV.reg.Result.wf.wfse;
     tri_wfs = DV.reg.Result.wf.wfs;
     start_wfs = DV.reg.Result.wf.wfs; start_wfs.values = start_wfs.values*0;
+
+    wfoc = DI.supply.Calc.WFOC;
 
     ACmotivepull = DI.ac.Mon_ABOOST.ACmotivepull;
     pacbmix = DI.ac.Mon_ABOOST.pacbmix;
@@ -415,6 +427,14 @@ if MOD.plotEnable  & Tf>1e-6 then
         overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Position')
 
     end  // plotVENpump
+
+    if MOD.plotEBOOST
+
+        figs($+1) = figure("Figure_name", 'EBOOST', "Position", [40,130,610,600]);
+        subplot(321)
+        overplot(['WFOC', 'wfoc'], ['r-',  'b--'], 'Oil Cooler Flow')
+
+    end // plotEBOOST
 
 end   // MOD.plotEnable
 

@@ -67,8 +67,9 @@ global dT
 stack_size = stacksize('max');
 MOD = tlist(["mod_ctrl", "initialized", "skip_init", "batch", "tPumpFail",...
              "zeroP3lineDamp", 'plotMAIN', "plotAC", 'plotHSp', 'plotHS', 'logAll',...
-             'plotEnable', 'plotMain', 'plotBoost', 'plotVEN', 'plotVENpump'],...
-             %f, %f, %f, %inf, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f);
+             'plotEnable', 'plotMain', 'plotBoost', 'plotVEN', 'plotVENpump',...
+             'plotEBOOST'],...
+             %f, %f, %f, %inf, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f);
 MOD.plotMAIN = %t;          // Main plot for monitor
 MOD.logAll = %t;            // Log data for plotting
 MOD.skip_init = %t;         // Load in pre-solved initial condition
@@ -77,6 +78,7 @@ MOD.plotEnable = %t;        // Plotting with StopFcn
 MOD.plotMain = %t;          // Main plot for StopFcn
 MOD.plotVEN = %t;           // VEN plot for StopFcn
 MOD.plotVENpump = %t;       // VEN pump plot for StopFdn
+MOD.plotEBOOST = %t;        // Engine boost system plot for StopFdn
 
 
 // Load external reference data
