@@ -39,3 +39,6 @@ o "Undefined variable: Resume_line_args"
     you may need to completely restart scilab to clear messages of the 
     order "unable to compile block"
  
+o NaN in chained line models
+    Can be caused by too high damping in lines ('c')
+    

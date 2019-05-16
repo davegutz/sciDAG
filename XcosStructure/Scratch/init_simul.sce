@@ -76,8 +76,8 @@ MOD.logAll = %t;            // Log data for plotting
 MOD.skip_init = %t;         // Load in pre-solved initial condition
 MOD.zeroP3lineDamp = %t;    // Special switch to match simulink model (not intended for final model) 
 MOD.plotEnable = %t;        // Plotting with StopFcn
-MOD.plotMain = %f;          // Main plot for StopFcn
-MOD.plotVEN = %f;           // VEN plot for StopFcn
+MOD.plotMain = %t;          // Main plot for StopFcn
+MOD.plotVEN = %t;           // VEN plot for StopFcn
 MOD.plotVENpump = %f;       // VEN pump plot for StopFdn
 MOD.plotEBOOST = %t;        // Engine boost system plot for StopFdn
 
@@ -160,12 +160,13 @@ wfbypass = DI.ac.Mon_ABOOST.wfbypass;
 wfengine = DI.ac.Mon_ABOOST.wfengine;
 wftank = DI.ac.Mon_ABOOST.wftank;
 vmA = DV.ehsv.In.mA;
+vmA.values(:,1) = vmA.values(1,1); // Freeze
 rlineps = DV.rline_ps;
 hlineps = DV.phead;
 
 // Length of simulation
 Tf = time($);
-
+Tf = .1;
 // Real time plot buffer
 Tb = Tf;
 
