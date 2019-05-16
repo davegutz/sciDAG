@@ -290,6 +290,10 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(325)
         overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
 
+    end  // plotMain
+
+    if MOD.plotAC then
+
         figs($+1) = figure("Figure_name", 'AC Supply', "Position", [40,90,810,600]);
         subplot(331)
         overplot(['WFENGINE', 'wfengine'], ['r-',  'b--'], 'Engine Supply Flow')
@@ -308,7 +312,7 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(339)
         overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
 
-    end  // plotMain
+    end // plotAC
 
     // Boost system plots
     if MOD.plotBoost then

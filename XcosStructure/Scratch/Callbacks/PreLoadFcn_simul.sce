@@ -307,8 +307,8 @@ G.ifc.ln_p3s.c = .06;
 if MOD.zeroP3lineDamp then
     G.ifc.ln_p3s.c = 0;
 end
-vo_p1c_on = 14;
-vo_p1c_so = 6.6;
+//vo_p1c_on = 14;
+//vo_p1c_so = 6.6;
 G.ifc.a_p3s.ao = sqr(.0135)*%pi/4;
 G.ifc.a_p3s.cd = 0.73;
 G.ifc.a_tvb.ao = sqr(.032)*%pi/4;
@@ -489,7 +489,8 @@ clear vol
 //G.ebp.mom_filt.c = 0;
 G.ebp.vo_pb1.vol = 77.9;
 G.ebp.vo_pb2.vol = 5;
-G.ebp.vo_p1.vol = 1e6;
+G.ebp.vo_p1.vol = 5.3;
+//G.ebp.vo_p1.vol = 1e6;  // freeze p1 for ifc test
 
 // Aircraft fuel supply
 // -400
