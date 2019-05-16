@@ -46,7 +46,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Oct 11, 2018     DA Gutz    Created
+// Oct 11, 2018     DA Gutz     Created
+// May 16, 2019     DA Gutz     Delete damping of end momentum
 // ******************************************************************
 function obj = lti_man_n_mm(obj, spgr, %beta)
     if typeof(obj) ~= 'pMM' then
@@ -80,8 +81,9 @@ function obj = lti_man_n_mm(obj, spgr, %beta)
     // Damping flow difference #2
     flow_diff = lti_summer(1, -%c, %c, 0);
 
-    // Single momentum slice.
-    endmom = lti_mom_1(l/(n+1), a, %c);
+    // Single momentum slice.   Don't damp or will introduce steady flow loss.
+    //    endmom = lti_mom_1(l/(n+1), a, %c);
+    endmom = lti_mom_1(l/(n+1), a);
 
     // Inputs are ps and pd.
     u = [1, 2*n+2];
