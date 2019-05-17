@@ -44,7 +44,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Oct 10, 2018 	DA Gutz		Created
+// Oct 10, 2018     DA Gutz     Created
+// May 17, 2019     DA Gutz     Remove damping from vol and mom
 // ******************************************************************************
 function [sys] = lti_man_1_vm(l, a, vol, spgr, %beta, %c)
 
@@ -77,13 +78,13 @@ function [sys] = lti_man_1_vm(l, a, vol, spgr, %beta, %c)
     split = lti_splitter(1, 1, 0, 0);
 
     // Volume #2
-    v_1 = lti_vol_1(vol, %beta, spgr, %c);
+    v_1 = lti_vol_1(vol, %beta, spgr);
 
     // Damping flow difference #3
     flow_damp = lti_summer(-%c, %c, 1, 0);
 
     // Momentum slice #4
-    m_1 = lti_mom_1(l, a, %c);
+    m_1 = lti_mom_1(l, a);
 
     // Put system into block diagonal form.
     temp = adjoin(split, v_1, flow_damp, m_1);

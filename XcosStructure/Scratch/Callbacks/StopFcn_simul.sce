@@ -121,6 +121,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     tBDATA = BDATA.time(:,1);
     DPBOOST = struct('time', tBDATA, 'values', BDATA.values(:,1));
     DPMFP = struct('time', tBDATA, 'values', BDATA.values(:,2));
+    P_1 = struct('time', tBDATA, 'values', BDATA.values(:,3));
     PB1 = struct('time', tBDATA, 'values', BDATA.values(:,4));
     PB2 = struct('time', tBDATA, 'values', BDATA.values(:,5));
     PMAINP = struct('time', tBDATA, 'values', BDATA.values(:,7));
@@ -130,6 +131,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     WFOC = struct('time', tBDATA, 'values', BDATA.values(:,13));
     XNMAIN = struct('time', tBDATA, 'values', BDATA.values(:,15));
     XNVEN = struct('time', tBDATA, 'values', BDATA.values(:,16));
+    PSMFP = struct('time', tBDATA, 'values', BDATA.values(:,17));
 
     // VEN Load
     tLDATA = LDATA.time(:,1);
@@ -468,17 +470,21 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(325)
         overplot(['PB2', 'pb2', 'POC', 'poc'], ['r-',  'b--', 'k-', 'c--'], 'Filter Discharge and Oil Cooler Discharge Pressures')
         subplot(326)
-        overplot(['PMAINP', 'pmainp'], ['r-',  'b--'], 'Main Pump Supply Pressure')
+        overplot(['PMAINP', 'PSMFP', 'pmainp'], ['r-', 'k-', 'b--'], 'Main Pump Supply Pressure')
  
         figs($+1) = figure("Figure_name", 'EBOOST Pump', "Position", [40,130,610,600]);
-        subplot(221)
+        subplot(321)
         overplot(['DPBOOST', 'DPMFP'], ['r-',  'k-'], 'Pump Pressure Rises')
-        subplot(222)
+        subplot(322)
         overplot(['XNVEN', 'xnven'], ['r-',  'b--'], 'Boost Pump RPM')
-        subplot(223)
+        subplot(323)
         overplot(['XNMAIN', 'xnmain'], ['r-',  'b--'], 'Main Fuel Pump RPM')
-        subplot(224)
+        subplot(324)
         overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
+        subplot(325)
+        overplot(['P1', 'P_1'], ['r-',  'c-'], 'MFP Discharge Pressure')
+        subplot(326)
+        overplot(['PMAINP', 'pmainp'], ['r-',  'c-'], 'MFP Supply Pressure')
 
     end // plotEBOOST
 
