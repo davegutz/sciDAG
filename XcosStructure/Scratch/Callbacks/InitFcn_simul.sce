@@ -96,7 +96,7 @@ ic.ven.vsv.x = G.ven.vsv.xmax;
 ic.ven.rrv.x = G.ven.rrv.xmin;
 ic.ven.load.act_c.x = 4.5;
 ic = order_all_fields(ic);
-
+//ic.ven.load.ehsv.x = 0.0033504277;
 
 if ic.wf36 > 900 then
     ic.ifc.check.a = G.ifc.check.ad.tb(4,2);

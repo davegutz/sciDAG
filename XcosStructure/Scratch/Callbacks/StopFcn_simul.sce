@@ -75,6 +75,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,2));
     PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
 
+    // AC Supply
     tADATA = ADATA.time(:,1);
     ACMOTIVEPULL = struct('time', tADATA, 'values', ADATA.values(:,1));
     PACBMIX = struct('time', tADATA, 'values', ADATA.values(:,2));
@@ -88,34 +89,6 @@ if MOD.plotEnable  & Tf>1e-6 then
     WFBYPASS = struct('time', tADATA, 'values', ADATA.values(:,9));
     WFENGINE = struct('time', tADATA, 'values', ADATA.values(:,10));
     WFTANK = struct('time', tADATA, 'values', ADATA.values(:,11));
-
-    tVDATA = VDATA.time(:,1);
-    PD_VEN = struct('time', tVDATA, 'values', VDATA.values(:,2));
-    PROD = struct('time', tVDATA, 'values', VDATA.values(:,4));
-    PHEAD = struct('time', tVDATA, 'values', VDATA.values(:,5));
-    PX_V = struct('time', tVDATA, 'values', VDATA.values(:,6));
-    WFS_START = struct('time', tVDATA, 'values', VDATA.values(:,8));
-    VLOAD_WFLLK = struct('time', tVDATA, 'values', VDATA.values(:,9));
-    VLOAD_WFLOAD = struct('time', tVDATA, 'values', VDATA.values(:,10));
-    BIAS_WFVE = struct('time', tVDATA, 'values', VDATA.values(:,13));
-    WFS_R =  struct('time', tVDATA, 'values', VDATA.values(:,14));
-    WFD_R =  struct('time', tVDATA, 'values', VDATA.values(:,15));
-    WFX_R =  struct('time', tVDATA, 'values', VDATA.values(:,16));
-    WFSE_R =  struct('time', tVDATA, 'values', VDATA.values(:,17));
-    WFS_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,18));
-    WFD_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,19));
-    WFVX_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,20));
-    WFR_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,21));
-    WFS_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,22));
-    SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,23));
-    TRI_X = struct('time', tVDATA, 'values', VDATA.values(:,24));
-    BIAS_X = struct('time', tVDATA, 'values', VDATA.values(:,25));
-    X_PACT  = struct('time', tVDATA, 'values', VDATA.values(:,26));
-    X_RRV  = struct('time', tVDATA, 'values', VDATA.values(:,27));
-    X_VEHSV  = struct('time', tVDATA, 'values', VDATA.values(:,28));
-    BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,29));
-    XVEN = struct('time', tVDATA, 'values', VDATA.values(:,30));
-    VVEN = struct('time', tVDATA, 'values', VDATA.values(:,31));
 
     // EBOOST
     tBDATA = BDATA.time(:,1);
@@ -132,6 +105,37 @@ if MOD.plotEnable  & Tf>1e-6 then
     XNMAIN = struct('time', tBDATA, 'values', BDATA.values(:,15));
     XNVEN = struct('time', tBDATA, 'values', BDATA.values(:,16));
     PSMFP = struct('time', tBDATA, 'values', BDATA.values(:,17));
+
+    // VEN
+    tVDATA = VDATA.time(:,1);
+    PD_VEN = struct('time', tVDATA, 'values', VDATA.values(:,2));
+    PROD = struct('time', tVDATA, 'values', VDATA.values(:,4));
+    PHEAD = struct('time', tVDATA, 'values', VDATA.values(:,5));
+    PX_V = struct('time', tVDATA, 'values', VDATA.values(:,6));
+    PS_HLINE = struct('time', tVDATA, 'values', VDATA.values(:,7));
+    PS_RLINE = struct('time', tVDATA, 'values', VDATA.values(:,8));
+    WFS_START = struct('time', tVDATA, 'values', VDATA.values(:,10));
+    VLOAD_WFLLK = struct('time', tVDATA, 'values', VDATA.values(:,11));
+    VLOAD_WFLOAD = struct('time', tVDATA, 'values', VDATA.values(:,12));
+    BIAS_WFVE = struct('time', tVDATA, 'values', VDATA.values(:,15));
+    WFS_R =  struct('time', tVDATA, 'values', VDATA.values(:,16));
+    WFD_R =  struct('time', tVDATA, 'values', VDATA.values(:,17));
+    WFX_R =  struct('time', tVDATA, 'values', VDATA.values(:,18));
+    WFSE_R =  struct('time', tVDATA, 'values', VDATA.values(:,19));
+    WFS_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,20));
+    WFD_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,21));
+    WFVX_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,22));
+    WFR_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,23));
+    WFS_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,24));
+    SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,25));
+    TRI_X = struct('time', tVDATA, 'values', VDATA.values(:,26));
+    BIAS_X = struct('time', tVDATA, 'values', VDATA.values(:,27));
+    X_PACT  = struct('time', tVDATA, 'values', VDATA.values(:,28));
+    X_RRV  = struct('time', tVDATA, 'values', VDATA.values(:,29));
+    X_VEHSV  = struct('time', tVDATA, 'values', VDATA.values(:,30));
+    BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,31));
+    XVEN = struct('time', tVDATA, 'values', VDATA.values(:,32));
+    VVEN = struct('time', tVDATA, 'values', VDATA.values(:,33));
 
     // VEN Load
     tLDATA = LDATA.time(:,1);
@@ -328,17 +332,17 @@ if MOD.plotEnable  & Tf>1e-6 then
     // VEN plots
     if MOD.plotVEN then
 
-        figs($+1) = figure("Figure_name", 'VEN EHSV', "Position", [40,110,810,600]);
+        figs($+1) = figure("Figure_name", 'VEN EHSV 1', "Position", [40,110,810,600]);
         subplot(221)
-        overplot(['rlineps'], ['m-'], 'VEN EHSV Pressures')
+        overplot(['PS_RLINE', 'rlineps'], ['r-', 'b--'], 'VEN EHSV Rod Pressure')
         subplot(222)
-        overplot(['hlineps'], ['c--'], 'VEN EHSV Pressures')
+        overplot(['PS_HLINE', 'hlineps'], ['r-', 'b--'], 'VEN EHSV Head Pressure')
         subplot(223)
         overplot(['vdpp_pd'], ['k-'], 'VEN EHSV Pressures')
         subplot(224)
         overplot(['vdpp_ps'], ['b-'], 'VEN EHSV Pressures')
 
-        figs($+1) = figure("Figure_name", 'VEN EHSV', "Position", [40,110,810,600]);
+        figs($+1) = figure("Figure_name", 'VEN EHSV 2', "Position", [60,115,810,600]);
         subplot(331)
         overplot(['VEWFS', 'wfs_vehsv'], ['r-',  'b--'], 'VEN EHSV Supply Flow')
         subplot(332)
