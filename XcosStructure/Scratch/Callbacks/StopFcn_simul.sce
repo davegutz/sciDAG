@@ -74,6 +74,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     PDVEN = struct('time', tPALL, 'values', PALL.values(:,1));
     P_NOZIN = struct('time', tPALL, 'values', PALL.values(:,2));
     PS3 = struct('time', tPALL, 'values', PALL.values(:,3));
+    P1SV = struct('time', tPALL, 'values', PALL.values(:,4));
 
     // AC Supply
     tADATA = ADATA.time(:,1);
@@ -117,6 +118,8 @@ if MOD.plotEnable  & Tf>1e-6 then
     WFS_START = struct('time', tVDATA, 'values', VDATA.values(:,10));
     VLOAD_WFLLK = struct('time', tVDATA, 'values', VDATA.values(:,11));
     VLOAD_WFLOAD = struct('time', tVDATA, 'values', VDATA.values(:,12));
+    WF_VDPP = struct('time', tVDATA, 'values', VDATA.values(:,13));
+    WFVX_START = struct('time', tVDATA, 'values', VDATA.values(:,14));
     BIAS_WFVE = struct('time', tVDATA, 'values', VDATA.values(:,15));
     WFS_R =  struct('time', tVDATA, 'values', VDATA.values(:,16));
     WFD_R =  struct('time', tVDATA, 'values', VDATA.values(:,17));
@@ -271,8 +274,7 @@ if MOD.plotEnable  & Tf>1e-6 then
 
         figs($+1) = figure("Figure_name", 'MAIN_PRESS_1', "Position", [40,70,610,460]);
         subplot(321)
-
-        overplot(['P1SO', 'p1c'], ['r-', 'b--'], 'MV Supply Pressure')
+        overplot(['P1SO', 'p1c', 'P1SV'], ['r-', 'b--', 'c-'], 'MV Supply Pressure')
         subplot(322)
         overplot(['P3', 'p3'], ['r-', 'b--'], 'MV Discharge Pressure')
         subplot(323)
@@ -424,6 +426,8 @@ if MOD.plotEnable  & Tf>1e-6 then
         overplot(['VLOAD_WFLOAD', 'vload_wfload'], ['r-',  'b--'], 'Total Load Flow')
         subplot(337)
         overplot(['WFS_START', 'start_wfs'], ['r-',  'b--'], 'Start Valve Flow')
+        subplot(338)
+        overplot(['WFVX_START'], ['r-'], 'Start Valve Motion Flow')
 
     end // plotVEN
 
@@ -444,19 +448,17 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(326)
         overplot(['VDPP_EFF_VOL'], ['b-'], 'VDPP')
 
-        figs($+1) = figure("Figure_name", 'VEN', "Position", [40,110,610,600]);
+        figs($+1) = figure("Figure_name", 'VEN Position', "Position", [40,110,610,600]);
         subplot(321)
         overplot(['PACT_X', 'pact_x'], ['r-',  'b--'], 'Pump Act Stroke')
         subplot(322)
         overplot(['PACT_V', 'pact_v'], ['r-',  'b--'], 'Pump Act Velocity')
         subplot(323)
-        overplot(['VLINK_FTPA', 'vlink_ftpa'], ['r-',  'b--'], 'Pump Act Loads')
-        subplot(324)
-        overplot(['PACT_FEXTH', 'pact_fexth'], ['r-',  'b--'], 'Pump Act Load')
-        subplot(325)
-        overplot(['PACT_WFR', 'pact_wfr'], ['r-',  'b--'], 'Pump Act Flow')
-        subplot(326)
         overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Position')
+        subplot(324)
+        overplot(['SV_POS', 'start_x'], ['r-',  'b--'], 'Start Valve Position')
+        subplot(325)
+        overplot(['BIAS_X', 'bias_x'], ['r-',  'b--'], 'Position')
 
     end  // plotVENpump
 

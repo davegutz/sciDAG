@@ -481,7 +481,9 @@ G.ebp.inlet.l = 30;
 G.ebp.inlet.a = G.ebp.inlet.vol/G.ebp.inlet.l;
 G.ebp.inlet.c = 0;
 G.ebp.or_filt.cd = 0.61;
-G.ebp.or_filt.ao = or_wptoa(52000, 2, 0, G.ebp.or_filt.cd, FP.sg);
+//G.ebp.or_filt.ao = or_wptoa(52000, 2, 0, G.ebp.or_filt.cd, FP.sg);
+// dampen 1000 Hz mode in filter
+G.ebp.or_filt.ao = or_wptoa(20000, 4, 0, G.ebp.or_filt.cd, FP.sg);
 G.ebp.mom_filt.length = 6;
 vol = 6.7;
 G.ebp.mom_filt.area = vol/G.ebp.mom_filt.length;
