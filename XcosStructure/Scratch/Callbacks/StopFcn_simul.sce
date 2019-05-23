@@ -215,6 +215,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     // EBOOST
     pb1 = DV.I.ps_psia;
     pb2 =  DV.I.pr_psia;
+    pmpin = DI.supply.Calc.PMPIN;
     pmainp = DI.supply.Calc.PMAINP;
     poc = DI.supply.Calc.POC;
     wf1p = DI.supply.WF1P;
@@ -488,9 +489,9 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(324)
         overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
         subplot(325)
-        overplot(['P1', 'P_1'], ['r-',  'c-'], 'MFP Discharge Pressure')
+        overplot(['P_1', 'P1SO', 'p1c'], ['k-', 'r-', 'b--'], 'MFP Discharge Pressure')
         subplot(326)
-        overplot(['PMAINP', 'pmainp'], ['r-',  'c-'], 'MFP Supply Pressure')
+        overplot(['PMAINP', 'pmainp'], ['r-',  'b--'], 'MFP Supply Pressure')
 
     end // plotEBOOST
 

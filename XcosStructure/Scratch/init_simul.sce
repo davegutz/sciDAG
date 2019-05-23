@@ -79,7 +79,7 @@ MOD.plotEnable = %t;        // Plotting with StopFcn
 MOD.plotMain = %t;          // Main plot for StopFcn
 MOD.plotVEN = %t;           // VEN plot for StopFcn
 MOD.plotVENpump = %t;       // VEN pump plot for StopFdn
-MOD.plotEBOOST = %f;        // Engine boost system plot for StopFdn
+MOD.plotEBOOST = %t;        // Engine boost system plot for StopFdn
 
 
 // Load external reference data
@@ -160,13 +160,14 @@ wfbypass = DI.ac.Mon_ABOOST.wfbypass;
 wfengine = DI.ac.Mon_ABOOST.wfengine;
 wftank = DI.ac.Mon_ABOOST.wftank;
 vmA = DV.ehsv.In.mA;
-vmA.values(:,1) = vmA.values(1,1); // Freeze
+//vmA.values(:,1) = vmA.values(1,1); // Freeze
 rlineps = DV.rline_ps;
 hlineps = DV.phead;
 
 // Length of simulation
 Tf = time($);
-Tf = .1;
+//Tf = .1;
+
 // Real time plot buffer
 Tb = Tf;
 
