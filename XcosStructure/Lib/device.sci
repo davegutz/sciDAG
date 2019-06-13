@@ -156,7 +156,7 @@ function [x,y,typ] = HEAD_B(job, arg1, arg2)
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
         exprs = ["lsx_hdb(GEO.hs)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.hs.x"]
         gr_i = [];
-        x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
+       x = standard_define([12 18],model,exprs,gr_i)  // size icon, etc..
     end
 endfunction
 
@@ -202,7 +202,7 @@ endfunction
 //// Default actuator_a_b prototype ***********************************
 actuator_a_b_default = tlist(["aab", "ab", "ah", "ahl", "ar", "arl",..
         "c_", "cd_", "fdyf", "fstf",..
-        "mact", "mext", "xmax", "xmin"],..
+       "mact", "mext", "xmax", "xmin"],..
          0, 0, 0, 0, 0,..
          0, 0, 0, 0,..
          0, 0, 1, -1);
@@ -402,7 +402,7 @@ function [x,y,typ] = ACTUATOR_A_C(job, arg1, arg2)
         model = arg1.model
         while %t do
             [ok,GEO,SG,LINCOS_OVERRIDE,Xinit,exprs] = getvalue('Set actuator_a_c parameters',..
-            ['lsx_aab(actuator_a_c)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
+            ['lsx_aac(actuator_a_c)';'SG';'LINCOS_OVERRIDE';'Xinit'],..
             list('lis',-1,'vec',1,'vec',1,'vec',1),..
             exprs)
             if ~ok then break,end 
@@ -429,7 +429,7 @@ function [x,y,typ] = ACTUATOR_A_C(job, arg1, arg2)
         model.rpar = [SG;LINCOS_OVERRIDE]
         model.blocktype = 'c'
         model.nmode = 1
-        model.nzcross = 5
+        model.nzcross = 7
         model.dep_ut = [%f %t] // [direct feedthrough,   time dependence]
         exprs = ["lsx_aab(G.venload.act_c)"; "FP.sg"; string(LINCOS_OVERRIDE); "INI.venload.act_c.x"]
         gr_i = [];
@@ -480,6 +480,8 @@ function [blkcall] = callblk_actuator_a_c(blk, sim, ph, pl, pr, per, fext, xol)
     blkcall.surf2 = blk.g(3);
     blkcall.surf3 = blk.g(4);
     blkcall.surf4 = blk.g(5);
+    blkcall.surf5 = blk.g(6);
+    blkcall.surf6 = blk.g(7);
 endfunction
 //////////********** end actuator_a_c ***************************************
 

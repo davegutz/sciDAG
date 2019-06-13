@@ -65,21 +65,23 @@ global dT
 // Memory of setup
 // Auto data overplot load
 stack_size = stacksize('max');
-MOD = tlist(["mod_ctrl", "initialized", "skip_init", "batch", "tPumpFail",...
-             "zeroP3lineDamp", 'plotMAIN', "plotAC", 'plotHSp', 'plotHS', 'logAll',...
-             'plotEnable', 'plotMain', 'plotBoost', 'plotVEN', 'plotVENpump',...
-             'plotEBOOST'],...
-             %f, %f, %f, %inf, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f);
-MOD.plotMAIN = %t;          // Main plot for monitor
-MOD.plotAC = %t;            // AC plot for monitor
+MOD = tlist(["mod_ctrl", "initialized", "skip_init", 'atWork', "batch", "tPumpFail",...
+             "zeroP3lineDamp", 'plotMAIN', 'plotVEN', "plotAC", 'plotHSp', 'plotHS',...
+             'logAll', 'plotEnable', 'plotMain', 'plotBoost', 'plotVEN', 'plotVENpump', 'plotEBOOST'],...
+             %f, %f, %f, %f, %inf,...
+             %f, %f, %f, %f, %f, %f,...
+             %f, %f, %f, %f, %f, %f, %f);
+MOD.plotMAIN = %t;          // Main plot for RT monitor
+MOD.plotVEN = %t;           // VEN plot for RT monitor
+MOD.plotAC = %f;            // AC plot for monitor
 MOD.logAll = %t;            // Log data for plotting
 MOD.skip_init = %t;         // Load in pre-solved initial condition
 MOD.zeroP3lineDamp = %t;    // Special switch to match simulink model (not intended for final model) 
 MOD.plotEnable = %t;        // Plotting with StopFcn
 MOD.plotMain = %t;          // Main plot for StopFcn
-MOD.plotVEN = %t;           // VEN plot for StopFcn
-MOD.plotVENpump = %t;       // VEN pump plot for StopFdn
-MOD.plotEBOOST = %t;        // Engine boost system plot for StopFdn
+MOD.plotVEN = %f;           // VEN plot for StopFcn
+MOD.plotVENpump = %f;       // VEN pump plot for StopFdn
+MOD.plotEBOOST = %f;        // Engine boost system plot for StopFdn
 
 
 // Load external reference data
@@ -109,6 +111,7 @@ end
 
 // Driven inputs  TODO: standalone model should not have any driven
 xn25 = DI.eng.xn25;
+ps3eng = DI.eng.ps3;
 hs_x = DI.ifc.Calc.Comp.hs.Result.x;
 tri_ps = DV.reg.In.ps;
 tri_pd = DV.reg.In.pd;
@@ -143,6 +146,9 @@ hs_pl = DI.ifc.Calc.Comp.hs.In.pl;
 hs_ph = DI.ifc.Calc.Comp.hs.In.ph;
 hs_pf = DI.ifc.Calc.Comp.hs.In.pf;
 p3 = DI.ifc.Calc.Press.p3;
+if MOD.atWork then
+    p1 = DI.ifc.In.p1;
+end
 wf3s = DI.ifc.Calc.Flow.wf3s;
 p3s = DI.ifc.Calc.Press.p3s;
 wf3sx = DI.ifc.Calc.Flow.lnp3s.wf3sx;
@@ -159,14 +165,34 @@ wfacmbst = DI.ac.Mon_ABOOST.wfacmbst;
 wfbypass = DI.ac.Mon_ABOOST.wfbypass;
 wfengine = DI.ac.Mon_ABOOST.wfengine;
 wftank = DI.ac.Mon_ABOOST.wftank;
+wffilt = DI.bvs.Calc.WFFILT;  // dag 5/25/2019
+wfabmain = DI.bvs.In.WFAB_MAIN;  // dag 5/25/2019
+wfs = DV.wfs; // dag 5/25/2019
+wfr = DV.wfr; // dag 5/25/2019
+pb2 = DV.I.ps_psia;   //dag 5/24/2019
+pb1 =  DV.I.pr_psia;   //dag 5/24/2019
 vmA = DV.ehsv.In.mA;
+wfb2 = DI.supply.Calc.WFB2;
+qb2 = wfb2;qb2.values(:,1) = qb2.values(:,1)/FP.dwdc;
 //vmA.values(:,1) = vmA.values(1,1); // Freeze
 rlineps = DV.rline_ps;
-hlineps = DV.phead;
+if MOD.atWork then
+    hlineps = DV.ehsv.In.p.ph;  // dag 6/11/2019
+end
+x_ven = DV.actSys.O_4.Result.x;
+v_ven = DV.actSys.O_4.Result.dxdt;
+wfs_vehsv = DV.ehsv.SPOOL.wfs;
+wfd_vehsv = DV.ehsv.SPOOL.wfd;
+wfh_vehsv = DV.ehsv.SPOOL.wf.wfh;
+wfr_vehsv = DV.ehsv.SPOOL.wf.wfr;
+wfh_vact = DV.actSys.wfh;
+wfr_vact = DV.actSys.wfr;
+bias_fext = DV.bias.In.fextr;  // dag 5/31/2019
+vdpp_pd = DV.pd;
+
 
 // Length of simulation
 Tf = time($);
-//Tf = .1;
 
 // Real time plot buffer
 Tb = Tf;
@@ -223,7 +249,7 @@ endfunction
 MLINE = tlist(["sys_mline", "vo_pnozin", "ln_vs", "main_line", "noz"],vol_default, pipeVM_default, pipeMM_default, ctab1_default);
 IFC = tlist(["sys_ifc", "mv", "mvtv", "hs", "mo_p3s", "vo_pd",  "vo_p3", "vo_p1so", "vo_px", "vo_p3s", "ln_p3s", "a_p3s", "a_tvb", "mvwin", "check", "k1leak", "a1leak", "prtv"], hlfvlv_a_default, vlv_a_default, head_b_default, mom_default, vol_default, vol_default, vol_default, vol_default, vol_default, pipeVM_default, or_default, or_default, ctab1_default, vlv_a_default, 0, 0, vlv_a_default);
 EPMP = tlist(["sys_ebp", "mfp", "wf1leak", "faboc", "ocm1", "ocm2", "focOr", "vo_poc", "boost", "inlet", "or_filt", "mom_filt", "vo_pb1", "vo_pb2", "vo_p1"], cpmpd_default, wf1leak_default, pipeMM_default, pipeMM_default, pipeVM_default, or_default, vol_default, cpmpd_default, pipeMM_default, or_default, mom_default, vol_default, vol_default, vol_default);
-VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias", "ehsv_klk", "ehsv_powlk", "ksb", "fsb", "leako"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default, 0, 0, 0, 0, la_default);
+VEN = tlist(["sys_ven", "vdpp", "vsv", "reg", "pact", "pact_lk", "vlink", "vleak", "rrv", "vo_pcham", "vo_px", "bias", "ehsv_klk", "ehsv_powlk", "ksb", "fsb", "leako", "reg_cbase", "bias_cbase"], vdp_default, vlv_a_default, tv_a1_default, actuator_a_b_default, la_default, vlink_default, la_default, vlv_a_default, vol_default, vol_default, actuator_a_b_default, 0, 0, 0, 0, la_default, 0, 0);  // dag 6/1/2019
 ENG = tlist(["sys_eng", "pcn25r", "N25c100Pct", "N25100Pct", "N2c100Pct", "xn25p", "xnvent", "xnmainpt", "ctstd", "spcn25", "sfxven", "swf", "sawfb", "fxvent", "t25t", "ps3t", "dps3dwt", "pcn2rt", "pcn25rt"], ctab1_default, 0, 0, 0, 0, 0, 0, 0, [0 1], [0 1], [0 1], [0 1], [0 1], ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default, ctab1_default);
 ACSUPPLY = tlist(["sys_acsup", "ltank", "lengine", "acbst", "acmbst", "motor"], pipeMV_default, pipeMV_default, cpmps_default, cpmps_default, or_default);
 VENLOAD = tlist(["sys_venload", "act_c", "ehsv", "ehsv_klk", "ehsv_powlk", "rline", "hline", "vo_rcham", "vo_hcham"], actuator_a_c_default, fehsv2_default, 0, 0, pipeVM_default, pipeVM_default, vol_default, vol_default);
@@ -304,6 +330,7 @@ function geo_write(file_name, g)
     mfprintf(fid, 'G.venload.rline.%s\n', pipe_fstring(g.venload.rline));
     mfprintf(fid, 'G.acsupply.ltank.%s\n', pipe_fstring(g.acsupply.ltank));
     mfprintf(fid, 'G.acsupply.lengine.%s\n', pipe_fstring(g.acsupply.lengine));
+
     mfprintf(fid, 'G.acsupply.acmbst.%s\n', cpmps_fstring(g.acsupply.acmbst));
     mfprintf(fid, 'G.acsupply.acbst.%s\n', cpmps_fstring(g.acsupply.acbst));
     mfprintf(fid, 'G.acsupply.motor.%s\n', or_fstring(g.acsupply.motor));
@@ -394,6 +421,7 @@ end
 dT = scs_m.props.tol(4);
 mprintf('Ready to play...press the right arrow icon on %s diagram at top.\n', root);
 
+editor('./Callbacks/StopFcn_'+root+'.sce') //dag 6/11/2019
 //scicos_simulate(scs_m);
 //scs_m.props.context
 

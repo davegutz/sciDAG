@@ -447,14 +447,14 @@ function [x,y,typ] = CPMPD(job, arg1, arg2)
     end
 endfunction
 
-function [blkcall] = callblk_cpmps(blk, rpm, ps, Q)
+function [blkcall] = callblk_cpmps(blk, rpm, ps, Wf)
     // Call compiled funcion cpmps that is scicos_block blk
     blk.inptr(1) = rpm;
     blk.inptr(2) = ps;
-    blk.inptr(3) = Q;
+    blk.inptr(3) = Wf;
     blkcall.rpm = rpm;
     blkcall.ps = ps;
-    blkcall.Q = Q;
+    blkcall.Wf = Wf;
     blkcall.sg = blk.rpar(1);
     //    blk = callblk(blk, 0, 0);
     //    blk = callblk(blk, 1, 0);
@@ -463,14 +463,14 @@ function [blkcall] = callblk_cpmps(blk, rpm, ps, Q)
     blkcall.pd = blk.outptr(1);
     blkcall.dP = blk.outptr(2);
 endfunction
-function [blkcall] = callblk_cpmpd(blk, rpm, pd, Q)
+function [blkcall] = callblk_cpmpd(blk, rpm, pd, Wf)
     // Call compiled funcion cpmps that is scicos_block blk
     blk.inptr(1) = rpm;
     blk.inptr(2) = pd;
-    blk.inptr(3) = Q;
+    blk.inptr(3) = Wf;
     blkcall.rpm = rpm;
     blkcall.ps = pd;
-    blkcall.Q = Q;
+    blkcall.Wf = Wf;
     blkcall.sg = blk.rpar(1);
     //    blk = callblk(blk, 0, 0);
     //    blk = callblk(blk, 1, 0);

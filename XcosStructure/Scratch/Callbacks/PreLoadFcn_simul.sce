@@ -94,7 +94,7 @@ G.ven.reg.alr = max((sqr(dlh) - sqr(dlr)) * %pi / 4., 0.);
 G.ven.reg.ar = max((sqr(dh) - sqr(dr)) * %pi / 4., 0.);
 G.ven.reg.asl = 0;
 clear dh dlh dlr dld dr
-G.ven.reg.c = 0.75;
+G.ven.reg_cbase = 0.75;
 G.ven.reg.cd = 0.61;
 G.ven.reg.cp = 0;
 G.ven.reg.fs = -15.9-12.;
@@ -113,7 +113,7 @@ G.ven.reg.ad.tb = [xh ad];
 clear xh as ad
 
 // Pump actuator
-G.ven.pact.c_ = 100.;
+G.ven.pact.c_ = 72.;  //* TM R2000AE1031 *//* match c=100 for kvis=1.3 and double book-keep */  dag 6/1/2019
 G.ven.pact.cd_ = .61;
 G.ven.pact.ab = 0.;
 G.ven.pact.ah = (.85)^2*%pi/4;
@@ -144,25 +144,25 @@ G.ven.vdpp.cdv = 3.1024;
 // VEN Unit Linkages
 // Degrees pump position
 yxpump = [0., .5, 1.,..
- 2., 3., 4., 5., 6.,..
- 7., 8., 9., 10., 11.,..
- 12., 13., 14., 15., 16.,..
- 17., 18., 19., 20., 21.,..
- 21.7, 22., 23., 24., 25., 26.];
+2., 3., 4., 5., 6.,..
+7., 8., 9., 10., 11.,..
+12., 13., 14., 15., 16.,..
+17., 18., 19., 20., 21.,..
+21.7, 22., 23., 24., 25., 26.];
 // Return spring force, in-lbf
 ytqrs = [732.2, 723.1, 713.7,..
- 694., 673.1, 651.4, 628.7, 605.3,..
- 581.2, 556.4, 531.2, 505.4, 479.3,..
- 452.9, 426.1, 399.1, 371.1, 344.6,..
- 317.9, 289.6, 262.1, 234.5, 207.,..
- 187.8, 179.6, 152.2, 124.9, 98.8, 70.9];
+694., 673.1, 651.4, 628.7, 605.3,..
+581.2, 556.4, 531.2, 505.4, 479.3,..
+452.9, 426.1, 399.1, 371.1, 344.6,..
+317.9, 289.6, 262.1, 234.5, 207.,..
+187.8, 179.6, 152.2, 124.9, 98.8, 70.9];
 // Pressure force gain, in-lbf/psi
 ytqa = [1.392, 1.386, 1.380,..
- 1.366, 1.352, 1.336, 1.320, 1.303,..
- 1.284, 1.264, 1.244, 1.222, 1.199,..
- 1.176, 1.151, 1.125, 1.098, 1.070,..
- 1.042, 1.012, 0.981, 0.949, 0.916,..
- 0.892, 0.882, 0.847, 0.811, 0.774, 0.736};
+1.366, 1.352, 1.336, 1.320, 1.303,..
+1.284, 1.264, 1.244, 1.222, 1.199,..
+1.176, 1.151, 1.125, 1.098, 1.070,..
+1.042, 1.012, 0.981, 0.949, 0.916,..
+0.892, 0.882, 0.847, 0.811, 0.774, 0.736};
 G.ven.vlink.ctqpv = 0.4418;
 G.ven.vlink.cva = 1.588;
 G.ven.vlink.cftpa = 0.567*0.7;
@@ -207,12 +207,12 @@ clear x a
 G.ven.rrv.ah.tb = [0 0;1 0];
 
 // VEN volumes
-//G.ven.vo_pcham.vol = 3.2; // Match Simulink
-G.ven.vo_pcham.vol = 1.6; // Match c-code
+G.ven.vo_pcham.vol = 3.2; // Match Simulink  dag 6/11/2019
+//G.ven.vo_pcham.vol = 1.6; // Match c-code
 G.ven.vo_px.vol = 0.2;
 
 // Bias %piston
-G.ven.bias.c_ = .7;
+G.ven.bias_cbase = .7;
 G.ven.bias.cd_ = .61;
 G.ven.bias.ab = 0.;
 G.ven.bias.ah = (.538)^2*%pi/4;
@@ -304,9 +304,6 @@ G.ifc.ln_p3s.a = sqr(0.1875)*%pi/4;
 G.ifc.ln_p3s.vol = G.ifc.ln_p3s.l*G.ifc.ln_p3s.a; 
 G.ifc.ln_p3s.n = 1;
 G.ifc.ln_p3s.c = .06;
-if MOD.zeroP3lineDamp then
-    G.ifc.ln_p3s.c = 0;
-end
 //vo_p1c_on = 14;
 //vo_p1c_so = 6.6;
 G.ifc.a_p3s.ao = sqr(.0135)*%pi/4;
@@ -479,7 +476,7 @@ G.ebp.inlet.n = 3;
 G.ebp.inlet.vol = 88.7;
 G.ebp.inlet.l = 30;
 G.ebp.inlet.a = G.ebp.inlet.vol/G.ebp.inlet.l;
-G.ebp.inlet.c = 0;
+G.ebp.inlet.c = 0.02; // dag 5/25/2019
 G.ebp.or_filt.cd = 0.61;
 //G.ebp.or_filt.ao = or_wptoa(52000, 2, 0, G.ebp.or_filt.cd, FP.sg);
 // dampen 1000 Hz mode in filter
@@ -501,12 +498,12 @@ G.acsupply.ltank.l = 6;
 G.acsupply.ltank.a = 2.805521;
 G.acsupply.ltank.vol = G.acsupply.ltank.l*G.acsupply.ltank.a;
 G.acsupply.ltank.n = 1;
-G.acsupply.ltank.c = 0.001;  // 2% damping
+G.acsupply.ltank.c = 0.01;  // dag 5/27/2019
 G.acsupply.lengine.l = 49.213;
 G.acsupply.lengine.a = %pi*(1.929/2)^2;
 G.acsupply.lengine.vol = G.acsupply.lengine.l * G.acsupply.lengine.a;
 G.acsupply.lengine.n = 9;
-G.acsupply.lengine.c = 0.0005; // 2% damping
+G.acsupply.lengine.c = 0.005; // dag 5/25/2019
 // G.acsupply.a_drop.Do = ; // see InitFcn
 //G.acsupply.a_drop.cd = 0.999;
 //G.acsupply.acbst.Npump = -999; // not applicable
@@ -544,14 +541,15 @@ G.venload.act_c.ar = 7.443421;
 //G.venload.act_c.vol_head_mech = 38.1; // B. Noyes 6/19/1992
 //G.venload.act_c.vol_rod_mech = 1; // arbitrarily small
 G.venload.act_c.ab = 0.000763; // B. Noyes 8/92.
-G.venload.act_c.c_ = 40.; // A little bit to quiet down.
+//G.venload.act_c.c_ = 40.; // A little bit to quiet down.
+G.venload.act_c.c_ = 0.002; // dag 6/6/2019
 G.venload.act_c.cd_ = .85; // B. Noyes 4/92.
-G.venload.act_c.mext = 200.; // Guess.
+G.venload.act_c.mext = 24.62;        // M. Klein 4/18/2017 // dag 6/6/2019
 G.venload.act_c.mact = 0;
 //G.venload.act_c.m = G.venload.act_c.mext + G.venload.act_c.mact;
 G.venload.act_c.xmax = 5.265;
 G.venload.act_c.xmin = 0;
-G.venload.act_c.fstf = 20; // Small friction.
+G.venload.act_c.fstf = 20; // Small friction. // dag 6/6/2019
 G.venload.act_c.fdyf = G.venload.act_c.fstf;
 //G.venload.act_c.eps = 1e-3; // boundary layer stiction
 //G.venload.act_c.vmax = 1000;
@@ -561,7 +559,7 @@ sfric_c = G.venload.act_c.fstf;
 dfric_c = G.venload.act_c.fdyf;
 sfric_o = G.venload.act_c.fstf;
 dfric_o = G.venload.act_c.fdyf;
-// TODO: add friction to actuator_a_c
+// TODO: add friction tables to actuator_a_c
 //G.venload.act_c.FSTF_C = [4.7*(ones(1,4) - [10 9.9 8.1 8]/100); sfric_c*ones(1,4)];
 //G.venload.act_c.FDYF_C = [4.7*(ones(1,4) - [10 9.9 8.1 8]/100); dfric_c*ones(1,4)];
 //G.venload.act_c.FSTF_O = [4.7*(ones(1,4) - [10 9.9 8.1 8]/100); sfric_c sfric_o sfric_o sfric_c];
@@ -690,4 +688,16 @@ G.guess.px.tb = [xfx     [794.2     806.9     866.0     1086      1181      1366
 G.guess.phead.tb = [xfx  [1180      791.8     681.2     891.8     851.2     971.8     989.8     920       884.4     753.7     650.5]'];
 clear xfx
 
-mprintf('Completed %s\n', sfilename()) 
+if MOD.zeroP3lineDamp then
+    G.ifc.ln_p3s.c = 0;
+    G.acsupply.ltank.c = 0;
+    G.acsupply.lengine.c = 0;
+    G.ebp.faboc.c = 0;
+    G.ebp.ocm1.c = 0;
+    G.ebp.ocm2.c = 0;    
+    G.ebp.inlet.c = 0;
+    G.mline.ln_vs.c = 0;
+end
+
+
+mprintf('Completed %s\n', sfilename())

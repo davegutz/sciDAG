@@ -1,3 +1,24 @@
+// Copyright (C) 2019  - Dave Gutz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+// Jun 7, 2019    DA Gutz     Created
+//
 // Copyright (c_) 2019 - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,6 +63,9 @@
 //                          from http://www.scicos.org/ScicosCBlockTutorial.pdf
 // Mar 10, 2019     DA Gutz     Add actuator_a_b
 // Mar 30, 2019     DA Gutz     Add actuator_a_c
+// Jun 03, 2019     DA Gutz     Correct friction in actuator_a_b dag
+// Jun 03, 2019     DA Gutz     Correct friction in all dag
+// Jun 06, 2019     DA Gutz     Friction function calls
 // 
 #include <scicos_block4.h>
 #include <math.h>
@@ -49,10 +73,20 @@
 #include <stdlib.h>
 #include "table.h"
 #include "hyd_mod.h"
+
+// Zero crossing parameters
+#define surf0   (GetGPtrs(blk)[0])
+#define surf1   (GetGPtrs(blk)[1])
+#define surf2   (GetGPtrs(blk)[2])
+#define surf3   (GetGPtrs(blk)[3])
+#define surf4   (GetGPtrs(blk)[4])
+#define mode0   (GetModePtrs(blk)[0])
+
+// I/O
 #define r_IN(n, i)  ((GetRealInPortPtrs(blk, n+1))[(i)])
 #define r_OUT(n, i) ((GetRealOutPortPtrs(blk, n+1))[(i)])
 
-// parameters
+// Other inputs
 #define sg              (GetRparPtrs(blk)[0]) // Fluid specific gravity
 #define LINCOS_OVERRIDE (GetRparPtrs(blk)[1]) // flag to disable friction for linearization
 
@@ -62,22 +96,6 @@
 #define Xdot    (GetState(blk)[1])      // Velocity state
 #define A       (GetDerState(blk)[1])   // Derivative of velocity
 
-// other constants
-#define surf0   (GetGPtrs(blk)[0])
-#define surf1   (GetGPtrs(blk)[1])
-#define surf2   (GetGPtrs(blk)[2])
-#define surf3   (GetGPtrs(blk)[3])
-#define surf4   (GetGPtrs(blk)[4])
-#define mode0   (GetModePtrs(blk)[0])
-
-// Zero-crossing modes
-#define mode_stop_max 3
-#define mode_stop_min -3
-#define mode_move_plus 2
-#define mode_move_neg -2
-#define mode_stuck_plus 1
-#define mode_stuck_neg -1
-#define mode_lincos_override 0
 
 // **********head_b**********************************************
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
@@ -133,40 +151,7 @@ void head_b(scicos_block *blk, int flag)
     f_f = (pf - ph) * f_an * \
             (1. + 16. * SQR(f_cf * X / f_dn));
     uf  = ae * (ph - plx) + f_f - fs - fb - (ks + kb)*X - Xdot*c_;
-
-    stops = 0;
-    if(mode0==mode_lincos_override)
-    {
-        uf_net = uf;
-    }
-    else if(mode0==mode_move_plus)
-    {
-//        uf_net = uf - fdyf;
-        uf_net = uf - fstf;
-    }
-    else if(mode0==mode_move_neg)
-    {
-//        uf_net = uf + fdyf;
-        uf_net = uf + fstf;
-    }
-    else if(mode0==mode_stop_min)
-    {
-        uf_net = max(uf - fstf, 0);
-        stops = 1;
-    }
-    else if(mode0==mode_stuck_plus)
-    {
-        uf_net = max(uf - fstf, 0);
-    }
-    else if(mode0==mode_stop_max)
-    {
-        uf_net = min(uf + fstf, 0);
-        stops = 1;
-    }
-    else if(mode0==mode_stuck_neg)
-    {
-        uf_net = min(uf + fstf, 0);
-    }
+    uf_net = friction_balance(mode0, uf, fstf, fdyf, &stops);
 
     // Different passes
     switch (flag)
@@ -210,30 +195,12 @@ void head_b(scicos_block *blk, int flag)
 
         case 9:
             // compute zero crossing surfaces and set modes
-            surf0 = Xdot;
-			surf1 = uf-fstf;
-			surf2 = uf+fstf;
-            surf3 = X-xmin;
-            surf4 = X-xmax;
-
+            friction_surf(&surf0, &surf1, &surf2, &surf3, &surf4, 
+                    Xdot, uf, fstf, X, xmin, xmax);
             if (get_phase_simulation() == 1)
             {
-                if(LINCOS_OVERRIDE && stops==0)
-                    mode0 = mode_lincos_override;
-                else if(surf3<=0 && surf1<=0)
-                    mode0 = mode_stop_min;
-                else if(surf4>=0 && surf2>=0)
-                    mode0 = mode_stop_max;
-                else if(uf>0)
-                {
-                    if(surf1<=0) mode0 = mode_stuck_plus;
-                    else mode0 = mode_move_plus; 
-                }
-                else
-                { 
-                    if(surf2>=0) mode0 = mode_stuck_neg;
-                    else mode0 = mode_move_neg; 
-                 }
+               mode0 = friction_mode(LINCOS_OVERRIDE, stops, surf0,
+                                surf1, surf2, surf3, surf4, Xdot, uf);
             }
             break;
     }
@@ -298,39 +265,9 @@ void actuator_a_b(scicos_block *blk, int flag)
     double m_ = mact + mext;
     
     // compute info needed for all passes
-    if(flag==-1) X = xol;   // Initialization call
+    if(flag==-1) Xdot = xol;   // Initialization call
     uf = (pr - per)*ar - (ph - per)*ah - fext - Xdot*c_;
-    stops = 0;
-    if(mode0==mode_lincos_override)
-    {
-        uf_net = uf;
-    }
-    else if(mode0==mode_move_plus)
-    {
-        uf_net = uf - fdyf;
-    }
-    else if(mode0==mode_move_neg)
-    {
-        uf_net = uf + fdyf;
-    }
-    else if(mode0==mode_stop_min)
-    {
-        uf_net = max(uf - fstf, 0);
-        stops = 1;
-    }
-    else if(mode0==mode_stuck_plus)
-    {
-        uf_net = max(uf - fstf, 0);
-    }
-    else if(mode0==mode_stop_max)
-    {
-        uf_net = min(uf + fstf, 0);
-        stops = 1;
-    }
-    else if(mode0==mode_stuck_neg)
-    {
-        uf_net = min(uf + fstf, 0);
-    }
+    uf_net = friction_balance(mode0, uf, fstf, fdyf, &stops);
 
     // Different passes
     switch (flag)
@@ -350,13 +287,15 @@ void actuator_a_b(scicos_block *blk, int flag)
             }
             else
             {
-                V = 0;
+                Xdot = 0; // dag 6/4/2019
+                V = Xdot;  // dag 6/4/2019
                 A = 0;
-                Xdot = 0;
             }
             break;
 
         case -1:
+            V = Xdot;
+            //break;   // dag 6/4/2019
         case 1:
             // compute the outputs of the block
             wfb = OR_APTOW(ab, pr, ph, cd_, sg);
@@ -372,30 +311,12 @@ void actuator_a_b(scicos_block *blk, int flag)
 
         case 9:
             // compute zero crossing surfaces and set modes
-            surf0 = Xdot;
-			surf1 = uf-fstf;
-			surf2 = uf+fstf;
-            surf3 = X-xmin;
-            surf4 = X-xmax;
-
+            friction_surf(&surf0, &surf1, &surf2, &surf3, &surf4, 
+                    Xdot, uf, fstf, X, xmin, xmax);
             if (get_phase_simulation() == 1)
             {
-                if(LINCOS_OVERRIDE && stops==0)
-                    mode0 = mode_lincos_override;
-                else if(surf3<=0 && surf1<=0)
-                    mode0 = mode_stop_min;
-                else if(surf4>=0 && surf2>=0)
-                    mode0 = mode_stop_max;
-                else if(uf>0)
-                {
-                    if(surf1<=0) mode0 = mode_stuck_plus;
-                    else mode0 = mode_move_plus; 
-                }
-                else
-                { 
-                    if(surf2>=0) mode0 = mode_stuck_neg;
-                    else mode0 = mode_move_neg; 
-                 }
+               mode0 = friction_mode(LINCOS_OVERRIDE, stops, surf0,
+                                surf1, surf2, surf3, surf4, Xdot, uf);
             }
             break;
     }
@@ -403,6 +324,9 @@ void actuator_a_b(scicos_block *blk, int flag)
 // **********end actuator_a_b**********************************************
 
 //*************actuator_a_c**************************************
+#define surf5   (GetGPtrs(blk)[4])
+#define surf6   (GetGPtrs(blk)[5])
+
 // Object parameters.  1st index is 1-based, 2nd index is 0-based.
 #define ab      (*GetRealOparPtrs(blk,1))   // Calculated bleed area, sqin
 #define ah      (*GetRealOparPtrs(blk,2))   // Calculated actuator head area, sqin
@@ -448,41 +372,11 @@ void actuator_a_c(scicos_block *blk, int flag)
     // compute info needed for all passes
     if(flag==-1) X = xol;   // Initialization call
     uf = (pr - per)*ar - (ph - per)*ah - fext - Xdot*c_;
-    stops = 0;
-    if(mode0==mode_lincos_override)
-    {
-        uf_net = uf;
-    }
-    else if(mode0==mode_move_plus)
-    {
-        uf_net = uf - fdyf;
-    }
-    else if(mode0==mode_move_neg)
-    {
-        uf_net = uf + fdyf;
-    }
-    else if(mode0==mode_stop_min)
-    {
-        uf_net = max(uf - fstf, 0);
-        stops = 1;
-    }
-    else if(mode0==mode_stuck_plus)
-    {
-        uf_net = max(uf - fstf, 0);
-    }
-    else if(mode0==mode_stop_max)
-    {
-        uf_net = min(uf + fstf, 0);
-        stops = 1;
-    }
-    else if(mode0==mode_stuck_neg)
-    {
-        uf_net = min(uf + fstf, 0);
-    }
+    uf_net = friction_balance(mode0, uf, fstf, fdyf, &stops);
 
     // Different passes
     switch (flag)
-    {
+   {
         case 0:
             // compute the derivative of the continuous time states
             // TODO:  insert xol logic here
@@ -505,6 +399,8 @@ void actuator_a_c(scicos_block *blk, int flag)
             break;
 
         case -1:
+            V = Xdot;
+            //break;   // dag 6/4/2019
         case 1:
             // compute the outputs of the block
             wfb = OR_APTOW(ab, pr, ph, cd_, sg);
@@ -520,30 +416,12 @@ void actuator_a_c(scicos_block *blk, int flag)
 
         case 9:
             // compute zero crossing surfaces and set modes
-            surf0 = Xdot;
-			surf1 = uf-fstf;
-			surf2 = uf+fstf;
-            surf3 = X-xmin;
-            surf4 = X-xmax;
-
+            friction_surf(&surf0, &surf1, &surf2, &surf3, &surf4, 
+                    Xdot, uf, fstf, X, xmin, xmax);
             if (get_phase_simulation() == 1)
             {
-                if(LINCOS_OVERRIDE && stops==0)
-                    mode0 = mode_lincos_override;
-                else if(surf3<=0 && surf1<=0)
-                    mode0 = mode_stop_min;
-                else if(surf4>=0 && surf2>=0)
-                    mode0 = mode_stop_max;
-                else if(uf>0)
-                {
-                    if(surf1<=0) mode0 = mode_stuck_plus;
-                    else mode0 = mode_move_plus; 
-                }
-                else
-                { 
-                    if(surf2>=0) mode0 = mode_stuck_neg;
-                    else mode0 = mode_move_neg; 
-                 }
+               mode0 = friction_mode(LINCOS_OVERRIDE, stops, surf0,
+                                surf1, surf2, surf3, surf4, Xdot, uf);
             }
             break;
     }

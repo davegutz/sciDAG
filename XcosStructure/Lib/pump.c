@@ -41,7 +41,7 @@
 // Jan 27, 2019     DA Gutz     Created
 //                          from http://www.scicos.org/ScicosCBlockTutorial.pdf
 // Mar 10, 2019     DA Gutz     Add actuator_a_b
-// 
+// Jun 12, 2019     DA Gutz     Change Q to Wf on CPMP
 #include <scicos_block4.h>
 #include <math.h>
 #include <stdio.h>
@@ -131,7 +131,7 @@ void vdp(scicos_block *blk, int flag)
 // inputs
 #define rpm     (r_IN(0,0))     // Pump speed, rpm
 #define ps      (r_IN(1,0))     // Supply pressure, psia
-#define Q       (r_IN(2,0))     // Supply flow, cis
+#define Wf      (r_IN(2,0))     // Supply flow, cis
 
 // outputs
 #define pd      (r_OUT(0,0))    // Discharge pressure, psia
@@ -144,8 +144,10 @@ void cpmps(scicos_block *blk, int flag)
     double gpm;
     double dP_dmd;
     double r22;
+    double Q;
 
     // compute info needed for all passes
+    Q = Wf/DWDC(sg);
     gpm = Q / 3.85;
     r22 = r2*r2;
     fc = 5.851 * gpm / max(w2 * (r22) * rpm, 1e-12);
@@ -176,8 +178,10 @@ void cpmpd(scicos_block *blk, int flag)
     double gpm;
     double dP_dmd;
     double r22;
+    double Q;
 
     // compute info needed for all passes
+    Q = Wf/DWDC(sg);
     gpm = Q / 3.85;
     r22 = r2*r2;
     fc = 5.851 * gpm / max(w2 * (r22) * rpm, 1e-12);

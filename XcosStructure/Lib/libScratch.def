@@ -6,6 +6,9 @@ EXPORTS
 	intgl
 	friction
 	hole
+	friction_surf
+	friction_balance
+	friction_mode
 	lim_int
 	cor_aptow
 	cor_awpstopd

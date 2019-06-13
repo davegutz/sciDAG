@@ -93,7 +93,7 @@ exec('./Callbacks/regwin_a.sci', -1);
 clear INI
 
 INI.wf36 = 9060;
-INI.pamb = 14.7;
+INI.pamb = 14.696;
 //INI.p1so = 1978.3;
 INI.awfb = 1e-5;
 
@@ -114,7 +114,7 @@ INI.ven.x3_xbi  = INI.ven.guess.x3_xbi;
 INI.ven.x4_pd = INI.ven.guess.x4_pd;
 INI.ven.x5_disp = INI.ven.guess.x5_disp;
 INI.ven.x_xreg = INI.ven.guess.x_xreg;
- 
+
 INI.ven.pr = 241.1401;
 INI.ven.ps = 241.0706;
 INI.xn25 = INI.ven.guess.xn25;
@@ -141,4 +141,4 @@ INI.single_pass = 0;
 //
 
 [INI, G] = solve_VEN(INI, G, FP);
-INI = order_all_fields(INI); 
+INI = order_all_fields(INI);

@@ -64,10 +64,11 @@ end
 //exec('./Callbacks/Solve_start04alone.sce', -1);
 
 mv_x = DI.ifc.Calc.Comp.fmv.mv.Result.x; 
+mv_xin = mv_x;
 x0 = mv_x.values(1,1);
 xE = mv_x.values($,1);
-mv_xin = struct('time', [0 0.011000 .011001 Tf]', 'values', [x0 x0 xE xE]');
-//mv_xin.values(:,1) = x0; // freeze
+//mv_xin = struct('time', [0 0.011000 .011001 Tf]', 'values', [x0 x0 xE xE]');
+// mv_xin.values(:,1) = x0; mv_x = mv_xin;// freeze
 mprintf('mv_x=%8.6f-%8.6f\n', mv_x.values(1,1), mv_x.values($,1));
 MOD.initialized = %t;
 
@@ -103,6 +104,10 @@ if ic.wf36 > 900 then
 else
     ic.ifc.check.a = G.ifc.check.ad.tb(4,3);
 end
+
+// Dampings defined at .46 centistokes, JP5 at 250F per C. Hopkins 8/10/92
+G.ven.reg.c  = G.ven.reg_cbase * FP.kvis / 0.46;  // dag 6/1/2019
+G.ven.bias.c_ = G.ven.bias_cbase * FP.kvis / 0.46; // dag 6/1/2019
 
 // Clear save data so not fooled by plots if MOD.logAll=%f
 clear VDATA IDATA MDATA ADATA LDATA PALL XALL WALL YDATA

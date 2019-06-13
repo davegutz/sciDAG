@@ -17,7 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// Jan 14, 2019    DA Gutz        Created
+// Jan 14, 2019     DA Gutz         Created
+// Jun 06, 2019     DA Gutz         Add friction functions
 // 
 #ifndef hyd_mod_h
 #define hyd_mod_h
@@ -33,7 +34,7 @@
                  (KVIS) * (WF) / ((PS) - (PD))
 #define LA_LRECPTOW(L, R, E, C, PS, PD, KVIS)\
                     (4.698e8 * (R) *((C)*(C)*(C)) / (KVIS) /\
-		     (L) * (1. + 1.5 * SQR((E)/(C))) * ((PS) - (PD)))
+                                     (L) * (1. + 1.5 * SQR((E)/(C))) * ((PS) - (PD)))
 
 #define OR_APTOW(A, PS, PD, CD, SG)\
                  ((A) * 19020. * (CD) * SSQRT((SG) * ((PS) - (PD))))
@@ -53,5 +54,23 @@ double hole(double x, double d);
 static double f_lqx[]   = {1.2, 2.5, 4.5, 7.5,\
                             .61, .65, .88, .95};
 static int n_lqxcf = 4; // Length of table above
+
+// Friction functions
+// Zero-crossing modes
+#define mode_stop_max 3
+#define mode_stop_min -3
+#define mode_move_plus 2
+#define mode_move_neg -2
+#define mode_stuck_plus 1
+#define mode_stuck_neg -1
+#define mode_lincos_override 0
+void friction_surf(double *surf0, double *surf1, double *surf2,
+    double *surf3, double *surf4, const double Xdot, const double uf,
+    const double fstf, const double X, const double xmin, const double xmax);
+double friction_balance(const int mode, const double uf, const double fstf,
+    const double fdyf, int *stops);
+int friction_mode(const double LINCOS_OVERRIDE, const int stops, const double surf0,
+    const double surf1, const double surf2, const double surf3, const double surf4,
+    const double Xdot, const double uf);
 
 #endif

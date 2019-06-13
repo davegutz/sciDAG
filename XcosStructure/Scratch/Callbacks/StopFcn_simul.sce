@@ -5,7 +5,7 @@
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// furnished to do so, suvebject to the following conditions:
 //
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
@@ -106,6 +106,8 @@ if MOD.plotEnable  & Tf>1e-6 then
     XNMAIN = struct('time', tBDATA, 'values', BDATA.values(:,15));
     XNVEN = struct('time', tBDATA, 'values', BDATA.values(:,16));
     PSMFP = struct('time', tBDATA, 'values', BDATA.values(:,17));
+    WFFILT = struct('time', tBDATA, 'values', BDATA.values(:,18));  // dag 5/25/2019
+    WFENGINEb = struct('time', tBDATA, 'values', BDATA.values(:,11));  // dag 5/25/2019
 
     // VEN
     tVDATA = VDATA.time(:,1);
@@ -130,24 +132,40 @@ if MOD.plotEnable  & Tf>1e-6 then
     WFVX_RRV =  struct('time', tVDATA, 'values', VDATA.values(:,22));
     WFR_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,23));
     WFS_VEN =  struct('time', tVDATA, 'values', VDATA.values(:,24));
-    SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,25));
-    TRI_X = struct('time', tVDATA, 'values', VDATA.values(:,26));
-    BIAS_X = struct('time', tVDATA, 'values', VDATA.values(:,27));
-    X_PACT  = struct('time', tVDATA, 'values', VDATA.values(:,28));
-    X_RRV  = struct('time', tVDATA, 'values', VDATA.values(:,29));
-    X_VEHSV  = struct('time', tVDATA, 'values', VDATA.values(:,30));
-    BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,31));
-    XVEN = struct('time', tVDATA, 'values', VDATA.values(:,32));
-    VVEN = struct('time', tVDATA, 'values', VDATA.values(:,33));
+    ACTSYS_WFH = struct('time', tVDATA, 'values', VDATA.values(:,25));
+    ACTSYS_WFR = struct('time', tVDATA, 'values', VDATA.values(:,26));
+    SV_POS = struct('time', tVDATA, 'values', VDATA.values(:,27));
+    TRI_X = struct('time', tVDATA, 'values', VDATA.values(:,28));
+    BIAS_X = struct('time', tVDATA, 'values', VDATA.values(:,29));
+    X_PACT  = struct('time', tVDATA, 'values', VDATA.values(:,30));
+    X_RRV  = struct('time', tVDATA, 'values', VDATA.values(:,31));
+    X_VEHSV  = struct('time', tVDATA, 'values', VDATA.values(:,32));
+    BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,33));
+    XVEN = struct('time', tVDATA, 'values', VDATA.values(:,34));
+    VVEN = struct('time', tVDATA, 'values', VDATA.values(:,35));
 
     // VEN Load
     tLDATA = LDATA.time(:,1);
+    VEWFHD = struct('time', tLDATA, 'values', LDATA.values(:,1));
+    VEWFHx = struct('time', tLDATA, 'values', LDATA.values(:,2));
+    VEWFRD = struct('time', tLDATA, 'values', LDATA.values(:,3));
+    VEWFSH = struct('time', tLDATA, 'values', LDATA.values(:,4));
+    VEWFRx = struct('time', tLDATA, 'values', LDATA.values(:,5));
+    VEWFSR = struct('time', tLDATA, 'values', LDATA.values(:,6));
+    vewfhd = DV.ehsv.SPOOL.wf.wfhd;
+    vewfh = DV.ehsv.SPOOL.wf.wfh;
+    vewfrd = DV.ehsv.SPOOL.wf.wfrd;
+    vewfsh = DV.ehsv.SPOOL.wf.wfsh;
+    vewfr = DV.ehsv.SPOOL.wf.wfr;
+    vewfsr = DV.ehsv.SPOOL.wf.wfsr;
     VEV = struct('time', tLDATA, 'values', LDATA.values(:,16));
     VEMA = struct('time', tLDATA, 'values', LDATA.values(:,17));
     VEX = struct('time', tLDATA, 'values', LDATA.values(:,18));
     VEXD = struct('time', tLDATA, 'values', LDATA.values(:,19));
-    VEWFH = struct('time', tLDATA, 'values', LDATA.values(:,20));
-    VEWFR = struct('time', tLDATA, 'values', LDATA.values(:,21));
+    VEWFHx = struct('time', tLDATA, 'values', LDATA.values(:,20));// dag 6/11/2019
+//    VEWFH = ACTSYS_WFH;// dag 6/11/2019
+    VEWFRx = struct('time', tLDATA, 'values', LDATA.values(:,21));  // dag 6/11/2019
+//    VEWFR = ACTSYS_WFR;// dag 6/11/2019
     VEWFS = struct('time', tLDATA, 'values', LDATA.values(:,22));
     VEWFD = struct('time', tLDATA, 'values', LDATA.values(:,23));
 
@@ -182,12 +200,11 @@ if MOD.plotEnable  & Tf>1e-6 then
     p2mp3 = p2; p2mp3.values = p2.values-p3.values;
     pd = DI.ifc.PD;
     pnozin = DI.eng.pnozin;
-    mv_xin = DI.ifc.Calc.Comp.fmv.mv.Result.x;
+    mv_x = DI.ifc.Calc.Comp.fmv.mv.Result.x;
     hs_x = DI.ifc.Calc.Comp.hs.Result.x;
     mvtv_x = DI.ifc.Calc.Comp.mvtv.Result.x;
     start_x = mvtv_x;start_x.values = start_x.values*G.ven.vsv.xmax;
     vdpp_rpm = DV.pump.In.rpm;
-    vdpp_pd = DV.pd;
     vdpp_ps = DV.I.ps_psia;
     vdpp_disp = DV.pump.In.disp;
     vdpp_wf = DV.pump.Result.wf;
@@ -196,7 +213,10 @@ if MOD.plotEnable  & Tf>1e-6 then
     vlink_ftpa = DV.pumpAct.ftpa;
     pact_fexth = DV.pumpAct.pa_fexth;
     pact_wfr = DV.pumpAct.wfr;
+    pact_tqrs = DV.pumpAct.tqrs;
+    pact_tqa = DV.pumpAct.tqa;
     tri_x = DV.reg.Result.x;
+    tri_v = DV.reg.Result.dxdt;
     vlink_wflkout = DV.wflkout;
     tri_px = DV.reg.In.px;
     vload_wfload = DV.wfload;
@@ -205,25 +225,33 @@ if MOD.plotEnable  & Tf>1e-6 then
     rrv_wfd = DV.rrv.Result.wf.wfd;
     rrv_wfvx = DV.rrv.Result.wf.wfvx;
     rrv_x = DV.rrv.Result.x;
-    bias_fext = DV.bias.In.fexth;
     bias_wfve = DV.bias.Result.wf.wfve;
     bias_x = DV.bias.Result.x;
     tri_wfse = DV.reg.Result.wf.wfse;
     tri_wfs = DV.reg.Result.wf.wfs;
     start_wfs = DV.reg.Result.wf.wfs; start_wfs.values = start_wfs.values*0;
+    if MOD.atWork then
+        pact_tqpv = DV.pumpAct.tqpv;
+        pact_tqc = DV.pumpAct.tqc;
+        pact_uf_net = DV.pumpAct.uf_net;
+        tri_uf = DV.reg.Result.force.uf;
+        tri_uf_net = DV.reg.Result.uf_net;
+        tri_uf_mod = DV.reg.Result.uf_mod;
+    end
 
     // EBOOST
-    pb1 = DV.I.ps_psia;
-    pb2 =  DV.I.pr_psia;
     pmpin = DI.supply.Calc.PMPIN;
     pmainp = DI.supply.Calc.PMAINP;
     poc = DI.supply.Calc.POC;
     wf1p = DI.supply.WF1P;
-    wfb2 = DI.supply.Calc.WFB2;
     wfoc = DI.supply.Calc.WFOC;
     xnven = DI.supply.In.XN25; xnven.values = xnven.values/G.eng.N25100Pct*G.eng.xnvent;
     xnmain = DI.supply.In.XN25; xnmain.values = xnmain.values/G.eng.N25100Pct*G.eng.xnmainpt;
-
+    if MOD.atWork then
+        dpmfp = p1;   dpmfp.values(:,1) = dpmfp.values(:,1)-pmpin.values(:,1);  // dag 5/23/2019
+    end
+    dpboost = DI.bvs.Calc.DPBOOST;  // dag 5/25/2019
+    
     // ACBOOST
     ACmotivepull = DI.ac.Mon_ABOOST.ACmotivepull;
     pacbmix = DI.ac.Mon_ABOOST.pacbmix;
@@ -239,15 +267,9 @@ if MOD.plotEnable  & Tf>1e-6 then
     wftank = DI.ac.Mon_ABOOST.wftank;
 
     x_vehsv = DV.ehsv.SPOOL.x;
-    wfs_vehsv = DV.ehsv.SPOOL.wfs;
-    wfd_vehsv = DV.ehsv.SPOOL.wfd;
     wfj_vehsv = DV.ehsv.SPOOL.wfj;
     dxdt_vehsv = DV.ehsv.SPOOL.dxdt;
-    wfh_vehsv = DV.actSys.wfh;
-    wfr_vehsv = DV.actSys.wfr;
 
-    x_ven = DV.actSys.O_4.Result.x;
-    v_ven = DV.actSys.O_4.Result.dxdt;
     phead = DV.actSys.O_4.In.ph;
     prod_ = DV.actSys.O_4.In.pr;
 
@@ -289,7 +311,7 @@ if MOD.plotEnable  & Tf>1e-6 then
 
         figs($+1) = figure("Figure_name", 'MAIN_POS', "Position", [40,80,610,600]);
         subplot(321)
-        overplot(['MV_POS', 'mv_xin'], ['r-',  'b--'], 'MV Poaition')
+        overplot(['MV_POS', 'mv_x', 'mv_xin'], ['r-',  'b--', 'k-'], 'MV Poaition')
         subplot(322)
         overplot(['HS_POS', 'hs_x'], ['r-',  'b--'], 'Head Sensor Position')
         subplot(324)
@@ -307,65 +329,82 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(331)
         overplot(['WFENGINE', 'wfengine'], ['r-',  'b--'], 'Engine Supply Flow')
         subplot(332)
-        overplot(['PACBMIX', 'pacbmix'], ['r-',  'b--'], 'Mix Pressure')
+        overplot(['PACBMIX', 'pacbmix', 'PENGINE', 'pengine'], ['r-',  'b--','k-', 'c--'], 'Mix Pressure') //dag 5/25/2019
         subplot(333)
         overplot(['WFACBST', 'wfacbst'], ['r-', 'b--'], 'Aircraft Boost Flow')
         subplot(334)
-        overplot(['PSACBST', 'psacbst', 'PDACBST', 'pdacbst'], ['r-', 'b--', 'k-', 'c--'], 'Aircraft Boost Pressures')
+        overplot(['PDACBST', 'pdacbst'], ['r-', 'b--'], 'Aircraft Boost Pressures')  // dag 5/25/2019
         subplot(335)
         overplot(['WFACMBST', 'wfacmbst'], ['r-', 'b--'], 'Aircraft Motive Boost Flow')
         subplot(336)
-        overplot(['PSACMBST', 'psacmbst', 'PDACMBST', 'pdacmbst'], ['r-', 'b--', 'k-', 'c--'], 'Aircraft Motive Boost Pressures')
+        overplot(['PDACMBST', 'pdacmbst'], ['r-', 'b--'], 'Aircraft Motive Boost Pressures')  // dag 5/25/2019
         subplot(337)
         overplot(['WFTANK', 'wftank'], ['r-', 'b--'], 'Aircraft Tank Flow')
+        subplot(338)
+        overplot(['ACMOTIVEPULL', 'ACmotivepull'], ['r-', 'b--'], 'Aircraft Motive Status')  // dag 5/25/2019
         subplot(339)
         overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
 
     end // plotAC
 
-    // Boost system plots
-    if MOD.plotBoost then
-
-        figs($+1) = figure("Figure_name", 'BOOST System', "Position", [40,140,610,600]);
-        subplot(221)
-        overplot(['DP_BOOST', 'prod_'], ['r-',  'b--'], 'Boost')
-
-    end
-
     // VEN plots
     if MOD.plotVEN then
 
-        figs($+1) = figure("Figure_name", 'VEN EHSV 1', "Position", [40,110,810,600]);
+        figs($+1) = figure("Figure_name", 'VEN EHSV 1', "Position", [40,70,810,600]);
         subplot(221)
         overplot(['PS_RLINE', 'rlineps'], ['r-', 'b--'], 'VEN EHSV Rod Pressure')
-        subplot(222)
-        overplot(['PS_HLINE', 'hlineps'], ['r-', 'b--'], 'VEN EHSV Head Pressure')
+        if MOD.atWork then
+            subplot(222)
+            overplot(['PS_HLINE', 'hlineps'], ['r-', 'b--'], 'VEN EHSV Head Pressure')
+        else
+            subplot(222)
+            overplot(['PS_HLINE'], ['r-'], 'VEN EHSV Head Pressure')
+        end
         subplot(223)
         overplot(['vdpp_pd'], ['k-'], 'VEN EHSV Pressures')
         subplot(224)
         overplot(['vdpp_ps'], ['b-'], 'VEN EHSV Pressures')
 
-        figs($+1) = figure("Figure_name", 'VEN EHSV 2', "Position", [60,115,810,600]);
+        figs($+1) = figure("Figure_name", 'VEN EHSV 2', "Position", [40,90,810,600]);
         subplot(331)
         overplot(['VEWFS', 'wfs_vehsv'], ['r-',  'b--'], 'VEN EHSV Supply Flow')
         subplot(332)
         overplot(['VEWFD', 'wfd_vehsv'], ['r-',  'b--'], 'VEN EHSV Return Flow')
         subplot(333)
-        overplot(['VEWFH', 'wfh_vehsv'], ['r-', 'b--'], 'VEN EHSV Head Flow')
+        overplot(['VEWFHx', 'wfh_vehsv'], ['r-', 'b--'], 'VEN EHSV Head Flow')// dag 6/11/2019
         subplot(334)
-        overplot(['VEWFR', 'wfr_vehsv'], ['r-', 'b--', 'k-', 'c--'], 'VEN EHSV Rod Flow')
+        overplot(['VEWFRx', 'wfr_vehsv'], ['r-', 'b--', 'k-', 'c--'], 'VEN EHSV Rod Flow')// dag 6/11/2019
         subplot(335)
         overplot(['VEMA', 'vmA'], ['r-', 'c--'], 'mA')
         subplot(336)
         overplot(['VEX', 'x_vehsv'], ['r-', 'b--'], 'VEN EHSV Position')
         subplot(337)
         overplot(['VEV', 'dxdt_vehsv'], ['r-', 'b--'], 'VEN EHSV Velocity')
-        subplot(338)
-        overplot(['rlineps', 'hlineps', 'vdpp_pd', 'vdpp_ps'], ['m-', 'c--', 'k-', 'b-'], 'VEN EHSV Pressures')
+        if MOD.atWork then
+            subplot(338)
+            overplot(['rlineps', 'hlineps', 'vdpp_pd', 'vdpp_ps'], ['m-', 'c--', 'k-', 'b-'], 'VEN EHSV Pressures')
+        else
+            subplot(338)
+            overplot(['rlineps', 'vdpp_pd', 'vdpp_ps'], ['m-', 'k-', 'b-'], 'VEN EHSV Pressures')
+        end
         subplot(339)
         overplot(['VEXD', 'VEX'], ['r-', 'c--'], 'VEN EHSV Position')
 
-        figs($+1) = figure("Figure_name", 'VEN ACT', "Position", [40,120,610,600]);
+        figs($+1) = figure("Figure_name", 'VEN EHSV 3', "Position", [60,70,810,600]);
+        subplot(321)
+        overplot(['VEWFHD', 'vewfhd'], ['r-', 'b--'], 'VEN EHSV HD flow')
+        subplot(322)
+        overplot(['VEWFRD', 'vewfrd'], ['r-', 'b--'], 'VEN EHSV RD flow')
+        subplot(323)
+        overplot(['VEWFSH', 'vewfsh'], ['r-', 'b--'], 'VEN EHSV SH flow')
+        subplot(324)
+        overplot(['VEWFSR', 'vewfsr'], ['r-', 'b--'], 'VEN EHSV SR flow')
+        subplot(325)
+        overplot(['VEWFHx', 'wfh_vehsv', 'ACTSYS_WFH', 'wfh_vact'], ['r-', 'b--', 'm-', 'k--'], 'VEN EHSV Head Flow')
+        subplot(326)
+        overplot(['VEWFRx', 'wfr_vehsv', 'ACTSYS_WFR', 'wfr_vact'], ['r-', 'b--', 'm-', 'k--'], 'VEN EHSV Rod Flow')
+
+        figs($+1) = figure("Figure_name", 'VEN ACT', "Position", [40,110,610,600]);
         subplot(221)
         overplot(['VVEN', 'v_ven'], ['r-',  'b--'], 'VEN Act Velocity')
         subplot(222)
@@ -410,6 +449,22 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(223)
         overplot(['BIAS_X', 'bias_x'], ['r-',  'b--'], 'Position')
 
+        figs($+1) = figure("Figure_name", 'TRI', "Position", [60,290,610,600]);
+        if MOD.atWork then
+            subplot(321)
+            overplot(['TRI_UF', 'tri_uf_mod'], ['r-',  'b--'], 'Regulator Motion')
+            subplot(322)
+            overplot(['TRI_V', 'tri_v'], ['r-',  'b--'], 'Regulator Motion')
+            subplot(323)
+            overplot(['TRI_UF_NET', 'tri_uf_net'], ['r-',  'b--'], 'Regulator Motion')
+            subplot(325)
+            overplot(['TRI_WFSE', 'tri_wfse'], ['r-',  'b--'], 'Regulator Motion')
+            subplot(326)
+            overplot(['TRI_MODE'], ['r-'], 'Regulator Motion')
+        end
+        subplot(324)
+        overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Motion')
+
         figs($+1) = figure("Figure_name", 'pcham Volume', "Position", [40,190,610,600]);
         subplot(339)
         overplot(['PD_VEN', 'vdpp_pd'], ['r-',  'b--'], 'Pump Discharge Pressure')
@@ -435,7 +490,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     // VENpump plots
     if MOD.plotVENpump then
 
-        figs($+1) = figure("Figure_name", 'VDPP', "Position", [40,90,610,600]);
+        figs($+1) = figure("Figure_name", 'VDPP', "Position", [40,210,610,600]);
         subplot(321)
         overplot(['VDPP_RPM', 'vdpp_rpm', 'vdpp_pd', 'VDPP_PL'], ['r-', 'b--', 'k--', 'm-'], 'VDPP')
         subplot(322)
@@ -449,7 +504,51 @@ if MOD.plotEnable  & Tf>1e-6 then
         subplot(326)
         overplot(['VDPP_EFF_VOL'], ['b-'], 'VDPP')
 
-        figs($+1) = figure("Figure_name", 'VEN Position', "Position", [40,110,610,600]);
+        figs($+1) = figure("Figure_name", 'VEN pact', "Position", [120,220,610,600]);
+        subplot(331)
+        overplot(['PACT_V', 'pact_v'], ['r-',  'b--'], 'Pump Act Velocity')
+        if MOD.atWork then
+            subplot(332)
+            overplot(['PACT_UF_NET', 'pact_uf_net'], ['r-', 'b--'], 'Pump Act Forces')
+            subplot(335)
+            overplot(['PACT_TQRS', 'pact_tqrs'], ['r-',  'b--'], 'Pump linkage')
+            subplot(336)
+            overplot(['PACT_TQA', 'pact_tqa'], ['r-',  'b--'], 'Pump linkage')
+            subplot(337)
+            overplot(['PACT_TQPV', 'pact_tqpv'], ['r-',  'b--'], 'Pump linkage')
+            subplot(338)
+            overplot(['PACT_TQC', 'pact_tqc'], ['r-',  'b--'], 'Pump linkage')
+        end
+        subplot(333)
+        overplot(['PACT_FEXTH', 'pact_fexth'], ['r-',  'b--'], 'Pump Act Force')
+        subplot(334)
+        overplot(['VLINK_FTPA', 'vlink_ftpa'], ['r-',  'b--'], 'Pump linkage')
+
+        figs($+1) = figure("Figure_name", 'VEN pact friction', "Position", [140,230,610,600]);
+        subplot(221)
+        overplot(['PACT_V', 'pact_v'], ['r-',  'b--'], 'Pump Act Velocity')
+        subplot(222)
+        overplot(['PACT_X', 'pact_x'], ['r-', 'b--'], 'Pump Act Pos')
+        if MOD.atWork then
+            subplot(223)
+            overplot(['PACT_UF', 'PACT_UF_NET'], ['k-',  'm-'], 'Pump Act Force')
+            subplot(224)
+            overplot(['PACT_MODE'], ['r-'], 'Pump linkage mode')
+        end
+        
+        figs($+1) = figure("Figure_name", 'VEN ACT friction', "Position", [140,250,610,600]);
+        subplot(221)
+        overplot(['VVEN', 'v_ven'], ['r-',  'b--'], 'VEN Act Velocity')
+        subplot(222)
+        overplot(['XVEN', 'x_ven'], ['r-',  'b--'], 'VEN Act Position')
+        if MOD.atWork then
+            subplot(223)
+            overplot(['VE_UF', 'VE_UF_NET'], ['k-',  'm-'], 'VEN Act Force')
+            subplot(224)
+            overplot(['VE_MODE'], ['r-'], 'VEN act mode')
+        end
+
+        figs($+1) = figure("Figure_name", 'VEN Position', "Position", [40,230,610,600]);
         subplot(321)
         overplot(['PACT_X', 'pact_x'], ['r-',  'b--'], 'Pump Act Stroke')
         subplot(322)
@@ -466,32 +565,48 @@ if MOD.plotEnable  & Tf>1e-6 then
     if MOD.plotEBOOST
 
         figs($+1) = figure("Figure_name", 'EBOOST', "Position", [40,130,610,600]);
-        subplot(321)
+        subplot(331)
         overplot(['WFOC', 'wfoc'], ['r-',  'b--'], 'Oil Cooler Flow')
-        subplot(322)
+        subplot(332)
         overplot(['WF1P', 'wf1p'], ['r-',  'b--'], 'Main Pump Flow')
-        subplot(323)
+        subplot(333)
         overplot(['WFB2', 'wfb2'], ['r-',  'b--'], 'Boost Pump Flow')
-        subplot(324)
+        subplot(334)
+        overplot(['WFFILT', 'wffilt'], ['r-',  'b--'], 'Filter Flow')
+        subplot(335)
         overplot(['PB1', 'pb1'], ['r-',  'b--'], 'Boost Pump Discharge Pressure')
-        subplot(325)
+        subplot(336)
         overplot(['PB2', 'pb2', 'POC', 'poc'], ['r-',  'b--', 'k-', 'c--'], 'Filter Discharge and Oil Cooler Discharge Pressures')
-        subplot(326)
+        subplot(337)
         overplot(['PMAINP', 'PSMFP', 'pmainp'], ['r-', 'k-', 'b--'], 'Main Pump Supply Pressure')
- 
+
         figs($+1) = figure("Figure_name", 'EBOOST Pump', "Position", [40,130,610,600]);
-        subplot(321)
-        overplot(['DPBOOST', 'DPMFP'], ['r-',  'k-'], 'Pump Pressure Rises')
-        subplot(322)
+        subplot(331)
+        overplot(['DPBOOST', 'dpboost'], ['r-',  'b--'], 'Pump Pressure Rises')
+        subplot(332)
         overplot(['XNVEN', 'xnven'], ['r-',  'b--'], 'Boost Pump RPM')
-        subplot(323)
+        subplot(333)
         overplot(['XNMAIN', 'xnmain'], ['r-',  'b--'], 'Main Fuel Pump RPM')
-        subplot(324)
+        subplot(334)
         overplot(['PENGINE', 'pengine'], ['r-',  'b--'], 'Engine Supply Pressure')
-        subplot(325)
-        overplot(['P_1', 'P1SO', 'p1c'], ['k-', 'r-', 'b--'], 'MFP Discharge Pressure')
-        subplot(326)
+        if MOD.atWork then
+            subplot(335)
+            overplot(['P_1', 'P1SO', 'p1c', 'p1'], ['k-', 'r-', 'b--', 'c--'], 'MFP Discharge Pressure') // dag 5/23/2019
+        else
+            subplot(335)
+            overplot(['P_1', 'P1SO', 'p1c'], ['k-', 'r-', 'b--'], 'MFP Discharge Pressure') // dag 5/23/2019
+        end
+        subplot(336)
         overplot(['PMAINP', 'pmainp'], ['r-',  'b--'], 'MFP Supply Pressure')
+        if MOD.atWork then
+            subplot(337)
+            overplot(['DPMFP', 'dpmfp'], ['r-',  'b--'], 'MFPump Pressure Rises') // dag 5/23/2019
+        else
+            subplot(337)
+            overplot(['DPMFP'], ['r-'], 'MFPump Pressure Rises') // dag 5/23/2019
+        end
+        subplot(338)
+        overplot(['WFENGINEb', 'wfengine'], ['r-',  'b--'], 'Engine Supply Flow')
 
     end // plotEBOOST
 
