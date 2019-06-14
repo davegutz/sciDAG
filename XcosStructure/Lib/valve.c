@@ -449,7 +449,7 @@ void trivalve_a1(scicos_block *blk, int flag)
             if(flag==-1)    x_out = xol;  // Initialization
             else            x_out = X;
             mode_out = mode0;
-            wfxd = uf_net;
+//            wfxd = uf_net;  // temp test
             break;
 
         case 9:

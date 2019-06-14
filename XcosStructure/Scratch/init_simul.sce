@@ -79,7 +79,7 @@ MOD.skip_init = %t;         // Load in pre-solved initial condition
 MOD.zeroP3lineDamp = %t;    // Special switch to match simulink model (not intended for final model) 
 MOD.plotEnable = %t;        // Plotting with StopFcn
 MOD.plotMain = %t;          // Main plot for StopFcn
-MOD.plotVEN = %f;           // VEN plot for StopFcn
+MOD.plotVEN = %t;           // VEN plot for StopFcn
 MOD.plotVENpump = %f;       // VEN pump plot for StopFdn
 MOD.plotEBOOST = %f;        // Engine boost system plot for StopFdn
 

@@ -143,6 +143,12 @@ if MOD.plotEnable  & Tf>1e-6 then
     BIAS_FEXT = struct('time', tVDATA, 'values', VDATA.values(:,33));
     XVEN = struct('time', tVDATA, 'values', VDATA.values(:,34));
     VVEN = struct('time', tVDATA, 'values', VDATA.values(:,35));
+    TRI_V = struct('time', tVDATA, 'values', VDATA.values(:,36));
+    TRI_MODE = struct('time', tVDATA, 'values', VDATA.values(:,37));
+    VE_UF = struct('time', tVDATA, 'values', VDATA.values(:,38));
+    VE_UF_NET = struct('time', tVDATA, 'values', VDATA.values(:,39));
+    VE_MODE = struct('time', tVDATA, 'values', VDATA.values(:,40));
+    TRI_UF =  struct('time', tVDATA, 'values', VDATA.values(:,41));
 
     // VEN Load
     tLDATA = LDATA.time(:,1);
@@ -450,20 +456,19 @@ if MOD.plotEnable  & Tf>1e-6 then
         overplot(['BIAS_X', 'bias_x'], ['r-',  'b--'], 'Position')
 
         figs($+1) = figure("Figure_name", 'TRI', "Position", [60,290,610,600]);
+        subplot(322)
+        overplot(['TRI_V', 'tri_v'], ['r-',  'b--'], 'Regulator Motion')
         if MOD.atWork then
             subplot(321)
             overplot(['TRI_UF', 'tri_uf_mod'], ['r-',  'b--'], 'Regulator Motion')
-            subplot(322)
-            overplot(['TRI_V', 'tri_v'], ['r-',  'b--'], 'Regulator Motion')
-            subplot(323)
-            overplot(['TRI_UF_NET', 'tri_uf_net'], ['r-',  'b--'], 'Regulator Motion')
-            subplot(325)
-            overplot(['TRI_WFSE', 'tri_wfse'], ['r-',  'b--'], 'Regulator Motion')
-            subplot(326)
-            overplot(['TRI_MODE'], ['r-'], 'Regulator Motion')
+        else
+            subplot(321)
+            overplot(['TRI_UF'], ['r-'], 'Regulator Motion')
         end
         subplot(324)
         overplot(['TRI_X', 'tri_x'], ['r-',  'b--'], 'Regulator Motion')
+        subplot(326)
+        overplot(['TRI_MODE'], ['r-'], 'Regulator Motion')
 
         figs($+1) = figure("Figure_name", 'pcham Volume', "Position", [40,190,610,600]);
         subplot(339)
@@ -518,6 +523,17 @@ if MOD.plotEnable  & Tf>1e-6 then
             overplot(['PACT_TQPV', 'pact_tqpv'], ['r-',  'b--'], 'Pump linkage')
             subplot(338)
             overplot(['PACT_TQC', 'pact_tqc'], ['r-',  'b--'], 'Pump linkage')
+        else
+            subplot(332)
+            overplot(['PACT_UF_NET'], ['r-'], 'Pump Act Forces')
+            subplot(335)
+            overplot(['PACT_TQRS'], ['r-'], 'Pump linkage')
+            subplot(336)
+            overplot(['PACT_TQA'], ['r-'], 'Pump linkage')
+            subplot(337)
+            overplot(['PACT_TQPV'], ['r-'], 'Pump linkage')
+            subplot(338)
+            overplot(['PACT_TQC'], ['r-'], 'Pump linkage')
         end
         subplot(333)
         overplot(['PACT_FEXTH', 'pact_fexth'], ['r-',  'b--'], 'Pump Act Force')
@@ -529,24 +545,20 @@ if MOD.plotEnable  & Tf>1e-6 then
         overplot(['PACT_V', 'pact_v'], ['r-',  'b--'], 'Pump Act Velocity')
         subplot(222)
         overplot(['PACT_X', 'pact_x'], ['r-', 'b--'], 'Pump Act Pos')
-        if MOD.atWork then
-            subplot(223)
-            overplot(['PACT_UF', 'PACT_UF_NET'], ['k-',  'm-'], 'Pump Act Force')
-            subplot(224)
-            overplot(['PACT_MODE'], ['r-'], 'Pump linkage mode')
-        end
+        subplot(223)
+        overplot(['PACT_UF', 'PACT_UF_NET'], ['k-',  'm-'], 'Pump Act Force')
+        subplot(224)
+        overplot(['PACT_MODE'], ['r-'], 'Pump linkage mode')
         
         figs($+1) = figure("Figure_name", 'VEN ACT friction', "Position", [140,250,610,600]);
         subplot(221)
         overplot(['VVEN', 'v_ven'], ['r-',  'b--'], 'VEN Act Velocity')
         subplot(222)
         overplot(['XVEN', 'x_ven'], ['r-',  'b--'], 'VEN Act Position')
-        if MOD.atWork then
-            subplot(223)
-            overplot(['VE_UF', 'VE_UF_NET'], ['k-',  'm-'], 'VEN Act Force')
-            subplot(224)
-            overplot(['VE_MODE'], ['r-'], 'VEN act mode')
-        end
+        subplot(223)
+        overplot(['VE_UF', 'VE_UF_NET'], ['k-',  'm-'], 'VEN Act Force')
+        subplot(224)
+        overplot(['VE_MODE'], ['r-'], 'VEN act mode')
 
         figs($+1) = figure("Figure_name", 'VEN Position', "Position", [40,230,610,600]);
         subplot(321)
