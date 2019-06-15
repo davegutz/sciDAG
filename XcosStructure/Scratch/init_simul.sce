@@ -66,22 +66,23 @@ global dT
 // Auto data overplot load
 stack_size = stacksize('max');
 MOD = tlist(["mod_ctrl", "initialized", "skip_init", 'atWork', "batch", "tPumpFail",...
-             "zeroP3lineDamp", 'plotMAIN', 'plotVEN', "plotAC", 'plotHSp', 'plotHS',...
-             'logAll', 'plotEnable', 'plotMain', 'plotBoost', 'plotVEN', 'plotVENpump', 'plotEBOOST'],...
+             "zeroP3lineDamp", 'plotMainRT', 'plotVenRT', "plotAcRT", 'plotHSp', 'plotHS',...
+             'logAll', 'plotEnable', 'plotAC', 'plotMain', 'plotBoost', 'plotVEN', 'plotVENpump', 'plotEBOOST'],...
              %f, %f, %f, %f, %inf,...
              %f, %f, %f, %f, %f, %f,...
-             %f, %f, %f, %f, %f, %f, %f);
-MOD.plotMAIN = %t;          // Main plot for RT monitor
-MOD.plotVEN = %t;           // VEN plot for RT monitor
-MOD.plotAC = %f;            // AC plot for monitor
+             %f, %f, %f, %f, %f, %f, %f, %f);
+MOD.plotMainRT = %t;        // Main plot for RT monitor
+MOD.plotVenRT = %t;         // VEN plot for RT monitor
+MOD.plotAcRT = %t;          // AC plot for RT monitor
 MOD.logAll = %t;            // Log data for plotting
 MOD.skip_init = %t;         // Load in pre-solved initial condition
 MOD.zeroP3lineDamp = %t;    // Special switch to match simulink model (not intended for final model) 
 MOD.plotEnable = %t;        // Plotting with StopFcn
-MOD.plotMain = %t;          // Main plot for StopFcn
-MOD.plotVEN = %t;           // VEN plot for StopFcn
+MOD.plotAC = %t;            // AC plot for StopFcn
+MOD.plotMain = %f;          // Main plot for StopFcn
+MOD.plotVEN = %f;           // VEN plot for StopFcn
 MOD.plotVENpump = %f;       // VEN pump plot for StopFdn
-MOD.plotEBOOST = %f;        // Engine boost system plot for StopFdn
+MOD.plotEBOOST = %t;        // Engine boost system plot for StopFdn
 
 
 // Load external reference data

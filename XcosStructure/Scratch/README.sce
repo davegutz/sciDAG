@@ -79,6 +79,11 @@ exec('benchmark_valve_start04alone.sce', -1)
 // between 9 and 10 seconds is typical
 
 // Sixth version to self initialize and match with Simulink model
+// Note:  lost ability to port Simulink data to this model due to
+// start of using Yubi key.   An exact match doesn't happen here
+// when running at home.   But at work, the latest data files
+// from Simulink are in Scratch/data and that's where match needs
+// to be evaluated.   Expected results contains both results.
 // Prework
     // In simulink
     //% uiopen('F414_Fuel.slx',1)
