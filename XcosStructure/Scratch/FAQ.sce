@@ -42,3 +42,6 @@ o "Undefined variable: Resume_line_args"
 o NaN in chained line models
     Can be caused by too high damping in lines ('c')
     
+o SQRT xcos does not seem to work
+    Double-click on SQRT blocks and change 2 to 1 - complex -> real.
+    Default value is bad in that block.

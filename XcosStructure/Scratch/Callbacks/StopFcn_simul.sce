@@ -164,6 +164,8 @@ if MOD.plotEnable  & Tf>1e-6 then
     vewfsh = DV.ehsv.SPOOL.wf.wfsh;
     vewfr = DV.ehsv.SPOOL.wf.wfr;
     vewfsr = DV.ehsv.SPOOL.wf.wfsr;
+    VEGS = struct('time', tLDATA, 'values', LDATA.values(:,15)); // dag 6/16/2019
+    vegs = DV.ehsv.SPOOL.gainScale; // dag 6/16/2019
     VEV = struct('time', tLDATA, 'values', LDATA.values(:,16));
     VEMA = struct('time', tLDATA, 'values', LDATA.values(:,17));
     VEX = struct('time', tLDATA, 'values', LDATA.values(:,18));
@@ -357,20 +359,22 @@ if MOD.plotEnable  & Tf>1e-6 then
     if MOD.plotVEN then
 
         figs($+1) = figure("Figure_name", 'VEN EHSV 1', "Position", [40,70,810,600]);
-        subplot(221)
+        subplot(321)
         overplot(['PS_RLINE', 'rlineps'], ['r-', 'b--'], 'VEN EHSV Rod Pressure')
         if MOD.atWork then
-            subplot(222)
+            subplot(322)
             overplot(['PS_HLINE', 'hlineps'], ['r-', 'b--'], 'VEN EHSV Head Pressure')
         else
-            subplot(222)
+            subplot(322)
             overplot(['PS_HLINE'], ['r-'], 'VEN EHSV Head Pressure')
         end
-        subplot(223)
+        subplot(323)
         overplot(['vdpp_pd'], ['k-'], 'VEN EHSV Pressures')
-        subplot(224)
+        subplot(324)
         overplot(['vdpp_ps'], ['b-'], 'VEN EHSV Pressures')
-
+        subplot(325)
+        overplot(['VEGS', 'vegs'], ['r-', 'b--'], 'VEN EHSV Gain Scalar')
+        
         figs($+1) = figure("Figure_name", 'VEN EHSV 2', "Position", [40,90,810,600]);
         subplot(331)
         overplot(['VEWFS', 'wfs_vehsv'], ['r-',  'b--'], 'VEN EHSV Supply Flow')
