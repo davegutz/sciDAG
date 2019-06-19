@@ -123,6 +123,16 @@ G.mline.main_line.a = 1e24;
 // Save off data
 save_file = './Results/g_simul.csv';
 geo_write(save_file, G)
+// Save off plots
+MOD.plotEnable = %t;MOD.plotAll=%t;MOD.exportFigs=%t;
+exec('Callbacks/StopFcn_simul.sce', -1)
+// The files 'Results/simul*.png' are pngs of all the plots.
+// These don't overplot well because the basic Simulink model
+// changed and with the Yubi key lockdown of work site (MOD.atWork=%t)
+// it was not possible to update the 'Data/*.csv' files. 
+// conbine pdfs in "PDF Shaper Free" using Action - Modify - Rotate Pages - 270 and
+// Action - Modify - Merge
+
 // check lines
 s=1;
 // mv

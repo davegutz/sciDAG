@@ -282,7 +282,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     prod_ = DV.actSys.O_4.In.pr;
 
     // Main Plots
-    if MOD.plotMain then
+    if MOD.plotMain | MOD.plotAll then
         figs($+1) = figure("Figure_name", 'MAIN_FLOW_1', "Position", [40,30,610,460]);
         subplot(221)
         overplot(['WF1V', 'wf1v'], ['r-', 'b--'], 'VEN Start Discharge Flow')
@@ -331,7 +331,7 @@ if MOD.plotEnable  & Tf>1e-6 then
 
     end  // plotMain
 
-    if MOD.plotAC then
+    if MOD.plotAC | MOD.plotAll then
 
         figs($+1) = figure("Figure_name", 'AC Supply', "Position", [40,90,810,600]);
         subplot(331)
@@ -356,7 +356,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     end // plotAC
 
     // VEN plots
-    if MOD.plotVEN then
+    if MOD.plotVEN | MOD.plotAll then
 
         figs($+1) = figure("Figure_name", 'VEN EHSV 1', "Position", [40,70,810,600]);
         subplot(321)
@@ -497,7 +497,7 @@ if MOD.plotEnable  & Tf>1e-6 then
     end // plotVEN
 
     // VENpump plots
-    if MOD.plotVENpump then
+    if MOD.plotVENpump | MOD.plotAll then
 
         figs($+1) = figure("Figure_name", 'VDPP', "Position", [40,210,610,600]);
         subplot(321)
@@ -578,7 +578,7 @@ if MOD.plotEnable  & Tf>1e-6 then
 
     end  // plotVENpump
 
-    if MOD.plotEBOOST
+    if MOD.plotEBOOST | MOD.plotAll
 
         figs($+1) = figure("Figure_name", 'EBOOST', "Position", [40,130,610,600]);
         subplot(331)
@@ -627,5 +627,12 @@ if MOD.plotEnable  & Tf>1e-6 then
     end // plotEBOOST
 
 end   // MOD.plotEnable
+
+if MOD.exportFigs then
+    for i = 1:length(figs)
+        xs2png(figs(i), 'results/'+root+string(i)+'.png')
+        xs2pdf(figs(i), 'results/'+root+string(i)+'.pdf', 'landscape')
+    end
+end
 
 mprintf('Completed %s\n', sfilename())  
