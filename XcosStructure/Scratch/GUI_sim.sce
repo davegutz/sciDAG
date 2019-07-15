@@ -1,4 +1,4 @@
-// Copyright (C) 2019  - Dave Gutz
+// Copyright (CNV) 2019  - Dave Gutz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,47 +20,25 @@
 // Jun 20, 2019    DA Gutz     Created
 //
 
-function file_name = sfilename()
-    [units, types, names]=file();
-    if ~isempty(names)
-        [%fullpath, bOK]=getlongpathname(names($-2))
-        pathsplit = strsplit(%fullpath($), [filesep();'\']);
-        file_name = pathsplit($);
-    else  // from an sci file
-        [a, b] = where();
-        [n, m] = size(b);
-        // disp(b)
-        // whereami()
-        if n>=4 then
-            file_name = b($-4);
-        else
-            file_name = b($);
-        end
-    end
-endfunction
-
 function save_this()
-    save('.GUI_sim.dat', 'G')
+    save('.GUI_sim.dat', 'GUI')
     mprintf('Saved memory\n');
 endfunction
 
-
 // Top level book-keeping
+funcprot(0)
+getd('../Lib')
 this = sfilename();
 base = strsplit(this, '.');
 base = base(1);
 this_path = get_absolute_file_path(this);
 out_path = this_path + '\out';
 chdir(this_path);
-loaded = %f;
 
-// Run this script in place.  Needs
-funcprot(0)
-getd('../Lib')
 // Global window parameters
 
 // Window Parameters initialization
-C = tlist(["Canvas",...
+CNV = tlist(["Canvas",...
 "margin_x", "margin_y",...      // Horizontal and vertical margins
 "frame_w", "frame_h",...        // Frame height and width (calculated)
 "default_font",...              // Default font
@@ -94,11 +72,11 @@ C = tlist(["Canvas",...
 100,...     // len_zoom_text
 0, 110, 200); // x_col
 
-C.frame_w = C.w_col1 + C.w_col2 + 3*C.margin_x;
-C.frame_h = C.y_row_choose_plot + 3*C.margin_y;
-C.x_zoom_entry = C.x_col2 + C.margin_x;
+CNV.frame_w = CNV.w_col1 + CNV.w_col2 + 3*CNV.margin_x;
+CNV.frame_h = CNV.y_row_choose_plot + 3*CNV.margin_y;
+CNV.x_zoom_entry = CNV.x_col2 + CNV.margin_x;
 
-G = tlist(["GUI", "context_file", "context_file_base",...
+GUI = tlist(["GUI", "context_file", "context_file_base",...
 "run_file", "run_file_base", "runfile_list_file",...
 "runfile_list_file_base", "batch", "csv_file",...
 "plot_file", "plot_file_base",...
@@ -109,9 +87,9 @@ G = tlist(["GUI", "context_file", "context_file_base",...
 '', '',...
 [[],[]], %f, %t, %f);
 
-global figs G C R RES Ctrl Sen Act Cmp020SM Cmp025SM zoom_entry PerfUnInst
+global figs GUI CNV R RES Ctrl Sen Act Cmp020SM Cmp025SM zoom_entry PerfUnInst
 
-// Structure needed by this script.  All else managed by user and NPSS
+// Structure needed by this script.  All else managed by user and SIM
 mkdir('out');
 mkdir('plots', 'raw');
 mkdir('run', 'list');
@@ -131,91 +109,89 @@ try
     mprintf('Loaded configuration\n');
 catch
     mprintf('Did not load memory...setting defaults and initializing save file\n');
-//    G.context_file_base = 'F414-400_v550_RetFix_Unified';
-    G.context_file_base = '';
-    G.context_file = G.context_file_base + '.ctx';
-//    G.run_file_base = 'Ret2_1906_Closing_Opening_PLA_VHM';
-    G.run_file_base = '';
-    G.run_file = G.run_file_base + '.run';
-    G.runfile_list_file = [G.run_file];
-    G.runfile_list_file_base = [G.run_file_base];
-    G.csv_file = 'out\' + G.run_file_base + '.csv';
-    G.run_file_base = G.run_file_base;
+    GUI.context_file_base = '';
+    GUI.context_file = GUI.context_file_base + '.ctx';
+    GUI.run_file_base = '';
+    GUI.run_file = GUI.run_file_base + '.run';
+    GUI.runfile_list_file = [GUI.run_file];
+    GUI.runfile_list_file_base = [GUI.run_file_base];
+    GUI.csv_file = 'out\' + GUI.run_file_base + '.csv';
+    GUI.run_file_base = GUI.run_file_base;
     save_this();
 end
-G.loaded = %f;
+GUI.loaded = %f;
 
-function About_NPSS_Gui()
-    msg = msprintf(gettext("NPSS Gui is developed by Dave Gutz"));
+function About_SIM_Gui()
+    msg = msprintf(gettext("SIM Gui is developed by Dave Gutz"));
     messagebox(msg, gettext("About"), "info", "modal");
 endfunction
 
 function choose_context()
-    global G
+    global GUI
     // Use ui to get value of context file
     new_ctx = uigetfile(["*.ctx"], this_path, 'Choose Context')
     if isempty(new_ctx) then
         mprintf('Aborted choose_context.  No changes made\n');
         return;
     end
-    G.context_file = new_ctx;
-    base_filename = strsplit(G.context_file, '\');
+    GUI.context_file = new_ctx;
+    base_filename = strsplit(GUI.context_file, '\');
     base_filename = base_filename($);
-    G.context_file_base = strsplit(base_filename, '.');
-    G.context_file_base = G.context_file_base($-1);
+    GUI.context_file_base = strsplit(base_filename, '.');
+    GUI.context_file_base = GUI.context_file_base($-1);
     disp_context_file_base();
     save_this();
 endfunction
 
 function choose_plot()
-    global G
+    global GUI
     // Use ui to get value of single plot file
     new_plot = uigetfile(["*.plt"], this_path, 'Choose Plot')
     if isempty(new_plot) then
         mprintf('Aborted choose_plot.  No changes made\n');
         return;
     end
-    G.plot_file = new_plot;
-    G.plot_file_base = extract_base(G.plot_file);
+    GUI.plot_file = new_plot;
+    GUI.plot_file_base = extract_base(GUI.plot_file);
     disp_plot_file_base();
     save_this();
 endfunction
 
 function choose_run()
-    global G
+    global GUI
     // Use ui to get value of single run file
     new_run = uigetfile(["*.run"], this_path+'/run', 'Choose Run')
     if isempty(new_run) then
         mprintf('Aborted choose_run.  No changes made\n');
         return;
     end
-    G.run_file = new_run;
-    G.run_file_base = extract_base(G.run_file);
+    GUI.run_file = new_run;
+    GUI.run_file_base = extract_base(GUI.run_file);
     disp_run_file_base();
-    G.csv_file = 'out\' + G.run_file_base + '.csv';
-    G.loaded = %f;
+    GUI.csv_file = 'out\' + GUI.run_file_base + '.csv';
+    GUI.loaded = %f;
     display_load_data();
     save_this();
 endfunction
 
 function choose_runlist()
-    global G
+    global GUI
     // Use ui to get value of multiple run files list
     new_rflf = uigetfile(["*.txt"], this_path+'/run/list', 'Choose Run List', %f)
     if isempty(new_rflf) then
         mprintf('Aborted choose_runlist.  No changes made\n');
         return;
     end
-    G.runfile_list_file = new_rflf;
-    G.runfile_list_file_base = extract_base(G.runfile_list_file);
+    GUI.runfile_list_file = new_rflf;
+    GUI.runfile_list_file_base = extract_base(GUI.runfile_list_file);
     display_mruns();
     save_this();
 endfunction
 
 function clear_zoom()
-    global G zoom_entry
+    global GUI zoom_entry
     mprintf('Clearing Zoom\n');
-    G.zoom = [];
+    GUI.zoom = [];
     zoom_entry(1).String="";
     zoom_entry(2).String="";
 endfunction
@@ -232,20 +208,20 @@ function close_figs()
 endfunction
 
 function create_runlist()
-    global G
+    global GUI
     // Use ui to get value of multiple run file
     raw_list = uigetfile(["*.run"], this_path+'/run', 'Choose Runs', %t)
     if isempty(raw_list) then
         mprintf('Aborted choose_run.  No changes made\n');
         return;
     end
-    G.runfile_list_file = uigetfile(["*.txt"], this_path+'/run/list', 'Where save', %f)
-    ext = extract_extension(G.runfile_list_file);
+    GUI.runfile_list_file = uigetfile(["*.txt"], this_path+'/run/list', 'Where save', %f)
+    ext = extract_extension(GUI.runfile_list_file);
     if ~exists('ext') | ext~='txt' then
-        G.runfile_list_file = G.runfile_list_file + '.txt';
+        GUI.runfile_list_file = GUI.runfile_list_file + '.txt';
     end
-    G.runfile_list_file_base = extract_base(G.runfile_list_file);
-    fd = mopen(G.runfile_list_file, 'wt');
+    GUI.runfile_list_file_base = extract_base(GUI.runfile_list_file);
+    fd = mopen(GUI.runfile_list_file, 'wt');
     for i=1:size(raw_list, 2)
         mfprintf(fd, "%s\n", raw_list(i))
     end
@@ -255,120 +231,120 @@ function create_runlist()
 endfunction
 
 function disp_context_file_base ()
-    global G
-    uicontrol("parent",gui_npss, "style","text", ...
-    "string",G.context_file_base, "position",[C.x_col3+C.margin_x C.y_row_ctx+C.margin_y 300 20], ...
+    global GUI
+    uicontrol("parent",gui_sim, "style","text", ...
+    "string",GUI.context_file_base, "position",[CNV.x_col3+CNV.margin_x CNV.y_row_ctx+CNV.margin_y 300 20], ...
     "horizontalalignment","left", "fontsize",14, ...
     "background",[1 1 1]);
 endfunction
 
 function disp_plot_file_base ()
-    global G
-    uicontrol("parent",gui_npss, "style","text", ...
-    "string", G.plot_file_base, "position", [C.x_col3+C.margin_x C.y_row_choose_plot+C.margin_y 300 20], ...
+    global GUI
+    uicontrol("parent",gui_sim, "style","text", ...
+    "string", GUI.plot_file_base, "position", [CNV.x_col3+CNV.margin_x CNV.y_row_choose_plot+CNV.margin_y 300 20], ...
     "horizontalalignment", "left", "fontsize", 14, ...
     "background", [1 1 1]);
 endfunction
 
 function disp_run_file_base ()
-    global G
-    uicontrol("parent",gui_npss, "style","text", ...
-    "string", G.run_file_base, "position", [C.x_col3+C.margin_x C.y_row_choose_run+C.margin_y 300 20], ...
+    global GUI
+    uicontrol("parent",gui_sim, "style","text", ...
+    "string", GUI.run_file_base, "position", [CNV.x_col3+CNV.margin_x CNV.y_row_choose_run+CNV.margin_y 300 20], ...
     "horizontalalignment", "left", "fontsize", 14, ...
     "background", [1 1 1]);
 endfunction
 
 function display_all_plot()
-    global figs G R Ctrl Sen Act
-    if isempty(Ctrl) | ~G.loaded then
+    global figs GUI R Ctrl Sen Act
+    if isempty(Ctrl) | ~GUI.loaded then
         mprintf('Load Data first\n')
         return
     end
-   if isempty(G.plot_file_base) then
+   if isempty(GUI.plot_file_base) then
         mprintf('Choose Plot file\n')
         messagebox('Choose Plot file', gettext("edit_plot_file"), "Error", "modal");
         return
     end
     // Plotting of model data
     delete(gca());
-    G.plot_summary = %f;
-    exec(G.plot_file, -1)
+    GUI.plot_summary = %f;
+    exec(GUI.plot_file, -1)
 endfunction
 
 function display_load_data ()
-    global G C
-    if G.loaded then
-        loaded_file = G.run_file_base;
+    global GUI CNV
+    if GUI.loaded then
+        loaded_file = GUI.run_file_base;
     else
         loaded_file = '';
     end
-    uicontrol("parent",gui_npss, "style","text", ...
-    "string", loaded_file, "position", [C.x_col3+C.margin_x C.y_row_load+C.margin_y 300 20], ...
+    uicontrol("parent",gui_sim, "style","text", ...
+    "string", loaded_file, "position", [CNV.x_col3+CNV.margin_x CNV.y_row_load+CNV.margin_y 300 20], ...
     "horizontalalignment", "left", "fontsize", 14, ...
     "background", [1 1 1]);
 endfunction
 
 function display_mruns ()
-    global G
-    uicontrol("parent",gui_npss, "style","text", ...
-    "string", G.runfile_list_file_base, "position", [C.x_col3+C.margin_x  C.y_row_mult+C.margin_y 300 20], ...
+    global GUI
+    uicontrol("parent",gui_sim, "style","text", ...
+    "string", GUI.runfile_list_file_base, "position", [CNV.x_col3+CNV.margin_x  CNV.y_row_mult+CNV.margin_y 300 20], ...
     "horizontalalignment", "left", "fontsize", 14, ...
     "background", [1 1 1]);
 endfunction
 
 function display_summary_plot()
-    global figs G R Ctrl Sen Act
-    if isempty(Ctrl) | ~G.loaded then
+    global figs GUI R Ctrl Sen Act
+    if isempty(Ctrl) | ~GUI.loaded then
         mprintf('Load Data first\n')
         return
     end
-   if isempty(G.plot_file_base) then
+   if isempty(GUI.plot_file_base) then
         mprintf('Choose Plot file\n')
         messagebox('Choose Plot file', gettext("edit_plot_file"), "Error", "modal");
         return
     end
     // Plotting of model data
     delete(gca());
-    G.plot_summary = %t;
-    exec(G.plot_file, -1)
+    GUI.plot_summary = %t;
+    exec(GUI.plot_file, -1)
 endfunction
 
 function edit_plot_file()
-    global G
-   if isempty(G.plot_file_base) then
+    global GUI
+   if isempty(GUI.plot_file_base) then
         mprintf('Choose Plot first\n')
         messagebox('Choose Plot first', gettext("edit_plot_file"), "Error", "modal");
         return
     end
-    mprintf('Editting %s...\n', G.plot_file_base);
-    cmd = msprintf("editor %s.plt", G.plot_file_base)
+    mprintf('Editting %s...\n', GUI.plot_file_base);
+    cmd = msprintf("editor %s.plt", GUI.plot_file_base)
     execstr(cmd)
 endfunction
 
 function edit_run()
-    global G
-    command = 'start notepad++ ' + G.run_file;
-    mprintf('Editting %s...\n', G.run_file);
+    global GUI
+    command = 'start notepad++ ' + GUI.run_file;
+    mprintf('Editting %s...\n', GUI.run_file);
     winID = progressionbar('Running '+command);
     exit_code = dos(command);
     close(winID);
 endfunction
 
 function edit_runfile_list_file()
-    global G
-    command = 'start notepad++ ' + G.runfile_list_file;
-    mprintf('Editting %s...\n', G.runfile_list_file);
+    global GUI
+    command = 'start notepad++ ' + GUI.runfile_list_file;
+    mprintf('Editting %s...\n', GUI.runfile_list_file);
     winID = progressionbar('Running '+command);
     exit_code = dos(command);
     close(winID);
 endfunction
 
 function export_plots()
-    global G figs
-    mprintf('Exporting plots to plots/%s*.pdf and plots/raw/%s*.png\n', G.run_file_base, G.run_file_base);
-    winID = progressionbar('Exporting to plots ' + G.run_file_base + '...');
+    global GUI figs
+    mprintf('Exporting plots to plots/%s*.pdf and plots/raw/%s*.png\n', GUI.run_file_base, GUI.run_file_base);
+    winID = progressionbar('Exporting to plots ' + GUI.run_file_base + '...');
     try
-        export_figs(figs, G.run_file_base)
+        export_figs(figs, GUI.run_file_base)
         close(winID)
     catch
         messagebox('Failed to export_figs', gettext("export_plots"), "Error", "modal");
@@ -394,14 +370,14 @@ function target = extract_extension(source)
 endfunction
 
 function load_data()
-    global G
+    global GUI
     global figs Ctrl Sen Act Cmp020SM Cmp025SM PerfUnInst
-    mprintf('Loading %s...', G.csv_file);
-    winID = progressionbar('Loading ' + G.csv_file + '...');
+    mprintf('Loading %s...', GUI.csv_file);
+    winID = progressionbar('Loading ' + GUI.csv_file + '...');
     try
-        [D, N, time] = load_csv_data(G.csv_file, 1);
+        [D, N, time] = load_csv_data(GUI.csv_file, 1);
     catch
-        mprintf('Output file %s does not exist\n', G.csv_file);
+        mprintf('Output file %s does not exist\n', GUI.csv_file);
         close(winID);
         messagebox("Output file does not exist", gettext("File does not exist"), "info", "modal");
         return
@@ -410,17 +386,17 @@ function load_data()
     Ctrl = order_all_fields(Ctrl);
     Act = order_all_fields(Act);
     Sen = order_all_fields(Sen);
-    G.loaded = %t;
+    GUI.loaded = %t;
     display_load_data();
     close(winID);
     mprintf('Done\n')
 endfunction
 
-function NPSSrun()
-    global figs G R Ctrl Sen Act batch
-    out_file = 'out/'+ G.run_file_base + '.out';
-    command = 'npssRun -c '+G.context_file+' ' + G.run_file +' > ' + out_file + ' 2>&1';
-    command_disp = 'npssRun -c '+G.context_file_base+' ' + G.run_file_base;
+function SIMrun()
+    global figs GUI R Ctrl Sen Act batch
+    out_file = 'out/'+ GUI.run_file_base + '.out';
+    command = 'npssRun -c '+GUI.context_file+' ' + GUI.run_file +' > ' + out_file + ' 2>&1';
+    command_disp = 'npssRun -c '+GUI.context_file_base+' ' + GUI.run_file_base;
     mprintf('Running %s...\n', command);
     winID = progressionbar(command_disp);
     dos(command);
@@ -428,9 +404,9 @@ function NPSSrun()
     out_file_info = fileinfo(out_file);
     if out_file_info(1)<1500 then
         editor(out_file)
-        G.loaded = %f;
+        GUI.loaded = %f;
         display_load_data();
-        messagebox("Failed to run NPSS.  If editor doesnt provide info try NPSSrun Interactive", gettext("NPSSrun"), "Error", "modal");
+        messagebox("Failed to run SIM.  If editor doesnt provide info try SIMrun Interactive", gettext("SIMrun"), "Error", "modal");
         return;
     end
     load_data();
@@ -443,15 +419,15 @@ function NPSSrun()
 endfunction
 
 function plot_all()
-    global figs G R Ctrl Sen Act
-    if isempty(Ctrl) | ~G.loaded then
+    global figs GUI R Ctrl Sen Act
+    if isempty(Ctrl) | ~GUI.loaded then
         mprintf('Load Data first\n')
         return
     end
     time0 = findobj("tag", "Zoom Start"); zoom0 = evstr(time0.string);
     time1 = findobj("tag", "Zoom End"); zoom1 = evstr(time1.string);
     if ~isnan(zoom0) & ~isnan(zoom1) then
-        G.zoom = [zoom0 zoom1];
+        GUI.zoom = [zoom0 zoom1];
     else
         clear_zoom();
     end
@@ -465,8 +441,8 @@ function plot_all()
 endfunction
 
 function plot_summ()
-    global figs G R Ctrl Sen Act
-    if isempty(Ctrl) | ~G.loaded then
+    global figs GUI R Ctrl Sen Act
+    if isempty(Ctrl) | ~GUI.loaded then
         mprintf('Load Data first\n')
         msg = msprintf(gettext("Load data first"));
         messagebox(msg, gettext("Hey!"), "Error", "modal");
@@ -475,7 +451,7 @@ function plot_summ()
     time0 = findobj("tag", "Zoom Start"); zoom0 = evstr(time0.string);
     time1 = findobj("tag", "Zoom End"); zoom1 = evstr(time1.string);
     if ~isnan(zoom0) & ~isnan(zoom1) then
-        G.zoom = [zoom0 zoom1];
+        GUI.zoom = [zoom0 zoom1];
     else
         clear_zoom();
     end
@@ -483,15 +459,15 @@ function plot_summ()
 endfunction
 
 function run_mult()
-    global G
+    global GUI
     batch = %t;
     try
-        fd = mopen(G.runfile_list_file, 'r');
-        G.run_file = mgetl(fd, 1);
-        while exists('G.run_file') & ~isempty(G.run_file) do
-            G.run_file_base = extract_base(G.run_file);
-            NPSSrun();
-            G.run_file = mgetl(fd);
+        fd = mopen(GUI.runfile_list_file, 'r');
+        GUI.run_file = mgetl(fd, 1);
+        while exists('GUI.run_file') & ~isempty(GUI.run_file) do
+            GUI.run_file_base = extract_base(GUI.run_file);
+            SIMrun();
+            GUI.run_file = mgetl(fd);
         end
         mclose(fd);
         batch = %f;
@@ -500,184 +476,174 @@ function run_mult()
     end
 endfunction
 
-function NPSSrun_interactive
-    global G figs G R Ctrl Sen Act
-    command = 'npssRun -win -i -c '+G.context_file+' ' + G.run_file;
+function SIMrun_interactive
+    global GUI figs GUI R Ctrl Sen Act
+    command = 'npssRun -win -i -c '+GUI.context_file+' ' + GUI.run_file;
     mprintf('Running %s...\n', command);
     dos(command);
-    G.loaded = %f;
+    GUI.loaded = %f;
     display_load_data();
 endfunction
 
 function npss_WS
-    global G
-    command = 'npssWS -c '+G.context_file;
+    global GUI
+    command = 'npssWS -c '+GUI.context_file;
     mprintf('Running %s...\n', command);
     dos(command);
 endfunction
 
 // Main section
-funcprot(0);
-this = sfilename();
-base = strsplit(this, '.');
-base = base(1);
-this_path = get_absolute_file_path(this);
-out_path = this_path + '\out';
-chdir(this_path);
-
-
-
-gui_npss = scf(100001);// Create window with id=100001 and make it the current one
+gui_sim = scf(100001);// Create window with id=100001 and make it the current one
 
 // Background and text
-gui_npss.background = -2;
-gui_npss.figure_position = [0 0];
-gui_npss.figure_size = [C.frame_w+50 C.frame_h+150];
-gui_npss.figure_name = gettext("NPSS Run");
+gui_sim.background = -2;
+gui_sim.figure_position = [0 0];
+gui_sim.figure_size = [CNV.frame_w+50 CNV.frame_h+150];
+gui_sim.figure_name = gettext("SIM Run");
 
 // Change dimensions of the figure
-//gui_npss.axes_size = [axes_w axes_h];
+//gui_sim.axes_size = [axes_w axes_h];
 
 // Remove Scilab graphics menus & toolbar
-delmenu(gui_npss.figure_id, gettext("&File"));
-delmenu(gui_npss.figure_id, gettext("&Tools"));
-delmenu(gui_npss.figure_id, gettext("&Edit"));
-delmenu(gui_npss.figure_id, gettext("&?"));
-toolbar(gui_npss.figure_id, "off");
+delmenu(gui_sim.figure_id, gettext("&File"));
+delmenu(gui_sim.figure_id, gettext("&Tools"));
+delmenu(gui_sim.figure_id, gettext("&Edit"));
+delmenu(gui_sim.figure_id, gettext("&?"));
+toolbar(gui_sim.figure_id, "off");
 
 // New menu
-h1 = uimenu("parent", gui_npss, "label", gettext("File"));
-h2 = uimenu("parent", gui_npss, "label", gettext("About"));
+h1 = uimenu("parent", gui_sim, "label", gettext("File"));
+h2 = uimenu("parent", gui_sim, "label", gettext("About"));
 
 // Populate menu: file
 uimenu("parent", h1, "label", gettext("Close"), "callback",...
-    "gui_npss=get_figure_handle(100001);delete(gui_npss);",...
+    "gui_sim=get_figure_handle(100001);delete(gui_sim);",...
     "tag", "close_menu");
 
 // Populate menu: about
-uimenu("parent", h2, "label",gettext("About"), "callback","About_NPSS_Gui();");
+uimenu("parent", h2, "label",gettext("About"), "callback","About_SIM_Gui();");
 // Sleep to guarantee a better display (avoiding to see a sequential display)
 sleep(500);
 
-// Frames creation [NPSS parameters]
-my_frame = uicontrol("parent",gui_npss, "relief","groove", ...
+// Frames creation [SIM parameters]
+my_frame = uicontrol("parent",gui_sim, "relief","groove", ...
     "style","frame", "units","pixels", ...
-    "position",[ C.margin_x C.margin_y C.frame_w C.frame_h], ...
+    "position",[ CNV.margin_x CNV.margin_y CNV.frame_w CNV.frame_h], ...
     "horizontalalignment","center", "background",[1 1 1], ...
     "tag","frame_control");
 
 // Frame title
-my_frame_title = uicontrol("parent", gui_npss, "style", "text",...
-    "string","NPSS Run Control", "units", "pixels",...
-    "position",[30+C.margin_x C.margin_y+C.frame_h-10 C.frame_w-60 20],...
-    "fontname", C.default_font, "fontunits", "points", ...
+my_frame_title = uicontrol("parent", gui_sim, "style", "text",...
+    "string","SIM Run Control", "units", "pixels",...
+    "position",[30+CNV.margin_x CNV.margin_y+CNV.frame_h-10 CNV.frame_w-60 20],...
+    "fontname", CNV.default_font, "fontunits", "points", ...
     "fontsize", 16, "horizontalalignment", "center", ...
     "background", [1 1 1], "tag", "title_frame_control");
 
 // Adding zoom
 labels_zoom = ["Zoom Start", "Zoom End"];
-values_zoom = G.zoom;
+values_zoom = GUI.zoom;
 for k=1:size(labels_zoom, 2)
-    uicontrol("parent",gui_npss, "style","text", ...
-        "string", labels_zoom(k), "position",[C.x_col1+2*C.margin_x,C.y_row_zoom-(k-1)*C.delta_y_zoom,C.len_zoom_text,20], ...
+    uicontrol("parent",gui_sim, "style","text", ...
+        "string", labels_zoom(k), "position",[CNV.x_col1+2*CNV.margin_x,CNV.y_row_zoom-(k-1)*CNV.delta_y_zoom,CNV.len_zoom_text,20], ...
         "horizontalalignment","left", "fontsize",14, ...
         "background",[1 1 1]);
-    zoom_entry(k) = uicontrol("parent", gui_npss, "style", "edit",...
-        "string", string(values_zoom(k)), "position", [C.x_zoom_entry,C.y_row_zoom-(k-1)*C.delta_y_zoom,50,20], ...
+    zoom_entry(k) = uicontrol("parent", gui_sim, "style", "edit",...
+        "string", string(values_zoom(k)), "position", [CNV.x_zoom_entry,CNV.y_row_zoom-(k-1)*CNV.delta_y_zoom,50,20], ...
         "horizontalalignment","left", "fontsize",14,...
         "background",[.9 .9 .9], "tag", labels_zoom(k));
 end
 clear values_zoom labels_zoom
 
 // Buttons
-// NPSSrun_button
-uicontrol(gui_npss, "style", "pushbutton", ...
-    "Position", [C.x_col1+2*C.margin_x C.y_row_run+C.margin_y C.w_col1 24], "String", "NPSSrun", ...
+// SIMrun_button
+uicontrol(gui_sim, "style", "pushbutton", ...
+    "Position", [CNV.x_col1+2*CNV.margin_x CNV.y_row_run+CNV.margin_y CNV.w_col1 24], "String", "SIMrun", ...
     "BackgroundColor",[0 .9 0], "fontsize", 18, ...
-    "Callback", "NPSSrun");
+    "Callback", "SIMrun");
 //npssrun_interactive
-uicontrol(gui_npss, "style", "pushbutton", ...
-    "Position", [C.x_col3+C.margin_x C.y_row_run+C.margin_y C.w_col2 24], "String", "NPSSrun Interactive", ...
+uicontrol(gui_sim, "style", "pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x CNV.y_row_run+CNV.margin_y CNV.w_col2 24], "String", "SIMrun Interactive", ...
     "BackgroundColor",[0.7 0.8 0.7], "fontsize", 12, ...
-    "Callback", "NPSSrun_interactive");
+    "Callback", "SIMrun_interactive");
 // load_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col1+2*C.margin_x C.y_row_load+C.margin_y C.w_col1 24], "String","Load Data-->", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col1+2*CNV.margin_x CNV.y_row_load+CNV.margin_y CNV.w_col1 24], "String","Load Data-->", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 18, ...
     "Callback", "load_data");
 // summ_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col1+2*C.margin_x C.y_row_plot+C.margin_y C.w_col1*1/2 24], "String", "Summ", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col1+2*CNV.margin_x CNV.y_row_plot+CNV.margin_y CNV.w_col1*1/2 24], "String", "Summ", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 16, ...
     "Callback", "plot_summ");
 // all_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col1+2*C.margin_x+C.w_col1/3+C.w_col1/4 C.y_row_plot+C.margin_y C.w_col1/3 24], "String", "All", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col1+2*CNV.margin_x+CNV.w_col1/3+CNV.w_col1/4 CNV.y_row_plot+CNV.margin_y CNV.w_col1/3 24], "String", "All", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 16, ...
     "Callback", "plot_all");
 // export_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col3+C.margin_x C.y_row_plot+C.margin_y C.w_col2 24], "String", "Export Plots", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col3+CNV.margin_x CNV.y_row_plot+CNV.margin_y CNV.w_col2 24], "String", "Export Plots", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 18, ...
     "Callback", "export_plots");
 // context_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col1+2*C.margin_x C.y_row_ctx+C.margin_y C.w_col1 20], "String", "Choose Context-->", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col1+2*CNV.margin_x CNV.y_row_ctx+CNV.margin_y CNV.w_col1 20], "String", "Choose Context-->", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 14, ...
     "Callback", "choose_context");
 // clear_zoom_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col3+C.margin_x, C.y_row_zoom,C.w_col2,20], "String", "Clear Zoom", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x, CNV.y_row_zoom,CNV.w_col2,20], "String", "Clear Zoom", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 14, ...
     "Callback", "clear_zoom");
 // close_figs_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col3+C.margin_x, C.y_row_zoom-C.delta_y_zoom,C.w_col2,20], "String", "Close Figs", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x, CNV.y_row_zoom-CNV.delta_y_zoom,CNV.w_col2,20], "String", "Close Figs", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 14, ...
     "Callback", "close_figs");
 // choose_run_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col1+2*C.margin_x C.y_row_choose_run+C.margin_y C.w_col1 20], "String", "Choose Run-->", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col1+2*CNV.margin_x CNV.y_row_choose_run+CNV.margin_y CNV.w_col1 20], "String", "Choose Run-->", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 14, ...
     "Callback", "choose_run");
 // choose_mrun_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col1+2*C.margin_x C.y_row_mult+C.margin_y C.w_col1 20], "String", "Choose Mult File-->", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col1+2*CNV.margin_x CNV.y_row_mult+CNV.margin_y CNV.w_col1 20], "String", "Choose Mult File-->", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 14, ...
     "Callback", "choose_runlist");
 // mrun_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col1+2*C.margin_x C.y_row_mult+C.margin_y-25 C.w_col1 20], "String", "Run Multiples", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col1+2*CNV.margin_x CNV.y_row_mult+CNV.margin_y-25 CNV.w_col1 20], "String", "Run Multiples", ...
     "BackgroundColor",[.6 .7 .6], "fontsize", 14, ...
     "Callback", "run_mult");
 // edit_run_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col3+C.margin_x C.y_row_choose_run+C.margin_y-15 50 12], "String", "Edit", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x CNV.y_row_choose_run+CNV.margin_y-15 50 12], "String", "Edit", ...
     "BackgroundColor",[.8 .7 .7], "fontsize", 10, ...
     "Callback", "edit_run");
 // create_runlist_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col3+C.margin_x C.y_row_mult+C.margin_y-15 70 12], "String", "Create", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x CNV.y_row_mult+CNV.margin_y-15 70 12], "String", "Create", ...
     "BackgroundColor",[.93 .93 .93], "fontsize", 10, ...
     "Callback", "create_runlist");
 // npssws_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col3+C.margin_x C.y_row_ctx+C.margin_y-15 70 12], "String", "npssWS", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x CNV.y_row_ctx+CNV.margin_y-15 70 12], "String", "npssWS", ...
     "BackgroundColor",[.7 .7 .8], "fontsize", 10, ...
     "Callback", "npss_WS");
 // edit_runfile_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col3+C.margin_x+75 C.y_row_mult+C.margin_y-15 50 12], "String", "Edit", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x+75 CNV.y_row_mult+CNV.margin_y-15 50 12], "String", "Edit", ...
     "BackgroundColor",[.8 .7 .7], "fontsize", 10, ...
     "Callback", "edit_runfile_list_file");
 // choose_plot_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position",[C.x_col1+2*C.margin_x C.y_row_choose_plot+C.margin_y C.w_col1 20], "String", "Choose Plot-->", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position",[CNV.x_col1+2*CNV.margin_x CNV.y_row_choose_plot+CNV.margin_y CNV.w_col1 20], "String", "Choose Plot-->", ...
     "BackgroundColor",[.9 .9 .9], "fontsize", 14, ...
     "Callback", "choose_plot");
 // edit_plot_file_button
-uicontrol(gui_npss, "style","pushbutton", ...
-    "Position", [C.x_col3+C.margin_x C.y_row_choose_plot+C.margin_y-15 50 12], "String", "Edit", ...
+uicontrol(gui_sim, "style","pushbutton", ...
+    "Position", [CNV.x_col3+CNV.margin_x CNV.y_row_choose_plot+CNV.margin_y-15 50 12], "String", "Edit", ...
     "BackgroundColor",[.8 .7 .7], "fontsize", 10, ...
     "Callback", "edit_plot_file");
 

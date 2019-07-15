@@ -21,8 +21,8 @@
 //
 
 // Top of script
-global figs G R RES Ctrl Sen Act Cmp020SM Cmp025SM PerfUnInst
-Title=G.context_file_base+' / '+G.run_file_base;
+global figs GUI R RES Ctrl Sen Act Cmp020SM Cmp025SM PerfUnInst
+Title=GUI.context_file_base+' / '+GUI.run_file_base;
 F.A8_LOOP_THRES = 18;
 F.A8_LOOP_PERSIS = 0.1;
 F.A8_LOOP_DTLIM = 20;
@@ -35,10 +35,10 @@ F.A8P_CL_NFR_THR = -1;
 F.A8P_CL_ERR_THR = -2;
 F.A8P_OP_ERR_THR = 2;
 
-[nz, mz] = size(G.zoom);
+[nz, mz] = size(GUI.zoom);
 if mz==2 then
     zooming = %t;
-    xlims = G.zoom;
+    xlims = GUI.zoom;
 else
     zooming = %f;
     xlims = [];
@@ -159,7 +159,7 @@ Ctrl.A8P_NUM_ = Ctrl.A8P_NUM; Ctrl.A8P_NUM_.values = Ctrl.A8P_NUM_.values - 4;
 Ctrl.A8P_OP_ENABLE_ = Ctrl.A8P_OP_ENABLE; Ctrl.A8P_OP_ENABLE_.values = Ctrl.A8P_OP_ENABLE_.values - 6;
 Ctrl.A8P_CL_ENABLE_ = Ctrl.A8P_CL_ENABLE; Ctrl.A8P_CL_ENABLE_.values = Ctrl.A8P_CL_ENABLE_.values - 8;
 
-if G.plot_summary then
+if GUI.plot_summary then
 
     figs($+1) = figure("Figure_name", Title, "Position",  [440,0,500,460]); clf();
     subplot(211)
@@ -274,4 +274,4 @@ else
     ylims = [-10 10];
     overplot_zoom(['Ctrl.A8P_OP_STK_', 'Ctrl.A8P_CL_STK_', 'Ctrl.A8P_QUIET_', 'Ctrl.A8P_STK_WATCH'], ['r-', 'r--', 'b-','g-'], 'Status', xlims, ylims)
 
-end  // ~G.plot_summary
+end  // ~GUI.plot_summary
