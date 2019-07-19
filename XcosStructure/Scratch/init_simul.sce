@@ -86,6 +86,7 @@ MOD.plotEBOOST = %t;        // Engine boost system plot for StopFdn
 
 
 // Load external reference data
+mprintf('In %s:   loading large data csv files...', sfilename()) 
 if MOD.zeroP3lineDamp then
     [D, N, time] = load_csv_data_row('./Data/FP_IRP_0d.csv', 1);
     [n_names, m_names] = size(N);
@@ -109,6 +110,7 @@ else
     exec('./Data/load_decode_csv_data.sce', -1);
     clear D N n_names m_names
 end
+mprintf('.  Done loading\n')
 
 // Driven inputs  TODO: standalone model should not have any driven
 xn25 = DI.eng.xn25;

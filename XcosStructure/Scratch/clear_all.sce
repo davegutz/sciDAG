@@ -23,9 +23,15 @@ clear
 clearglobal
 xdel(winsid())
 mclose('all');
-listf = listfunctions();
-for i = 1:size(listf,2)
-    evstr('clear ' + listf(i))
+// Old versions clear does not clear functions
+r = ver();
+version = strsplit(r(1,2), '.');
+version = strtod(version(1));
+if version<6 then
+    listf = listfunctions();
+    for i = 1:size(listf,2)
+        evstr('clear ' + listf(i))
+    end
 end
-
+clear r version
 
