@@ -42,6 +42,7 @@
 // 
 funcprot(0);
 getd('../Lib')
+getd('../Lib/Pipes')
 this = sfilename();
 base = strsplit(this, '.');
 base = base(1);
@@ -64,7 +65,16 @@ global dT
 
 // Memory of setup
 // Auto data overplot load
-stack_size = stacksize('max');
+
+// Old versions clear does not clear functions
+r = ver();
+version = strsplit(r(1,2), '.');
+version = strtod(version(1));
+if version<6 then
+    stack_size = stacksize('max');
+end
+clear r version
+
 MOD = tlist(["mod_ctrl", "initialized", "skip_init", 'atWork', "batch", "tPumpFail",...
              "zeroP3lineDamp", 'plotMainRT', 'plotVenRT', "plotAcRT", 'plotHSp', 'plotHS',...
              'logAll', 'plotEnable', 'plotAC', 'plotMain', 'plotBoost', 'plotVEN', 'plotVENpump', 'plotEBOOST', 'plotAll', 'exportFigs'],...

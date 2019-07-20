@@ -18,8 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 // Jan 17, 2019    DA Gutz        Created
+// Jul 20, 2019    DA Gutz  	Have to load subfolders in getd separately for v6
 // 
-getd('../Lib/Pipes')
+
+//getd('../Lib/Pipes')  load this separately
 
 function [dwdc] = DWDC(sg)
     dwdc = 129.93948*sg;
