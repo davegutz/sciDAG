@@ -108,8 +108,16 @@ exec('benchmark_valve_start04alone.sce', -1)
     save('init_00_08000_00000_16005_09060_147_79_13_sNone_ic.dat', 'ic')
     save_file = './Results/ic_simul.csv';
     [fdo, err] = mopen(save_file, 'wt');write_struct_row(ic, 'ic', fdo,',');mclose(fdo);rotate_file(save_file, save_file);
+
+// Normal run
 // Load the simulation
 exec('.\init_simul.sce',-1)
+// Run
+// Executed init_simul.sce up to importXcosDiagram*********
+// Ready to play...press the right arrow icon on simul diagram at top
+// Plot
+exec('Callbacks/StopFcn_simul.sce', -1)
+
 // Freeze stuff
 G.ifc.mvtv.fstf=1e12;
 G.ifc.hs.fstf=1e12;
